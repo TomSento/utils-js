@@ -1,5 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 exports.domReady = function(fn) {
-    if (document.attachEvent ? (document.readyState === "complete") : (document.readyState !== "loading")) {
+    if (document.attachEvent ? (document.readyState === 'complete') : (document.readyState !== 'loading')) {
         fn();
     }
     else {
@@ -16,11 +17,6 @@ exports.domMatches = function(el, sel) { // https://developer.mozilla.org/en-US/
     };
     return fn.call(el, sel);
 };
-/**
- * @param {String} sel
- * @param {Element} el
- * @returns {Array}
- */
 exports.domFind = function(sel, el) {
     var list = null;
     if (!sel || typeof(sel) !== 'string') {
@@ -60,7 +56,7 @@ exports.domFind = function(sel, el) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -82,7 +78,7 @@ exports.domAddClass = function(sel, v) {
         throw new Error('invalidParameter');
     }
     if (!v || typeof(v) !== 'string') {
-        return new Error('invalidParameter');
+        throw new Error('invalidParameter');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -121,7 +117,7 @@ exports.domAddClass = function(sel, v) {
 };
 exports.domRemoveClass = function(sel, v) {
     if (!sel || !v || typeof(v) !== 'string') {
-        return new Error('invalidParameter');
+        throw new Error('invalidParameter');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -157,13 +153,13 @@ exports.domRemoveClass = function(sel, v) {
             el.className = el.className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
     }
-},
+};
 exports.domToggleClass = function(sel, v) {
     if (!sel) {
         throw new Error('invalidParameter');
     }
     if (!v || typeof(v) !== 'string') {
-        return new Error('invalidParameter');
+        throw new Error('invalidParameter');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -199,7 +195,7 @@ exports.domVal = function(sel, v) {
     if (!sel) {
         throw new Error('invalidParameter');
     }
-    if (v && typeof(v) !== 'string' && isNaN(v)) {
+    if (v && typeof(v) !== 'string' && isNaN(parseInt(v))) {
         return new Error('invalidParameter');
     }
     var els = null;
@@ -233,12 +229,7 @@ exports.domVal = function(sel, v) {
         return el.value || null;
     }
     function setVal(el, v) {
-        if (v === undefined) {
-            return el.value;
-        }
-        else {
-            el.value = v;
-        }
+        el.value = v;
     }
     function selectingOne(sel) {
         if (exports.domIsEl(sel)) {
@@ -246,7 +237,7 @@ exports.domVal = function(sel, v) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -258,8 +249,8 @@ exports.domAttr = function(sel, k, v) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('invalidParameter');
     }
-    if (v && typeof(v) !== 'string' && isNaN(v) && typeof(v) !== null) {
-        throw new Error('invalidParameter')
+    if (v && typeof(v) !== 'string' && isNaN(parseInt(v)) && v !== null) {
+        throw new Error('invalidParameter');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -306,7 +297,7 @@ exports.domAttr = function(sel, k, v) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -320,7 +311,8 @@ exports.domData = function(sel, k, v) {
     }
     try {
         v = normalizeVal(v);
-    } catch (err) {
+    }
+    catch (err) {
         throw new Error('unableToParse');
     }
     var els = null;
@@ -380,7 +372,7 @@ exports.domData = function(sel, k, v) {
             }
             return v;
         }
-        else if (v && typeof(v.toString) == 'function') {
+        else if (v && typeof(v.toString) == 'function') {
             return v.toString();
         }
         else {
@@ -393,7 +385,7 @@ exports.domData = function(sel, k, v) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -444,7 +436,7 @@ exports.domHTML = function(sel, v) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -495,7 +487,7 @@ exports.domText = function(sel, v) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -534,7 +526,7 @@ exports.domParent = function(sel) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -578,7 +570,7 @@ exports.domChildren = function(sel) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -619,6 +611,16 @@ exports.domSiblings = function(sel) {
         }
         return arr;
     }
+    function selectingOne(sel) {
+        if (exports.domIsEl(sel)) {
+            return true;
+        }
+        else if (typeof(sel) === 'string') {
+            var parts = sel.split(/\s+/);
+            return (parts && parts.length == 1 && parts[0][0] == '#');
+        }
+        return false;
+    }
 };
 exports.domPrev = function(sel) {
     if (!sel) {
@@ -647,7 +649,6 @@ exports.domPrev = function(sel) {
     return selectingOne(sel) ? arr[0] : arr;
     function getPrev(el, psel) {
         var els = (el.parentNode && el.parentNode.children) ? el.parentNode.children : [];
-        var arr = [];
         var brk = false;
         for (var i = els.length - 1; i >= 0; i--) {
             var sib = els[i];
@@ -670,7 +671,7 @@ exports.domPrev = function(sel) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -710,6 +711,7 @@ exports.domPrevAll = function(sel) {
             }
             arr.push(ch);
         }
+        return [];
     }
     function selectingOne(sel) {
         if (exports.domIsEl(sel)) {
@@ -717,7 +719,7 @@ exports.domPrevAll = function(sel) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -749,7 +751,6 @@ exports.domNext = function(sel, nsel) {
     return selectingOne(sel) ? arr[0] : arr;
     function getNext(el, nsel) {
         var els = (el.parentNode && el.parentNode.children) ? el.parentNode.children : [];
-        var arr = [];
         var brk = false;
         for (var i = 0; i < els.length; i++) {
             var sib = els[i];
@@ -772,7 +773,7 @@ exports.domNext = function(sel, nsel) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -823,7 +824,7 @@ exports.domNextAll = function(sel) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -835,7 +836,7 @@ exports.domStyle = function(sel, k, v) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('invalidParameter');
     }
-    if (v && (typeof(v) !== 'string' && isNaN(v))) {
+    if (v && (typeof(v) !== 'string' && isNaN(parseInt(v)))) {
         throw new Error('invalidParameter');
     }
     var els = null;
@@ -877,7 +878,7 @@ exports.domStyle = function(sel, k, v) {
         }
         else if (typeof(sel) === 'string') {
             var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            return (parts && parts.length == 1 && parts[0][0] == '#');
         }
         return false;
     }
@@ -908,16 +909,6 @@ exports.domFadeIn = function(sel, t) {
     function fadeIn(el, t) {
         el.style.transition = 'opacity ' + (t && !isNaN(t) && t > 0 ? t : 250) + 'ms';
         el.style.opacity = '1';
-    }
-    function selectingOne(sel) {
-        if (exports.domIsEl(sel)) {
-            return true;
-        }
-        else if (typeof(sel) === 'string') {
-            var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
-        }
-        return false;
     }
 };
 exports.domFadeOut = function(sel, t) {
@@ -967,8 +958,7 @@ exports.domFadeTo = function(sel, o, t) {
         els = Array.isArray(els) ? els : [els];
     }
     if (Array.isArray(els)) {
-        var len = els.length;
-        for (var i = 0; i < els.length; i++) {
+        for (var i = 0, len = els.length; i < len; i++) {
             var el = els[i];
             if (el) {
                 fadeTo(el, o, t);
@@ -996,8 +986,7 @@ exports.domFadeToggle = function(sel, t) {
         els = Array.isArray(els) ? els : [els];
     }
     if (Array.isArray(els)) {
-        var len = els.length;
-        for (var i = 0; i < els.length; i++) {
+        for (var i = 0, len = els.length; i < len; i++) {
             var el = els[i];
             if (el) {
                 fadeToggle(el);
@@ -1024,7 +1013,7 @@ exports.domOn = function(sel, k, fn) {
         throw new Error('invalidParameter');
     }
     if (!k || typeof(k) !== 'string' || typeof(fn) !== 'function') {
-        return new Error('invalidParameter');
+        throw new Error('invalidParameter');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1167,7 +1156,7 @@ exports.domTriggerEvent = function(sel, k, v) {
         for (var i = 0; i < len; i++) {
             var el = els[i];
             if (el) {
-                triggerEvent(el, k, v)
+                triggerEvent(el, k, v);
             }
         }
     }
@@ -1177,7 +1166,8 @@ exports.domTriggerEvent = function(sel, k, v) {
             e = new CustomEvent(k, {
                 detail: v
             });
-        } else {
+        }
+        else {
             e = document.createEvent('CustomEvent');
             e.initCustomEvent(k, true, true, v);
         }

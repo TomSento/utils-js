@@ -1,6 +1,6 @@
 # utilizer-js
 
-[![Join the chat at https://gitter.im/module-utils-js/Lobby](https://badges.gitter.im/module-utils-js/Lobby.svg)](https://gitter.im/module-utils-js/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/tomas-sentkeresty/utilizer-js](https://badges.gitter.im/tomas-sentkeresty/utilizer-js.svg)](https://gitter.im/tomas-sentkeresty/utilizer-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 >*Still experimental and unstable*
 
