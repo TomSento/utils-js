@@ -5,8 +5,6 @@ JavaScript utilities storage
 
 > *Still experimental and unstable*
 
-![screenshot](./images/screenshot.png)
-
 ## FEATURES
 
 - Organize your utils in multiple files.
