@@ -33,6 +33,7 @@
         "prefer-rest-params": "off",
         "quotes": ["error", "single", { "avoidEscape": true }],
         "radix": ["error", "as-needed"],
+        "consistent-return": "off",
         "space-unary-ops": [2, {
             "words": true,
             "overrides": {
