@@ -24,12 +24,17 @@
         "max-len": "off",
         "comma-dangle": ["error", "never"],
         "no-restricted-syntax": ["error", "BinaryExpression[operator='in']"],
+        "no-restricted-globals": "off",
         "no-continue": "off",
         "no-plusplus": "off",
+        "no-else-return": "off",
         "brace-style": ["error", "stroustrup", {"allowSingleLine": false}],
         "dot-notation": "warn",
         "prefer-rest-params": "off",
+        "quotes": ["error", "single", { "avoidEscape": true }],
+        "radix": ["error", "as-needed"],
         "space-unary-ops": [2, {
+            "words": true,
             "overrides": {
                 "typeof": false
             }
