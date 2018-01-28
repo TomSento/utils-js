@@ -1,4 +1,5 @@
-var U = require('../utils/base');
+var U = require('../dist/utils.git');
+
 var strA = 'aa  aa';
 var strB = ' aa   aa ';
 var strC = '  aa    aa  ';

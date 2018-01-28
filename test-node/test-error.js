@@ -1,8 +1,8 @@
-var error = require('../utils/base.js').error;
-var ErrorBuilder = require('../utils/base.js').ErrorBuilder;
-var log = require('../utils/base.js').log;
-var errorBuilder = new ErrorBuilder();
+var error = require('../dist/utils.git').error;
+var ErrorBuilder = require('../dist/utils.git').ErrorBuilder;
+var log = require('../dist/utils.git').log;
 
+var errorBuilder = new ErrorBuilder();
 var err = error('BuggsBunny-name', 'Parameter ...');
 // log(err.throw());
 log(err.toString());

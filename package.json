@@ -1,0 +1,25 @@
+{
+    "name": "utilizer-js",
+    "version": "1.3.0",
+    "description": "Minify everything to single, well readable object.",
+    "main": "compile.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tomas-sentkeresty/utils-js.git"
+    },
+    "keywords": [],
+    "author": "Tomas Sentkeresty",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/tomas-sentkeresty/utils-js/issues"
+    },
+    "homepage": "https://github.com/tomas-sentkeresty/utils-js#readme",
+    "devDependencies": {
+        "eslint": "4.16.0",
+        "eslint-config-airbnb-base": "12.1.0",
+        "eslint-plugin-import": "2.8.0"
+    }
+}

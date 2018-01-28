@@ -1,27 +1,27 @@
-var U = require('../utils/base');
+var U = require('../dist/utils.git');
 
 var SchemaOne = U.Schema(function(attr, attrError, attrPrepare, attrValidate, func, funcError) {
     attr('name', String);
     attrValidate(function(v, typeMatch) {
-        return typeMatch && !!v;
+        return typeMatch && v.length > 5;
     });
     attrError('Parameter "name" is missing or has incorrect format.');
-    attrError(U.lan.SK, 'Paremeter "name" chýba alebo má nesprávny formát.');
-    attrError(U.lan.CZ, 'Parametr "name" chybí nebo má špatný formát.');
-    attr('surname', String); // If you want to apply prepare and validate function, last parameter must be true.
+    attrError('SK', 'Paremeter "name" chýba alebo má nesprávny formát.');
+    attrError('CZ', 'Parametr "name" chybí nebo má špatný formát.');
+    attr('rewards', String);
     attrError('Parameter "surname" has incorrect format.');
     attrPrepare(function(v) {
-        return v || null; // When we prepare with bad type, validation will contain error.
+        return v || null; // PREPARE TO BAD TYPE WILL CAUSE TYPE MISSMATCH IN VALIDATE STEP
     });
-    attrValidate(function(v, typeMatch, obj, actualType, ruleType) {
+    attrValidate(function(v, typeMatch) {
         if (v === null) {
             return true;
         }
         return typeMatch;
     });
     attr('projects', Array);
-    attrError('Parameter "projects" has to be array of at least one item.');
-    attrValidate(function(arr, typeMatch, obj, actualType, ruleType) {
+    attrError('Parameter "projects" must be an array with at least one item.'); // WHEN ERROR MESSAGE FOR 'SK' LANGUAGE IS NOT FOUND -> FALLBACK TO DEFAULT attrError() MESSAGE
+    attrValidate(function(arr, typeMatch) {
         if (!arr) {
             return false;
         }
@@ -29,15 +29,15 @@ var SchemaOne = U.Schema(function(attr, attrError, attrPrepare, attrValidate, fu
     });
     func('getName');
     funcError('Function "getName" is missing.');
-    funcError(U.lan.SK, 'Chýba funkcia "getName".');
+    funcError('SK', 'Chýba funkcia "getName".');
 });
 var obj = {
     name: 'Tomas',
     // surname: undefined,
-    projects: ['TodoList'],
+    projects: []
     // getName: function() {}
 };
-var errors = SchemaOne.prepareAndValidate(obj, U.lan.SK);
+var errors = SchemaOne.prepareAndValidate(obj, 'SK');
 U.log('errors default sk locale: ', errors);
 if (errors.hasError()) {
     // errors.throwFirst();

@@ -1,222 +1,20 @@
-exports.moduleName = 'DefaultModule';
-exports.version = '1.0.0';
-exports.utilsVersion = '1.2.0';
-exports.lan = {
-    SK: 'SK',
-    CZ: 'CZ',
-    EN: 'EN',
-    DE: 'DE'
+exports.strPadStart = function(str, len, fill) {
+    if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
+        return ''.padStart(str, len);
+    }
+    else if (typeof(str) === 'string' && typeof(len) === 'number' && typeof(fill) === 'string') {
+        return str.padStart(len, fill);
+    }
+    throw new Error('invalidParameter');
 };
-exports.SID = function(l) {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    var len = chars.length;
-    var lenID = (l && !isNaN(l)) ? l : 5;
-    var str = '';
-    for (var i = 0; i < lenID; i++) {
-        str += chars.charAt(Math.floor(Math.random() * len));
+exports.strPadEnd = function(str, len, fill) {
+    if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
+        return ''.padEnd(str, len);
     }
-    return str;
-};
-exports.UID = function() {
-    return Math.ceil(Date.now() / 1000) + '-' + exports.SID(3);
-};
-exports.objectKeys = function(obj) {
-    var keys = [];
-    var k;
-    for (k in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, k)) {
-            keys.push(k);
-        }
+    else if (typeof(str) === 'string' && typeof(len) === 'number' && typeof(fill) === 'string') {
+        return str.padEnd(len, fill);
     }
-    return keys;
-};
-exports.forIn = function(obj, fn) {
-    var len = exports.objectKeys(obj).length;
-    var i = 0;
-    for (var k in obj) {
-        if (obj.hasOwnProperty(k)) {
-            var first = (i == 0);
-            var last = ((i + 1) == len);
-            fn(k, obj[k], first, last);
-            i++;
-        }
-    }
-};
-exports.forEach = function(arr, fn) {
-    var len = arr.length;
-    for (var i = 0; i < len; i++) {
-        var first = (i == 0);
-        var last = ((i + 1) == len);
-        fn(arr[i], i, arr, first, last);
-    }
-};
-exports.map = function(arr, fn) {
-    var acc = [];
-    for (var i = 0; i < arr.length; i++) {
-        acc.push(fn(arr[i], i, arr));
-    }
-    return acc;
-};
-exports.filter = function(arr, fn) {
-    var acc = [];
-    for (var i = 0; i < arr.length; i++) {
-        if (fn.call(null, arr[i], i, arr)) {
-            acc.push(arr[i]);
-        }
-    }
-    return acc;
-};
-exports.find = function(arr, fn) {
-    for (var i = 0; i < arr.length; i++) {
-        if (fn.call(null, arr[i], i, arr)) {
-            return arr[i];
-        }
-    }
-    return null;
-};
-exports.reduce = function(arr, fn, initial, context){
-    var acc = (initial === undefined) ? 0 : initial;
-    for (var i = 0; i < arr.length; i++) {
-        acc = fn.call(context, acc, arr[i], i, arr);
-    }
-    return acc;
-};
-exports.clone = function(obj, skip, skipFunctions) {
-    if (!obj) {
-        return obj;
-    }
-    var type = typeof(obj);
-    if (type !== 'object' || obj instanceof Date) {
-        return obj;
-    }
-    var length;
-    var o;
-    if (obj instanceof Array) {
-        length = obj.length;
-        o = new Array(length);
-        for (var i = 0; i < length; i++) {
-            type = typeof(obj[i]);
-            if (type !== 'object' || obj[i] instanceof Date) {
-                if (skipFunctions && type === 'function') {
-                    continue;
-                }
-                o[i] = obj[i];
-                continue;
-            }
-            o[i] = exports.clone(obj[i], skip, skipFunctions);
-        }
-        return o;
-    }
-    o = {};
-    for (var m in obj) {
-        if (skip && skip[m]) {
-            continue;
-        }
-        var val = obj[m];
-        var type = typeof(val);
-        if (type !== 'object' || val instanceof Date) {
-            if (skipFunctions && type === 'function') {
-                continue;
-            }
-            o[m] = val;
-            continue;
-        }
-        o[m] = exports.clone(obj[m], skip, skipFunctions);
-    }
-    return o;
-};
-exports.contains = function(arrOrStr, v) {
-    if (!arrOrStr) {
-        return false;
-    }
-    if (typeof(arrOrStr) !== 'string' && !Array.isArray(arrOrStr)) {
-        return false;
-    }
-    return (arrOrStr.indexOf(v) !== -1);
-};
-exports.extend = function(base, obj, rewrite) {
-    if (!base || !obj) {
-        return base;
-    }
-    if (typeof(base) !== 'object' || typeof(obj) !== 'object') {
-        return base;
-    }
-    if (rewrite === undefined) {
-        rewrite = true;
-    }
-    var keys = Object.keys(obj);
-    var i = keys.length;
-    while (i--) {
-        var key = keys[i];
-        if (rewrite || base[key] === undefined) {
-            base[key] = exports.clone(obj[key]);
-        }
-    }
-    return base;
-};
-exports.toQueryString = function(obj, base) { // From MooTools
-    var queryString = [];
-    Object.each(obj, function(v, k) {
-        if (base) {
-            k = base + '[' + k + ']';
-        }
-        var result = null;
-        switch (typeof(v)) {
-            case 'object':
-                result = Object.toQueryString(v, k);
-                break;
-            case 'array':
-                var qs = {};
-                v.each(function(val, i) {
-                    qs[i] = val;
-                });
-                result = Object.toQueryString(qs, k);
-                break;
-            default:
-                result = k + '=' + encodeURIComponent(v);
-        }
-        if (v != null) {
-            queryString.push(result);
-        }
-    });
-    return queryString.join('&');
-};
-exports.argsToDebugString = function(args) {
-	var logs = '';
-	for (var i = 0; i < arguments.length; i++) {
-		var arg = arguments[i];
-		if (arg) {
-			if (typeof arg == 'object' || Array.isArray(arg)) {
-				if (Array.isArray(arg)) {
-					logs += 'Array(' + arg.length + '): \n';
-				}
-				else if (typeof arg == 'object') {
-					logs += 'Object: \n';
-				}
-				logs += JSON.stringify(arg, null, '\t');
-				logs += '\n';
-			}
-			else {
-				logs += arg;
-			}
-		}
-		else {
-			logs += ' ' + arg;
-		}
-	}
-	return logs;
-};
-exports.strPadStart = function(len, str) {
-    return String.prototype.padStart(len, str);
-};
-exports.strPadEnd = function(len, str) {
-    return String.prototype.padEnd(len, str);
-};
-exports.strFormat = function(str, args) {
-    return str.replace(/\{\d+\}/g, function(text) {
-        var value = args[+text.substring(1, text.length - 1)];
-        return value === null ? '' : value;
-    });
+    throw new Error('invalidParameter');
 };
 exports.strHyphenize = function(str) {
     if (typeof(str) !== 'string') {
@@ -226,8 +24,14 @@ exports.strHyphenize = function(str) {
         return ('-' + g[0]);
     }).toLowerCase();
 };
-exports.strHtml = function(tag, obj) {
-    if (!tag || typeof(tag) != 'string') {
+exports.strFormat = function(str, args) {
+    return str.replace(/\{\d+\}/g, function(text) {
+        var value = args[+text.substring(1, text.length - 1)];
+        return value === null ? '' : value;
+    });
+};
+exports.strHTML = function(tag, obj) {
+    if (!tag || typeof(tag) !== 'string') {
         return '';
     }
     var pairables = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
@@ -238,14 +42,14 @@ exports.strHtml = function(tag, obj) {
     if (obj.id) {
         str += ' id="' + obj.id + '"';
     }
-    if (obj.classes && Array.isArray(obj.classes)) {
+    if (Array.isArray(obj.classes)) {
         str += classesAsStr(obj);
     }
-    if (obj.style && typeof(obj.data == 'object')) {
+    if (obj.style && typeof(obj.style) === 'object') {
         str += stylesAsStr(obj.style);
     }
     str += attrsAsStr(obj);
-    if (obj.data && typeof(obj.data) == 'object') {
+    if (obj.data && typeof(obj.data) === 'object') {
         str += dataAttrsAsStr(obj.data);
     }
     if (pairables.indexOf(tag) >= 0) {
@@ -265,29 +69,29 @@ exports.strHtml = function(tag, obj) {
             }
         }
         str = obj.classes.join(' ');
-        return (str.length > 0) ? (' class="' + str) + '"' : '';
+        return str.length > 0 ? (' class="' + str + '"') : '';
     }
     function attrsAsStr(obj) {
-        obj = (typeof(obj) == 'object') ? obj : {};
+        obj = typeof(obj) === 'object' ? obj : {};
         var str = '';
         for (var k in obj) {
             if (['id', 'classes', 'style', 'data', 'html'].indexOf(k) >= 0) {
                 continue;
             }
             var attr = k + '="' + obj[k] + '"';
-            str += (str.length > 0) ? (' ' + attr) : attr;
+            str += str.length > 0 ? (' ' + attr) : attr;
         }
-        return (str.length > 0) ? (' ' + str) : '';
+        return str.length > 0 ? (' ' + str) : '';
     }
     function dataAttrsAsStr(obj) {
         var str = '';
         for (var k in obj) {
             if (obj.hasOwnProperty(k)) {
                 var attr = 'data-' + k + '="' + obj[k] + '"';
-                str += (str.length > 0) ? (' ' + attr) : attr;
+                str += str.length > 0 ? (' ' + attr) : attr;
             }
         }
-        return (str.length > 0) ? (' ' + str) : '';
+        return str.length > 0 ? (' ' + str) : '';
     }
     function stylesAsStr(obj) {
         var str = '';
@@ -296,9 +100,9 @@ exports.strHtml = function(tag, obj) {
         }
         return (str.length > 0) ? (' style="' + str + '"') : '';
     }
-}
+};
 exports.strStripHTML = function(str) {
-    str = (typeof(str) == 'string') ? str.replace(/<\/?[^>]+(>|$)/g, '') : '';
+    str = typeof(str) === 'string' ? str.replace(/<\/?[^>]+(>|$)/g, '') : '';
     var map = {
         'nbsp': ' ',
         'amp': '&',
@@ -350,349 +154,7 @@ exports.strToHTMLText = function(str, leftStartWithNBPS, leftRevResult, rightSta
     };
 },
 exports.strStripWhitespaces = function(str) {
-    return (typeof str == 'string') ? str.replace(/\s+/, '') : '';
-};
-exports.logDebug = function(/*...args*/) {
-	var log = exports.argsToDebugString.apply(this, arguments);
-	console.log(exports.moduleName + ': ' + log);
-};
-exports.log = function(/*...args*/) {
-    var args = [].slice.call(arguments);
-    args.unshift(exports.moduleName + ':');
-    console.log.apply(null, args);
-};
-exports.logWarn = function(/*...args*/) {
-    var args = [].slice.call(arguments);
-    args.unshift(exports.moduleName + ':');
-    console.warn.apply(null, args);
-};
-/**
- * @param {String|Error} problem
- * @param {String} [message]
- * Error passed: Set error.id = problem.message.
- * String passed: Set error.id = problem.
- */
-exports.error = function(problem, message) {
-    var Co = function(problem, message) {
-        if (!problem) {
-            throw new Error('missingProblem');
-        }
-        message = message || null;
-        if (problem instanceof Error) {
-            this.id = problem.message;
-            this.message = message;
-        }
-        else if (typeof(problem) == 'string') {
-            this.id = problem;
-            this.message = message;
-        }
-        else {
-            throw new Error('invalidProblem');
-        }
-    };
-    Co.prototype = {
-        throw: function() {
-            throw new Error(this.id);
-        },
-        log: function() {
-            var str = this.id;
-            if (this.message) {
-                str += ': ' + this.message;
-            }
-            exports.logWarn(str);
-        },
-        logAndThrow: function() {
-            this.log();
-            this.throw();
-        },
-        toString: function() {
-            return JSON.stringify({
-                id: this.id,
-                message: this.message
-            }, null, '    ');
-        }
-    };
-    return new Co(problem, message);
-};
-exports.ErrorBuilder = function(errors) {
-    var Co = function(errors) {
-        if (errors) {
-            if (!Array.isArray(errors)) {
-                throw new Error('invalidParameter');
-            }
-            for (var i = 0; i < errors.length; i++) {
-                if (!errors[i] || !errors[i].id) {
-                    throw new Error('invalidArrayItem');
-                }
-            }
-        }
-        this.errors = errors || [];
-    };
-    Co.prototype = {
-        push: function(err) {
-            this.errors.push(err);
-        },
-        remove: function(id) {
-            var arr = this.errors;
-            var idx = -1;
-            for (var i = 0; i < arr.length; i++) {
-                if (arr[i].id == id) {
-                    idx = i;
-                }
-            }
-            if (idx > -1) {
-                arr.splice(idx, 1);
-            }
-        },
-        clear: function() {
-            this.errors = [];
-        },
-        hasError: function(id) {
-            var arr = this.errors;
-            if (id) {
-                for (var i = 0; i < arr.length; i++) {
-                    if (arr[i] && arr[i].id == id) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            return arr.length > 0;
-        },
-        throwFirst: function() {
-            if (this.errors.length <= 0) {
-                throw new Error('emptyErrorBuilder');
-            }
-            this.errors[0].throw();
-        },
-        first: function() {
-            return this.errors[0] || null;
-        },
-        last: function() {
-            return this.errors[this.errors.length - 1] || null;
-        },
-        toString: function() {
-            return JSON.stringify(this, null, '    ');
-        },
-        logFirst: function() {
-            if (this.errors[0]) {
-                this.errors[0].log();
-            }
-        },
-        logAndThrowFirst: function() {
-            if (this.errors[0]) {
-                this.errors[0].logAndThrow();
-            }
-        }
-    };
-    return new Co(errors);
-};
-exports.Schema = function(fn) {
-    var Co = function(fn) {
-        this.rule = {};
-        this.prefix = '';
-        this.__control = null;
-        fn.apply(null, [
-            attr.bind(this),
-            attrError.bind(this),
-            attrPrepare.bind(this),
-            attrValidate.bind(this),
-            func.bind(this),
-            funcError.bind(this),
-            setPrefix.bind(this)
-        ]);
-    };
-    Co.prototype = {
-        prepareAndValidate: function(obj, lan) { // Can be called without normalize.
-            if (typeof(obj) !== 'object' || !obj) {
-                throw new Error('invalidParameter');
-            }
-            var eb = new exports.ErrorBuilder();
-            for (var k in this.rule) {
-                if (this.rule.hasOwnProperty(k)) {
-                    var v = obj[k];
-                    var rule = this.rule[k];
-                    var mes = rule.message[lan] || rule.message['default'] || ('Invalid property "' + k + '".');
-                    if (rule.prepare) {
-                        v = rule.prepare(v, obj);
-                        obj[k] = v;
-                    }
-                    var act = Object.prototype.toString.call(v);
-                    var mat = (act === rule.type);
-                    if (rule.validate && !rule.validate(v, mat, obj, act, rule.type)) {
-                        eb.push(exports.error(this.prefix + k, mes));
-                    }
-                }
-            }
-            return eb;
-        },
-        /**
-         * Does not validates.
-         * In case of type missmatch assigns empty value.
-         * In case of empty value use normalized empty value.
-         *
-         * - (nonExisting|typeMissmatch) attr {String|Object|Date|Number} -> null
-         * - (nonExisting|typeMissmatch) attr {Array} -> []
-         * - (nonExisting|typeMissmatch) func -> function() {}
-         */
-        normalize: function(obj) {
-            var norm = {};
-            for (var k in this.rule) {
-                if (this.rule.hasOwnProperty(k)) {
-                    var rule = this.rule[k];
-                    var val = obj[k];
-                    var typ = Object.prototype.toString.call(val);
-                    if (!val || typ !== rule.type) {
-                        if (rule.type === '[object Array]') {
-                            norm[k] = [];
-                        }
-                        else if (rule.type == '[object Function]') {
-                            norm[k] = function() {};
-                        }
-                        else {
-                            norm[k] = null;
-                        }
-                    }
-                    else {
-                        norm[k] = val;
-                    }
-                }
-            }
-            return norm;
-        }
-    };
-    function attr(name, type) { // Starts attribute definition
-        if (!name || typeof(name) !== 'string') {
-            throw new Error('invalidParameter');
-        }
-        type = strType(type);
-        if (!type) {
-            throw new Error('invalidParameter');
-        }
-        this.__control = name;
-        this.rule[this.__control] = {
-            type: type,
-            message: {
-                default: 'Invalid attribute "' + name + '".'
-            }
-        };
-    }
-    function func(name) { // Starts function definition
-        if (!name || typeof(name) !== 'string') {
-            throw new Error('invalidParameter');
-        }
-        this.__control = name;
-        this.rule[this.__control] = {
-            type: '[object Function]',
-            message: {
-                default: 'Invalid function "' + name + '".'
-            }
-        };
-    }
-    var attrError = funcError = function(a, b) { // Sets default or localized error message.
-        if (!a || typeof(a) !== 'string') {
-            throw new Error('invalidParameter');
-        }
-        if (b && typeof(b) !== 'string') {
-            throw new Error('invalidParameter');
-        }
-        var lan = (a && b) ? a : 'default';
-        var mes = (a && b) ? b : a;
-        if (!this.rule[this.__control]) {
-            throw new Error('invalidOrder');
-        }
-        if (!this.rule[this.__control].message) {
-            this.rule[this.__control].message = {};
-        }
-        this.rule[this.__control].message[lan] = mes;
-    };
-    function attrPrepare(fn) {
-        if (!fn || typeof(fn) !== 'function') {
-            throw new Error('invalidParameter');
-        }
-        if (!this.rule[this.__control]) {
-            throw new Error('invalidOrder');
-        }
-        this.rule[this.__control].prepare = fn;
-    }
-    function attrValidate(fn) {
-        if (!fn || typeof(fn) !== 'function') {
-            throw new Error('invalidParameter');
-        }
-        if (!this.rule[this.__control]) {
-            throw new Error('invalidOrder');
-        }
-        this.rule[this.__control].validate = fn;
-    }
-    function strType(type) {
-        if (type === Number) {
-            return '[object Number]';
-        }
-        else if (type === String) {
-            return '[object String]';
-        }
-        else if (type === Array) {
-            return '[object Array]';
-        }
-        else if (type === Date) {
-            return '[object Date]';
-        }
-        else if (type === Object) {
-            return '[object Object]';
-        }
-        else if (type === Boolean) {
-            return '[object Boolean]';
-        }
-        else {
-            null;
-        }
-    }
-    function setPrefix(prefix) {
-        this.prefix = prefix;
-    }
-    return new Co(fn);
-};
-exports.keyCodeToKey = function(keyCode) {
-    var map = {
-        8: 'BACKSPACE',
-        9: 'TAB',
-        13: 'ENTER',
-        16: 'SHIFT',
-        17: 'CTRL',
-        18: 'ALT',
-        32: 'SPACE',
-        37: 'LEFT_ARROW',
-        38: 'UP_ARROW',
-        39: 'RIGHT_ARROW',
-        40: 'DOWN_ARROW',
-        65: 'A',
-        66: 'B',
-        67: 'C',
-        68: 'D',
-        69: 'E',
-        70: 'F',
-        71: 'G',
-        72: 'H',
-        73: 'I',
-        74: 'J',
-        75: 'K',
-        76: 'L',
-        77: 'M',
-        78: 'N',
-        79: 'O',
-        80: 'P',
-        81: 'Q',
-        82: 'R',
-        83: 'S',
-        84: 'T',
-        85: 'U',
-        86: 'V', 
-        87: 'W', 
-        88: 'X', 
-        89: 'Y', 
-        90: 'Z'
-    };
-    return map[keyCode] || null;
+    return typeof(str) === 'string' ? str.replace(/\s+/, '') : '';
 };
 exports.strRemoveDiacritics = function(str) {
     var map = {
@@ -1543,8 +1005,8 @@ exports.strRemoveDiacritics = function(str) {
         '\u2c6c': 'z',
         '\ua763': 'z',
     };
-    var regexpDiacritics = /[^\u0000-\u007e]/g;
-    return str.replace(regexpDiacritics, function(ch) {
+    var expDiacritics = /[^\u0000-\u007e]/g;
+    return str.replace(expDiacritics, function(ch) {
         return map[ch] || ch;
     });
 };
@@ -1585,6 +1047,9 @@ exports.strReverse = function(str) {
     }
     return rev;
 };
+exports.strHas = function(str, v) {
+    return str.includes(v);
+};
 exports.strUntil = function(str, exp) {
     var arr = str.split(exp);
     return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
@@ -1611,117 +1076,9 @@ exports.strReverseFromUntil = function(str, leftIndex, exp) {
     var arr = rev.split(exp);
     return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
 };
-exports.regexMatchLength = function(str, regex, i) {
+exports.strMatchLen = function(str, regex, i) {
     var matches = str.match(regex);
     i = parseInt(i);
     i = isNaN(i) ? 0 : i;
     return (Array.isArray(matches) && matches[i]) ? matches[i].length : 0;
-};
-exports.arrRemove = function(arr, fn, v) { // FROM TOTAL.JS
-    var isFN = typeof(fn) === 'function';
-    var isV = v !== undefined;
-    var tmp = [];
-    for (var i = 0, length = arr.length; i < length; i++) {
-        if (isFN) {
-            !fn.call(arr, arr[i], i) && tmp.push(arr[i]);
-            continue;
-        }
-        if (isV) {
-            arr[i] && arr[i][fn] !== v && tmp.push(arr[i]);
-            continue;
-        }
-        arr[i] !== fn && tmp.push(arr[i]);
-    }
-    return tmp;
-};
-exports.arrFirst = function(arr) {
-    return arr[0] || null;
-};
-exports.arrLast = function(arr) {
-    return arr[arr.length - 1] || null;
-};
-exports.arrOrderBy = function(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
-    var length = arr.length;
-    if (!length || length === 1) {
-        return arr;
-    }
-    if (typeof(name) === 'boolean') {
-        asc = name;
-        name = undefined;
-    }
-    if (maxlength === undefined) {
-        maxlength = 3;
-    }
-    if (asc === undefined) {
-        asc = true;
-    }
-    var type = 0;
-    var field = name ? arr[0][name] : arr[0];
-    switch (typeof(field)) {
-        case 'string':
-            type = 1;
-            break;
-        case 'number':
-            type = 2;
-            break;
-        case 'boolean':
-            type = 3;
-            break;
-        default:
-            if (!field instanceof Date && !isNaN(field.getTime())) {
-                return arr;
-            }
-            type = 4;
-            break;
-    }
-    function _shellInsertionSort(list, length, gapSize, fn) {
-        var temp, i, j;
-        for (i = gapSize; i < length; i += gapSize ) {
-            j = i;
-            while(j > 0 && fn(list[j - gapSize], list[j]) === 1) {
-                temp = list[j];
-                list[j] = list[j - gapSize];
-                list[j - gapSize] = temp;
-                j -= gapSize;
-            }
-        }
-    };
-    function shellsort(arr, fn) {
-        var length = arr.length;
-        var gapSize = Math.floor(length / 2);
-        while(gapSize) {
-            _shellInsertionSort(arr, length, gapSize, fn);
-            gapSize = Math.floor(gapSize / 2);
-        }
-        return arr;
-    };
-    shellsort(arr, function(a, b) {
-        var va = name ? a[name] : a;
-        var vb = name ? b[name] : b;
-        if (type === 1) {
-            return (va && vb) ? (asc ? exports.strRemoveDiacritics(va.substring(0, maxlength)).localeCompare(exports.strRemoveDiacritics(vb.substring(0, maxlength))) : exports.strRemoveDiacritics(vb.substring(0, maxlength)).localeCompare(exports.strRemoveDiacritics(va.substring(0, maxlength)))) : 0;
-        }
-        else if (type === 2) {
-            return va > vb ? (asc ? 1 : -1) : va < vb ? (asc ? -1 : 1) : 0;
-        }
-        else if (type === 3) {
-            return va === true && vb === false ? (asc ? 1 : -1) : va === false && vb === true ? (asc ? -1 : 1) : 0;
-        }
-        else if (type === 4) {
-            if (!va || !vb) {
-                return 0;
-            }
-            if (!va.getTime) {
-                va = new Date(va);
-            }
-            if (!vb.getTime) {
-                vb = new Date(vb);
-            }
-            var at = va.getTime();
-            var bt = vb.getTime();
-            return at > bt ? (asc ? 1 : -1) : at < bt ? (asc ? -1 : 1) : 0;
-        }
-        return 0;
-    });
-    return arr;
 };

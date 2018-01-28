@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="../utils.min.js"></script>
+    </head>
+    <script>
+        U.log('Testing serial flow.');
+        var proc = U.procSerial();
+        proc.push(function(id, next) {
+            this.result.userA = {
+                id: id,
+                name: 'Tomas'
+            };
+            return next(null, -1);
+        }, 1);
+        proc.push(function(id, next) {
+            this.result.userB = {
+                id: id,
+                name: 'George'
+            };
+            return next(null, -3);
+        }, 1); // IGNORE -1 FORCE TO 1
+        proc.push(function(id, next) {
+            this.result.userC = {
+                id: id,
+                name: 'Joe'
+            };
+            setTimeout(function() {
+                return next(U.error('userB'));
+            }, 1000);
+        });
+        proc.push(function(id, next) {
+            this.result.userD = {
+                id: id,
+                name: 'Joe'
+            };
+            setTimeout(function() {
+                return next(null);
+            }, 1000);
+        }, 2);
+        proc.run(function(err, result) {
+            U.logDebug('RESULT: ', result);
+            if (err) {
+                return err.logAndThrow();
+            }
+        });
+    </script>
+    <body></body>
+</html>

@@ -1,0 +1,38 @@
+{
+    "extends": "airbnb-base",
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "rules": {
+        "prefer-arrow-callback": "off",
+        "func-names": ["error", "never"],
+        "space-before-function-paren": ["error", "never"],
+        "indent": ["error", 4],
+        "no-var": "off",
+        "object-shorthand": ["error", "never"],
+        "prefer-destructuring": "off",
+        "import/no-unresolved": [2, {"commonjs": true}],
+        "import/no-dynamic-require": "warn",
+        "global-require": "warn",
+        "vars-on-top": "off",
+        "no-param-reassign": "off",
+        "eqeqeq": "off",
+        "no-use-before-define": ["error", {"functions": false}],
+        "prefer-template": "off",
+        "no-shadow": "off",
+        "max-len": "off",
+        "comma-dangle": ["error", "never"],
+        "no-restricted-syntax": ["error", "BinaryExpression[operator='in']"],
+        "no-continue": "off",
+        "no-plusplus": "off",
+        "brace-style": ["error", "stroustrup", {"allowSingleLine": false}],
+        "dot-notation": "warn",
+        "prefer-rest-params": "off",
+        "space-unary-ops": [2, {
+            "overrides": {
+                "typeof": false
+            }
+        }]
+    }
+}

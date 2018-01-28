@@ -1,6 +1,3 @@
-exports.__domInternal = {
-    handler: {}
-};
 exports.domReady = function(fn) {
     if (document.attachEvent ? (document.readyState === "complete") : (document.readyState !== "loading")) {
         fn();
@@ -9,15 +6,15 @@ exports.domReady = function(fn) {
         document.addEventListener('DOMContentLoaded', fn);
     }
 };
-exports.isDomEl = function(el) {
+exports.domIsEl = function(el) {
     return (el instanceof Node || el instanceof Element || el instanceof HTMLDocument);
 };
 exports.domMatches = function(el, sel) { // https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
-	var p = Element.prototype;
-	var f = p.matches || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || function(s) {
-		return (Array.prototype.indexOf.call(document.querySelectorAll(s), this) !== -1);
-	};
-	return f.call(el, sel);
+    var p = Element.prototype;
+    var fn = p.matches || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || function(s) {
+        return Array.prototype.indexOf.call(document.querySelectorAll(s), this) !== -1;
+    };
+    return fn.call(el, sel);
 };
 /**
  * @param {String} sel
@@ -29,7 +26,7 @@ exports.domFind = function(sel, el) {
     if (!sel || typeof(sel) !== 'string') {
         throw new Error('invalidParameter');
     }
-    if (el && exports.isDomEl(el)) {
+    if (el && exports.domIsEl(el)) {
         list = el.querySelectorAll(sel);
     }
     else {
@@ -58,7 +55,7 @@ exports.domFind = function(sel, el) {
         return [];
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -69,7 +66,7 @@ exports.domFind = function(sel, el) {
     }
 };
 exports.domHasClass = function(el, name) {
-    if (!el || !exports.isDomEl(el)) {
+    if (!el || !exports.domIsEl(el)) {
         throw new Error('invalidParameter');
     }
     if (el.classList) {
@@ -91,7 +88,7 @@ exports.domAddClass = function(sel, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -130,7 +127,7 @@ exports.domRemoveClass = function(sel, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -172,7 +169,7 @@ exports.domToggleClass = function(sel, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -209,7 +206,7 @@ exports.domVal = function(sel, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -244,7 +241,7 @@ exports.domVal = function(sel, v) {
         }
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -268,7 +265,7 @@ exports.domAttr = function(sel, k, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -304,7 +301,7 @@ exports.domAttr = function(sel, k, v) {
         el.setAttribute(k, '' + v);
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -330,7 +327,7 @@ exports.domData = function(sel, k, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -391,7 +388,7 @@ exports.domData = function(sel, k, v) {
         }
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -401,7 +398,7 @@ exports.domData = function(sel, k, v) {
         return false;
     }
 };
-exports.domHtml = function(sel, v) {
+exports.domHTML = function(sel, v) {
     if (!sel) {
         throw new Error('invalidParameter');
     }
@@ -412,7 +409,7 @@ exports.domHtml = function(sel, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -442,7 +439,7 @@ exports.domHtml = function(sel, v) {
         el.innerHTML = v;
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -463,7 +460,7 @@ exports.domText = function(sel, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -493,7 +490,7 @@ exports.domText = function(sel, v) {
         el.textContent = v;
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -511,7 +508,7 @@ exports.domParent = function(sel) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -532,7 +529,7 @@ exports.domParent = function(sel) {
         return el.parentNode || null;
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -550,7 +547,7 @@ exports.domChildren = function(sel) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -576,7 +573,7 @@ exports.domChildren = function(sel) {
         return arr;
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -594,7 +591,7 @@ exports.domSiblings = function(sel) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -631,7 +628,7 @@ exports.domPrev = function(sel) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -668,7 +665,7 @@ exports.domPrev = function(sel) {
         return null;
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -686,7 +683,7 @@ exports.domPrevAll = function(sel) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -715,7 +712,7 @@ exports.domPrevAll = function(sel) {
         }
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -733,7 +730,7 @@ exports.domNext = function(sel, nsel) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -770,7 +767,7 @@ exports.domNext = function(sel, nsel) {
         return null;
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -788,7 +785,7 @@ exports.domNextAll = function(sel) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -821,7 +818,7 @@ exports.domNextAll = function(sel) {
         return arr;
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -845,7 +842,7 @@ exports.domStyle = function(sel, k, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -875,7 +872,7 @@ exports.domStyle = function(sel, k, v) {
         el.style[k] = v;
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -893,7 +890,7 @@ exports.domFadeIn = function(sel, t) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -913,7 +910,7 @@ exports.domFadeIn = function(sel, t) {
         el.style.opacity = '1';
     }
     function selectingOne(sel) {
-        if (U.isDomEl(sel)) {
+        if (exports.domIsEl(sel)) {
             return true;
         }
         else if (typeof(sel) === 'string') {
@@ -931,7 +928,7 @@ exports.domFadeOut = function(sel, t) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -962,7 +959,7 @@ exports.domFadeTo = function(sel, o, t) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -991,7 +988,7 @@ exports.domFadeToggle = function(sel, t) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -1033,7 +1030,7 @@ exports.domOn = function(sel, k, fn) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -1050,14 +1047,17 @@ exports.domOn = function(sel, k, fn) {
         }
     }
     function addListener(el, k, fn) {
-        if (!exports.__domInternal.handler[el]) {
-            exports.__domInternal.handler[el] = {};
+        var cache = exports.malloc('__DOM');
+        var handler = cache('handler') || {};
+        if (!handler[el]) {
+            handler[el] = {};
         }
-        if (!exports.__domInternal.handler[el][k]) {
-            exports.__domInternal.handler[el][k] = []; // Multiple handlers can be associated to one dom element.
+        if (!handler[el][k]) {
+            handler[el][k] = []; // ONE ELEMENT CAN HAVE MULTIPLE EVENT HANDLERS
         }
-        exports.__domInternal.handler[el][k].push(fn);
+        handler[el][k].push(fn);
         el.addEventListener(k, fn, false);
+        cache('handler', handler);
     }
 };
 exports.domOff = function(sel, k) { // https://stackoverflow.com/a/4386514
@@ -1071,7 +1071,7 @@ exports.domOff = function(sel, k) { // https://stackoverflow.com/a/4386514
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -1083,26 +1083,32 @@ exports.domOff = function(sel, k) { // https://stackoverflow.com/a/4386514
         for (var i = 0; i < len; i++) {
             var el = els[i];
             if (el) {
-                removeListener(el, k || null);
+                els[i] = removeListener(el, k || null);
             }
         }
     }
     function removeListener(el, k) {
-        if (!exports.__domInternal.handler[el]) {
-            return;
-        }
-        if (k && exports.__domInternal.handler[el][k]) { // Remove handlers by type.
-            var fns = exports.__domInternal.handler[el][k];
-            var len = fns.length;
-            for (var i = 0; i < len; i++) {
-                var fn = fns[i];
-                el.removeEventListener(k, fn, false);
+        var cache = exports.malloc('__DOM');
+        var handler = cache('handler') || {};
+        var replacer = el;
+        if (k) { // REMOVE BY KEY
+            if (handler[el] && handler[el][k]) {
+                var fns = handler[el][k];
+                for (var i = 0; i < fns.length; i++) {
+                    var fn = fns[i];
+                    el.removeEventListener(k, fn, false);
+                }
+                handler[el][k] = null;
             }
         }
-        else { // Remove all handlers.
-            var sub = el.cloneNode(true);
-            el.parentNode.replaceChild(sub, el);
+        else { // REMOVE ALL
+            var copy = el.cloneNode(true);
+            el.parentNode.replaceChild(copy, el);
+            handler[el] = null;
+            replacer = copy;
         }
+        cache('handler', handler);
+        return replacer;
     }
 };
 exports.domTriggerNativeEvent = function(sel, k) {
@@ -1116,7 +1122,7 @@ exports.domTriggerNativeEvent = function(sel, k) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -1149,7 +1155,7 @@ exports.domTriggerEvent = function(sel, k, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -1189,7 +1195,7 @@ exports.domAppend = function(sel, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -1219,7 +1225,7 @@ exports.domPrepend = function(sel, v) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {
@@ -1246,7 +1252,7 @@ exports.domRemove = function(sel) {
     if (Array.isArray(sel)) {
         els = sel;
     }
-    else if (exports.isDomEl(sel)) {
+    else if (exports.domIsEl(sel)) {
         els = [sel];
     }
     else {

@@ -4,11 +4,11 @@
         <title></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="../utils.min.js"></script>
+        <script src="../utils.git.js"></script>
     </head>
     <script>
         U.domReady(function() {
-            var html = U.strHtml('div', {
+            var html = U.strHTML('div', {
                 id: 'products',
                 classes: ['area', 'area-products'],
                 data: {
@@ -21,27 +21,30 @@
                     width: '200px',
                     overflow: 'hidden'
                 },
-                html: U.reduce(['pen', 'notebook', 'guitar'], getProductHtml, '')
+                html: getProductsHTML(['pen', 'notebook', 'guitar'])
             });
-            function getProductHtml(acc, product) {
-                acc += U.strHtml('div', {
-                    classes: ['product-item'],
-                    disabled: true,
-                    html: product,
-                    style: {
-                        margin: '10px',
-                        padding: '10px',
-                        background: 'silver'
-                    }
+            function getProductsHTML(products) {
+                var html = '';
+                U.arrForEach(products, function(product) {
+                    html += U.strHTML('div', {
+                        classes: ['product-item'],
+                        disabled: true,
+                        html: product,
+                        style: {
+                            margin: '10px',
+                            padding: '10px',
+                            background: 'silver'
+                        }
+                    });
                 });
-                return acc;
+                return html;
             };
-            var el = U.domFind('#holder'); // Returns element if finding by id otherwise array of elements (not NodeList)
+            var el = U.domFind('#holder'); // RETURNS 1 ELEMENT IF QUERYING BY ID. OTHERWISE ARRAY WITH ELEMENTS IS RETURNED (NOT NodeList)
             U.domStyle(el, 'margin-top', '200px');
             U.domStyle(el, 'margin-left', '100px');
-            U.domHtml(el, html);
+            U.domHTML(el, html);
             // U.domOff('#products', 'click');
-            // Or bind event to element/s already in variable
+            // BIND EVENT BY VARIABLE WITH ELEMENT(S) OR BY SELECTOR
             el = U.domFind('#products');
             U.domOn(el, 'click', function(e) {
                 U.log('event: ', e);
@@ -49,12 +52,12 @@
                 U.log('currentTarget: ', e.currentTarget);
                 U.log('event bindeded to elements variable');
                 var els = U.domFind('.product-item');
-                U.forEach(els, function(el) {
+                U.arrForEach(els, function(el) {
                     U.domStyle(el, 'background', 'blue');
                 });
             });
             U.domOn(el, 'click', function() {
-                U.log('--> OK 2');
+                U.log('click');
             });
             U.domOn(el, 'mouseover', function() {
                 U.log('mouseover');

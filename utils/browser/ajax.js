@@ -4,11 +4,12 @@ exports.ajax = function(obj) {
     var json = 'application/json';
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
-            if (obj.header['Accept'] === json) {
+            if (obj.header['Accept'] === json) { // eslint-disable-line dot-notation
                 try {
                     res = JSON.parse(xhr.responseText);
-                } catch (err) {
-                    console.warn('Ajax: Unable to parse server response to JSON.');
+                }
+                catch (err) {
+                    exports.logWarn('Unable to parse server response to JSON.');
                     obj.error(null, xhr);
                 }
             }
@@ -17,7 +18,8 @@ exports.ajax = function(obj) {
             }
             if (xhr.status === 200) {
                 obj.success(res, xhr);
-            } else {
+            }
+            else {
                 obj.error(res, xhr);
             }
             obj.always(res, xhr);
@@ -30,12 +32,14 @@ exports.ajax = function(obj) {
         }
     };
     xhr.onerror = function() {
-        console.warn('Ajax: Unexpected ajax error.');
+        exports.logWarn('Unexpected AJAX error.');
     };
-    xhr.open(obj.method, url, true);
+    xhr.open(obj.method, obj.url, true);
     for (var k in obj.header) {
-        var v = obj.header[k];
-        xhr.setRequestHeader(k, v);
+        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+            var v = obj.header[k];
+            xhr.setRequestHeader(k, v);
+        }
     }
     xhr.send(obj.data);
-}
+};

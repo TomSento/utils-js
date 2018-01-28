@@ -1,46 +1,116 @@
-# module-utils-js
-*Alpha version - compiler works, utils are unfinished.*
+# utilizer-js
 
-Storage for custom javascript utility functions (utils).
-Project contains compiler which generates following output:
+[![Join the chat at https://gitter.im/module-utils-js/Lobby](https://badges.gitter.im/module-utils-js/Lobby.svg)](https://gitter.im/module-utils-js/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+>*Still experimental and unstable*
+
+Storage for custom JavaScript utility functions.
+
+## FEATURES
+
+- Organize your utils in multiple files.
+- Compile utils to single object, where each utility is single line of code:
 
 ```javascript
 var U = {
-    name: 'DefaultModule',
-    version: '1.0.0',
+    // META START
+    v: '1.0.0',
     utilsVersion: '1.2.0',
-    yourUtilityFunction1: // (function|object|date)
-    // More utilities...
+    // META END
+    // INTERNALS START
+    // INTERNALS GOES HERE...
+    // INTERNALS END
+    // MY UTILS START
+    // MY UTILS GOES HERE...
+    myUtil1(a,b): function(){}, // (function|string|number|object|date)
+    // MY UTILS GOES HERE...
+    // MY UTILS END
 }
 ```
 
-Compiler writes output to: `utils.min.js`.
+Compiler writes output to `utils.min.js` file.
 
-## Recommendations
-Keep utils structure flat. Compiler allows to add utils under nested objects
-but toplevel object will be compiled always as `oneliner` which makes finding utils harder.
-For this reason try to avoid creating objects to wrap your utils. On the other hand object support is useful to hold internal state of group of utilities i.e. dom event handler functions are stored this way, see `utils/dom.js`.
+## PROS
+**Lightweight**
+- Compile only what you need.
 
-## Benefits
-- Great for developing standalone module or library with no need to start always from scratch.
-- Simply copy&paste utils to or between modules.
+**Multipurpose**
+- Private scope usage: for standalone module or library.
+- Global scope usage: for business project.
+- Plays well with both **browser** and **node** enviroment.
+
+**Flexible**
+- Just remove files from utils and code your custom utils. :)
+
+**Functional**
+- No need to reinvent standard functionality always from scratch.
+
+**Out of a box solution**
+- Comes with precoded utilities like **schemas**, **errors**, **dom** and a lot more.
+
+**Safe**
+- Can solve browser backward compatibility.
+
+**Managable**
+- Saves target's project lines of code.
+- Compiled result is very well readable API reference.
+- Usage of utils makes target project more readable.
 - Track `module version` and `utils version` separately.
-- Contains some useful utilities out of a box.
-- Easy to accommodate, just remove files from utils and create your custom utils.
+
+**Fast**
 - Brutal fast compilation.
 
-## Drawbacks
+## CONS
 - Required compile step.
-- You must keep utils structure flat.
+- Utils structure must be flat *(readability is on 1st place by design)*.
+- Manual compilation.
+- Manual pasting utils to target project.
 
-## Compile command
-```
-    node compile
-```
-ENV variables:
-- `MODULE` - **PascalCase** `U.name` of module.
-- `KEYS` - list of comma separated keys, useful when generating light version of utils.
+## TIPS
+- Keep utils structure flat.
+- Avoid creating objects to wrap your utils.
+- Use build in `malloc` cache or custom cache implementation to store data. This makes data available inside function body even when function is called multiple times.
+- Build in `malloc` cache uses prefix to specify utilities group. e.g see `utils/browser/dom.js`.
 
+## COMPILE
+Compile all utility functions:
+```bash
+node compile
 ```
-    MODULE=ContentEditor KEYS=moduleName,objectKeys,find,extend,ajax node compile
+**ENV variables**
+- `KEYS=` - List of comma separated keys - which utils to compile.
+
+**Custom ENV variables**
+- `v=` - `x.x.x` Version of your module, library, project or whatever.
+> **Tip:** You can define custom ENV variables to set other meta properties.
+
+### CORE SET
+If you use included utils this is total minimum which must be always compiled:
+```bash
+v=1.2.3 KEYS=v,utilsVersion,utilsCompileCMD,__cache,malloc,toDebugStr,logDebug,logWarn,log node compile
 ```
+
+### BASE SET
+To compile more utilities append more util keys:
+> Order must be preserved.
+##### \+ ERRORS *(OPTIONAL)*
+```
+...,error,ErrorBuilder
+```
+##### \+ SCHEMAS *(OPTIONAL)*
+```
+...,Schema
+```
+##### \+ PRIMITIVE UTILS *(OPTIONAL)*
+##### \+ BROWSER UTILS *(OPTIONAL)*
+
+#### EXAMPLE
+```bash
+v=1.2.3 KEYS=v,utilsVersion,utilsCompileCMD,__cache,malloc,toDebugStr,logDebug,logWarn,log,error,ErrorBuilder,Schema node compile
+```
+
+### NOTES
+> - Value assigned to key can be `any` type.  
+> - Only place where `object` is allowed is in `utils/_internal.js` file, used for common cache for all utilities.
+> - Values with type `string|number|date` can occur in `utils/meta.js`.
+> - Other than that you should always assign `function`.
