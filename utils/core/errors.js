@@ -58,7 +58,7 @@ exports.ErrorBuilder = function(errors) {
     Co.prototype = {
         push: function(err) {
             if (err instanceof Error) {
-                err = new exports.error(err.message);
+                err = exports.error(err.message);
             }
             this.errors.push(err);
         },
