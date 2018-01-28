@@ -1,10 +1,11 @@
 # utilizer-js
+JavaScript utilities storage
 
 [![Join the chat at https://gitter.im/tomas-sentkeresty/utilizer-js](https://badges.gitter.im/tomas-sentkeresty/utilizer-js.svg)](https://gitter.im/tomas-sentkeresty/utilizer-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
->*Still experimental and unstable*
+> *Still experimental and unstable*
 
-Storage for custom JavaScript utility functions.
+![screenshot](./images/screenshot.png)
 
 ## FEATURES
 
