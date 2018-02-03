@@ -8,6 +8,7 @@ var files = [
     'utils/meta.js',
     'utils/_internal.js',
     'utils/core/log.js',
+    'utils/core/test.js',
     'utils/core/generators.js',
     'utils/primitives/object.js',
     'utils/primitives/array.js',
