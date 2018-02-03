@@ -28,6 +28,7 @@
         "no-continue": "off",
         "no-plusplus": "off",
         "no-else-return": "off",
+        "no-unneeded-ternary": "error",
         "brace-style": ["error", "stroustrup", {"allowSingleLine": false}],
         "dot-notation": "warn",
         "prefer-rest-params": "off",
