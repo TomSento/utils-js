@@ -17,6 +17,9 @@
         "url": "https://github.com/tomas-sentkeresty/utils-js/issues"
     },
     "homepage": "https://github.com/tomas-sentkeresty/utils-js#readme",
+    "dependencies": {
+        "qunit": "2.5.0"
+    },
     "devDependencies": {
         "eslint": "4.17.0",
         "eslint-config-airbnb-base": "12.1.0",

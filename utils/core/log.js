@@ -18,6 +18,14 @@ exports.logWarn = function(/* ...args */) {
     }
     console.warn.apply(null, args);
 };
+exports.logError = function(/* ...args */) {
+    var cache = exports.malloc('__LOG');
+    var args = [].slice.call(arguments);
+    if (cache('prefix')) {
+        args.unshift(cache('prefix') + ':');
+    }
+    console.error.apply(null, args);
+};
 exports.log = function(/* ...args */) {
     var cache = exports.malloc('__LOG');
     var args = [].slice.call(arguments);

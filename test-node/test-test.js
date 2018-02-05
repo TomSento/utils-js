@@ -3,6 +3,7 @@ var U = require('../dist/utils.git');
 U.test('errorBuilder.getData()', function(assert) {
     var done = assert.async(2);
     // assert.expect(2); // JUST FOR TIMEOUT - V2
+    throw new Error('aaaa');
     setTimeout(function() {
         assert.ok(1);
         assert.fail(2);

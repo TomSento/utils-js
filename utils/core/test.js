@@ -2,18 +2,77 @@
 exports.test = function(k, fn, maxTimeout) {
     var cache = exports.malloc('__TEST');
     var runner = cache('runner');
-    if (runner) {
+    var env = cache('env');
+    if (env && runner) {
         runner.addTest(k, fn, maxTimeout);
     }
     else {
-        runner = new TestRunner();
-        runner.addTest(k, fn, maxTimeout);
-        runner.run();
-        cache('runner', runner);
+        env = getEnv();
+        if (env) {
+            cache('env', env);
+            runner = new TestRunner(env);
+            runner.addTest(k, fn, maxTimeout);
+            runner.run();
+            cache('runner', runner);
+        }
+        else {
+            throw new Error('unknownEnvironment');
+        }
     }
-    function TestRunner() {
+    function getEnv() {
+        var Env = function(env, type) {
+            var self = this;
+            self.env = env;
+            self.type = type;
+            self.fns = {};
+            if (self.type === 'BROWSER') {
+                self.env.onerror = function(msg, url, lin, col, err) {
+                    var fn = self.fns['windowError'];
+                    if (fn) {
+                        fn(err);
+                        return true; // OVERRIDE DEFAULT BEHAVIOR
+                    }
+                };
+            }
+            else if (self.type === 'NODE') {
+                self.env.on('uncaughtException', function(err) {
+                    var fn = self.fns['uncaughtProcessException'];
+                    if (fn) {
+                        fn(err);
+                    }
+                });
+                self.env.on('unhandledRejection', function(err) {
+                    var fn = self.fns['unhandledProcessRejection'];
+                    if (fn) {
+                        fn(err);
+                    }
+                });
+            }
+        };
+        Env.prototype = {
+            isNode: function() {
+                var self = this;
+                return self.type === 'NODE';
+            },
+            on: function(k, fn) {
+                var self = this;
+                self.fns[k] = fn;
+            }
+        };
+        if (typeof(process) === 'object') {
+            return new Env(process, 'NODE');
+        }
+        else if (typeof(window) === 'object') {
+            return new Env(window, 'BROWSER');
+        }
+        else {
+            return null;
+        }
+    }
+    function TestRunner(env) {
         var Co = function() {
             var self = this;
+            self.env = env;
             self.tests = [];
             self.emitter = new EventEmitter();
             self.terminated = false;
@@ -49,6 +108,15 @@ exports.test = function(k, fn, maxTimeout) {
             self.canRunNextTest = function() {
                 return !self.terminated;
             };
+            self.env.on('windowError', function(err) {
+                self.emitter.trigger('error', [err, 'windowError']);
+            });
+            self.env.on('uncaughtProcessException', function(err) {
+                self.emitter.trigger('error', [err, 'uncaughtException']);
+            });
+            self.env.on('unhandledProcessRejection', function(err) {
+                self.emitter.trigger('error', [err, 'unhandledRejection']);
+            });
         };
         Co.prototype = {
             addTest: function(k, fn, maxTimeout) {
@@ -67,7 +135,11 @@ exports.test = function(k, fn, maxTimeout) {
                 });
                 self.emitter.on('error', function(err) {
                     self.terminated = true;
-                    console.log('ERR: ' + err.toString());
+                    var msg = err[0] ? (': ' + err[0].stack) : '';
+                    exports.logError('TEST ERROR DETECTION [ENV:' + self.env.type + '] (' + err[1] + ')' + msg);
+                    if (self.env.isNode()) {
+                        self.env.env.exit(1);
+                    }
                 });
                 self.emitter.trigger('runNextTest');
             }
@@ -89,7 +161,7 @@ exports.test = function(k, fn, maxTimeout) {
             self.runNextTest = function() {
                 clearInterval(self.interval);
                 if (self.execTime > self.maxTimeout) {
-                    return self.emitter.trigger('error', new Error('execTimeExceeded'));
+                    return self.emitter.trigger('error', [new Error('execTimeExceeded'), 'testError']);
                 }
                 self.emitter.trigger('runNextTest');
             };
@@ -101,7 +173,7 @@ exports.test = function(k, fn, maxTimeout) {
                     self.fn(self.assert);
                 }
                 catch (error) {
-                    return self.emitter.trigger('error', error);
+                    return self.emitter.trigger('error', [error, 'syncError']);
                 }
                 if (self.isAsync()) {
                     self.emitter.on('assert.asyncTestEnded', function() {
