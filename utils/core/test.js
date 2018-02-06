@@ -75,6 +75,7 @@ exports.test = function(k, fn, maxTimeout) {
             self.env = env;
             self.tests = [];
             self.emitter = new EventEmitter();
+            self.results = new TestsResults();
             self.terminated = false;
             self.finalizeTimeout = 5000;
             self.findTest = function(k) {
@@ -103,7 +104,8 @@ exports.test = function(k, fn, maxTimeout) {
                 }
             };
             self.finalize = function() {
-                console.log('RESULTS');
+                var self = this;
+                exports.logDebug('RESULTS: ', self.results);
             };
             self.canRunNextTest = function() {
                 return !self.terminated;
@@ -141,6 +143,9 @@ exports.test = function(k, fn, maxTimeout) {
                         self.env.env.exit(1);
                     }
                 });
+                self.emitter.on('assert.result', function(result) {
+                    self.results.push(result);
+                });
                 self.emitter.trigger('runNextTest');
             }
         };
@@ -152,7 +157,7 @@ exports.test = function(k, fn, maxTimeout) {
             self.id = k;
             self.fn = fn;
             self.emitter = emitter;
-            self.assert = new Assert(emitter);
+            self.assert = new Assert(k, emitter);
             self.maxTimeout = maxTimeout || 20000;
             self.execTime = 0;
             self.interval = setInterval(function() {
@@ -191,9 +196,10 @@ exports.test = function(k, fn, maxTimeout) {
         };
         return new Co();
     }
-    function Assert(emitter) {
+    function Assert(testName, emitter) {
         var Co = function() {
             var self = this;
+            self.testName = testName;
             self.emitter = emitter;
             self.isAsync = false;
             self.callbackCounter = -1;
@@ -206,11 +212,23 @@ exports.test = function(k, fn, maxTimeout) {
             };
         };
         Co.prototype = {
-            ok: function(i) {
-                console.log('--> OK: ' + i);
+            ok: function(bool, msg) {
+                var self = this;
+                if (bool) {
+                    return self.emitter.trigger('assert.result', new AssertionResult(self.testName, 'ok', msg, null, true, true));
+                }
+                else {
+                    return self.emitter.trigger('assert.result', new AssertionResult(self.testName, 'ok', msg, new Error('assert.ok'), false, true));
+                }
             },
-            fail: function(i) {
-                console.log('--> FAIL: ' + i);
+            notOk: function(bool, msg) {
+                var self = this;
+                if (!bool) {
+                    return self.emitter.trigger('assert.result', new AssertionResult(self.testName, 'notOk', msg, null, false, false));
+                }
+                else {
+                    return self.emitter.trigger('assert.result', new AssertionResult(self.testName, 'notOk', msg, new Error('assert.notOk'), true, false));
+                }
             },
             async: function(expectedCallbacks) {
                 var self = this;
@@ -226,6 +244,34 @@ exports.test = function(k, fn, maxTimeout) {
             //     console.log('--> EXPECT');
             //     self.assertionCounter = expectedAssertions;
             // },
+        };
+        return new Co();
+    }
+    function AssertionResult(testName, fnName, msg, err, actual, expected) {
+        var Co = function() {
+            var self = this;
+            self.testName = testName;
+            self.fnName = fnName;
+            self.msg = msg;
+            self.err = err;
+            self.actual = actual;
+            self.expected = expected;
+        };
+        return new Co();
+    }
+    function TestsResults() {
+        var Co = function() {
+            var self = this;
+            self.results = {};
+        };
+        Co.prototype = {
+            push: function(result) {
+                var self = this;
+                if (!self.results[result.testName]) {
+                    self.results[result.testName] = [];
+                }
+                self.results[result.testName].push(result);
+            }
         };
         return new Co();
     }
