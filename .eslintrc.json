@@ -35,6 +35,8 @@
         "quotes": ["error", "single", { "avoidEscape": true }],
         "radix": ["error", "as-needed"],
         "consistent-return": "off",
+        "prefer-spread": "off",
+        "no-useless-call": "error",
         "space-unary-ops": [2, {
             "words": true,
             "overrides": {
