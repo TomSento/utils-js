@@ -1,5 +1,11 @@
 // /* eslint-disable */
 exports.test = function(k, fn, maxTimeout) {
+    if (!k || typeof(k) !== 'string') {
+        throw new Error('invalidParameter');
+    }
+    if (typeof(fn) !== 'function') {
+        throw new Error('invalidParameter');
+    }
     var cache = exports.malloc('__TEST');
     var runner = cache('runner');
     var env = cache('env');
@@ -75,7 +81,8 @@ exports.test = function(k, fn, maxTimeout) {
             self.env = env;
             self.tests = [];
             self.emitter = new EventEmitter();
-            self.results = new TestsResults();
+            self.results = new TestResults();
+            self.logger = new ResultLogger(env);
             self.terminated = false;
             self.finalizeTimeout = 5000;
             self.findTest = function(k) {
@@ -89,7 +96,6 @@ exports.test = function(k, fn, maxTimeout) {
             };
             self.runNextTest = function(ms) {
                 var test = self.tests.shift();
-                console.log('--> OK test: ', test && test.id);
                 if (test) {
                     test.run();
                 }
@@ -105,7 +111,7 @@ exports.test = function(k, fn, maxTimeout) {
             };
             self.finalize = function() {
                 var self = this;
-                exports.logDebug('RESULTS: ', self.results);
+                self.logger.logResults(self.results.results);
             };
             self.canRunNextTest = function() {
                 return !self.terminated;
@@ -210,29 +216,37 @@ exports.test = function(k, fn, maxTimeout) {
                     self.emitter.trigger('assert.asyncTestEnded');
                 }
             };
+            self.composeAssertionResult = function(msg, expected, actual, err) {
+                return {
+                    testName: self.testName,
+                    msg: msg,
+                    expected: expected,
+                    actual: actual,
+                    err: err
+                };
+            };
         };
         Co.prototype = {
             ok: function(bool, msg) {
                 var self = this;
                 if (bool) {
-                    return self.emitter.trigger('assert.result', new AssertionResult(self.testName, 'ok', msg, null, true, true));
+                    return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, true, true, null));
                 }
                 else {
-                    return self.emitter.trigger('assert.result', new AssertionResult(self.testName, 'ok', msg, new Error('assert.ok'), false, true));
+                    return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, true, false, new Error('assert.ok')));
                 }
             },
             notOk: function(bool, msg) {
                 var self = this;
                 if (!bool) {
-                    return self.emitter.trigger('assert.result', new AssertionResult(self.testName, 'notOk', msg, null, false, false));
+                    return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, false, false, null));
                 }
                 else {
-                    return self.emitter.trigger('assert.result', new AssertionResult(self.testName, 'notOk', msg, new Error('assert.notOk'), true, false));
+                    return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, false, true, new Error('assert.notOk')));
                 }
             },
             async: function(expectedCallbacks) {
                 var self = this;
-                console.log('--> ASYNC');
                 if (expectedCallbacks <= 0) {
                     throw new Error('invalidParameter');
                 }
@@ -247,30 +261,120 @@ exports.test = function(k, fn, maxTimeout) {
         };
         return new Co();
     }
-    function AssertionResult(testName, fnName, msg, err, actual, expected) {
-        var Co = function() {
-            var self = this;
-            self.testName = testName;
-            self.fnName = fnName;
-            self.msg = msg;
-            self.err = err;
-            self.actual = actual;
-            self.expected = expected;
-        };
-        return new Co();
-    }
-    function TestsResults() {
+    function TestResults() {
         var Co = function() {
             var self = this;
             self.results = {};
+            self.composeTestResult = function(results, passed) {
+                return {
+                    results: results,
+                    passed: passed
+                };
+            };
         };
         Co.prototype = {
             push: function(result) {
                 var self = this;
                 if (!self.results[result.testName]) {
-                    self.results[result.testName] = [];
+                    self.results[result.testName] = self.composeTestResult([], true);
                 }
-                self.results[result.testName].push(result);
+                self.results[result.testName].results.push(result);
+                if (result.err) {
+                    self.results[result.testName].passed = false;
+                }
+            }
+        };
+        return new Co();
+    }
+    function ResultLogger(env) {
+        var Co = function() {
+            var self = this;
+            self.logger = env.isNode() ? new NodeLogger() : new BrowserLogger();
+            self.logger.initialLog();
+            self.composeResultsForLogger = function(results, passed, failed) {
+                return {
+                    results: results,
+                    passed: passed,
+                    failed: failed
+                };
+            };
+            self.prepareResults = function(results) {
+                var passed = 0;
+                var failed = 0;
+                for (var k in results) {
+                    if (Object.prototype.hasOwnProperty.call(results, k)) {
+                        var v = results[k];
+                        if (v.passed) {
+                            passed++;
+                        }
+                        else {
+                            failed++;
+                        }
+                    }
+                }
+                return self.composeResultsForLogger(results, passed, failed);
+            };
+        };
+        Co.prototype = {
+            logResults: function(results) {
+                var self = this;
+                results = self.prepareResults(results);
+                self.logger.logResults(results);
+            }
+        };
+        return new Co();
+    }
+    function BrowserLogger() {
+        var Co = function() {
+        };
+        return new Co();
+    }
+    function NodeLogger() {
+        var Co = function() {
+            var self = this;
+            self.logTestResult = function(i, testName, results) {
+                results = self.getAssertErrorsStr(results);
+                if (results) {
+                    console.log('\x1b[31mnot ok ' + (i + 1) + ' ' + testName + '\x1b[0m');
+                    console.log(results);
+                }
+                else {
+                    console.log('ok ' + (i + 1) + ' ' + testName);
+                }
+            };
+            self.getAssertErrorsStr = function(results) {
+                var b = '';
+                for (var i = 0; i < results.length; i++) {
+                    var v = results[i];
+                    if (v.err) {
+                        b += '  ---\n';
+                        b += "  message: '" + v.msg + "'\n";
+                        b += '  severity: failed\n';
+                        b += '  actual: ' + v.actual + '\n';
+                        b += '  expected: ' + v.expected + '\n';
+                        b += '  stack: ' + v.err.stack + '\n';
+                        b += '  ...\n';
+                    }
+                }
+                return b;
+            };
+        };
+        Co.prototype = {
+            initialLog: function() {
+                console.log('TAP version 13');
+            },
+            logResults: function(results) {
+                var self = this;
+                var i = 0;
+                for (var k in results.results) {
+                    if (Object.prototype.hasOwnProperty.call(results.results, k)) {
+                        self.logTestResult(i, k, results.results[k].results);
+                        i++;
+                    }
+                }
+                console.log('1..' + i);
+                console.log('# pass ' + results.passed);
+                console.log('\x1b[31m# fail ' + results.failed + '\x1b[0m');
             }
         };
         return new Co();
