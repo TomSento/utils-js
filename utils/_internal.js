@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 exports.malloc = function(prefix) {
     if (!exports.__cache) {
         exports.__cache = {};
@@ -8,7 +9,8 @@ exports.malloc = function(prefix) {
     var obj = exports.__cache[prefix];
     return function(k, v) {
         if (typeof(k) === 'object' && v === undefined) {
-            return obj = k;
+            obj = k;
+            return;
         }
         if (k === undefined && v === undefined) {
             return obj;
@@ -22,9 +24,9 @@ exports.malloc = function(prefix) {
         else {
             obj[k] = v;
         }
-    }
+    };
 };
-exports.toDebugStr = function(args) {
+exports.toDebugStr = function(/* ...args */) {
     var str = '';
     for (var i = 0; i < arguments.length; i++) {
         var arg = arguments[i];
