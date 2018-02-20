@@ -30,7 +30,7 @@ exports.objClone = function(obj, skip, skipFunctions) {
             continue;
         }
         var val = obj[m];
-        var typ = typeof(val);
+        typ = typeof(val);
         if (typ !== 'object' || val instanceof Date) {
             if (skipFunctions && typ === 'function') {
                 continue;
