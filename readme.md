@@ -12,10 +12,6 @@ JavaScript utilities storage
 
 ```javascript
 var U = {
-    // META START
-    v: '1.0.0',
-    utilsVersion: '1.2.0',
-    // META END
     // INTERNALS START
     // INTERNALS GOES HERE...
     // INTERNALS END
@@ -54,7 +50,6 @@ Compiler writes output to `utils.min.js` file.
 - Saves target's project lines of code.
 - Compiled result is very well readable API reference.
 - Usage of utils makes target project more readable.
-- Track `module version` and `utils version` separately.
 
 **Fast**
 - Brutal fast compilation.
@@ -77,16 +72,13 @@ Compile all utility functions:
 node compile
 ```
 **ENV variables**
-- `KEYS=` - List of comma separated keys - which utils to compile.
-
-**Custom ENV variables**
-- `v=` - `x.x.x` Version of your module, library, project or whatever.
-> **Tip:** You can define custom ENV variables to set other meta properties.
+- `v=` - `x.x.x` (optional) Version of your module, library, project or whatever.
+- `keys=` - List of comma separated keys - which utils to compile.
 
 ### CORE SET
 If you use included utils this is total minimum which must be always compiled:
 ```bash
-v=1.2.3 KEYS=v,utilsVersion,utilsCompileCMD,__cache,malloc,toDebugStr,logDebug,logWarn,log node compile
+v=1.3.0 keys=__cache,malloc,toDebugStr,logDebug,logWarn,log node compile
 ```
 
 ### BASE SET
@@ -105,11 +97,10 @@ To compile more utilities append more util keys:
 
 #### EXAMPLE
 ```bash
-v=1.2.3 KEYS=v,utilsVersion,utilsCompileCMD,__cache,malloc,toDebugStr,logDebug,logWarn,log,error,ErrorBuilder,Schema node compile
+v=1.3.0 keys=__cache,malloc,toDebugStr,logDebug,logWarn,log,error,ErrorBuilder,Schema node compile
 ```
 
 ### NOTES
 > - Value assigned to key can be `any` type.  
 > - Only place where `object` is allowed is in `utils/_internal.js` file, used for common cache for all utilities.
-> - Values with type `string|number|date` can occur in `utils/meta.js`.
 > - Other than that you should always assign `function`.

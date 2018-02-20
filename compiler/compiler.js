@@ -1,104 +1,95 @@
 var fs = require('fs');
 var path = require('path');
+var v = require('../package.json').version;
 
-var KEYS = [];
-exports.compileUtils = function(filePaths, accessVariable, keys, out, exceptKeys) {
-    if (Array.isArray(keys)) {
-        keys = unique(keys);
-        KEYS = keys;
+exports.compileUtils = function(version, filePaths, accessVariable, keys, out) {
+    if (version && v !== version) {
+        throw new Error('versionMismatch');
+    }
+    if (!Array.isArray(filePaths) || filePaths.length === 0) {
+        throw new Error('invalidParameter');
+    }
+    if (!accessVariable || typeof(accessVariable) !== 'string') {
+        throw new Error('invalidParameter');
+    }
+    if (keys && !Array.isArray(keys)) {
+        throw new Error('invalidParameter');
+    }
+    if (!out || typeof(out) !== 'string') {
+        throw new Error('invalidParameter');
     }
     var start = Date.now();
-    if (!Array.isArray(filePaths) || filePaths.length == 0) {
-        return;
-    }
-    filePaths = filePaths.map(function(str) {
-        return path.resolve(str);
-    });
-    var fileStats = getFileStatsWithAtLeastOneKey(filePaths, keys);
-    var str = '';
-    fileStats.forEach(function(fileStat, fileIndex) {
-        var lastFile = (fileStats.length === fileIndex + 1);
-        str += compileUtilsFromFile(fileStat.filePath, fileStat.keyCount, accessVariable, lastFile, keys, exceptKeys);
-    });
+    filePaths = normalizePaths(filePaths);
+    var o = toSingleObj(filePaths);
+    var accKeys = [];
+    var b = toBundleStr(o, keys, accessVariable, accKeys);
     var code = fs.readFileSync(path.join(__dirname, 'template.js'), 'utf8');
     code = code.replace(/ACCESS_VAR/g, accessVariable);
-    code = code.replace(/^\s*UTILS/m, str);
+    code = code.replace(/^\s*UTILS/m, b);
+    code = code.replace(/\{0\}/, v);
+    code = code.replace(/\{1\}/, accKeys.join(','));
     fs.writeFileSync(out, code);
     endLog(out, start, code);
 };
+function normalizePaths(filePaths) {
+    return filePaths.map(function(filePath) {
+        return path.resolve(filePath);
+    });
+}
 function endLog(out, start, code) {
     var s = Buffer.byteLength(code, 'utf8');
     s = (s / 1000).toFixed(1);
     var t = (Date.now() - start);
     console.log(out + ' \t' + s + 'kB\t ' + t + 'ms'); // eslint-disable-line no-console
 }
-function getFileStatsWithAtLeastOneKey(filePaths, keys) {
-    var arr = [];
-    filePaths.forEach(function(path) {
-        var utils = require(path); // eslint-disable-line global-require,import/no-dynamic-require
-        var len = Array.isArray(keys) ? Object.keys(utils).filter(function(k) {
-            return (keys.indexOf(k) >= 0);
-        }).length : Object.keys(utils).length;
-        if (len > 0) {
-            arr.push({
-                filePath: path,
-                keyCount: len
-            });
+function toSingleObj(filePaths) {
+    var o = {};
+    filePaths.forEach(function(filePath) {
+        var utils = require(filePath);
+        for (var k in utils) {
+            if (Object.hasOwnProperty.call(utils, k)) {
+                if (o[k]) {
+                    throw new Error("Duplicate implementation: '" + k + "'.");
+                }
+                var v = utils[k];
+                if (v) {
+                    o[k] = v;
+                }
+                else {
+                    throw new Error("Implementation for: '" + k + "' doesn't exist.");
+                }
+            }
         }
     });
-    return arr;
+    return o;
 }
-function compileUtilsFromFile(filePath, keyCount, accessVariable, lastFile, keys, exceptKeys) {
-    var temp = '';
-    var utils = require(filePath); // eslint-disable-line global-require,import/no-dynamic-require
-    var i = 1;
-    for (var k in utils) {
-        if (!Object.prototype.hasOwnProperty.call(utils, k)) {
-            continue;
-        }
-        if (Array.isArray(keys) && keys.indexOf(k) < 0) {
-            continue;
-        }
-        if (Array.isArray(exceptKeys) && exceptKeys.indexOf(k) >= 0) {
-            continue;
-        }
-        var v = utils[k];
-        temp += '    ' + k + ': ' + compileModuleValue(k, v, accessVariable) + ((i === keyCount && lastFile) ? '' : ',\n');
-        i++;
+function toBundleStr(obj, keys, accessVariable, accKeys) {
+    var b = '';
+    var dup = {};
+    if (Array.isArray(keys) && keys.length > 0) {
+        keys.forEach(function(k) {
+            if (!obj[k]) {
+                throw new Error("Implementation for: '" + k + "' doesn't exist.");
+            }
+            if (dup[k]) {
+                throw new Error("Duplicate key in command: '" + k + "'.");
+            }
+            dup[k] = true;
+        });
     }
-    return temp;
-}
-function isSpecialProperty(key) {
-    return process.env[key] || ['utilsCompileCMD'].indexOf(key) >= 0;
-}
-function getSpecialProperty(key) {
-    var v = '';
-    if (key == 'utilsCompileCMD') {
-        v = composeCMD();
-    }
-    else {
-        v = process.env[key] || '';
-    }
-    return v ? ("'" + v + "'") : "''";
-}
-function composeCMD() {
-    var arr = [];
-    KEYS.forEach(function(key) {
-        var v = process.env[key];
-        if (v) {
-            arr.push(key + '=' + v);
+    for (var k in obj) {
+        if (Object.hasOwnProperty.call(obj, k)) {
+            if (Array.isArray(keys) && keys.indexOf(k) === -1) {
+                continue;
+            }
+            accKeys.push(k);
+            var v = obj[k];
+            b += '    ' + k + ': ' + compileModuleValue(k, v, accessVariable) + ',\n';
         }
-    });
-    if (process.env.KEYS) {
-        arr.push('KEYS=' + unique(process.env.KEYS.split(/\s*,\s*/)).join(','));
     }
-    arr.push('node compile');
-    return arr.join(' ');
+    return b ? b.slice(0, -2) : '';
 }
 function compileModuleValue(key, value, accessVariable) {
-    if (isSpecialProperty(key)) {
-        return getSpecialProperty(key);
-    }
     if (!value) {
         return value;
     }
@@ -155,14 +146,4 @@ function stringifyScript(input, accessVariable) {
         }
         return result;
     });
-}
-function unique(arr) {
-    var temp = [];
-    for (var i = 0, len = arr.length; i < len; i++) {
-        var v = arr[i];
-        if (temp.indexOf(v) === -1) {
-            temp.push(v);
-        }
-    }
-    return temp;
 }
