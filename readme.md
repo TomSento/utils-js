@@ -23,7 +23,7 @@ var U = {
 }
 ```
 
-Compiler writes output to `utils.min.js` file.
+Compiler writes output to `dist/utils.git.js` file.
 
 ## PROS
 **Lightweight**
