@@ -2,7 +2,8 @@ exports.Schema = function(fn) {
     var Co = function(fn) {
         this.rule = {};
         this.prefix = '';
-        this.__control = null;
+        this.currentKey = null;
+        var funcError = attrError;
         fn.apply(null, [
             attr.bind(this),
             attrError.bind(this),
@@ -80,8 +81,8 @@ exports.Schema = function(fn) {
         if (!type) {
             throw new Error('invalidParameter');
         }
-        this.__control = name;
-        this.rule[this.__control] = {
+        this.currentKey = name;
+        this.rule[this.currentKey] = {
             type: type,
             message: {
                 default: 'Invalid attribute "' + name + '".'
@@ -92,15 +93,15 @@ exports.Schema = function(fn) {
         if (!name || typeof(name) !== 'string') {
             throw new Error('invalidParameter');
         }
-        this.__control = name;
-        this.rule[this.__control] = {
+        this.currentKey = name;
+        this.rule[this.currentKey] = {
             type: '[object Function]',
             message: {
                 default: 'Invalid function "' + name + '".'
             }
         };
     }
-    var attrError = funcError = function(a, b) { // Sets default or localized error message.
+    function attrError(a, b) { // Sets default or localized error message.
         if (!a || typeof(a) !== 'string') {
             throw new Error('invalidParameter');
         }
@@ -109,31 +110,31 @@ exports.Schema = function(fn) {
         }
         var lan = (a && b) ? a : 'default';
         var mes = (a && b) ? b : a;
-        if (!this.rule[this.__control]) {
+        if (!this.rule[this.currentKey]) {
             throw new Error('invalidOrder');
         }
-        if (!this.rule[this.__control].message) {
-            this.rule[this.__control].message = {};
+        if (!this.rule[this.currentKey].message) {
+            this.rule[this.currentKey].message = {};
         }
-        this.rule[this.__control].message[lan] = mes;
-    };
+        this.rule[this.currentKey].message[lan] = mes;
+    }
     function attrPrepare(fn) {
         if (!fn || typeof(fn) !== 'function') {
             throw new Error('invalidParameter');
         }
-        if (!this.rule[this.__control]) {
+        if (!this.rule[this.currentKey]) {
             throw new Error('invalidOrder');
         }
-        this.rule[this.__control].prepare = fn;
+        this.rule[this.currentKey].prepare = fn;
     }
     function attrValidate(fn) {
         if (!fn || typeof(fn) !== 'function') {
             throw new Error('invalidParameter');
         }
-        if (!this.rule[this.__control]) {
+        if (!this.rule[this.currentKey]) {
             throw new Error('invalidOrder');
         }
-        this.rule[this.__control].validate = fn;
+        this.rule[this.currentKey].validate = fn;
     }
     function strType(type) {
         if (type === Number) {
@@ -155,7 +156,7 @@ exports.Schema = function(fn) {
             return '[object Boolean]';
         }
         else {
-            null;
+            return null;
         }
     }
     function setPrefix(prefix) {
