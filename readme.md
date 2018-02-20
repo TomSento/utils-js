@@ -64,7 +64,7 @@ Compiler writes output to [`dist/utils.git.js`](https://github.com/tomas-sentker
 - Keep utils structure flat.
 - Avoid creating objects to wrap your utils.
 - Use build in `malloc` cache or custom cache implementation to store data. This makes data available inside function body even when function is called multiple times.
-- Build in `malloc` cache uses prefix to specify utilities group. e.g see `utils/browser/dom.js`.
+- Build in `malloc` cache uses prefix to specify utilities group. e.g see [`utils/browser/dom.js`](https://github.com/tomas-sentkeresty/utilizer-js/blob/master/utils/browser/dom.js).
 
 ## COMPILE
 Compile all utility functions:
