@@ -23,7 +23,7 @@ var U = {
 }
 ```
 
-Compiler writes output to `dist/utils.git.js` file.
+Compiler writes output to [`dist/utils.git.js`](https://github.com/tomas-sentkeresty/utilizer-js/blob/master/dist/utils.git.js) file.
 
 ## PROS
 **Lightweight**
