@@ -66,7 +66,7 @@ exports.objKeys = function(obj) {
     var keys = [];
     var k;
     for (k in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+        if (obj.hasOwnProperty(k)) {
             keys.push(k);
         }
     }
@@ -75,7 +75,7 @@ exports.objKeys = function(obj) {
 exports.objForIn = function(obj, fn) {
     var i = 0;
     for (var k in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+        if (obj.hasOwnProperty(k)) {
             fn(k, obj[k], i);
             i++;
         }
@@ -84,7 +84,7 @@ exports.objForIn = function(obj, fn) {
 exports.objToQueryStr = function(obj) {
     var arr = [];
     for (var k in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+        if (obj.hasOwnProperty(k)) {
             var v = encodeVal(obj[k]);
             k = encodeURIComponent(k);
             if (k && v) {

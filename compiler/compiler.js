@@ -115,7 +115,7 @@ function compileModuleObjectValue(obj, accessVariable) { // REKURZIA
     var len = Object.keys(obj).length;
     var i = 0;
     for (var k in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+        if (obj.hasOwnProperty(k)) {
             i++;
             var v = obj[k];
             v = compileModuleValue(k, v, accessVariable);

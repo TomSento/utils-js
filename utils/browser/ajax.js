@@ -36,7 +36,7 @@ exports.ajax = function(obj) {
     };
     xhr.open(obj.method, obj.url, true);
     for (var k in obj.header) {
-        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+        if (obj.hasOwnProperty(k)) {
             var v = obj.header[k];
             xhr.setRequestHeader(k, v);
         }

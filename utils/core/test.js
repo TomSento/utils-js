@@ -302,7 +302,7 @@ exports.test = function(k, fn, maxTimeout) {
                 var passed = 0;
                 var failed = 0;
                 for (var k in results) {
-                    if (Object.prototype.hasOwnProperty.call(results, k)) {
+                    if (results.hasOwnProperty(k)) {
                         var v = results[k];
                         if (v.passed) {
                             passed++;
@@ -367,7 +367,7 @@ exports.test = function(k, fn, maxTimeout) {
                 var self = this;
                 var i = 0;
                 for (var k in results.results) {
-                    if (Object.prototype.hasOwnProperty.call(results.results, k)) {
+                    if (results.results.hasOwnProperty(k)) {
                         self.logTestResult(i, k, results.results[k].results);
                         i++;
                     }

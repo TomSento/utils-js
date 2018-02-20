@@ -18,12 +18,7 @@
             "error",
             "multi-line"
         ],
-        "default-case": [
-            "error",
-            {
-                "commentPattern": "^no default$"
-            }
-        ],
+        "default-case": "off",
         "dot-notation": "warn",
         "dot-location": [
             "error",
@@ -54,12 +49,7 @@
         "no-extra-label": "error",
         "no-fallthrough": "error",
         "no-floating-decimal": "error",
-        "no-global-assign": [
-            "error",
-            {
-                "exceptions": []
-            }
-        ],
+        "no-global-assign": "off",
         "no-native-reassign": "off",
         "no-implicit-coercion": [
             "off",
@@ -196,7 +186,7 @@
         "no-template-curly-in-string": "error",
         "no-sparse-arrays": "error",
         "no-regex-spaces": "error",
-        "no-prototype-builtins": "error",
+        "no-prototype-builtins": "off",
         "no-obj-calls": "error",
         "no-irregular-whitespace": "error",
         "no-invalid-regexp": "error",
@@ -351,7 +341,7 @@
             "as-needed",
             {
                 "keywords": false,
-                "unnecessary": true,
+                "unnecessary": false,
                 "numbers": false
             }
         ],
@@ -607,7 +597,10 @@
         ],
         "indent": [
             "error",
-            4
+            4,
+            {
+                "SwitchCase": 1
+            }
         ],
         "id-match": "off",
         "id-length": "off",
@@ -769,10 +762,7 @@
             }
         ],
         "prefer-arrow-callback": "off",
-        "object-shorthand": [
-            "error",
-            "never"
-        ],
+        "object-shorthand": "off",
         "no-var": "off",
         "no-useless-rename": [
             "error",
