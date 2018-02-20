@@ -3,6 +3,14 @@ exports.logPrefix = function(str) {
     var c = exports.malloc('__LOG');
     c('prefix', str);
 };
+exports.log = function(/* ...args */) {
+    var cache = exports.malloc('__LOG');
+    var args = [].slice.call(arguments);
+    if (cache('prefix')) {
+        args.unshift(cache('prefix') + ':');
+    }
+    console.log.apply(null, args);
+};
 exports.logDebug = function(/* ...args */) {
     var cache = exports.malloc('__LOG');
     var args = [].slice.call(arguments);
@@ -25,12 +33,4 @@ exports.logError = function(/* ...args */) {
         args.unshift(cache('prefix') + ':');
     }
     console.error.apply(null, args);
-};
-exports.log = function(/* ...args */) {
-    var cache = exports.malloc('__LOG');
-    var args = [].slice.call(arguments);
-    if (cache('prefix')) {
-        args.unshift(cache('prefix') + ':');
-    }
-    console.log.apply(null, args);
 };
