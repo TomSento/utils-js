@@ -10,7 +10,7 @@ exports.genUID = function() {
         day,
         h,
         min,
-        exports.SID(3)
+        exports.genSID(3)
     ];
     return arr.join('-');
     function twoPlaces(v) {
