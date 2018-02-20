@@ -20,7 +20,7 @@ exports.strHyphenize = function(str) {
     if (typeof(str) !== 'string') {
         return null;
     }
-    return str.replace(/\B([A-Z])/g, function (g) {
+    return str.replace(/\B([A-Z])/g, function(g) {
         return ('-' + g[0]);
     }).toLowerCase();
 };
@@ -96,7 +96,9 @@ exports.strHTML = function(tag, obj) {
     function stylesAsStr(obj) {
         var str = '';
         for (var k in obj) {
-            str += exports.strHyphenize(k) + ':' + obj[k] + ';';
+            if (obj.hasOwnProperty(k)) {
+                str += exports.strHyphenize(k) + ':' + obj[k] + ';';
+            }
         }
         return (str.length > 0) ? (' style="' + str + '"') : '';
     }
@@ -106,7 +108,7 @@ exports.strStripHTML = function(str) {
     var map = {
         'nbsp': ' ',
         'amp': '&',
-        'quot': '\"',
+        'quot': '"',
         'lt': '<',
         'gt': '>'
     };
@@ -117,7 +119,7 @@ exports.strStripHTML = function(str) {
 exports.strToHTMLText = function(str, leftStartWithNBPS, leftRevResult, rightStartWithNBPS, rightRevResult) {
     var map = {
         '&': 'amp',
-        '\"': 'quot',
+        '"': 'quot',
         '<': 'lt',
         '>': 'gt'
     };
@@ -134,7 +136,8 @@ exports.strToHTMLText = function(str, leftStartWithNBPS, leftRevResult, rightSta
     return str;
     function replaceMultipleWhitespacesBetweenChars(str) {
         var exp = /[^\s](\s+)[^\s]/g;
-        while ((match = exp.exec(str)) != null) {
+        var match = null;
+        while (match = exp.exec(str)) {
             if (Array.isArray(match)) {
                 exp.lastIndex -= 1; // MATCH OVERLAPS
                 var i = match.index + 1;
@@ -148,11 +151,16 @@ exports.strToHTMLText = function(str, leftStartWithNBPS, leftRevResult, rightSta
     function generateSpaces(len, startWithNBPS, revResult) {
         var arr = [];
         for (var i = 0; i < len; i++) {
-            arr[i] = (i % 2 == 0) ? (startWithNBPS ? '&nbsp;' : ' ') : (startWithNBPS ? ' ' : '&nbsp;');
+            if (i % 2 === 0) {
+                arr[i] = startWithNBPS ? '&nbsp;' : ' ';
+            }
+            else {
+                arr[i] = startWithNBPS ? ' ' : '&nbsp;';
+            }
         }
         return revResult ? arr.reverse().join('') : arr.join('');
-    };
-},
+    }
+};
 exports.strStripWhitespaces = function(str) {
     return typeof(str) === 'string' ? str.replace(/\s+/, '') : '';
 };
@@ -1003,7 +1011,7 @@ exports.strRemoveDiacritics = function(str) {
         '\u0225': 'z',
         '\u0240': 'z',
         '\u2c6c': 'z',
-        '\ua763': 'z',
+        '\ua763': 'z'
     };
     var expDiacritics = /[^\u0000-\u007e]/g;
     return str.replace(expDiacritics, function(ch) {

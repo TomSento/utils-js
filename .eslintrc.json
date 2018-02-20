@@ -215,10 +215,7 @@
         "no-control-regex": "error",
         "no-constant-condition": "warn",
         "no-console": "warn",
-        "no-cond-assign": [
-            "error",
-            "always"
-        ],
+        "no-cond-assign": "off",
         "no-compare-neg-zero": "error",
         "no-await-in-loop": "error",
         "getter-return": [
