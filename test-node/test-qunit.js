@@ -2,10 +2,11 @@ var QUnit = require('qunit');
 
 QUnit.test('errorBuilder.getData()', function(assert) {
     var done = assert.async(2);
+    assert.expect(5);
     setTimeout(function() {
         assert.ok(true, 'Should 1');
         assert.ok(true, 'Should 2');
-        throw new Error('testError');
+        // throw new Error('testError');
         done();
     }, 2000);
     setTimeout(function() {

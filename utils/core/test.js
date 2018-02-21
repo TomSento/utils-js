@@ -166,20 +166,25 @@ exports.test = function(k, fn, maxTimeout) {
             self.assert = new Assert(k, emitter);
             self.maxTimeout = maxTimeout || 20000;
             self.execTime = 0;
-            self.interval = setInterval(function() {
-                self.execTime += 500;
-            }, 500);
+            self.startInterval = function() {
+                self.interval = setInterval(function() {
+                    self.execTime += 500;
+                    if (self.execTime >= self.maxTimeout) {
+                        var err = new Error("Test '" + self.id + "' exceeded maxTimeout " + self.maxTimeout + 'ms.');
+                        return self.emitter.trigger('error', [err, 'timingError']);
+                    }
+                }, 500);
+            };
             self.runNextTest = function() {
                 clearInterval(self.interval);
-                if (self.execTime > self.maxTimeout) {
-                    return self.emitter.trigger('error', [new Error('execTimeExceeded'), 'testError']);
-                }
+                self.assert.onTestEnd();
                 self.emitter.trigger('runNextTest');
             };
         };
         Co.prototype = {
             run: function() {
                 var self = this;
+                self.startInterval();
                 try {
                     self.fn(self.assert);
                 }
@@ -209,11 +214,21 @@ exports.test = function(k, fn, maxTimeout) {
             self.emitter = emitter;
             self.isAsync = false;
             self.callbackCounter = -1;
-            // self.assertionCounter = -1; // NUMBER OF ASSERTIONS FOR ONE TEST - V2
+            self.expectedAssertions = 0;
+            self.assertionCounter = 0;
             self.callback = function() { // ASYNC TEST CALLBACK(S)
                 self.callbackCounter--;
                 if (self.callbackCounter === 0) {
                     self.emitter.trigger('assert.asyncTestEnded');
+                }
+            };
+            self.onTestEnd = function() {
+                if (self.expectedAssertions > 0 && self.expectedAssertions !== self.assertionCounter) {
+                    var b = 'Expected ' + self.expectedAssertions;
+                    b += self.expectedAssertions === 1 ? ' assertion' : ' assertions';
+                    b += ', but ' + self.assertionCounter;
+                    b += self.assertionCounter === 1 ? ' was run.' : ' were run.';
+                    self.emitter.trigger('assert.result', self.composeAssertionResult(b, undefined, null, new Error('assert.notOk')));
                 }
             };
             self.composeAssertionResult = function(msg, expected, actual, err) {
@@ -229,6 +244,7 @@ exports.test = function(k, fn, maxTimeout) {
         Co.prototype = {
             ok: function(bool, msg) {
                 var self = this;
+                self.assertionCounter++;
                 if (bool) {
                     return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, true, true, null));
                 }
@@ -238,6 +254,7 @@ exports.test = function(k, fn, maxTimeout) {
             },
             notOk: function(bool, msg) {
                 var self = this;
+                self.assertionCounter++;
                 if (!bool) {
                     return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, false, false, null));
                 }
@@ -247,17 +264,20 @@ exports.test = function(k, fn, maxTimeout) {
             },
             async: function(expectedCallbacks) {
                 var self = this;
-                if (expectedCallbacks <= 0) {
+                if (isNaN(parseInt(expectedCallbacks)) || expectedCallbacks <= 0) {
                     throw new Error('invalidParameter');
                 }
                 self.isAsync = true;
                 self.callbackCounter = expectedCallbacks;
                 return self.callback;
+            },
+            expect: function(expectedAssertions) {
+                var self = this;
+                if (isNaN(parseInt(expectedAssertions)) || expectedAssertions <= 0) {
+                    throw new Error('invalidParameter');
+                }
+                self.expectedAssertions = expectedAssertions;
             }
-            // expect: function(expectedAssertions) { V2
-            //     console.log('--> EXPECT');
-            //     self.assertionCounter = expectedAssertions;
-            // },
         };
         return new Co();
     }
