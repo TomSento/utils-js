@@ -334,31 +334,6 @@ exports.test = function(k, fn, maxTimeout) {
                 }
                 return self.composeResultsForLogger(results, passed, failed);
             };
-        };
-        Co.prototype = {
-            logResults: function(results) {
-                var self = this;
-                results = self.prepareResults(results);
-                var i = 0;
-                for (var k in results.results) {
-                    if (results.results.hasOwnProperty(k)) {
-                        self.logger.logTestResult(i, k, results.results[k].results);
-                        i++;
-                    }
-                }
-                self.logger.logFooter(results);
-            }
-        };
-        return new Co();
-    }
-    function BrowserLogger() {
-        var Co = function() {
-        };
-        return new Co();
-    }
-    function NodeLogger() {
-        var Co = function() {
-            var self = this;
             self.getAssertErrorsStr = function(results) {
                 var b = '';
                 for (var i = 0; i < results.length; i++) {
@@ -377,12 +352,99 @@ exports.test = function(k, fn, maxTimeout) {
             };
         };
         Co.prototype = {
+            logResults: function(results) {
+                var self = this;
+                results = self.prepareResults(results);
+                var i = 0;
+                for (var k in results.results) {
+                    if (results.results.hasOwnProperty(k)) {
+                        self.logger.logTestResult(i, k, results.results[k].results, self.getAssertErrorsStr);
+                        i++;
+                    }
+                }
+                self.logger.logFooter(results);
+            }
+        };
+        return new Co();
+    }
+    function BrowserLogger() {
+        var Co = function() {
+            var self = this;
+            self.domReady = function(fn) {
+                var d = document;
+                if (d.readyState === 'complete' || d.readyState !== 'loading') {
+                    fn();
+                }
+                else {
+                    d.addEventListener('DOMContentLoaded', fn);
+                }
+            };
+        };
+        Co.prototype = {
+            initialLog: function() {
+                var self = this;
+                self.domReady(function() {
+                    var d = document;
+                    var el = d.getElementById('tests');
+                    if (!el) {
+                        el = d.createElement('div');
+                        el.setAttribute('id', 'tests');
+                        el.style.fontFamily = '"Courier New", Courier, monospace';
+                        el.style.fontSize = 12 + 'px';
+                    }
+                    var line = d.createElement('div');
+                    line.textContent = 'TAP version 13';
+                    el.appendChild(line);
+                    var body = d.querySelector('body');
+                    if (body) {
+                        body.appendChild(el);
+                    }
+                });
+            },
+            logTestResult: function(i, testName, results, getAssertErrorsStr) {
+                var d = document;
+                results = getAssertErrorsStr(results);
+                var el = d.createElement('div');
+                if (results) {
+                    el.style.color = 'red';
+                    el.textContent = 'not ok ' + (i + 1) + ' ' + testName;
+                    d.getElementById('tests').append(el);
+                    el = d.createElement('pre');
+                    el.style.margin = '0 0 15px 0';
+                    el.style.fontFamily = 'inherit';
+                    el.textContent = results;
+                    d.getElementById('tests').append(el);
+                }
+                else {
+                    el.textContent = 'ok ' + (i + 1) + ' ' + testName;
+                    d.getElementById('tests').append(el);
+                }
+            },
+            logFooter: function(results) {
+                var d = document;
+                var el = d.createElement('div');
+                el.textContent = '1..' + (results.passed + results.failed);
+                d.getElementById('tests').append(el);
+                el = d.createElement('div');
+                el.textContent = '# pass ' + results.passed;
+                d.getElementById('tests').append(el);
+                el = d.createElement('div');
+                el.style.color = 'red';
+                el.textContent = '# fail ' + results.failed;
+                d.getElementById('tests').append(el);
+            }
+        };
+        return new Co();
+    }
+    function NodeLogger() {
+        var Co = function() {
+        };
+        Co.prototype = {
             initialLog: function() {
                 console.log('TAP version 13');
             },
-            logTestResult: function(i, testName, results) {
-                var self = this;
-                results = self.getAssertErrorsStr(results);
+            logTestResult: function(i, testName, results, getAssertErrorsStr) {
+                results = getAssertErrorsStr(results);
                 if (results) {
                     console.log('\x1b[31mnot ok ' + (i + 1) + ' ' + testName + '\x1b[0m');
                     console.log(results);

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>core-test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../dist/utils.git.js"></script>
+    <script>
+        U.domReady(function() {
+            U.test('errorBuilder.getData()', function(assert) {
+                var done = assert.async(2);
+                assert.expect(4);
+                setTimeout(function() {
+                    assert.ok(true, 'ASSERT0');
+                    assert.notOk(true, 'ASSERT1');
+                    done();
+                }, 15000);
+                setTimeout(function() {
+                    assert.ok(true, 'ASSERT2');
+                    assert.notOk(true, 'ASSERT3');
+                    done();
+                }, 18500);
+            }, 18000);
+            U.test('errorBuilder.getData().setName()', function(assert) {
+                assert.expect(1);
+                assert.ok(true, 'ASSERT4');
+            });
+            U.test('errorBuilder.getData().getAge()', function(assert) {
+                assert.ok(true, 'ASSERT5');
+            });
+        });
+    </script>
+</head>
+<body></body>
+</html>

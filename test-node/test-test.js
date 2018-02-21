@@ -5,13 +5,13 @@ U.test('errorBuilder.getData()', function(assert) {
     assert.expect(4);
     // throw new Error('aaaa');
     setTimeout(function() {
-        // assert.ok(true, 'ASSERT0');
-        // assert.notOk(true, 'ASSERT1');
+        assert.ok(true, 'ASSERT0');
+        assert.notOk(true, 'ASSERT1');
         done();
     }, 15000);
     setTimeout(function() {
         assert.ok(true, 'ASSERT2');
-        // assert.notOk(true, 'ASSERT3');
+        assert.notOk(true, 'ASSERT3');
         done();
     }, 17000);
 }, 17000);
