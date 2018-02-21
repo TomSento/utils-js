@@ -408,30 +408,30 @@ exports.test = function(k, fn, maxTimeout) {
                 if (results) {
                     el.style.color = 'red';
                     el.textContent = 'not ok ' + (i + 1) + ' ' + testName;
-                    d.getElementById('tests').append(el);
+                    d.getElementById('tests').appendChild(el);
                     el = d.createElement('pre');
                     el.style.margin = '0 0 15px 0';
                     el.style.fontFamily = 'inherit';
                     el.textContent = results;
-                    d.getElementById('tests').append(el);
+                    d.getElementById('tests').appendChild(el);
                 }
                 else {
                     el.textContent = 'ok ' + (i + 1) + ' ' + testName;
-                    d.getElementById('tests').append(el);
+                    d.getElementById('tests').appendChild(el);
                 }
             },
             logFooter: function(results) {
                 var d = document;
                 var el = d.createElement('div');
                 el.textContent = '1..' + (results.passed + results.failed);
-                d.getElementById('tests').append(el);
+                d.getElementById('tests').appendChild(el);
                 el = d.createElement('div');
                 el.textContent = '# pass ' + results.passed;
-                d.getElementById('tests').append(el);
+                d.getElementById('tests').appendChild(el);
                 el = d.createElement('div');
                 el.style.color = 'red';
                 el.textContent = '# fail ' + results.failed;
-                d.getElementById('tests').append(el);
+                d.getElementById('tests').appendChild(el);
             }
         };
         return new Co();
