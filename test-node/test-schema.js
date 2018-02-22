@@ -1,6 +1,6 @@
 var U = require('../dist/utils.git');
 
-var SchemaOne = U.Schema(function(attr, attrError, attrPrepare, attrValidate, func, funcError) {
+U.SETSCHEMA('User', function(attr, attrError, attrPrepare, attrValidate, func, funcError) {
     attr('name', String);
     attrValidate(function(v, typeMatch) {
         return typeMatch && v.length > 5;
@@ -34,14 +34,14 @@ var SchemaOne = U.Schema(function(attr, attrError, attrPrepare, attrValidate, fu
 var obj = {
     name: 'Tomas',
     // surname: undefined,
-    projects: []
+    projects: [1]
     // getName: function() {}
 };
-var errors = SchemaOne.prepareAndValidate(obj, 'SK');
+var errors = U.GETSCHEMA('User').prepareAndValidate(obj, 'SK');
 U.log('errors default sk locale: ', errors);
 if (errors.hasError()) {
     // errors.throwFirst();
 }
 U.log('before normalize: ', obj);
-var norm = SchemaOne.normalize(obj);
+var norm = U.GETSCHEMA('User').normalize(obj);
 U.log('normalized: ', norm);

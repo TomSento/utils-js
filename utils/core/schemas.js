@@ -1,4 +1,10 @@
-exports.Schema = function(fn) {
+exports.SETSCHEMA = function(k, fn) {
+    if (!k || typeof(k) !== 'string') {
+        throw new Error('invalidParameter');
+    }
+    if (typeof(fn) !== 'function') {
+        throw new Error('invalidParameter');
+    }
     var Co = function(fn) {
         this.rule = {};
         this.prefix = '';
@@ -162,5 +168,16 @@ exports.Schema = function(fn) {
     function setPrefix(prefix) {
         this.prefix = prefix;
     }
-    return new Co(fn);
+    var cache = exports.malloc('__SCHEMA');
+    if (cache(k)) {
+        throw new Error("Duplicate schema: '" + k + "'.");
+    }
+    cache(k, new Co(fn));
+};
+exports.GETSCHEMA = function(k) {
+    if (!k || typeof(k) !== 'string') {
+        throw new Error('invalidParameter');
+    }
+    var cache = exports.malloc('__SCHEMA');
+    return cache(k) || null;
 };
