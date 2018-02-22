@@ -4,15 +4,17 @@
         <title></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="../utils.min.js"></script>
+        <script src="../dist/utils.git.js"></script>
     </head>
     <script>
         U.log('Testing serial flow.');
         var proc = U.procSerial();
         proc.push(function(id, next) {
-            this.result.userA = {
-                id: id,
-                name: 'Tomas'
+            this.result = {
+                userA: {
+                    id: id,
+                    name: 'Tomas'
+                }
             };
             return next(null, -1);
         }, 1);
@@ -41,8 +43,8 @@
                 return next(null);
             }, 1000);
         }, 2);
-        proc.run(function(err, result) {
-            U.logDebug('RESULT: ', result);
+        proc.run(function(err) {
+            U.logDebug('RESULT: ', this.result);
             if (err) {
                 return err.logAndThrow();
             }

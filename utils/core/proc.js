@@ -1,10 +1,8 @@
-exports.procSerial = function(obj) {
-    var Co = function(obj) {
+exports.procSerial = function() {
+    var Co = function() {
         var self = this;
         self.queue = [];
-        self.ctx = {
-            result: typeof(obj) === 'object' ? obj : {}
-        };
+        self.ctx = {};
     };
     Co.prototype.push = function(fn/* , ...args */) {
         var self = this;
@@ -19,7 +17,7 @@ exports.procSerial = function(obj) {
         (function loop(i, args) {
             var obj = self.queue[i];
             if (!obj) {
-                return endFN && endFN(null, self.ctx.result);
+                return endFN && endFN.call(self.ctx, null);
             }
             if (i === 0 || (Array.isArray(obj.args) && obj.args.length > 0)) {
                 obj.args.push(next);
@@ -33,7 +31,7 @@ exports.procSerial = function(obj) {
                 var args = (arguments && arguments.length > 0) ? [].slice.call(arguments) : [];
                 var err = args.shift();
                 if (err) {
-                    return endFN && endFN(err, self.ctx.result);
+                    return endFN && endFN.call(self.ctx, err);
                 }
                 if (typeof(setImmediate) === 'function') {
                     setImmediate(function() {
@@ -46,5 +44,5 @@ exports.procSerial = function(obj) {
             }
         }(0));
     };
-    return new Co(obj);
+    return new Co();
 };
