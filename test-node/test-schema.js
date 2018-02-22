@@ -37,11 +37,11 @@ var obj = {
     projects: [1]
     // getName: function() {}
 };
-var errors = U.GETSCHEMA('User').prepareAndValidate(obj, 'SK');
+var errors = U.SCHEMA('User').prepareAndValidate(obj, 'SK');
 U.log('errors default sk locale: ', errors);
 if (errors.hasError()) {
     // errors.throwFirst();
 }
 U.log('before normalize: ', obj);
-var norm = U.GETSCHEMA('User').normalize(obj);
+var norm = U.SCHEMA('User').normalize(obj);
 U.log('normalized: ', norm);

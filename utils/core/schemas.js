@@ -174,7 +174,7 @@ exports.SETSCHEMA = function(k, fn) {
     }
     cache(k, new Co(fn));
 };
-exports.GETSCHEMA = function(k) {
+exports.SCHEMA = function(k) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('invalidParameter');
     }
