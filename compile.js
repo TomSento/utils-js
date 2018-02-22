@@ -13,6 +13,7 @@ var files = [
     'utils/primitives/number.js',
     'utils/core/errors.js',
     'utils/core/schemas.js',
+    'utils/core/modules.js',
     'utils/core/proc.js',
     'utils/browser/ajax.js',
     'utils/browser/dom.js'
