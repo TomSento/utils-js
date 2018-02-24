@@ -25,12 +25,19 @@ exports.compileUtils = function(version, filePaths, accessVariable, keys, out) {
     var b = toBundleStr(o, keys, accessVariable, accKeys);
     var code = fs.readFileSync(path.join(__dirname, 'template.js'), 'utf8');
     code = code.replace(/ACCESS_VAR/g, accessVariable);
-    code = code.replace(/^\s*UTILS/m, b);
+    code = replaceUtils(code, b);
     code = code.replace(/\{0\}/, v);
     code = code.replace(/\{1\}/, accKeys.join(','));
     fs.writeFileSync(out, code);
     endLog(out, start, code);
 };
+function replaceUtils(code, utils) { // CODE CAN CONTAIN SPECIAL CHARS LIKE $ WHICH HAVE TO BE REPLACED WITH $$, THEREFORE SAFER AND SIMPLER SPLIT METHOD IS USED.
+    var arr = code.split(/^\s*UTILS/m);
+    if (!Array.isArray(arr) || arr.length !== 2) {
+        throw new Error("Missing 'UTILS' in template.");
+    }
+    return [arr[0], utils, arr[1]].join('');
+}
 function normalizePaths(filePaths) {
     return filePaths.map(function(filePath) {
         return path.resolve(filePath);
