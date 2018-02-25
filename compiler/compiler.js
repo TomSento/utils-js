@@ -91,17 +91,17 @@ function toBundleStr(obj, keys, accessVariable, accKeys) {
             }
             accKeys.push(k);
             var v = obj[k];
-            b += '    ' + k + ': ' + compileModuleValue(k, v, accessVariable) + ',\n';
+            b += accessVariable + '.' + k + ' = ' + compileModuleValue(k, v, accessVariable) + ';\n';
         }
     }
-    return b ? b.slice(0, -2) : '';
+    return b ? b.slice(0, -1) : '';
 }
 function compileModuleValue(key, value, accessVariable) {
     if (!value) {
         return value;
     }
     if (typeof(value) === 'function') {
-        return stringifyScript(value.toString(), accessVariable);
+        return stringifyScript(fnToStr(value, accessVariable), accessVariable);
     }
     else if (typeof(value) === 'object') {
         return compileModuleObjectValue(value);
@@ -153,4 +153,22 @@ function stringifyScript(input, accessVariable) {
         }
         return result;
     });
+}
+function fnToStr(fn, accessVariable) {
+    var b = fn.toString();
+    var len = Object.keys(fn.prototype).length;
+    if (len > 0) {
+        var proto = '';
+        for (var k in fn.prototype) {
+            if (fn.prototype.hasOwnProperty(k)) {
+                var v = fn.prototype[k];
+                proto += k + ':' + v + ',';
+            }
+        }
+        if (proto) {
+            proto = proto.slice(0, -1);
+            b += ';' + accessVariable + '.' + fn.name + '.prototype={' + proto + '}';
+        }
+    }
+    return b;
 }
