@@ -101,7 +101,7 @@ function compileModuleValue(key, value, accessVariable) {
         return value;
     }
     if (typeof(value) === 'function') {
-        return stringifyScript(fnToStr(value, accessVariable), accessVariable);
+        return stringifyScript(fnToStr(key, value, accessVariable), accessVariable);
     }
     else if (typeof(value) === 'object') {
         return compileModuleObjectValue(value);
@@ -154,7 +154,7 @@ function stringifyScript(input, accessVariable) {
         return result;
     });
 }
-function fnToStr(fn, accessVariable) {
+function fnToStr(key, fn, accessVariable) {
     var b = fn.toString();
     var len = Object.keys(fn.prototype).length;
     if (len > 0) {
@@ -167,7 +167,7 @@ function fnToStr(fn, accessVariable) {
         }
         if (proto) {
             proto = proto.slice(0, -1);
-            b += ';' + accessVariable + '.' + fn.name + '.prototype={' + proto + '}';
+            b += ';' + accessVariable + '.' + key + '.prototype={' + proto + '}';
         }
     }
     return b;

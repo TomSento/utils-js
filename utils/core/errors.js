@@ -4,121 +4,145 @@
  * Error passed: Set error.id = problem.message.
  * String passed: Set error.id = problem.
  */
-exports.error = function(problem, message) {
-    var Co = function(problem, message) {
-        if (!problem) {
-            throw new Error('invalidParameter');
-        }
+function Error2(problem, message) {
+    if (problem) {
         if (problem instanceof Error) {
             this.id = problem.message;
+            this.message = message || null;
         }
-        else if (typeof(problem) == 'string') {
+        else if (typeof(problem) === 'string') {
             this.id = problem;
+            this.message = message || null;
         }
         else {
             throw new Error('invalidParameter');
         }
-        this.message = message || null;
-    };
-    Co.prototype = {
-        log: function() {
-            var str = this.id;
-            if (this.message) {
-                str += ': ' + this.message;
-            }
-            exports.logWarn(str);
-        },
-        throw: function() {
-            throw new Error(this.id);
-        },
-        logAndThrow: function() {
-            this.log();
-            this.throw();
-        },
-        toString: function() {
-            return JSON.stringify(this, null, '    ');
+    }
+    else {
+        throw new Error('invalidParameter');
+    }
+}
+Error2.prototype = {
+    log: function() {
+        var str = this.id;
+        if (this.message) {
+            str += ': ' + this.message;
         }
-    };
-    return new Co(problem, message);
+        exports.logWarn(str);
+    },
+    throw: function() {
+        throw new Error(this.id);
+    },
+    logAndThrow: function() {
+        this.log();
+        this.throw();
+    },
+    toString: function() {
+        return JSON.stringify(this, null, '    ');
+    }
 };
-exports.ErrorBuilder = function(errors) {
-    var Co = function(errors) {
-        if (errors) {
-            if (!Array.isArray(errors)) {
-                throw new Error('invalidParameter');
-            }
-            for (var i = 0; i < errors.length; i++) {
-                if (!errors[i] || !errors[i].id) {
-                    throw new Error('invalidParameter');
-                }
-            }
+exports.Error = Error2;
+function ErrorBuilder(err) {
+    if (err) {
+        if (typeof(err) === 'string') {
+            this.errors = [new exports.Error(err)];
         }
-        this.errors = errors || [];
-    };
-    Co.prototype = {
-        push: function(err) {
-            if (err instanceof Error) {
-                err = exports.error(err.message);
-            }
-            this.errors.push(err);
-        },
-        remove: function(id) {
-            var arr = this.errors;
-            var i = -1;
-            for (var j = 0; j < arr.length; j++) {
-                if (arr[j].id == id) {
-                    i = j;
-                }
-            }
-            if (i >= 0) {
-                arr.splice(i, 1);
-            }
-        },
-        clear: function() {
-            this.errors = [];
-        },
-        first: function() {
-            return this.errors[0] || null;
-        },
-        last: function() {
-            return this.errors[this.errors.length - 1] || null;
-        },
-        toString: function() {
-            return JSON.stringify(this, null, '    ');
-        },
-        hasError: function(id) {
-            var arr = this.errors;
-            if (id) {
-                for (var i = 0; i < arr.length; i++) {
-                    if (arr[i] && arr[i].id == id) {
-                        return true;
+        else if (err instanceof exports.Error) {
+            this.errors = [err];
+        }
+        else if (Array.isArray(err)) {
+            var len = err.length;
+            if (len > 0) {
+                for (var i = 0; i < len; i++) {
+                    var v = err[i];
+                    if (!v || !(v instanceof exports.Error)) {
+                        throw new Error('invalidParameter');
                     }
                 }
-                return false;
             }
-            return arr.length > 0;
-        },
-        throwFirst: function() {
-            var len = this.errors.length;
-            if (len == 0) {
-                throw new Error('emptyErrorBuilder');
-            }
-            this.errors[0].throw();
-        },
-        logFirst: function() {
-            var len = this.errors.length;
-            if (len == 0) {
-                throw new Error('emptyErrorBuilder');
-            }
-            this.errors[0].log();
-        },
-        logAndThrowFirst: function() {
-            var len = this.errors.length;
-            if (len == 0) {
-                throw new Error('emptyErrorBuilder');
-            }
-            this.errors[0].logAndThrow();
+            this.errors = err;
         }
-    };
-    return new Co(errors);
+        else if (err instanceof exports.ErrorBuilder) {
+            this.errors = err.errors;
+        }
+        else {
+            throw new Error('invalidParameter');
+        }
+    }
+    else {
+        this.errors = [];
+    }
+}
+ErrorBuilder.prototype = {
+    push: function(err) {
+        if (err instanceof Error) {
+            this.errors.push(new exports.Error(err.message));
+            return this;
+        }
+        else if (err instanceof exports.Error) {
+            this.errors.push(err);
+            return this;
+        }
+        else {
+            throw new Error('invalidParameter');
+        }
+    },
+    remove: function(id) {
+        var arr = this.errors;
+        var i = -1;
+        for (var j = 0; j < arr.length; j++) {
+            if (arr[j].id == id) {
+                i = j;
+            }
+        }
+        if (i >= 0) {
+            arr.splice(i, 1);
+        }
+    },
+    clear: function() {
+        this.errors = [];
+    },
+    first: function() {
+        return this.errors[0] || null;
+    },
+    last: function() {
+        return this.errors[this.errors.length - 1] || null;
+    },
+    toString: function() {
+        return JSON.stringify(this, null, '    ');
+    },
+    hasError: function(id) {
+        var arr = this.errors;
+        if (id) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] && arr[i].id == id) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return arr.length > 0;
+    },
+    throwFirst: function() {
+        var len = this.errors.length;
+        if (len == 0) {
+            throw new Error('emptyErrorBuilder');
+        }
+        this.errors[0].throw();
+    },
+    logFirst: function() {
+        var len = this.errors.length;
+        if (len == 0) {
+            throw new Error('emptyErrorBuilder');
+        }
+        this.errors[0].log();
+    },
+    logAndThrowFirst: function() {
+        var len = this.errors.length;
+        if (len == 0) {
+            throw new Error('emptyErrorBuilder');
+        }
+        this.errors[0].logAndThrow();
+    }
 };
+exports.ErrorBuilder = ErrorBuilder;
