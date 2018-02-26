@@ -79,6 +79,6 @@ exports.genIID = function(len) {
         c(prefix, {
             arr: arr
         });
-        return exports.IID(len);
+        return exports.genIID(len);
     }
 };
