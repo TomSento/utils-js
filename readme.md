@@ -7,8 +7,7 @@ JavaScript utilities storage
 
 ## FEATURES
 
-- Organize your utils in multiple files.
-- Compiles utils to single object, where each utility is single line of code:
+- **Compiles utils from multiple files to single object, where each utility is single line of code**
 
 ```javascript
 // COMPILE COMMAND COMMENT
