@@ -14,9 +14,8 @@ JavaScript utilities storage
 // COMPILE COMMAND COMMENT
 var U = {};
 // INTERNALS
-myUtil1(a,b): function(){}, // (function|string|number|object|date)
+U.myUtil1(a,b) = function(){};U.myUtil1.prototype={}; // (function|string|number|object|date)
 // MORE UTILS...
-}
 ```
 
 - Supports partial build with version checking and check if function is implemented or not.
