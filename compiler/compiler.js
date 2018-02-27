@@ -156,6 +156,7 @@ function stringifyScript(input, accessVariable) {
 }
 function fnToStr(key, fn, accessVariable) {
     var b = fn.toString();
+    b = 'function' + b.slice(b.match(/\(.*\)/).index); // REMOVE NAME FROM NAMED FUNCTION, E.G. Error2, ErrorBuilder ETC. FIXES FN NAME DISPLAYED IN BROWSER INSPECTOR
     var len = Object.keys(fn.prototype).length;
     if (len > 0) {
         var proto = '';
