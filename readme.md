@@ -8,22 +8,20 @@ JavaScript utilities storage
 ## FEATURES
 
 - Organize your utils in multiple files.
-- Compile utils to single object, where each utility is single line of code:
+- Compiles utils to single object, where each utility is single line of code:
 
 ```javascript
-var U = {
-    // INTERNALS START
-    // INTERNALS GOES HERE...
-    // INTERNALS END
-    // MY UTILS START
-    // MY UTILS GOES HERE...
-    myUtil1(a,b): function(){}, // (function|string|number|object|date)
-    // MY UTILS GOES HERE...
-    // MY UTILS END
+// COMPILE COMMAND COMMENT
+var U = {};
+// INTERNALS
+myUtil1(a,b): function(){}, // (function|string|number|object|date)
+// MORE UTILS...
 }
 ```
 
-Compiler writes output to [`dist/utils.git.js`](https://github.com/tomas-sentkeresty/utilizer-js/blob/master/dist/utils.git.js) file.
+- Supports partial build with version checking and check if function is implemented or not.
+- Builds `partial` and [`full build`](https://github.com/tomas-sentkeresty/utilizer-js/blob/master/dist/utils.git.js) under `./dist` folder at same moment
+- Supports function `prototyping`
 
 ## PROS
 **Lightweight**
