@@ -78,7 +78,7 @@ node compile
 ### CORE SET
 If you use included utils this is total minimum which must be always compiled:
 ```bash
-v=1.4.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError node compile
+v=1.5.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError node compile
 ```
 
 ### BASE SET
@@ -86,18 +86,18 @@ To compile more utilities append more util keys:
 > Order must be preserved.
 ##### \+ ERRORS *(OPTIONAL)*
 ```
-...,error,ErrorBuilder
+...,Error,ErrorBuilder
 ```
 ##### \+ SCHEMAS *(OPTIONAL)*
 ```
-...,Schema
+...,SETSCHEMA,SCHEMA
 ```
 ##### \+ PRIMITIVE UTILS *(OPTIONAL)*
 ##### \+ BROWSER UTILS *(OPTIONAL)*
 
 #### EXAMPLE
 ```bash
-v=1.4.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError,error,ErrorBuilder,Schema node compile
+v=1.5.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError,Error,ErrorBuilder,SETSCHEMA,SCHEMA node compile
 ```
 
 ### NOTES
