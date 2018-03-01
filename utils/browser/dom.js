@@ -1261,3 +1261,17 @@ exports.domRemove = function(sel) {
         el.parentNode.removeChild(el);
     }
 };
+exports.domScrollTo = function(sel) {
+    if (typeof(sel) === 'string') {
+        if (sel[0] !== '#') {
+            throw new Error('invalidParameter');
+        }
+    }
+    else if (!exports.domIsEl(sel)) {
+        throw new Error('invalidParameter');
+    }
+    var el = typeof(sel) === 'string' ? document.getElementById(sel.slice(1)) : sel;
+    if (el) {
+        el.scrollIntoView();
+    }
+};
