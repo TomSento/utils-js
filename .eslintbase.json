@@ -473,7 +473,7 @@
                 "allowSamePrecedence": false
             }
         ],
-        "no-lonely-if": "error",
+        "no-lonely-if": "off",
         "no-inline-comments": "off",
         "no-continue": "off",
         "no-bitwise": "error",
