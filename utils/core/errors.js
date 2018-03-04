@@ -44,7 +44,7 @@ Error2.prototype = {
 exports.Error = Error2;
 function ErrorBuilder(err) {
     if (err) {
-        if (typeof(err) === 'string') {
+        if (typeof(err) === 'string' || err instanceof Error) {
             this.errors = [new exports.Error(err)];
         }
         else if (err instanceof exports.Error) {
@@ -52,17 +52,29 @@ function ErrorBuilder(err) {
         }
         else if (Array.isArray(err)) {
             var len = err.length;
+            var arr = [];
             if (len > 0) {
                 for (var i = 0; i < len; i++) {
                     var v = err[i];
-                    if (!v || !(v instanceof exports.Error)) {
+                    if (v) {
+                        if (v instanceof exports.Error) {
+                            arr.push(v);
+                        }
+                        else if (v instanceof Error) {
+                            arr.push(new exports.Error(v));
+                        }
+                        else {
+                            throw new Error('invalidParameter');
+                        }
+                    }
+                    else {
                         throw new Error('invalidParameter');
                     }
                 }
             }
-            this.errors = err;
+            this.errors = arr;
         }
-        else if (err instanceof exports.ErrorBuilder) {
+        else if (typeof(err) === 'object' && Array.isArray(err.errors)) {
             this.errors = err.errors;
         }
         else {
