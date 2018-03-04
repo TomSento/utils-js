@@ -16,7 +16,8 @@ var files = [
     'utils/core/modules.js',
     'utils/core/proc.js',
     'utils/browser/ajax.js',
-    'utils/browser/dom.js'
+    'utils/browser/dom.js',
+    'utils/browser/route0.js'
 ];
 compiler.compileUtils(v, files, 'U', keys, './dist/utils.js');
 compiler.compileUtils(v, files, 'U', null, './dist/utils.git.js');
