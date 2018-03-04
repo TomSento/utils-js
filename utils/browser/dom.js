@@ -1263,12 +1263,18 @@ exports.domRemove = function(sel) {
 };
 exports.domScrollTo = function(sel) {
     if (typeof(sel) === 'string') {
-        if (sel[0] !== '#') {
+        if (sel[0] !== '#' && sel[0] !== '.') {
+            sel = '#' + sel;
+        }
+        else {
             throw new Error('invalidParameter');
         }
     }
-    else if (!exports.domIsEl(sel)) {
+    else if (sel && !exports.domIsEl(sel)) {
         throw new Error('invalidParameter');
+    }
+    else if (!sel) {
+        return;
     }
     var el = typeof(sel) === 'string' ? document.getElementById(sel.slice(1)) : sel;
     if (el) {
