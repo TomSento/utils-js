@@ -153,7 +153,7 @@ exports.ROUTE0 = function(url, err) {
                 location.replace(''); // PREVENT DOUBLE RELOAD WHEN REDIRECTING FROM # TO ''. FORGET '#' HISTORY.
             }
             else {
-                return location.reload();
+                location.reload();
             }
         }
     }
