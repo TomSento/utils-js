@@ -3,56 +3,54 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>ROUTE0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../dist/utils.git.js"></script>
 </head>
 <body>
+    <!-- REQUIRED ELEMENT -->
     <div id="page"></div>
     <script>
-        U.SETROUTE0('#',            page0); // HOMEPAGE
-        U.SETROUTE0('#aaaa',        page1,   ['@aa', '@bb']);
-        // U.SETROUTE0('#aaaa~{id}',    page1,   ['@aa', '@bb']); // THIS WILL BE AUTOMATIC
-        U.SETROUTE0('#bbbb/{id}',   page2,   ['@aa'       ]);
-        U.SETROUTE0('#400',         err400);
-        U.SETROUTE0('#404',         err404);
-        U.SETROUTE0('#408',         err408);
-        U.SETROUTE0('#500',         err500);
-        // U.ROUTE0(); // USES #page AS PAGE WRAPPER ID
+        U.SETROUTE0('#',          page0); // HOMEPAGE
+        U.SETROUTE0('#aaaa',      page1); // ROUTE WITH THROWN ERROR
+        U.SETROUTE0('#bbbb',      page2); // ROUTE THAT TIMED OUT
+        U.SETROUTE0('#cccc/{id}', page3); // ROUTE WITH PARAMETERS
+        U.SETROUTE0('#dddd',      page4); // ANCHOR EXAMPLE: #aaaa~howto2
+        U.SETROUTE0('#400',       err400);
+        U.SETROUTE0('#404',       err404);
+        U.SETROUTE0('#408',       err408);
+        U.SETROUTE0('#500',       err500);
         function page0() {
             this.view('page0');
         }
         function page1() {
             this.view('page1');
-            U.domScrollTo(this.anchor);
+            var err = new U.ErrorBuilder().push(new U.Error('WTF2'));
+            this.throw404(err);
         }
         function page2(id) {
             var self = this;
-            console.log('ID:', id);
             setTimeout(function() {
-                self.view('<h1 id="howto1">#bbbb/{id}</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br><h1 id="howto2">#bbbb/{id}</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>');
+                self.view('page2');
             }, 12000);
-            // U.domScrollTo(this.anchor);
-            // setTimeout(function() {
-            //     var err = new U.ErrorBuilder().push(new U.Error('WTF2'));
-            //     self.throw404(err);
-            // }, 5000);
+        }
+        function page3(id) {
+            this.view('page3 with id: ' + id);
+        }
+        function page4(params) {
+            this.view('<h1 id="howto1">#bbbb/{id}</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br><h1 id="howto2">#bbbb/{id}</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>');
         }
         function err400() {
-            this.view('400');
-            console.log('CTRL_ERR:', this.err);
+            this.view('400: ' + JSON.stringify(this.err));
         }
         function err404() {
-            this.view('404');
-            console.log('CTRL_ERR', this.err);
+            this.view('404: ' + JSON.stringify(this.err));
         }
         function err408() {
-            this.view('408');
-            console.log('CTRL_ERR', this.err);
+            this.view('408: ' + JSON.stringify(this.err));
         }
         function err500() {
-            this.view('500');
-            console.log('CTRL_ERR', this.err);
+            this.view('500: ' + JSON.stringify(this.err));
         }
     </script>
 </body>
