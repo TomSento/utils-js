@@ -34,7 +34,7 @@ exports.SETROUTE0 = function(route, fn) {
     function composeRoute(route, fn) {
         return {
             route: route,
-            exp: new RegExp('^' + route.replace(/\//g, '\\/').replace(/{(\w+)}/g, '(\\w+)') + '$'),
+            exp: new RegExp('^' + route.replace(/{(\w+)}/g, '(\\w+)') + '$'),
             hasAnchor: route.split('~').length === 2,
             fn: fn
         };
@@ -95,7 +95,7 @@ exports.ROUTE0 = function(url, err) {
                 is = true;
                 var args = search.match(v.exp).slice(1);
                 var anchor = v.hasAnchor ? (args.pop() || null) : null; // FORCE TO NULL IF URL IS #users~
-                var controller = new exports.Controller0(v.route, query, args, anchor, err);
+                var controller = new exports.Controller0(v.route, args, anchor, query, err);
                 return invokeRoute(v.fn, controller, args);
             }
         }
@@ -119,17 +119,19 @@ exports.ROUTE0 = function(url, err) {
     }
     function getQueryObj(url) {
         url = url.replace(/\+/g, ' ');
-        var exp = /[?&]([^=#]+)=([^&#]*)/g;
+        var exp = /[?&]([^=]+)=([^&]*)/g;
         var o = {};
         var m = null;
         while (m = exp.exec(url)) {
-            var k = decodeURIComponent(m[1]);
-            var v = decodeURIComponent(m[2]);
-            o[k] = v;
+            var k = m[1] ? decodeURIComponent(m[1]) : '';
+            var v = m[2] ? decodeURIComponent(m[2]) : '';
+            if (k) {
+                o[k] = v;
+            }
         }
         return o;
     }
-    function locationHash() { // IF ONLY # IS IN ADDRESS BAR RETURNS #. location.hash RETURNS ''
+    function locationHash() { // RETURNS # IF ONLY # IS IN ADDRESS BAR. NATIVE location.hash RETURNS ''
         var hash = location.href.split(location.pathname)[1];
         return typeof(hash) === 'string' ? hash : '';
     }
@@ -165,12 +167,12 @@ exports.ROUTE0 = function(url, err) {
         return /^#(400|404|408|500)/.test(v);
     }
 };
-function Controller0(route, query, args, anchor, err) {
+function Controller0(route, args, anchor, query, err) {
     var self = this;
     self.route = route;
-    self.query = query;
     self.args = Array.isArray(args) ? args : [];
     self.anchor = anchor || null;
+    self.query = query;
     self.err = err || null;
     self.viewCalled = false;
     self.execTime = 0;
@@ -190,13 +192,14 @@ Controller0.prototype = {
         if (self.execTime >= 10000) {
             return;
         }
-        if (html !== 'string') {
+        if (typeof(html) !== 'string') {
             throw new Error('invalidParameter');
         }
         if (self.viewCalled) {
             throw new Error('invocationCount');
         }
         self.viewCalled = true;
+        clearInterval(self.interval);
         var el = document.getElementById('page');
         if (el) {
             el.innerHTML = html;
