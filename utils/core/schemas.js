@@ -25,12 +25,14 @@ exports.SETSCHEMA = function(k, fn) {
             if (!obj || typeof(obj) !== 'object') {
                 throw new Error('invalidParameter');
             }
+            if (lan && typeof(lan) !== 'string') {
+                throw new Error('invalidParameter');
+            }
             var eb = new exports.ErrorBuilder();
             for (var k in this.rule) {
                 if (this.rule.hasOwnProperty(k)) {
                     var v = obj[k];
                     var rule = this.rule[k];
-                    var mes = rule.message[lan] || rule.message['default'] || ('Invalid property "' + k + '".');
                     if (rule.prepare) {
                         v = rule.prepare(v, obj);
                         obj[k] = v;
@@ -38,7 +40,10 @@ exports.SETSCHEMA = function(k, fn) {
                     var act = Object.prototype.toString.call(v);
                     var mat = (act === rule.type);
                     if (rule.validate && !rule.validate(v, mat, obj, act, rule.type)) {
-                        eb.push(exports.error(this.prefix + k, mes));
+                        var mes = lan
+                            ? (rule.message[lan.toUpperCase()] || rule.message['default'])
+                            : rule.message['default'];
+                        eb.push(new exports.Error(this.prefix + k, mes));
                     }
                 }
             }
@@ -77,6 +82,26 @@ exports.SETSCHEMA = function(k, fn) {
                 }
             }
             return norm;
+        },
+        makeError: function(name, lan) {
+            if (!name || typeof(name) !== 'string') {
+                throw new Error('invalidParameter');
+            }
+            if (lan && typeof(lan) !== 'string') {
+                throw new Error('invalidParameter');
+            }
+            for (var k in this.rule) {
+                if (this.rule.hasOwnProperty(k)) {
+                    if (k === name) {
+                        var rule = this.rule[k];
+                        var mes = lan
+                            ? (rule.message[lan.toUpperCase()] || rule.message['default'])
+                            : rule.message['default'];
+                        return new exports.Error(this.prefix + k, mes);
+                    }
+                }
+            }
+            throw new Error('Missing field "' + name + '" in schema definition.');
         }
     };
     function attr(name, type) { // Starts attribute definition
@@ -114,7 +139,7 @@ exports.SETSCHEMA = function(k, fn) {
         if (b && typeof(b) !== 'string') {
             throw new Error('invalidParameter');
         }
-        var lan = (a && b) ? a : 'default';
+        var lan = (a && b) ? a.toUpperCase() : 'default';
         var mes = (a && b) ? b : a;
         if (!this.rule[this.currentKey]) {
             throw new Error('invalidOrder');
