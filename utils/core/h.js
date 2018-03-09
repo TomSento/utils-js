@@ -84,9 +84,19 @@ exports.H = function(command, a, b) {
         }
         return cmd[2].replace('{modifiers}', modifiers);
     }
-    function throwRightHandFunctionOrderMismatchError(/* mapPairs, controls */) {
-        var msg = 'Wrong right-hand function order, expected order: ';
-        throw new Error(msg);
+    function throwRightHandFunctionOrderMismatchError(mapPairs, controls) {
+        var msg = 'Incorrect right-hand function order, expected:';
+        for (var i = 0, l = mapPairs.length; i < l; i++) {
+            var pair = mapPairs[i];
+            for (var j = 0, ll = controls.length; j < ll; j++) {
+                var control = controls[j];
+                if (control[0] === pair[0]) {
+                    msg += ' ' + pair[0] + '()';
+                    break;
+                }
+            }
+        }
+        throw new Error(msg + '.');
     }
     function parseNonBodyControls(arrWithControlStrings) {
         var arr = [];
