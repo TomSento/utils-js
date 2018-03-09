@@ -35,6 +35,14 @@ exports.H = function(command, a, b) {
             'Body': '<body{modifiers}>{content}</body>'
         };
         cmd = cmd.split('|');
+        if (cmd[1]) {
+            if (/\)(?!@|\s|$)/.test(cmd[1])) {
+                throw new Error('Missing space after function\'s ")".');
+            }
+            if (/\)(?!@lg|@md|@sm|@xs|\s|$)/.test(cmd[1])) {
+                throw new Error('Unsupported @media query.');
+            }
+        }
         var controls = cmd[1] ? cmd[1].match(/[A-Z].*?\)(?:@lg|@md|@sm|@xs)?/g) : [];
         var template = map[cmd[0]] || null;
         if (template) {
