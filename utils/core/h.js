@@ -42,6 +42,9 @@ exports.H = function(command, a, b) {
             if (/\)(?!@lg|@md|@sm|@xs|\s|$)/.test(cmd[1])) {
                 throw new Error('Unsupported @media query.');
             }
+            if (/\b[a-z]\w+\(/.test(cmd[1])) {
+                throw new Error('Function must start with capital letter.');
+            }
         }
         var controls = cmd[1] ? cmd[1].match(/[A-Z].*?\)(?:@lg|@md|@sm|@xs)?/g) : [];
         var template = map[cmd[0]] || null;
