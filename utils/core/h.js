@@ -12,11 +12,21 @@ exports.H = function(command, a, b) {
         throw new Error('invalidParameter');
     }
     command = prepareCMD(command);
-    if (!command[2]) {
-        throw new Error('Invalid left-hand "' + command[0] + '" operator.');
-    }
     return processCMD(command, data, content);
     function prepareCMD(cmd) {
+        if (/\s{2,}/.test(cmd)) {
+            throw new Error('No multiple spaces.');
+        }
+        var m = cmd.match(/\|/g);
+        if (m && m.length > 1) {
+            throw new Error('No multiple "|".');
+        }
+        m = cmd.match(/(\s*)\|(\s*)/);
+        if (m) {
+            if (m[1].length > 0 || m[2].length > 0) {
+                throw new Error('No "|" surrounded with spaces.');
+            }
+        }
         var map = {
             'Doc': '<!DOCTYPE html><html{modifiers}>{content}</html>',
             'Head': '<head>{content}</head>',
@@ -27,7 +37,12 @@ exports.H = function(command, a, b) {
         cmd = cmd.split('|');
         var controls = cmd[1] ? cmd[1].match(/[A-Z].*?\)(?:@lg|@md|@sm|@xs)?/g) : [];
         var template = map[cmd[0]] || null;
-        return [cmd[0], controls, template];
+        if (template) {
+            return [cmd[0], controls, template];
+        }
+        else {
+            throw new Error('Invalid left-hand "' + cmd[0] + '" operator.');
+        }
     }
     function processCMD(cmd, data, content) {
         var html = '';
