@@ -17,6 +17,33 @@ exports.H = function(command, a, b) {
         if (/\s{2,}/.test(cmd)) {
             throw new Error('No multiple spaces.');
         }
+        if (isVarCMD(cmd)) {
+            return prepareVarCMD(cmd);
+        }
+        else {
+            return prepareGenCMD(cmd);
+        }
+    }
+    function isVarCMD(v) {
+        return v.startsWith('--');
+    }
+    function prepareVarCMD(cmd) {
+        cmd = cmd.split(/\s*:\s*/);
+        var k = cmd[0];
+        var v = prepareParameterValue(cmd[1]);
+        var err = validateParameterValue(v);
+        if (err) {
+            throw err;
+        }
+        return [k, v];
+    }
+    function prepareParameterValue(v) {
+        return v;
+    }
+    function validateParameterValue(/* v */) {
+        return null;
+    }
+    function prepareGenCMD(cmd) {
         var m = cmd.match(/\|/g);
         if (m && m.length > 1) {
             throw new Error('No multiple "|".');
@@ -57,13 +84,29 @@ exports.H = function(command, a, b) {
     }
     function processCMD(cmd, data, content) {
         var html = '';
-        if (isNonBodyCMD(cmd[0])) {
-            html = inlineModifiersForNonBodyCMD(cmd);
+        if (isVarCMD(cmd[0])) {
+            setVar(cmd[0], cmd[1]);
         }
         else {
-            html = inlineModifiersForInBodyCMD(cmd);
+            if (isNonBodyCMD(cmd[0])) {
+                html = inlineModifiersForNonBodyCMD(cmd);
+            }
+            else {
+                html = inlineModifiersForInBodyCMD(cmd);
+            }
+            return html.replace('{content}', content);
         }
-        return html.replace('{content}', content);
+    }
+    function setVar(k, v) {
+        var cache = exports.malloc('__H');
+        var vars = cache('vars') || {};
+        if (vars[k]) {
+            throw new Error('No duplicate variable.');
+        }
+        else {
+            vars[k] = v;
+            cache('vars', vars);
+        }
     }
     function isNonBodyCMD(v) { // COUNT OF NOT BODY TAGS < BODY TAGS - BETTER PERFORMANCE
         return ['Doc', 'Head', 'Meta', 'Title'].indexOf(v) >= 0;
@@ -151,3 +194,65 @@ exports.H = function(command, a, b) {
         return 'Not implemented yet.';
     }
 };
+
+// function normalizeCSSKeyframes(v) {
+//     var arr = [];
+//     var index = 0;
+//     while (index !== -1) {
+//         index = v.indexOf('@keyframes', index + 1);
+//         if (index === -1) {
+//             continue;
+//         }
+//         var counter = 0;
+//         var end = -1;
+//         for (var indexer = index + 10; indexer < v.length; indexer++) {
+//             if (v[indexer] === '{') {
+//                 counter++;
+//             }
+//             if (v[indexer] !== '}') {
+//                 continue;
+//             }
+//             if (counter > 1) {
+//                 counter--;
+//                 continue;
+//             }
+//             end = indexer;
+//             break;
+//         }
+//         if (end === -1) {
+//             continue;
+//         }
+//         var css = v.substring(index, end + 1);
+//         arr.push({
+//             name: 'keyframes',
+//             property: css
+//         });
+//     }
+//     var output = [];
+//     var len = arr.length;
+//     for (var i = 0; i < len; i++) {
+//         var name = arr[i].name;
+//         var property = arr[i].property;
+//         if (name !== 'keyframes') {
+//             continue;
+//         }
+//         var plus = property.substring(1);
+//         var delimiter = '\n';
+//         var updated = '@' + plus + delimiter;
+//         updated += '@-webkit-' + plus + delimiter;
+//         updated += '@-moz-' + plus + delimiter;
+//         updated += '@-o-' + plus + delimiter;
+//         v = strReplace(v, property, '@[[' + output.length + ']]');
+//         output.push(updated);
+//     }
+//     len = output.length;
+//     for (var j = 0; j < len; j++) {
+//         v = v.replace('@[[' + j + ']]', output[j]);
+//     }
+//     return v;
+// }
+
+// function strReplace(str, find, to) {
+//     var beg = str.indexOf(find);
+//     return beg === -1 ? str : (str.substring(0, beg) + to + str.substring(beg + find.length));
+// }
