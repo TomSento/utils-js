@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>core-h</title>
+        <script src="../dist/utils.git.js"></script>
+    </head>
+    <body>
+        <script>
+            var H = U.H;
+            var start = Date.now();
+            var html = '';
+            // for (var i = 0; i < 1000; i++) {
+                // H(/blue(#0280AE.5)/);
+                // H(/shadow0(1px,2px,4px,#0280AE.5)/);
+                html += H(/Doc|Lang(en)/, [
+                    H(/Head/, [
+                        H(/Meta|Charset(UTF-8)/),
+                        H(/Meta|Property(viewport) Content(width=device-width,initial-scale=1.0)/),
+                        H(/Meta|HttpEquiv(X-UA-Compatible) Content(ie=edge)/),
+                        H(/Title/, 'Homepage')
+                    ])
+                ]);
+            // }
+            console.log('ms:' + (Date.now() - start));
+            console.log('html: ', html);
+        </script>
+    </body>
+</html>

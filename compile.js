@@ -15,6 +15,7 @@ var files = [
     'utils/core/schemas.js',
     'utils/core/modules.js',
     'utils/core/proc.js',
+    'utils/core/h.js',
     'utils/browser/ajax.js',
     'utils/browser/dom.js',
     'utils/browser/route0.js'
