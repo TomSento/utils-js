@@ -193,53 +193,43 @@ exports.H = function(command, a, b) {
     function inlineModifiersForInBodyCMD(/* cmd */) {
         return 'Not implemented yet.';
     }
-    // NOT USED YET
-    function buildCSS() {
-        var b = cssReset();
-        b += cssGrid();
-        b += cssAnimations();
-        return b;
-    }
     function cssReset() { // https://github.com/jgthms/minireset.css/tree/0.0.3
-        var b = css('html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6', [
+        var b = CSS2('html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6', [
             'margin:0',
             'padding:0'
         ]);
-        b += css('h1,h2,h3,h4,h5,h6', [
+        b += CSS2('h1,h2,h3,h4,h5,h6', [
             'font-size:100%',
             'font-weight:normal'
         ]);
-        b += css('ul', 'list-style:none');
-        b += css('button,input,select,textarea', 'margin:0');
-        b += css('html', 'box-sizing:border-box');
-        b += css('*,*:before,*:after', 'box-sizing:inherit');
-        b += css('img,embed,iframe,object,audio,video', [
+        b += CSS2('ul', 'list-style:none');
+        b += CSS2('button,input,select,textarea', 'margin:0');
+        b += CSS2('html', 'box-sizing:border-box');
+        b += CSS2('*,*:before,*:after', 'box-sizing:inherit');
+        b += CSS2('img,embed,iframe,object,audio,video', [
             'height:auto',
             'max-width:100%'
         ]);
-        b += css('iframe', 'border:0');
-        b += css('table', [
+        b += CSS2('iframe', 'border:0');
+        b += CSS2('table', [
             'border-collapse:collapse',
             'border-spacing:0'
         ]);
-        b += css('td,th', [
+        b += CSS2('td,th', [
             'padding:0',
             'text-align:left'
         ]);
         return b;
     }
-    function cssGrid() {
-        var b = '';
-        return b;
-    }
-    function cssAnimations() {
-        var b = '';
-        return b;
-    }
-    function css(k, a) {
+    function CSS2(k, a) {
         if (k && typeof(k) === 'string' && a) {
             if (typeof(a) === 'string') {
-                return k + '{' + cssPROPERTY(a) + '}';
+                if (k.indexOf('@media') >= 0) {
+                    return k + '){' + a + '}';
+                }
+                else {
+                    return k + '{' + cssPROPERTY(a) + '}';
+                }
             }
             else if (Array.isArray(a)) {
                 var b = '';
