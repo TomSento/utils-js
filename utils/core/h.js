@@ -193,6 +193,121 @@ exports.H = function(command, a, b) {
     function inlineModifiersForInBodyCMD(/* cmd */) {
         return 'Not implemented yet.';
     }
+    // NOT USED YET
+    function buildCSS() {
+        var b = cssReset();
+        b += cssGrid();
+        b += cssAnimations();
+        return b;
+    }
+    function cssReset() { // https://github.com/jgthms/minireset.css/tree/0.0.3
+        var b = css('html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6', [
+            'margin:0',
+            'padding:0'
+        ]);
+        b += css('h1,h2,h3,h4,h5,h6', [
+            'font-size:100%',
+            'font-weight:normal'
+        ]);
+        b += css('ul', 'list-style:none');
+        b += css('button,input,select,textarea', 'margin:0');
+        b += css('html', 'box-sizing:border-box');
+        b += css('*,*:before,*:after', 'box-sizing:inherit');
+        b += css('img,embed,iframe,object,audio,video', [
+            'height:auto',
+            'max-width:100%'
+        ]);
+        b += css('iframe', 'border:0');
+        b += css('table', [
+            'border-collapse:collapse',
+            'border-spacing:0'
+        ]);
+        b += css('td,th', [
+            'padding:0',
+            'text-align:left'
+        ]);
+        return b;
+    }
+    function cssGrid() {
+        var b = '';
+        return b;
+    }
+    function cssAnimations() {
+        var b = '';
+        return b;
+    }
+    function css(k, a) {
+        if (k && typeof(k) === 'string' && a) {
+            if (typeof(a) === 'string') {
+                return k + '{' + cssPROPERTY(a) + '}';
+            }
+            else if (Array.isArray(a)) {
+                var b = '';
+                for (var i = 0, l = a.length; i < l; i++) {
+                    var v = a[i];
+                    b += v ? cssPROPERTY(v) : '';
+                }
+                return b ? (k + '{' + b + '}') : '';
+            }
+            else {
+                return '';
+            }
+        }
+        else {
+            return '';
+        }
+    }
+    function cssPROPERTY(kv) { // AUTOPREFIXES CSS KEY-VALUE PAIR
+        var autovendor = ['filter', 'appearance', 'column-count', 'column-gap', 'column-rule', 'display', 'transform', 'transform-style', 'transform-origin', 'transition', 'user-select', 'animation', 'perspective', 'animation-name', 'animation-duration', 'animation-timing-function', 'animation-delay', 'animation-iteration-count', 'animation-direction', 'animation-play-state', 'opacity', 'background', 'background-image', 'font-smoothing', 'text-size-adjust', 'backface-visibility', 'box-sizing', 'overflow-scrolling'];
+        kv = kv.replace(/\s{2,}/g, ' ');
+        kv = kv[kv.length - 1] === ';' ? kv.slice(0, -1) : kv;
+        kv = kv.split(/\s*:\s*/);
+        var k = kv[0];
+        var v = kv[1];
+        var sep = ':';
+        var del = ';';
+        if (k && v) {
+            if (autovendor.indexOf(k) === -1) {
+                return k + sep + v + del;
+            }
+            else {
+                var rows = [k + sep + v];
+                if (k === 'opacity') {
+                    var opacity = +(v.replace(/\s/g, ''));
+                    if (isNaN(opacity)) {
+                        return '';
+                    }
+                    rows.push('filter' + sep + 'alpha(opacity=' + Math.floor(opacity * 100) + ')');
+                }
+                else if (k === 'font-smoothing') {
+                    rows.push('-webkit-' + k + sep + v);
+                    rows.push('-moz-osx-' + k + sep + v);
+                }
+                else if (k === 'background' || k === 'background-image') {
+                    var g = '-gradient';
+                    if (v.indexOf('linear' + g) >= 0 || v.indexOf('radial' + g) >= 0) {
+                        rows.push('-webkit-' + k + sep + v);
+                        rows.push('-moz-' + k + sep + v);
+                        rows.push('-ms-' + k + sep + v);
+                    }
+                }
+                else if (k === 'text-overflow') {
+                    rows.push('-ms-' + k + sep + v);
+                }
+                else {
+                    rows.push('-webkit-' + k + sep + v);
+                    rows.push('-moz-' + k + sep + v);
+                    if (k.indexOf('animation') === -1) { // SAME AS IN TOTAL.JS
+                        rows.push('-ms-' + k + sep + v);
+                    }
+                }
+                return rows.join(del) + del;
+            }
+        }
+        else {
+            return '';
+        }
+    }
 };
 
 // function normalizeCSSKeyframes(v) {
