@@ -665,12 +665,7 @@
                 }
             }
         ],
-        "camelcase": [
-            "error",
-            {
-                "properties": "never"
-            }
-        ],
+        "camelcase": "off",
         "brace-style": [
             "error",
             "stroustrup",
