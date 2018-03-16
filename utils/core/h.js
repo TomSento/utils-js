@@ -48,32 +48,37 @@ exports.H = function(command, a, b) {
     var HTML_ATTRIBUTES = {
         Doc: [{
             instructionName: 'Lang',
+            allowArgument: true,
             html: 'lang={0}'
         }],
-        Head: [],
         Meta: [{ // MANDATORY ORDER
             instructionName: 'Charset',
             html: 'charset={0}'
         }, {
             instructionName: 'Name',
+            allowArgument: true,
             html: 'name={0}'
         }, {
             instructionName: 'Property',
+            allowArgument: true,
             html: 'property={0}'
         }, {
             instructionName: 'HttpEquiv',
+            allowArgument: true,
             html: 'http-equiv={0}'
         }, {
             instructionName: 'Content',
+            allowArgument: true,
             html: 'content={0}'
         }],
-        Title: [],
         Input: [{
             instructionName: 'Chckd',
+            allowArgument: false,
             html: 'checked'
         }],
         Option: [{
             instructionName: 'Slctd',
+            allowArgument: false,
             html: 'selected'
         }]
     };
