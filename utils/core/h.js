@@ -1,53 +1,41 @@
+// COMMAND FORMAT:
+// HTML_SELECTOR_INSTRUCTION_STRING|HTML_ATTRIBUTES_INSTRUCTIONS_STRING|ACSS_INSTRUCTIONS_STRING
+// ACSS IS ALLOWED ONLY FOR BODYTAG ELEMENTS
+// ELEMENT ID AND CLASSES ARE ALLOWED ONLY FOR BODYTAG ELEMENTS
+// BOTH ATTRIBUTES AND ACSS INSTRUCTIONS MUST HAVE PARENS () - THIS IS DIFFERENT FROM YAHOO'S ACSS WHICH SUPPORTS HELPERS WITHOUT THEM
 exports.H = function(command, a, b) {
     /**
      * CONSTANTS
      */
+    var REG_BASE_CMD_NO_SPACE_AT_START = /^\s/;
+    var REG_BASE_CMD_NO_SPACE_AT_END = /\s$/;
+    var REG_BASE_CMD_NO_MULTIPLE_SPACES = /\s{2,}/;
+    var REG_BASE_CMD_NO_MULTIPLE_COMMAS = /,\s*,/;
+    var REG_BASE_CMD_NO_MULTIPLE_PIPES = /\|{2,}/;
+    var REG_BASE_CMD_NO_SPACES_AROUND_PIPE = /(?:\s+\|)|(?:\|\s+)/;
+    var REG_BASE_CMD_NO_LOWERCASED_FUNCTION = /\b[a-z]\w+\(/;
 
-    // BOTH ATTRIBUTES AND ACSS INSTRUCTIONS MUST HAVE PARENS () - THIS IS DIFFERENT FROM YAHOO'S ACSS WHICH SUPPORTS HELPERS WITHOUT THEM
+    var REG_BASE_CMD_IS_ACSS_VAR = /^--/;
+    var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Meta|Title)(?![A-z0-9])/;
+    var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Btn|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-z0-9])/; // https://www.w3schools.com/tags/default.asp
 
-    // SELECTOR|ATTRIBUTES|ACSS
+    var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
-    // SELECTOR
-    // - META - ONLY TAG
-    // - BODY - TAG | CLASSES - no spaces, only dots
+    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(Lang|Charset|Name|Property|HttpEquiv|Content)(?![A-z0-9])/;
+    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdend|Bdb|Bdstart|Bdc|Bdtc|Bdendc|Bdbc|Bdstartc|Bdsp|Bds|Bdts|Bdends|Bdbs|Bdstarts|Bdw|Bdtw|Bdendw|Bdbw|Bdstartw|Bdrs|Bdrstend|Bdrsbend|Bdrsbstart|Bdrststart|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mend|Mb|Mstart|Mah|Maw|Mih|Miw|O|T|End|B|Start|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pend|Pb|Pstart|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
-    // CHAIN WITH 3 STEPS - SELECTOR PROCESS RUNS ALWAYS BUT NOT ALWAYS SAME
-    // -
-
-
-    var REG_GENERAL_NO_INVALID_FIRST_LETTER = /^[^A-Z]/;
-    var REG_GENERAL_NO_MULTIPLE_SPACES = /\s{2,}/;
-    var REG_GENERAL_NO_MULTIPLE_COMMAS = /,\s*,/;
-    var REG_GENERAL_NO_SPACES_AROUND_PIPE = /(?:\s+\|)|(?:\|\s+)/;
-    var REG_GENERAL_NO_LOWERCASE_FUNCTIONS = /\b[a-z]\w+\(/;
-    var REG_GENERAL_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
-    var REG_GENERAL_NO_SPACES_AT_START_OR_END = /^\s|\s$/;
-
-    var REG_GENERAL_STARTS_WITH_METATAG = /^(Doc|Head|Meta|Title)(?![A-z0-9])/;
-    var REG_GENERAL_STARTS_WITH_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Btn|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-z0-9])/; // https://www.w3schools.com/tags/default.asp
-    var REG_GENERAL_STARTS_WITH_UPPERCASE = /^[A-Z]/;
-
-    var REG_GENERAL_IS_POSSIBLY_HTML_ATTRIBUTES_INSTRUCTION_STRING = /(Lang|Charset|Name|Property|HttpEquiv|Content)(?![A-z0-9])/;
-    var REG_GENERAL_IS_POSSIBLY_ACSS_INSTUCTIONS_STRING = /(Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdend|Bdb|Bdstart|Bdc|Bdtc|Bdendc|Bdbc|Bdstartc|Bdsp|Bds|Bdts|Bdends|Bdbs|Bdstarts|Bdw|Bdtw|Bdendw|Bdbw|Bdstartw|Bdrs|Bdrstend|Bdrsbend|Bdrsbstart|Bdrststart|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mend|Mb|Mstart|Mah|Maw|Mih|Miw|O|T|End|B|Start|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pend|Pb|Pstart|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
-
-    var REG_GENERAL_SPLIT_BY_PIPE = /\|/;
-    var REG_GENERAL_SPLIT_BY_DOT = /\./;
-    var REG_GENERAL_SPLIT_BY_HASH = /#/;
-    var REG_GENERAL_SPLIT_BY_OPEN_BRACKET = /\(/;
-
-    var REG_HTML_ATTRIBUTES_CMD_NO_MISSING_SPACE_AFTER_FUNCTION = /\)(?!\s|$)/;
-    var REG_HTML_ATTRIBUTES_CMD_SPLIT_TO_CMDS = /[A-Z].*?\)/g;
-
-    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_CHAR_BODYTAG = /[^A-z0-9#.]/;
-    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_CHAR_METATAG = /[^A-z0-9]/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_METATAG_CHAR = /[^A-z0-9]/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_BODYTAG_CHAR = /[^A-z0-9#.\-_]/;
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_MULTIPLE_DOTS = /\.{2,}/;
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_MULTIPLE_HASHES = /#{2,}/;
-    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_DOT_AT_START_OR_END = /^\.|\.$/;
-    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_HASH_AT_START_OR_END = /^#|#$/;
-    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_HASH_FOLLOWED_BY_UNALLOWED_CHAR = /#[^A-z0-9]/;
-    var REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS = /[A-Z.#][a-z0-9_-]+/g;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_DOT_AT_END = /\.$/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_HASH_AT_END = /#$/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_HASH_FOLLOWED_BY_DOT = /#[^A-z0-9]/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_DOT_FOLLOWED_BY_HASH = /\.#/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_NAME_SEPARATOR_AT_BOUNDARY = /[#.][-_]|[-_]\.|[-_]$/;
 
-    var REG_ACSS_IS_VAR_CMD = /^--/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS = /[A-Z.#][a-z0-9_-]+/g;
 
     var HTML_TEMPLATES = {
         Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
@@ -79,163 +67,24 @@ exports.H = function(command, a, b) {
             instructionName: 'Content',
             html: 'content={0}'
         }],
-        Title: []
+        Title: [],
+        Input: [{
+            instructionName: 'Chkd',
+            html: 'checked'
+        }],
+        Option: [{
+            instructionName: 'Slctd',
+            html: 'selected'
+        }]
     };
 
     /**
      * ACSS CONSTANTS
      */
-    var ACSS_COLOR_SHORTCUTS = {
+    var ACSS_COLOR_ARGUMENTS = {
         t: 'transparent',
         cc: 'currentColor',
         n: 'none'
-        // aliceblue: 'aliceblue',
-        // antiquewhite: 'antiquewhite',
-        // aqua: 'aqua',
-        // aquamarine: 'aquamarine',
-        // azure: 'azure',
-        // beige: 'beige',
-        // bisque: 'bisque',
-        // black: 'black',
-        // blanchedalmond: 'blanchedalmond',
-        // blue: 'blue',
-        // blueviolet: 'blueviolet',
-        // brown: 'brown',
-        // burlywood: 'burlywood',
-        // cadetblue: 'cadetblue',
-        // chartreuse: 'chartreuse',
-        // chocolate: 'chocolate',
-        // coral: 'coral',
-        // cornflowerblue: 'cornflowerblue',
-        // cornsilk: 'cornsilk',
-        // crimson: 'crimson',
-        // cyan: 'cyan',
-        // darkblue: 'darkblue',
-        // darkcyan: 'darkcyan',
-        // darkgoldenrod: 'darkgoldenrod',
-        // darkgray: 'darkgray',
-        // darkgreen: 'darkgreen',
-        // darkgrey: 'darkgrey',
-        // darkkhaki: 'darkkhaki',
-        // darkmagenta: 'darkmagenta',
-        // darkolivegreen: 'darkolivegreen',
-        // darkorange: 'darkorange',
-        // darkorchid: 'darkorchid',
-        // darkred: 'darkred',
-        // darksalmon: 'darksalmon',
-        // darkseagreen: 'darkseagreen',
-        // darkslateblue: 'darkslateblue',
-        // darkslategray: 'darkslategray',
-        // darkslategrey: 'darkslategrey',
-        // darkturquoise: 'darkturquoise',
-        // darkviolet: 'darkviolet',
-        // deeppink: 'deeppink',
-        // deepskyblue: 'deepskyblue',
-        // dimgray: 'dimgray',
-        // dimgrey: 'dimgrey',
-        // dodgerblue: 'dodgerblue',
-        // firebrick: 'firebrick',
-        // floralwhite: 'floralwhite',
-        // forestgreen: 'forestgreen',
-        // fuchsia: 'fuchsia',
-        // gainsboro: 'gainsboro',
-        // ghostwhite: 'ghostwhite',
-        // gold: 'gold',
-        // goldenrod: 'goldenrod',
-        // gray: 'gray',
-        // green: 'green',
-        // greenyellow: 'greenyellow',
-        // grey: 'grey',
-        // honeydew: 'honeydew',
-        // hotpink: 'hotpink',
-        // indianred: 'indianred',
-        // indigo: 'indigo',
-        // ivory: 'ivory',
-        // khaki: 'khaki',
-        // lavender: 'lavender',
-        // lavenderblush: 'lavenderblush',
-        // lawngreen: 'lawngreen',
-        // lemonchiffon: 'lemonchiffon',
-        // lightblue: 'lightblue',
-        // lightcoral: 'lightcoral',
-        // lightcyan: 'lightcyan',
-        // lightgoldenrodyellow: 'lightgoldenrodyellow',
-        // lightgray: 'lightgray',
-        // lightgreen: 'lightgreen',
-        // lightgrey: 'lightgrey',
-        // lightpink: 'lightpink',
-        // lightsalmon: 'lightsalmon',
-        // lightseagreen: 'lightseagreen',
-        // lightskyblue: 'lightskyblue',
-        // lightslategray: 'lightslategray',
-        // lightslategrey: 'lightslategrey',
-        // lightsteelblue: 'lightsteelblue',
-        // lightyellow: 'lightyellow',
-        // lime: 'lime',
-        // limegreen: 'limegreen',
-        // linen: 'linen',
-        // magenta: 'magenta',
-        // maroon: 'maroon',
-        // mediumaquamarine: 'mediumaquamarine',
-        // mediumblue: 'mediumblue',
-        // mediumorchid: 'mediumorchid',
-        // mediumpurple: 'mediumpurple',
-        // mediumseagreen: 'mediumseagreen',
-        // mediumslateblue: 'mediumslateblue',
-        // mediumspringgreen: 'mediumspringgreen',
-        // mediumturquoise: 'mediumturquoise',
-        // mediumvioletred: 'mediumvioletred',
-        // midnightblue: 'midnightblue',
-        // mintcream: 'mintcream',
-        // mistyrose: 'mistyrose',
-        // moccasin: 'moccasin',
-        // navajowhite: 'navajowhite',
-        // navy: 'navy',
-        // oldlace: 'oldlace',
-        // olive: 'olive',
-        // olivedrab: 'olivedrab',
-        // orange: 'orange',
-        // orangered: 'orangered',
-        // orchid: 'orchid',
-        // palegoldenrod: 'palegoldenrod',
-        // palegreen: 'palegreen',
-        // paleturquoise: 'paleturquoise',
-        // palevioletred: 'palevioletred',
-        // papayawhip: 'papayawhip',
-        // peachpuff: 'peachpuff',
-        // peru: 'peru',
-        // pink: 'pink',
-        // plum: 'plum',
-        // powderblue: 'powderblue',
-        // purple: 'purple',
-        // red: 'red',
-        // rosybrown: 'rosybrown',
-        // royalblue: 'royalblue',
-        // saddlebrown: 'saddlebrown',
-        // salmon: 'salmon',
-        // sandybrown: 'sandybrown',
-        // seagreen: 'seagreen',
-        // seashell: 'seashell',
-        // sienna: 'sienna',
-        // silver: 'silver',
-        // skyblue: 'skyblue',
-        // slateblue: 'slateblue',
-        // slategray: 'slategray',
-        // slategrey: 'slategrey',
-        // snow: 'snow',
-        // springgreen: 'springgreen',
-        // steelblue: 'steelblue',
-        // tan: 'tan',
-        // teal: 'teal',
-        // thistle: 'thistle',
-        // tomato: 'tomato',
-        // turquoise: 'turquoise',
-        // violet: 'violet',
-        // wheat: 'wheat',
-        // white: 'white',
-        // whitesmoke: 'whitesmoke',
-        // yellow: 'yellow',
-        // yellowgreen: 'yellowgreen'
     };
     var ACSS_RULES = [{ // MANDATORY ORDER
         name: 'Animation',
@@ -372,31 +221,31 @@ exports.H = function(command, a, b) {
         instructionName: 'Bdc',
         // allowParamTransformation: true,
         css: 'border-color:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border top color',
         instructionName: 'Bdtc',
         // allowParamTransformation: true,
         css: 'border-top-color:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border end color',
         instructionName: 'Bdendc',
         // allowParamTransformation: true,
         css: 'border-{end}-color:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border bottom color',
         instructionName: 'Bdbc',
         // allowParamTransformation: true,
         css: 'border-bottom-color:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border start color',
         instructionName: 'Bdstartc',
         // allowParamTransformation: true,
         css: 'border-{start}-color:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border spacing',
         instructionName: 'Bdsp',
@@ -587,7 +436,7 @@ exports.H = function(command, a, b) {
         instructionName: 'Bgc',
         // allowParamTransformation: true,
         css: 'background-color:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Background clip',
         instructionName: 'Bgcp',
@@ -720,7 +569,7 @@ exports.H = function(command, a, b) {
         instructionName: 'C',
         // allowParamTransformation: true,
         css: 'color:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Contain',
         instructionName: 'Ctn',
@@ -1901,13 +1750,13 @@ exports.H = function(command, a, b) {
         instructionName: 'Fill',
         // allowParamTransformation: false,
         css: 'fill:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Stroke (SVG)',
         instructionName: 'Stk',
         // allowParamTransformation: false,
         css: 'stroke:{0}',
-        arguments: [ACSS_COLOR_SHORTCUTS]
+        arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Stroke width (SVG)',
         instructionName: 'Stkw',
@@ -1955,7 +1804,7 @@ exports.H = function(command, a, b) {
     if (typeof(content) !== 'string') {
         throw new Error('invalidParameter');
     }
-    var err = VALIDATE_BASE_CMD(command);
+    var err = BASE_CMD_validate(command);
     if (err) {
         throw err;
     }
@@ -1963,91 +1812,290 @@ exports.H = function(command, a, b) {
         return BASE_CMD_process(command, data, content);
     }
 
-    // OLD - PARSING ONE COMMAND
-    // function HTML_ATTRIBUTES_parseOneCMD(cmd) {
-    //     var tmp = cmd.split('(');
-    //     if (!Array.isArray(tmp) || tmp.length !== 2) {
-    //         throw new Error('Unable to parse attribute "' + cmd + '".');
-    //     }
-    //     var k = tmp[0];
-    //     if (!k) {
-    //         throw new Error('Unable to parse attribute "' + cmd + '".');
-    //     }
-    //     var m = cmd.match(/\((.*)\)/);
-    //     if (m) {
-    //         var v = m[1] || '';
-    //         return composeHTMLAttribute(k, v);
-    //     }
-    //     else {
-    //         throw new Error('Unable to parse attribute "' + cmd + '".');
-    //     }
-    // }
-    // function composeHTMLAttribute(fnName, fnParam) {
-    //     return {
-    //         fnName: fnName,
-    //         fnParam: fnParam
-    //     };
-    // }
-
-    // SEPARATE ACSS COMMANDS: /[A-Z].*?\)(?:@lg|@md|@sm|@xs)?/g
-
-    // function validateAcssCMD(cmd) {
-    //     if (/\)(?!@|\s|$)/.test(cmd[1])) {
-    //         return new Error('Missing space after function\'s ")".');
-    //     }
-    //     if (/\)(?!@lg|@md|@sm|@xs|\s|$)/.test(cmd[1])) {
-    //         return new Error('Unsupported @media query.');
-    //     }
-    //     return null;
-    // }
-
-    function BASE_CMD_process(cmd, data, content) { // NO MULTIPLE SPACES, NO SPACES AROUND PIPE, FUNCTIONS STARTS WITH CAPITAL LETTER
+    function BASE_CMD_validate(v) {
+        return validateAll(v, [
+            BASE_CMD_noSpaceAtStart,
+            BASE_CMD_noSpaceAtEnd,
+            BASE_CMD_noMultipleSpaces,
+            BASE_CMD_noMultipleCommas,
+            BASE_CMD_noMultiplePipes,
+            BASE_CMD_noSpacesAroundPipe,
+            BASE_CMD_noLowercasedFunction
+        ]);
+    }
+    function validateAll(str, validations) {
+        for (var i = 0, l = validations.length; i < l; i++) {
+            var err = validations[i](str);
+            if (err) {
+                return err;
+            }
+        }
+        return null;
+    }
+    function BASE_CMD_noSpaceAtStart(v) {
+        if (REG_BASE_CMD_NO_SPACE_AT_START.test(v)) {
+            return new Error('Base command - No space at start.');
+        }
+        return null;
+    }
+    function BASE_CMD_noSpaceAtEnd(v) {
+        if (REG_BASE_CMD_NO_SPACE_AT_END.test(v)) {
+            return new Error('Base command - No space at end.');
+        }
+        return null;
+    }
+    function BASE_CMD_noMultipleSpaces(v) {
+        if (REG_BASE_CMD_NO_MULTIPLE_SPACES.test(v)) {
+            return new Error('Base command - No multiple spaces.');
+        }
+        return null;
+    }
+    function BASE_CMD_noMultipleCommas(v) {
+        if (REG_BASE_CMD_NO_MULTIPLE_COMMAS.test(v)) {
+            return new Error('Base command - No multiple commas.');
+        }
+        return null;
+    }
+    function BASE_CMD_noMultiplePipes(v) {
+        if (REG_BASE_CMD_NO_MULTIPLE_PIPES.test(v)) {
+            return new Error('Base command - No multiple pipes.');
+        }
+        return null;
+    }
+    function BASE_CMD_noSpacesAroundPipe(v) {
+        if (REG_BASE_CMD_NO_SPACES_AROUND_PIPE.test(v)) {
+            return new Error('Base command - No spaces around pipe.');
+        }
+        return null;
+    }
+    function BASE_CMD_noLowercasedFunction(v) {
+        if (REG_BASE_CMD_NO_LOWERCASED_FUNCTION.test(v)) {
+            return new Error('Base command - No lowercased function.');
+        }
+        return null;
+    }
+    function BASE_CMD_process(cmd, data, content) {
         data = BASE_CMD_parse(cmd, data, content);
     }
-
     function BASE_CMD_parse(cmd) {
         var type = BASE_CMD_GET_TYPE(cmd);
         if (type === BASE_CMD_TYPE_ACSS_VAR()) {
             return ACSS_VAR_process(cmd);
         }
         else if (type === BASE_CMD_TYPE_HTML_METATAG() || type === BASE_CMD_TYPE_HTML_BODYTAG()) {
-            // var attributes = {};
-            // var acss = {};
             cmd = BASE_CMD_parseTriple(type, cmd);
-            console.log('CMD:', cmd);
+            var err = HTML_SELECTOR_INSTRUCTION_STRING_validate(type, cmd.htmlSelectorInstructionString);
+            if (err) {
+                throw err;
+            }
             var selector = HTML_SELECTOR_INSTRUCTION_STRING_parse(type, cmd.htmlSelectorInstructionString);
+            console.log('CMD:', cmd);
             console.log('SELECTOR:', selector);
         }
         else {
             throw new Error('Unsupported command type.');
         }
     }
-
-    function HTML_SELECTOR_INSTRUCTION_STRING_parse(type, instructionString) {
-        var err = VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING(type, instructionString);
-        if (err) {
-            throw err;
+    function BASE_CMD_GET_TYPE(cmd) {
+        if (REG_BASE_CMD_IS_ACSS_VAR.test(cmd)) {
+            return BASE_CMD_TYPE_ACSS_VAR();
         }
+        else if (REG_BASE_CMD_IS_METATAG.test(cmd)) {
+            return BASE_CMD_TYPE_HTML_METATAG();
+        }
+        else if (REG_BASE_CMD_IS_BODYTAG.test(cmd)) {
+            return BASE_CMD_TYPE_HTML_BODYTAG();
+        }
+        else {
+            return null;
+        }
+    }
+    function BASE_CMD_TYPE_ACSS_VAR() {
+        return 'ACSS_VAR_CMD';
+    }
+    function BASE_CMD_TYPE_HTML_METATAG() {
+        return 'HTML_METATAG_CMD';
+    }
+    function BASE_CMD_TYPE_HTML_BODYTAG() {
+        return 'HTML_BODYTAG_CMD';
+    }
+    function ACSS_VAR_process(cmd) {
+        var variable = ACSS_VAR_parse(cmd);
+        var cache = exports.malloc('__H');
+        var variables = cache('variables') || {};
+        if (variables[variable.key]) {
+            throw new Error('No duplicate variable.');
+        }
+        else {
+            variables[variable.key] = variable.value;
+            cache('variable', variables);
+        }
+    }
+    function ACSS_VAR_parse(cmd) {
+        cmd = cmd.split(/\s*:\s*/);
+        var key = cmd[0];
+        var value = cmd[1];
+        if (key && value) {
+            return ACSS_VAR_compose(key, value);
+        }
+        else {
+            throw new Error('Invalid ACSS variable separator.');
+        }
+    }
+    function ACSS_VAR_compose(key, value) {
+        return {
+            key: key,
+            value: value
+        };
+    }
+    function BASE_CMD_parseTriple(type, cmd) {
+        cmd = cmd.split(REG_BASE_CMD_SPLIT_BY_PIPE);
+        if (cmd && cmd.length > 3) {
+            throw new Error('Command can contain max 2 pipe separators.');
+        }
+        if (type === BASE_CMD_TYPE_HTML_METATAG()) {
+            if (cmd.length > 2) {
+                throw new Error('Meta element command must have max 1 pipe separator.');
+            }
+        }
+        var htmlSelectorInstructionString = cmd[0];
+        if (!htmlSelectorInstructionString) {
+            throw new Error('Missing HTML selector instruction string.');
+        }
+        var htmlAttributesInstructionsString = REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING.test(cmd[1]) ? cmd[1] : null;
+        var acssInstructionsString = REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(cmd[1]) ? cmd[1] : (cmd[2] || null);
+        if (htmlAttributesInstructionsString && acssInstructionsString) {
+            if (htmlAttributesInstructionsString === acssInstructionsString) {
+                throw new Error('Ambigious command.');
+            }
+        }
+        if (type === BASE_CMD_TYPE_HTML_METATAG()) {
+            if (acssInstructionsString) {
+                throw new Error('HTML metatag element must not define ACSS command.');
+            }
+        }
+        return BASE_CMD_composeTripleObject(type, htmlSelectorInstructionString, htmlAttributesInstructionsString, acssInstructionsString);
+    }
+    function BASE_CMD_composeTripleObject(type, htmlSelectorInstructionString, htmlAttributesInstructionsString, acssInstructionsString) {
+        return {
+            type: type,
+            htmlSelectorInstructionString: htmlSelectorInstructionString,
+            htmlAttributesInstructionsString: htmlAttributesInstructionsString,
+            acssInstructionsString: acssInstructionsString
+        };
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_validate(type, instructionString) {
+        if (type === BASE_CMD_TYPE_HTML_METATAG()) {
+            return HTML_SELECTOR_INSTRUCTION_STRING_metaTagValidate(instructionString);
+        }
+        else if (type === BASE_CMD_TYPE_HTML_BODYTAG()) {
+            return HTML_SELECTOR_INSTRUCTION_STRING_bodyTagValidate(instructionString);
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_metaTagValidate(firstPartOfCMD) {
+        return validateAll(firstPartOfCMD, [
+            HTML_SELECTOR_INSTRUCTION_STRING_noSpaces,
+            HTML_SELECTOR_INSTRUCTION_STRING_noUnallowedMetaTagChar
+        ]);
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_bodyTagValidate(firstPartOfCMD) {
+        return validateAll(firstPartOfCMD, [
+            HTML_SELECTOR_INSTRUCTION_STRING_noSpaces,
+            HTML_SELECTOR_INSTRUCTION_STRING_noUnallowedBodyTagChar,
+            HTML_SELECTOR_INSTRUCTION_STRING_noMultipleDots,
+            HTML_SELECTOR_INSTRUCTION_STRING_noMultipleHashes,
+            HTML_SELECTOR_INSTRUCTION_STRING_noDotAtEnd,
+            HTML_SELECTOR_INSTRUCTION_STRING_noHashAtEnd,
+            HTML_SELECTOR_INSTRUCTION_STRING_noHashFollowedByDot,
+            HTML_SELECTOR_INSTRUCTION_STRING_noDotFollowedByHash,
+            HTML_SELECTOR_INSTRUCTION_STRING_noNameSeparatorAtBoundary
+        ]);
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noSpaces(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES.test(v)) {
+            return new Error('HTML selector instruction string - No spaces.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noUnallowedMetaTagChar(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_METATAG_CHAR.test(v)) {
+            return new Error('HTML selector instruction string - No unallowed character.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noUnallowedBodyTagChar(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_BODYTAG_CHAR.test(v)) {
+            return new Error('HTML selector instruction string - No unallowed character.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noMultipleDots(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_MULTIPLE_DOTS.test(v)) {
+            return new Error('HTML selector instruction string - No multiple dots.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noMultipleHashes(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_MULTIPLE_HASHES.test(v)) {
+            return new Error('HTML selector instruction string - No multiple hashes.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noDotAtEnd(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_DOT_AT_END.test(v)) {
+            return new Error('HTML selector instruction string - No dot at end.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noHashAtEnd(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_HASH_AT_END.test(v)) {
+            return new Error('HTML selector instruction string - No hash at end.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noHashFollowedByDot(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_HASH_FOLLOWED_BY_DOT.test(v)) {
+            return new Error('HTML selector instruction string - No hash followed by dot.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noDotFollowedByHash(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_DOT_FOLLOWED_BY_HASH.test(v)) {
+            return new Error('HTML selector instruction string - No dot followed by hash.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_noNameSeparatorAtBoundary(v) {
+        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_NAME_SEPARATOR_AT_BOUNDARY.test(v)) {
+            return new Error('HTML selector instruction string - No name separator at boundary.');
+        }
+        return null;
+    }
+    function HTML_SELECTOR_INSTRUCTION_STRING_parse(type, instructionString) {
         var components = instructionString.match(REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS);
         var htmlSelectorTag = null;
         var htmlSelectorID = null;
         var htmlSelectorClasses = [];
         for (var i = 0, l = components.length; i < l; i++) {
             var component = components[i];
-            if (i > 0) {
-                var t = component[0];
-                if (t === '.') {
-                    htmlSelectorClasses.push(component);
-                }
-                else if (t === '#') {
-                    if (htmlSelectorClasses.length > 0) {
-                        throw new Error('Invalid HTML selector components order.');
+            if (component) {
+                if (i > 0) {
+                    var ch = component[0];
+                    if (ch === '.') {
+                        htmlSelectorClasses.push(component.slice(1));
                     }
-                    htmlSelectorID = component;
+                    else if (ch === '#') {
+                        if (htmlSelectorClasses.length > 0) {
+                            throw new Error('HTML selector instruction string - No invalid order.');
+                        }
+                        if (htmlSelectorID) {
+                            throw new Error('HTML selector instruction string - No multiple IDs. ');
+                        }
+                        htmlSelectorID = component.slice(1);
+                    }
                 }
-            }
-            else {
-                if (REG_GENERAL_STARTS_WITH_UPPERCASE.test(component)) {
+                else {
                     htmlSelectorTag = component;
                     if (!htmlSelectorTag) {
                         throw new Error('Unable to parse HTML selector tag.');
@@ -2060,340 +2108,12 @@ exports.H = function(command, a, b) {
         }
         return HTML_SELECTOR_INSTRUCTION_compose(htmlSelectorTag, htmlSelectorID, htmlSelectorClasses);
     }
-
     function HTML_SELECTOR_INSTRUCTION_compose(htmlSelectorTag, htmlSelectorID, htmlSelectorClasses) {
         return {
             htmlSelectorTag: htmlSelectorTag,
             htmlSelectorID: htmlSelectorID,
             htmlSelectorClasses: htmlSelectorClasses
         };
-    }
-
-    // function HTML_BODYTAG_CMD_process(cmd) {
-    //     var m = cmd.match(/\|/g);
-    //     if (m && m.length > 1) {
-    //         throw new Error('No multiple "|".');
-    //     }
-    //     var map = {
-    //         'Doc': '<!DOCTYPE html><html{modifiers}>{content}</html>',
-    //         'Head': '<head>{content}</head>',
-    //         'Meta': '<meta{modifiers}>',
-    //         'Title': '<title>{content}</title>'
-    //     };
-    //     cmd = cmd.split('|');
-    //     if (cmd[1]) {
-    //         err = HTML_ATTRIBUTES_beforeParseValidateCMD(cmd[1]);
-    //         if (err) {
-    //             throw err;
-    //         }
-    //         var attrsCMDs = HTML_ATTRIBUTES_parseCMD(cmd[1]);
-    //         ATTRS_parse(cmd[1]);
-    //     }
-    //     var template = map[cmd[0]] || null;
-    //     if (template) {
-    //         return template.replace('{modifiers}', HTML_ATTRIBUTES_);
-    //         [cmd[0], template, attrsCMDs];
-    //     }
-    //     else {
-    //         throw new Error('Invalid left-hand "' + cmd[0] + '" operator.');
-    //     }
-    // }
-
-    function ACSS_VAR_process(cmd) {
-        var variable = ACSS_VAR_parseVAR(cmd);
-        var cache = exports.malloc('__H');
-        var variables = cache('variables') || {};
-        if (variables[variable.key]) {
-            throw new Error('No duplicate variable.');
-        }
-        else {
-            variables[variable.key] = variable.value;
-            cache('variable', variables);
-        }
-    }
-
-    function ACSS_VAR_parseVAR(cmd) {
-        cmd = cmd.split(/\s*:\s*/);
-        var key = cmd[0];
-        var value = cmd[1];
-        if (key && value) {
-            return ACSS_VAR_composeVAR(key, value);
-        }
-        else {
-            throw new Error('Invalid ACSS variable separator.');
-        }
-    }
-
-    function ACSS_VAR_composeVAR(key, value) {
-        return {
-            key: key,
-            value: value
-        };
-    }
-
-    // ORDER CHECKING
-    // function HTML_ATTRIBUTES_processCMD(cmd) {
-    //     var map = {
-    //         'Doc': [
-    //             ['Lang', 'lang']
-    //         ],
-    //         'Head': [],
-    //         'Meta': [
-    //             ['Charset', 'charset'],
-    //             ['Name', 'name'],
-    //             ['Property', 'property'],
-    //             ['HttpEquiv', 'http-equiv'],
-    //             ['Content', 'content']
-    //         ],
-    //         'Title': []
-    //     };
-    //     var mapPairs = map[cmd[0]];
-    //     var controls = cmd[1];
-    //     var modifiers = '';
-    //     var previous = -1;
-    //     for (var i = 0, len = controls.length; i < len; i++) {
-    //         var control = controls[i];
-    //         var found = false;
-    //         for (var j = 0, l = mapPairs.length; j < l; j++) {
-    //             var pair = mapPairs[j];
-    //             if (pair[0] === control[0]) {
-    //                 if (j < previous) {
-    //                     return throwRightHandFunctionOrderMismatchError(mapPairs, controls);
-    //                 }
-    //                 else { // FUNCTION WAS FOUND AND FUNCTIONS CHAIN IS IN SAME ORDER AS IN MAP
-    //                     found = true;
-    //                     modifiers += ' ' + control[0] + '="' + control[1] + '"';
-    //                     previous = j;
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //         if (!found) {
-    //             throw new Error('Unsupported right-hand function "' + control[0] + '()".');
-    //         }
-    //     }
-    //     return cmd[2].replace('{modifiers}', modifiers);
-    // }
-    // function throwRightHandFunctionOrderMismatchError(mapPairs, controls) {
-    //     var msg = 'Incorrect right-hand function order, expected:';
-    //     for (var i = 0, l = mapPairs.length; i < l; i++) {
-    //         var pair = mapPairs[i];
-    //         for (var j = 0, ll = controls.length; j < ll; j++) {
-    //             var control = controls[j];
-    //             if (control[0] === pair[0]) {
-    //                 msg += ' ' + pair[0] + '()';
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     throw new Error(msg + '.');
-    // }
-
-    function BASE_CMD_parseTriple(type, cmd) {
-        cmd = cmd.split(REG_GENERAL_SPLIT_BY_PIPE);
-        if (cmd && cmd.length > 3) {
-            throw new Error('Command can contain max 2 pipe separators.');
-        }
-        if (type === BASE_CMD_TYPE_HTML_METATAG()) {
-            if (cmd.length > 2) {
-                throw new Error('Meta element command must have max 1 pipe separator.');
-            }
-        }
-        var htmlSelectorInstructionString = cmd[0];
-        if (htmlSelectorInstructionString) {
-            var htmlAttributesInstructionsString = REG_GENERAL_IS_POSSIBLY_HTML_ATTRIBUTES_INSTRUCTION_STRING.test(cmd[1]) ? cmd[1] : null;
-            var acssInstructionsString = REG_GENERAL_IS_POSSIBLY_ACSS_INSTUCTIONS_STRING.test(cmd[1]) ? cmd[1] : (cmd[2] || null);
-            if (htmlAttributesInstructionsString && acssInstructionsString) {
-                if (htmlAttributesInstructionsString === acssInstructionsString) {
-                    throw new Error('Ambigious command.');
-                }
-            }
-            return BASE_CMD_composeTripleObject(type, htmlSelectorInstructionString, htmlAttributesInstructionsString, acssInstructionsString);
-        }
-        else {
-            throw new Error('Missing HTML selector command.');
-        }
-    }
-
-    function BASE_CMD_composeTripleObject(type, htmlSelectorInstructionString, htmlAttributesInstructionsString, acssInstructionsString) {
-        return {
-            type: type,
-            htmlSelectorInstructionString: htmlSelectorInstructionString,
-            htmlAttributesInstructionsString: htmlAttributesInstructionsString,
-            acssInstructionsString: acssInstructionsString
-        };
-    }
-
-    /**
-     * TYPES
-     */
-    function BASE_CMD_GET_TYPE(cmd) {
-        if (REG_ACSS_IS_VAR_CMD.test(cmd)) {
-            return BASE_CMD_TYPE_ACSS_VAR();
-        }
-        else if (REG_GENERAL_STARTS_WITH_METATAG.test(cmd)) {
-            return BASE_CMD_TYPE_HTML_METATAG();
-        }
-        else if (REG_GENERAL_STARTS_WITH_BODYTAG.test(cmd)) {
-            return BASE_CMD_TYPE_HTML_BODYTAG();
-        }
-        else {
-            return null;
-        }
-    }
-
-    function BASE_CMD_TYPE_ACSS_VAR() {
-        return 'ACSS_VAR_CMD';
-    }
-
-    function BASE_CMD_TYPE_HTML_METATAG() {
-        return 'HTML_METATAG_CMD';
-    }
-
-    function BASE_CMD_TYPE_HTML_BODYTAG() {
-        return 'HTML_BODYTAG_CMD';
-    }
-
-    /**
-     * VALIDATE HTML SELECTOR INSTRUCTION STRING
-     */
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING(type, instructionString) {
-        if (type === BASE_CMD_TYPE_HTML_METATAG()) {
-            return VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_FOR_METATAG(instructionString);
-        }
-        else if (type === BASE_CMD_TYPE_HTML_BODYTAG()) {
-            return VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_FOR_BODYTAG(instructionString);
-        }
-        else {
-            return null;
-        }
-    }
-
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_FOR_BODYTAG(firstPartOfCMD) {
-        return VALIDATE_STR_AGAINST(firstPartOfCMD, [
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noUnallowedBodyTagCharacter,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noMultipleDots,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noMultipleHashes,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noDotAtStartOrEnd,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noHashAtStartOrEnd,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noHashFollowedByUnallowedChar,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noInvalidFirstLetter,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noSpaces
-        ]);
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_FOR_METATAG(firstPartOfCMD) {
-        return VALIDATE_STR_AGAINST(firstPartOfCMD, [
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noInvalidFirstLetter,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noSpaces,
-            VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noUnallowedMetaTagCharacter
-        ]);
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noInvalidFirstLetter(v) {
-        if (REG_GENERAL_NO_INVALID_FIRST_LETTER.test(v)) {
-            return new Error('HTML selector instruction string - No invalid first letter.');
-        }
-        return null;
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noSpaces(v) {
-        if (REG_GENERAL_NO_SPACES.test(v)) {
-            return new Error('HTML selector instruction string - No spaces.');
-        }
-        return null;
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noUnallowedBodyTagCharacter(v) {
-        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_CHAR_BODYTAG.test(v)) {
-            return new Error('HTML selector instruction string - No unallowed character.');
-        }
-        return null;
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noUnallowedMetaTagCharacter(v) {
-        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_CHAR_METATAG.test(v)) {
-            return new Error('HTML selector instruction string - No unallowed character.');
-        }
-        return null;
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noMultipleDots(v) {
-        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_MULTIPLE_DOTS.test(v)) {
-            return new Error('HTML selector instruction string - No multiple dots.');
-        }
-        return null;
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noMultipleHashes(v) {
-        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_MULTIPLE_HASHES.test(v)) {
-            return new Error('HTML selector instruction string - No multiple hashes.');
-        }
-        return null;
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noDotAtStartOrEnd(v) {
-        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_DOT_AT_START_OR_END.test(v)) {
-            return new Error('HTML selector instruction string - No dot at start or end.');
-        }
-        return null;
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noHashAtStartOrEnd(v) {
-        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_HASH_AT_START_OR_END.test(v)) {
-            return new Error('HTML selector instruction string - No hash at start or end.');
-        }
-        return null;
-    }
-    function VALIDATE_HTML_SELECTOR_INSTRUCTION_STRING_noHashFollowedByUnallowedChar(v) {
-        if (REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_HASH_FOLLOWED_BY_UNALLOWED_CHAR.test(v)) {
-            return new Error('HTML selector instruction string - No hash followed by unallowed char.');
-        }
-        return null;
-    }
-
-    /**
-     * GENERAL VALIDATION
-     */
-    function VALIDATE_BASE_CMD(v) {
-        return VALIDATE_STR_AGAINST(v, [
-            VALIDATE_BASE_CMD_spaceAtStartOrEnd,
-            VALIDATE_BASE_CMD_multipleSpaces,
-            VALIDATE_BASE_CMD_multipleCommas,
-            VALIDATE_BASE_CMD_spacesAroundPipe,
-            VALIDATE_BASE_CMD_functionsWithNonCapitalLetters
-        ]);
-    }
-    function VALIDATE_BASE_CMD_spaceAtStartOrEnd(v) {
-        if (REG_GENERAL_NO_SPACES_AT_START_OR_END.test(v)) {
-            return new Error('No spaces at start or end.');
-        }
-        return null;
-    }
-    function VALIDATE_BASE_CMD_multipleSpaces(v) {
-        if (REG_GENERAL_NO_MULTIPLE_SPACES.test(v)) {
-            return new Error('No multiple spaces.');
-        }
-        return null;
-    }
-    function VALIDATE_BASE_CMD_multipleCommas(v) {
-        if (REG_GENERAL_NO_MULTIPLE_COMMAS.test(v)) {
-            return new Error('No multiple commas.');
-        }
-        return null;
-    }
-    function VALIDATE_BASE_CMD_spacesAroundPipe(v) {
-        if (REG_GENERAL_NO_SPACES_AROUND_PIPE.test(v)) {
-            return new Error('No spaces around pipe.');
-        }
-        return null;
-    }
-    function VALIDATE_BASE_CMD_functionsWithNonCapitalLetters(v) {
-        if (REG_GENERAL_NO_LOWERCASE_FUNCTIONS.test(v)) {
-            return new Error('Functions must start with capital letter.');
-        }
-        return null;
-    }
-
-    function VALIDATE_STR_AGAINST(str, validations) {
-        for (var i = 0, l = validations.length; i < l; i++) {
-            var err = validations[i](str);
-            if (err) {
-                return err;
-            }
-        }
-        return null;
     }
 
     /**
@@ -2505,65 +2225,3 @@ exports.H = function(command, a, b) {
         }
     }
 };
-
-// function normalizeCSSKeyframes(v) {
-//     var arr = [];
-//     var index = 0;
-//     while (index !== -1) {
-//         index = v.indexOf('@keyframes', index + 1);
-//         if (index === -1) {
-//             continue;
-//         }
-//         var counter = 0;
-//         var end = -1;
-//         for (var indexer = index + 10; indexer < v.length; indexer++) {
-//             if (v[indexer] === '{') {
-//                 counter++;
-//             }
-//             if (v[indexer] !== '}') {
-//                 continue;
-//             }
-//             if (counter > 1) {
-//                 counter--;
-//                 continue;
-//             }
-//             end = indexer;
-//             break;
-//         }
-//         if (end === -1) {
-//             continue;
-//         }
-//         var css = v.substring(index, end + 1);
-//         arr.push({
-//             name: 'keyframes',
-//             property: css
-//         });
-//     }
-//     var output = [];
-//     var len = arr.length;
-//     for (var i = 0; i < len; i++) {
-//         var name = arr[i].name;
-//         var property = arr[i].property;
-//         if (name !== 'keyframes') {
-//             continue;
-//         }
-//         var plus = property.substring(1);
-//         var delimiter = '\n';
-//         var updated = '@' + plus + delimiter;
-//         updated += '@-webkit-' + plus + delimiter;
-//         updated += '@-moz-' + plus + delimiter;
-//         updated += '@-o-' + plus + delimiter;
-//         v = strReplace(v, property, '@[[' + output.length + ']]');
-//         output.push(updated);
-//     }
-//     len = output.length;
-//     for (var j = 0; j < len; j++) {
-//         v = v.replace('@[[' + j + ']]', output[j]);
-//     }
-//     return v;
-// }
-
-// function strReplace(str, find, to) {
-//     var beg = str.indexOf(find);
-//     return beg === -1 ? str : (str.substring(0, beg) + to + str.substring(beg + find.length));
-// }
