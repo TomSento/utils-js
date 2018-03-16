@@ -47,36 +47,44 @@ exports.H = function(command, a, b) {
     };
     var HTML_ATTRIBUTES = {
         Doc: [{
+            name: 'Language',
             instructionName: 'Lang',
             allowArgument: true,
             html: 'lang={0}'
         }],
         Meta: [{ // MANDATORY ORDER
+            name: 'Charset',
             instructionName: 'Charset',
             html: 'charset={0}'
         }, {
+            name: 'Name',
             instructionName: 'Name',
             allowArgument: true,
             html: 'name={0}'
         }, {
+            name: 'Property',
             instructionName: 'Property',
             allowArgument: true,
             html: 'property={0}'
         }, {
+            name: 'HttpEquiv',
             instructionName: 'HttpEquiv',
             allowArgument: true,
             html: 'http-equiv={0}'
         }, {
+            name: 'Content',
             instructionName: 'Content',
             allowArgument: true,
             html: 'content={0}'
         }],
         Input: [{
+            name: 'Checked',
             instructionName: 'Chckd',
             allowArgument: false,
             html: 'checked'
         }],
         Option: [{
+            name: 'Selected',
             instructionName: 'Slctd',
             allowArgument: false,
             html: 'selected'
