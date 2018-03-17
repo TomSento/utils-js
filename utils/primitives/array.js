@@ -28,6 +28,28 @@ exports.arrFind = function(arr, fn) {
     }
     return null;
 };
+exports.arrFindIndex = function(arr, fn, value) {
+    var isFN = typeof(fn) === 'function';
+    var isV = value !== undefined;
+    for (var i = 0, length = arr.length; i < length; i++) {
+        if (isFN) {
+            if (fn.call(arr, arr[i], i)) {
+                return i;
+            }
+            continue;
+        }
+        if (isV) {
+            if (arr[i] && arr[i][fn] === value) {
+                return i;
+            }
+            continue;
+        }
+        if (arr[i] === fn) {
+            return i;
+        }
+    }
+    return -1;
+};
 exports.arrRemove = function(arr, fn, v) { // FROM TOTAL.JS
     var isFN = typeof(fn) === 'function';
     var isV = v !== undefined;
