@@ -9,11 +9,15 @@ exports.H = function(command, a, b) {
      */
     var REG_BASE_CMD_NO_SPACE_AT_START = /^\s/;
     var REG_BASE_CMD_NO_SPACE_AT_END = /\s$/;
+    var REG_BASE_CMD_NO_SPACE_FOLLOWED_BY_COMMA = /\s,/;
     var REG_BASE_CMD_NO_MULTIPLE_SPACES = /\s{2,}/;
     var REG_BASE_CMD_NO_MULTIPLE_COMMAS = /,\s*,/;
     var REG_BASE_CMD_NO_MULTIPLE_PIPES = /\|{2,}/;
     var REG_BASE_CMD_NO_SPACES_AROUND_PIPE = /(?:\s+\|)|(?:\|\s+)/;
+    var REG_BASE_CMD_NO_PIPE_AT_END = /\|$/;
     var REG_BASE_CMD_NO_LOWERCASED_FUNCTION = /\b[a-z]\w+\(/;
+    var REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN = /\(\s/;
+    var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
 
     var REG_BASE_CMD_IS_ACSS_VAR = /^--/;
     var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Meta|Title)(?![A-z0-9])/;
@@ -21,7 +25,7 @@ exports.H = function(command, a, b) {
 
     var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
-    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Lang|Charset|Name|Property|HttpEquiv|Content|Chckd|Slctd)(?![A-z0-9])/;
+    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Lang|Charset|Name|Property|HttpEquiv|Content|Chckd|Slctd|Readonly|Disabled)(?![A-z0-9])/;
     var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdend|Bdb|Bdstart|Bdc|Bdtc|Bdendc|Bdbc|Bdstartc|Bdsp|Bds|Bdts|Bdends|Bdbs|Bdstarts|Bdw|Bdtw|Bdendw|Bdbw|Bdstartw|Bdrs|Bdrstend|Bdrsbend|Bdrsbstart|Bdrststart|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mend|Mb|Mstart|Mah|Maw|Mih|Miw|O|T|End|B|Start|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pend|Pb|Pstart|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
@@ -37,13 +41,21 @@ exports.H = function(command, a, b) {
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS = /[A-Z.#][a-z0-9_-]+/g;
 
+    var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S+/g;
+    var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /(\S+)\((.*?)\)(\S+)?/;
+
+    var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR = /[()]/;
+
     var HTML_TEMPLATES = {
         Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
         Head: '<head>{content}</head>',
         Meta: '<meta{modifiers}>',
         Title: '<title>{content}</title>',
         Div: '<div{modifiers}>{content}</div>',
-        Span: '<span{modifiers}>{content}</span>'
+        Span: '<span{modifiers}>{content}</span>',
+        Input: '<input{modifiers}>',
+        Select: '<select{modifiers}>{content}</select>',
+        Option: '<option{modifiers}>{content}</option>'
     };
     var HTML_ATTRIBUTES = {
         Doc: [{
@@ -82,6 +94,22 @@ exports.H = function(command, a, b) {
             instructionName: 'Chckd',
             allowArgument: false,
             html: 'checked'
+        }, {
+            name: 'Readonly',
+            instructionName: 'Readonly',
+            allowArgument: false,
+            html: 'readonly'
+        }, {
+            name: 'Disabled',
+            instructionName: 'Disabled',
+            allowArgument: false,
+            html: 'disabled'
+        }],
+        Select: [{
+            name: 'Disabled',
+            instructionName: 'Disabled',
+            allowArgument: false,
+            html: 'disabled'
         }],
         Option: [{
             name: 'Selected',
@@ -1829,11 +1857,15 @@ exports.H = function(command, a, b) {
         return validateAll(v, [
             BASE_CMD_noSpaceAtStart,
             BASE_CMD_noSpaceAtEnd,
+            BASE_CMD_noSpaceFollowedByComma,
             BASE_CMD_noMultipleSpaces,
             BASE_CMD_noMultipleCommas,
             BASE_CMD_noMultiplePipes,
             BASE_CMD_noSpacesAroundPipe,
-            BASE_CMD_noLowercasedFunction
+            BASE_CMD_noPipeAtEnd,
+            BASE_CMD_noLowercasedFunction,
+            BASE_CMD_noSpaceAfterOpenParen,
+            BASE_CMD_noSpaceBeforeCloseParen
         ]);
     }
     function validateAll(str, validations) {
@@ -1854,6 +1886,12 @@ exports.H = function(command, a, b) {
     function BASE_CMD_noSpaceAtEnd(v) {
         if (REG_BASE_CMD_NO_SPACE_AT_END.test(v)) {
             return new Error('Base command - No space at end.');
+        }
+        return null;
+    }
+    function BASE_CMD_noSpaceFollowedByComma(v) {
+        if (REG_BASE_CMD_NO_SPACE_FOLLOWED_BY_COMMA.test(v)) {
+            return new Error('Base command - No space followed by comma.');
         }
         return null;
     }
@@ -1881,9 +1919,27 @@ exports.H = function(command, a, b) {
         }
         return null;
     }
+    function BASE_CMD_noPipeAtEnd(v) {
+        if (REG_BASE_CMD_NO_PIPE_AT_END.test(v)) {
+            return new Error('Base command - No pipe at end.');
+        }
+        return null;
+    }
     function BASE_CMD_noLowercasedFunction(v) {
         if (REG_BASE_CMD_NO_LOWERCASED_FUNCTION.test(v)) {
             return new Error('Base command - No lowercased function.');
+        }
+        return null;
+    }
+    function BASE_CMD_noSpaceAfterOpenParen(v) {
+        if (REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN.test(v)) {
+            return new Error('Base command - No space after open paren.');
+        }
+        return null;
+    }
+    function BASE_CMD_noSpaceBeforeCloseParen(v) {
+        if (REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN.test(v)) {
+            return new Error('Base command - No space before close paren.');
         }
         return null;
     }
@@ -1902,8 +1958,10 @@ exports.H = function(command, a, b) {
                 throw err;
             }
             var selector = HTML_SELECTOR_INSTRUCTION_STRING_parse(type, cmd.htmlSelectorInstructionString);
+            var attributes = cmd.htmlAttributesInstructionsString ? HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(selector.htmlSelectorTag, cmd.htmlAttributesInstructionsString) : [];
             console.log('CMD:', cmd);
             console.log('SELECTOR:', selector);
+            console.log('ATTRIBUTES:', attributes);
         }
         else {
             throw new Error('Unsupported command type.');
@@ -1982,8 +2040,13 @@ exports.H = function(command, a, b) {
                 throw new Error('Ambigious command.');
             }
         }
-        if (cmd.length === 3 && cmd[1].length > 0 && !htmlAttributesInstructionsString) { // NOT ALL INSTRUCTION NAMES MUST MATCH, WE ARE JUST DIVIDING THERE COMMANDS, IF SOME IS NOT REGISTERED THIS WILL BE VALIDATED IN PER INSTRUCTION VALIDATION
-            throw new Error('HTML attributes instructions string - No all instruction names mismatch.');
+        if (cmd[1].length > 0) { // NOT ALL INSTRUCTION NAMES MUST MATCH, WE ARE JUST DIVIDING THERE COMMANDS, IF SOME IS NOT REGISTERED THIS WILL BE VALIDATED IN PER INSTRUCTION VALIDATION
+            if (cmd.length === 3 && !htmlAttributesInstructionsString) {
+                throw new Error('HTML attributes instructions string - No all instruction names mismatch.');
+            }
+            if (cmd.length === 2 && !htmlAttributesInstructionsString && !acssInstructionsString) {
+                throw new Error('HTML attributes instructions string - No all instruction names mismatch.');
+            }
         }
         if (type === BASE_CMD_TYPE_HTML_METATAG()) {
             if (acssInstructionsString) {
@@ -2131,6 +2194,90 @@ exports.H = function(command, a, b) {
             htmlSelectorClasses: htmlSelectorClasses
         };
     }
+    function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(htmlSelectorTag, instructionsString) {
+        var allowedHTMLAttributes = HTML_ATTRIBUTES[htmlSelectorTag] || [];
+        var instructionStrings = instructionsString.match(REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS);
+        if (!instructionStrings) {
+            throw new Error('HTML attributes instructions string - Unable to match any instruction string.');
+        }
+        var attributes = [];
+        for (var i = 0, l = instructionStrings.length; i < l; i++) {
+            var instructionString = instructionStrings[i];
+            var attribute = HTML_ATTRIBUTES_INSTRUCTION_STRING_parse(instructionString, allowedHTMLAttributes, htmlSelectorTag);
+            if (i > 0) {
+                var currIndex = arrFindIndex(allowedHTMLAttributes, 'instructionName', attribute.instructionName);
+                var lastIndex = arrFindIndex(allowedHTMLAttributes, 'instructionName', attributes[attributes.length - 1].instructionName);
+                if (currIndex < lastIndex) {
+                    throw HTML_ATTRIBUTES_INSTRUCTIONS_STRING_composeOrderError(instructionStrings, allowedHTMLAttributes);
+                }
+                else if (currIndex === lastIndex) {
+                    throw new Error('HTML attributes instructions string - Duplicate instructions.');
+                }
+            }
+            attributes.push(attribute);
+        }
+        return attributes;
+    }
+    function HTML_ATTRIBUTES_INSTRUCTION_STRING_parse(instructionString, allowedHTMLAttributes, htmlSelectorTag) {
+        var components = instructionString.match(REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS);
+        if (!components) {
+            throw Error('HTML attributes instruction string - Instruction must follow <Attribute>(<value>?) syntax.');
+        }
+        var allowedHTMLAttribute = arrFind(allowedHTMLAttributes, 'instructionName', components[1]);
+        if (!allowedHTMLAttribute) {
+            throw new Error('HTML attribute "' + components[1] + '" is not allowed for "' + htmlSelectorTag + '" tag.');
+        }
+        var err = HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(allowedHTMLAttribute, components);
+        if (err) {
+            throw err;
+        }
+        var instructionValue = components[2] || '';
+        return HTML_ATTRIBUTES_INSTRUCTION_compose(allowedHTMLAttribute, instructionValue);
+    }
+    function HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(allowedHTMLAttribute, components) {
+        if (!allowedHTMLAttribute.allowArgument && components[2]) {
+            throw new Error('HTML attributes instruction string - Instruction "' + allowedHTMLAttribute.instructionName + '" must not define parameter.');
+        }
+        if (components[3]) {
+            throw new Error('HTML attributes instruction string - No chars after close paren.');
+        }
+        return HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(components[1]);
+    }
+    function HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(v) {
+        return validateAll(v, [
+            HTML_ATTRIBUTES_INSTRUCTION_VALUE_noUnallowedChar
+        ]);
+    }
+    function HTML_ATTRIBUTES_INSTRUCTION_VALUE_noUnallowedChar(v) {
+        if (REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR.test(v)) {
+            return new Error('HTML attributes instruction value - No unallowed char.');
+        }
+    }
+    function HTML_ATTRIBUTES_INSTRUCTION_compose(allowedHTMLAttribute, instructionValue) {
+        return extend(clone(allowedHTMLAttribute), {
+            instructionValue: instructionValue
+        });
+    }
+    function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_composeOrderError(instructionStrings, allowedHTMLAttributes) {
+        var instructionNames = [];
+        var i;
+        for (i = 0; i < instructionStrings.length; i++) {
+            var instructionString = instructionStrings[i];
+            var components = instructionString ? instructionString.match(REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS) : [];
+            if (Array.isArray(components) && components[1]) {
+                instructionNames.push(components[1]);
+            }
+        }
+        var baseMessage = 'HTML attributes instructions string - ';
+        var orderMessage = '';
+        for (i = 0; i < allowedHTMLAttributes.length; i++) {
+            var instructionName = allowedHTMLAttributes[i].instructionName;
+            if (instructionName && instructionNames.indexOf(instructionName) >= 0) {
+                orderMessage += ' ' + instructionName + '()';
+            }
+        }
+        return new Error(orderMessage ? (baseMessage + 'Expected order:' + orderMessage + '.') : (baseMessage + 'Invalid instructions order.'));
+    }
 
     /**
      * CSS
@@ -2239,5 +2386,94 @@ exports.H = function(command, a, b) {
         else {
             return '';
         }
+    }
+    function clone(obj, skip) { // NO DATE AND FUNCTION CLONING
+        if (!obj || typeof(obj) !== 'object') {
+            return obj;
+        }
+        var o;
+        var t;
+        if (obj instanceof Array) {
+            var len = obj.length;
+            o = new Array(len);
+            for (var i = 0; i < len; i++) {
+                t = typeof(obj[i]);
+                if (t !== 'object') {
+                    if (t === 'function') {
+                        continue;
+                    }
+                    o[i] = obj[i];
+                    continue;
+                }
+                o[i] = clone(obj[i], skip);
+            }
+            return o;
+        }
+        o = {};
+        for (var m in obj) {
+            if (skip && skip[m]) {
+                continue;
+            }
+            var val = obj[m];
+            t = typeof(val);
+            if (t !== 'object') {
+                if (t === 'function') {
+                    continue;
+                }
+                o[m] = val;
+                continue;
+            }
+            o[m] = clone(obj[m], skip);
+        }
+        return o;
+    }
+    function extend(base, obj) {
+        if (!base || !obj) {
+            return base;
+        }
+        if (typeof(base) !== 'object' || typeof(obj) !== 'object') {
+            return base;
+        }
+        var keys = [];
+        for (var k in obj) {
+            if (obj.hasOwnProperty(k)) {
+                keys.push(k);
+            }
+        }
+        var i = keys.length;
+        while (i--) {
+            var key = keys[i];
+            base[key] = clone(obj[key]);
+        }
+        return base;
+    }
+    function arrFind(arr, fn, value) {
+        var index = arrFindIndex(arr, fn, value);
+        if (index === -1) {
+            return null;
+        }
+        return arr[index];
+    }
+    function arrFindIndex(arr, fn, value) {
+        var isFN = typeof(fn) === 'function';
+        var isV = value !== undefined;
+        for (var i = 0, length = arr.length; i < length; i++) {
+            if (isFN) {
+                if (fn.call(arr, arr[i], i)) {
+                    return i;
+                }
+                continue;
+            }
+            if (isV) {
+                if (arr[i] && arr[i][fn] === value) {
+                    return i;
+                }
+                continue;
+            }
+            if (arr[i] === fn) {
+                return i;
+            }
+        }
+        return -1;
     }
 };
