@@ -42,7 +42,7 @@ exports.H = function(command, a, b) {
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS = /[-_A-Z][-_A-Za-z0-9]*|[.#][-_A-Za-z0-9]+/g;
 
     var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S+/g;
-    var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /(\S+)\((.*?)\)(\S+)?/;
+    var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /([^\s(]+)\((.*)\)(\S+)?/;
 
     var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR = /[()]/;
 
@@ -2244,7 +2244,7 @@ exports.H = function(command, a, b) {
         if (components[3]) {
             throw new Error('HTML attributes instruction string - No chars after close paren.');
         }
-        return HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(components[1]);
+        return HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(components[2]);
     }
     function HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(v) {
         return validateAll(v, [
