@@ -2021,7 +2021,10 @@ exports.H = function(command, a, b) {
     }
     function BASE_CMD_parseTriple(type, cmd) {
         cmd = cmd.split(REG_BASE_CMD_SPLIT_BY_PIPE);
-        if (cmd && cmd.length > 3) {
+        if (!Array.isArray(cmd) || cmd.length === 0) {
+            throw new Error('Base command - Unable to parse triple.');
+        }
+        if (cmd.length > 3) {
             throw new Error('Command can contain max 2 pipe separators.');
         }
         if (type === BASE_CMD_TYPE_HTML_METATAG()) {
@@ -2040,7 +2043,7 @@ exports.H = function(command, a, b) {
                 throw new Error('Ambigious command.');
             }
         }
-        if (cmd[1].length > 0) { // NOT ALL INSTRUCTION NAMES MUST MATCH, WE ARE JUST DIVIDING THERE COMMANDS, IF SOME IS NOT REGISTERED THIS WILL BE VALIDATED IN PER INSTRUCTION VALIDATION
+        if (cmd[1] && cmd[1].length > 0) { // NOT ALL INSTRUCTION NAMES MUST MATCH, WE ARE JUST DIVIDING THERE COMMANDS, IF SOME IS NOT REGISTERED THIS WILL BE VALIDATED IN PER INSTRUCTION VALIDATION
             if (cmd.length === 3 && !htmlAttributesInstructionsString) {
                 throw new Error('HTML attributes instructions string - No all instruction names mismatch.');
             }
