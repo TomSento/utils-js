@@ -2239,10 +2239,10 @@ exports.H = function(command, a, b) {
     }
     function HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(allowedHTMLAttribute, components) {
         if (!allowedHTMLAttribute.allowArgument && components[2]) {
-            throw new Error('HTML attributes instruction string - Instruction "' + allowedHTMLAttribute.instructionName + '" must not define parameter.');
+            return new Error('HTML attributes instruction string - Instruction "' + allowedHTMLAttribute.instructionName + '" must not define parameter.');
         }
         if (components[3]) {
-            throw new Error('HTML attributes instruction string - No chars after close paren.');
+            return new Error('HTML attributes instruction string - No chars after close paren.');
         }
         return HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(components[2]);
     }
