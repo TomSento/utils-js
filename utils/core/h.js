@@ -15,7 +15,7 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_NO_MULTIPLE_PIPES = /\|{2,}/;
     var REG_BASE_CMD_NO_SPACES_AROUND_PIPE = /(?:\s+\|)|(?:\|\s+)/;
     var REG_BASE_CMD_NO_PIPE_AT_END = /\|$/;
-    var REG_BASE_CMD_NO_LOWERCASED_FUNCTION = /\b[a-z]\w+\(/;
+    var REG_BASE_CMD_NO_LOWERCASED_FUNCTION = /(?:^|\||\s)[a-z]\S+\(/;
     var REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN = /\(\s/;
     var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
 
