@@ -29,8 +29,8 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdend|Bdb|Bdstart|Bdc|Bdtc|Bdendc|Bdbc|Bdstartc|Bdsp|Bds|Bdts|Bdends|Bdbs|Bdstarts|Bdw|Bdtw|Bdendw|Bdbw|Bdstartw|Bdrs|Bdrstend|Bdrsbend|Bdrsbstart|Bdrststart|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mend|Mb|Mstart|Mah|Maw|Mih|Miw|O|T|End|B|Start|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pend|Pb|Pstart|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
-    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_METATAG_CHAR = /[^A-z0-9]/;
-    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_BODYTAG_CHAR = /[^A-z0-9#.\-_]/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_METATAG_CHAR = /[^\w]/;
+    var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_BODYTAG_CHAR = /[^\w-_#.]/;
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_MULTIPLE_DOTS = /\.{2,}/;
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_MULTIPLE_HASHES = /#{2,}/;
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_DOT_AT_END = /\.$/;
