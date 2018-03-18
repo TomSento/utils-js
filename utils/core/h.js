@@ -41,8 +41,10 @@ exports.H = function(command, a, b) {
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS = /[-_A-Z][-_A-Za-z0-9]*|[.#][-_A-Za-z0-9]+/g;
 
+    var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)(?![\s)]|$)/;
+
     var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S+/g;
-    var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /([^\s(]+)\((.*)\)(\S+)?/;
+    var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /([^\s(]+)\((.*)\)/;
 
     var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR = /[()]/;
 
@@ -1958,7 +1960,14 @@ exports.H = function(command, a, b) {
                 throw err;
             }
             var selector = HTML_SELECTOR_INSTRUCTION_STRING_parse(type, cmd.htmlSelectorInstructionString);
-            var attributes = cmd.htmlAttributesInstructionsString ? HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(selector.htmlSelectorTag, cmd.htmlAttributesInstructionsString) : [];
+            var attributes = [];
+            if (cmd.htmlAttributesInstructionsString) {
+                err = HTML_ATTRIBUTES_INSTRUCTIONS_STRING_validate(cmd.htmlAttributesInstructionsString);
+                if (err) {
+                    throw err;
+                }
+                attributes = HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(selector.htmlSelectorTag, cmd.htmlAttributesInstructionsString);
+            }
             console.log('CMD:', cmd);
             console.log('SELECTOR:', selector);
             console.log('ATTRIBUTES:', attributes);
@@ -2197,6 +2206,17 @@ exports.H = function(command, a, b) {
             htmlSelectorClasses: htmlSelectorClasses
         };
     }
+    function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_validate(instructionsString) {
+        return validateAll(instructionsString, [
+            HTML_ATTRIBUTES_INSTRUCTIONS_STRING_noMissingSpaceBetweenInstructions
+        ]);
+    }
+    function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_noMissingSpaceBetweenInstructions(v) {
+        if (REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS.test(v)) {
+            return new Error('HTML attributes instructions string - No missing space between instructions.');
+        }
+        return null;
+    }
     function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(htmlSelectorTag, instructionsString) {
         var allowedHTMLAttributes = HTML_ATTRIBUTES[htmlSelectorTag] || [];
         var instructionStrings = instructionsString.match(REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS);
@@ -2240,9 +2260,6 @@ exports.H = function(command, a, b) {
     function HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(allowedHTMLAttribute, components) {
         if (!allowedHTMLAttribute.allowArgument && components[2]) {
             return new Error('HTML attributes instruction string - Instruction "' + allowedHTMLAttribute.instructionName + '" must not define parameter.');
-        }
-        if (components[3]) {
-            return new Error('HTML attributes instruction string - No chars after close paren.');
         }
         return HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(components[2]);
     }
