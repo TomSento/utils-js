@@ -15,7 +15,6 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_NO_MULTIPLE_PIPES = /\|{2,}/;
     var REG_BASE_CMD_NO_SPACES_AROUND_PIPE = /(?:\s+\|)|(?:\|\s+)/;
     var REG_BASE_CMD_NO_PIPE_AT_END = /\|$/;
-    var REG_BASE_CMD_NO_LOWERCASED_FUNCTION = /(?:^|\||\s)[a-z]\S+\(/;
     var REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN = /\(\s/;
     var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
 
@@ -1865,7 +1864,6 @@ exports.H = function(command, a, b) {
             BASE_CMD_noMultiplePipes,
             BASE_CMD_noSpacesAroundPipe,
             BASE_CMD_noPipeAtEnd,
-            BASE_CMD_noLowercasedFunction,
             BASE_CMD_noSpaceAfterOpenParen,
             BASE_CMD_noSpaceBeforeCloseParen
         ]);
@@ -1924,12 +1922,6 @@ exports.H = function(command, a, b) {
     function BASE_CMD_noPipeAtEnd(v) {
         if (REG_BASE_CMD_NO_PIPE_AT_END.test(v)) {
             return new Error('Base command - No pipe at end.');
-        }
-        return null;
-    }
-    function BASE_CMD_noLowercasedFunction(v) {
-        if (REG_BASE_CMD_NO_LOWERCASED_FUNCTION.test(v)) {
-            return new Error('Base command - No lowercased function.');
         }
         return null;
     }
