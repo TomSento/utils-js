@@ -68,6 +68,7 @@ exports.H = function(command, a, b) {
         Meta: [{ // MANDATORY ORDER
             name: 'Charset',
             instructionName: 'Charset',
+            allowArgument: true,
             html: 'charset={0}'
         }, {
             name: 'Name',
