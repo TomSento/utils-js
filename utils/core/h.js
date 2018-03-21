@@ -18,6 +18,7 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN = /\(\s/;
     var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
 
+    var REG_BASE_CMD_IS_ACSS_MEDIA_QUERY_VAR = /^@/;
     var REG_BASE_CMD_IS_ACSS_VAR = /^--/;
     var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Meta|Title)(?![A-Za-z0-9_-])/;
     var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Btn|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-Za-z0-9_-])/; // https://www.w3schools.com/tags/default.asp
@@ -46,6 +47,9 @@ exports.H = function(command, a, b) {
     var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /([^\s(]+)\((.*)\)/;
 
     var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR = /[()]/;
+
+    var REG_ACSS_MEDIA_QUERY_VAR_CMD_MATCH_COMPONENTS = /^@(\S+): (\d+)px(?!.)/;
+    var REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR = /[^a-z]/;
 
     var HTML_TEMPLATES = {
         Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
@@ -1943,8 +1947,11 @@ exports.H = function(command, a, b) {
     }
     function BASE_CMD_parse(cmd) {
         var type = BASE_CMD_GET_TYPE(cmd);
-        if (type === BASE_CMD_TYPE_ACSS_VAR()) {
-            return ACSS_VAR_process(cmd);
+        if (type === BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR()) {
+            return ACSS_MEDIA_QUERY_VAR_CMD_process(cmd);
+        }
+        else if (type === BASE_CMD_TYPE_ACSS_VAR()) {
+            return ACSS_VAR_CMD_process(cmd);
         }
         else if (type === BASE_CMD_TYPE_HTML_METATAG() || type === BASE_CMD_TYPE_HTML_BODYTAG()) {
             cmd = BASE_CMD_parseTriple(type, cmd);
@@ -1970,7 +1977,10 @@ exports.H = function(command, a, b) {
         }
     }
     function BASE_CMD_GET_TYPE(cmd) {
-        if (REG_BASE_CMD_IS_ACSS_VAR.test(cmd)) {
+        if (REG_BASE_CMD_IS_ACSS_MEDIA_QUERY_VAR.test(cmd)) {
+            return BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR();
+        }
+        else if (REG_BASE_CMD_IS_ACSS_VAR.test(cmd)) {
             return BASE_CMD_TYPE_ACSS_VAR();
         }
         else if (REG_BASE_CMD_IS_METATAG.test(cmd)) {
@@ -1983,6 +1993,9 @@ exports.H = function(command, a, b) {
             return null;
         }
     }
+    function BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR() {
+        return 'ACSS_MEDIA_QUERY_VAR_CMD';
+    }
     function BASE_CMD_TYPE_ACSS_VAR() {
         return 'ACSS_VAR_CMD';
     }
@@ -1992,7 +2005,54 @@ exports.H = function(command, a, b) {
     function BASE_CMD_TYPE_HTML_BODYTAG() {
         return 'HTML_BODYTAG_CMD';
     }
-    function ACSS_VAR_process(cmd) {
+    function ACSS_MEDIA_QUERY_VAR_CMD_process(cmd) {
+        var breakpoint = ACSS_MEDIA_QUERY_VAR_parse(cmd);
+        var cache = exports.malloc('__H');
+        var media = cache('media') || {};
+        if (media[breakpoint.key]) {
+            throw new Error('ACSS media query variable - No duplicate key.');
+        }
+        media[breakpoint.key] = breakpoint.value;
+        cache('media', media);
+    }
+    function ACSS_MEDIA_QUERY_VAR_parse(cmd) {
+        var components = cmd.match(REG_ACSS_MEDIA_QUERY_VAR_CMD_MATCH_COMPONENTS);
+        if (!components) {
+            throw new Error('ACSS media query variable - Command must follow @<breakpoint>: <value>px syntax.');
+        }
+        var key = components[1];
+        var err = ACSS_MEDIA_QUERY_VAR_KEY_validate(key);
+        if (err) {
+            throw err;
+        }
+        var value = ACSS_MEDIA_QUERY_VAR_VALUE_parse(components[2]);
+        return ACSS_MEDIA_QUERY_VAR_compose('@' + key, value + 'px');
+    }
+    function ACSS_MEDIA_QUERY_VAR_KEY_validate(v) {
+        return validateAll(v, [
+            ACSS_MEDIA_QUERY_VAR_KEY_noUnallowedChar
+        ]);
+    }
+    function ACSS_MEDIA_QUERY_VAR_KEY_noUnallowedChar(v) {
+        if (REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR.test(v)) {
+            return new Error('ACSS media query variable key - No unallowed char.');
+        }
+        return null;
+    }
+    function ACSS_MEDIA_QUERY_VAR_VALUE_parse(v) {
+        v = parseInt(v);
+        if (isNaN(v)) {
+            throw new Error('ACSS media query variable value - Unable to parse.');
+        }
+        return v;
+    }
+    function ACSS_MEDIA_QUERY_VAR_compose(key, value) {
+        return {
+            key: key,
+            value: value
+        };
+    }
+    function ACSS_VAR_CMD_process(cmd) {
         var variable = ACSS_VAR_parse(cmd);
         var cache = exports.malloc('__H');
         var variables = cache('variables') || {};
@@ -2001,7 +2061,7 @@ exports.H = function(command, a, b) {
         }
         else {
             variables[variable.key] = variable.value;
-            cache('variable', variables);
+            cache('variables', variables);
         }
     }
     function ACSS_VAR_parse(cmd) {
