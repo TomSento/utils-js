@@ -2549,4 +2549,12 @@ exports.H = function(command, a, b) {
         }
         return -1;
     }
+    function genElementID() {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var b = '';
+        for (var i = 0; i < 3; i++) {
+            b += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return 'el-' + b;
+    }
 };
