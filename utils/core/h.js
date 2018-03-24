@@ -3,6 +3,7 @@
 // ACSS IS ALLOWED ONLY FOR BODYTAG ELEMENTS
 // ELEMENT ID AND CLASSES ARE ALLOWED ONLY FOR BODYTAG ELEMENTS
 // BOTH ATTRIBUTES AND ACSS INSTRUCTIONS MUST HAVE PARENS () - THIS IS DIFFERENT FROM YAHOO'S ACSS WHICH SUPPORTS HELPERS WITHOUT THEM
+// EACH BODYTAG ELEMENT THAT DEFINES ACSS STYLES HAS GENERATED ACSS ID (AN CSS CLASS) TO SIMPLE REFERENCE THIS ELEMENT IN CSS STYLES
 exports.H = function(command, a, b) {
     /**
      * CONSTANTS
@@ -42,14 +43,14 @@ exports.H = function(command, a, b) {
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS = /[-_A-Z][-_A-Za-z0-9]*|[.#][-_A-Za-z0-9]+/g;
 
     var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)(?![\s)]|$)/;
-
     var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S+/g;
     var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /([^\s(]+)\((.*)\)/;
-
     var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR = /[()]/;
 
     var REG_ACSS_MEDIA_QUERY_VAR_CMD_MATCH_COMPONENTS = /^@(\S+): (\d+)px(?!.)/;
     var REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR = /[^a-z]/;
+    var REG_ACSS_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)\S*\(/;
+    var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S+/g;
 
     var HTML_TEMPLATES = {
         Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
@@ -1968,9 +1969,21 @@ exports.H = function(command, a, b) {
                 }
                 attributes = HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(selector.htmlSelectorTag, cmd.htmlAttributesInstructionsString);
             }
+            var acss = {};
+            if (cmd.acssInstructionsString) {
+                err = ACSS_INSTRUCTIONS_STRING_validate(cmd.acssInstructionsString);
+                if (err) {
+                    throw err;
+                }
+                var styleID = genStyleID();
+                acss = ACSS_INSTRUCTIONS_STRING_parse(styleID, cmd.acssInstructionsString);
+                selector.htmlSelectorClasses.unshift(styleID);
+            }
             console.log('CMD:', cmd);
             console.log('SELECTOR:', selector);
             console.log('ATTRIBUTES:', attributes);
+            console.log('ACSS:', acss);
+            return BASE_CMD_compose(selector, attributes, acss);
         }
         else {
             throw new Error('Unsupported command type.');
@@ -2351,6 +2364,38 @@ exports.H = function(command, a, b) {
         }
         return new Error(orderMessage ? (baseMessage + 'Expected order:' + orderMessage + '.') : (baseMessage + 'Invalid instructions order.'));
     }
+    function ACSS_INSTRUCTIONS_STRING_validate(instructionsString) {
+        return validateAll(instructionsString, [
+            ACSS_INSTRUCTIONS_STRING_noMissingSpaceBetweenInstructions
+        ]);
+    }
+    function ACSS_INSTRUCTIONS_STRING_noMissingSpaceBetweenInstructions(v) {
+        if (REG_ACSS_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS.test(v)) {
+            return new Error('ACSS instructions string - No missing space between instructions.');
+        }
+        return null;
+    }
+    function ACSS_INSTRUCTIONS_STRING_parse(styleID, instructionsString) {
+        var instructionStrings = instructionsString.match(REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS);
+        if (!instructionStrings) {
+            throw new Error('ACSS instructions string - Unable to match any instruction string.');
+        }
+        var media = [];
+        return ACSS_compose(styleID, media);
+    }
+    function ACSS_compose(styleID, media) {
+        return {
+            styleID: styleID,
+            media: media
+        };
+    }
+    function BASE_CMD_compose(selector, attributes, acss) {
+        return {
+            selector: selector,
+            attributes: attributes,
+            acss: acss
+        };
+    }
 
     /**
      * CSS
@@ -2549,12 +2594,12 @@ exports.H = function(command, a, b) {
         }
         return -1;
     }
-    function genElementID() {
+    function genStyleID() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         var b = '';
         for (var i = 0; i < 3; i++) {
             b += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        return 'el-' + b;
+        return 'css-' + b;
     }
 };
