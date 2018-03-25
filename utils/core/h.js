@@ -50,8 +50,9 @@ exports.H = function(command, a, b) {
     var REG_ACSS_MEDIA_QUERY_VAR_CMD_MATCH_COMPONENTS = /^@(\S+): (\d+)px(?!.)/;
     var REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR = /[^a-z]/;
     var REG_ACSS_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)\S*\(/;
-    var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S+/g;
-
+    var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.+?\)\S*/g;
+    // https://regex101.com/r/D7wlXm/14 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
+    // https://regex101.com/r/tIaCUX/14 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
     var HTML_TEMPLATES = {
         Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
         Head: '<head>{content}</head>',
