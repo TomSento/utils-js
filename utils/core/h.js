@@ -53,6 +53,9 @@ exports.H = function(command, a, b) {
     var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.+?\)\S*/g;
     // https://regex101.com/r/D7wlXm/14 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
     // https://regex101.com/r/tIaCUX/14 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
+    var REG_ACSS_INSTRUCTION_STRING_WITH_COMBINATOR_MATCH_COMPONENTS = /^([^:_>+()!@]+)((?=:[^:_>+()!@]):[^:_>+()!@]+|)([_>+](?![_>+]))([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@]):[^:_>+()!@]+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/;
+    var REG_ACSS_INSTRUCTION_STRING_WITHOUT_COMBINATOR_MATCH_COMPONENTS = /^()()()([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@]):[^:_>+()!@]+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/; // SAME AS ABOVE ONLY GROUPS 1,2,3 ARE REPLACED WITH EMPTY GROUPS TO PRESERVE COMPONENT INDEXING
+    var REG_ACSS_INSTRUCTION_STRING_IS_WITH_COMBINATOR = /^[^()_>+]+[_>+](?![_>+])/;
     var HTML_TEMPLATES = {
         Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
         Head: '<head>{content}</head>',
@@ -1945,6 +1948,7 @@ exports.H = function(command, a, b) {
         return null;
     }
     function BASE_CMD_process(cmd, data, content) {
+        ACSS_MEDIA_QUERY_VAR_setDefault();
         data = BASE_CMD_parse(cmd, data, content);
     }
     function BASE_CMD_parse(cmd) {
@@ -2019,14 +2023,28 @@ exports.H = function(command, a, b) {
     function BASE_CMD_TYPE_HTML_BODYTAG() {
         return 'HTML_BODYTAG_CMD';
     }
+    function ACSS_MEDIA_QUERY_VAR_setDefault() {
+        var cache = exports.malloc('__H');
+        if (!cache('media')) {
+            cache('media', [ACSS_MEDIA_QUERY_VAR_compose('@default', null)]);
+        }
+    }
     function ACSS_MEDIA_QUERY_VAR_CMD_process(cmd) {
         var breakpoint = ACSS_MEDIA_QUERY_VAR_parse(cmd);
         var cache = exports.malloc('__H');
-        var media = cache('media') || {};
-        if (media[breakpoint.key]) {
+        var media = cache('media');
+        if (arrFindIndex(media, 'key', breakpoint.key) >= 0) {
             throw new Error('ACSS media query variable - No duplicate key.');
         }
-        media[breakpoint.key] = breakpoint.value;
+        var i = arrFindIndex(media, function(v) {
+            if (!isNaN(parseInt(v.value))) {
+                return breakpoint.value <= v.value;
+            }
+        });
+        if (i >= 0) {
+            throw new Error('ACSS media query variable - No duplicate or unordered value.');
+        }
+        media = media.concat([breakpoint]);
         cache('media', media);
     }
     function ACSS_MEDIA_QUERY_VAR_parse(cmd) {
@@ -2040,7 +2058,7 @@ exports.H = function(command, a, b) {
             throw err;
         }
         var value = ACSS_MEDIA_QUERY_VAR_VALUE_parse(components[2]);
-        return ACSS_MEDIA_QUERY_VAR_compose('@' + key, value + 'px');
+        return ACSS_MEDIA_QUERY_VAR_compose('@' + key, value);
     }
     function ACSS_MEDIA_QUERY_VAR_KEY_validate(v) {
         return validateAll(v, [
@@ -2055,7 +2073,7 @@ exports.H = function(command, a, b) {
     }
     function ACSS_MEDIA_QUERY_VAR_VALUE_parse(v) {
         v = parseInt(v);
-        if (isNaN(v)) {
+        if (isNaN(v) || v < 0) {
             throw new Error('ACSS media query variable value - Unable to parse.');
         }
         return v;
