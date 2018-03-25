@@ -51,10 +51,10 @@ exports.H = function(command, a, b) {
     var REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR = /[^a-z]/;
     var REG_ACSS_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)\S*\(/;
     var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.+?\)\S*/g;
-    // https://regex101.com/r/D7wlXm/14 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
-    // https://regex101.com/r/tIaCUX/14 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
-    var REG_ACSS_INSTRUCTION_STRING_WITH_COMBINATOR_MATCH_COMPONENTS = /^([^:_>+()!@]+)((?=:[^:_>+()!@]):[^:_>+()!@]+|)([_>+](?![_>+]))([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@]):[^:_>+()!@]+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/;
-    var REG_ACSS_INSTRUCTION_STRING_WITHOUT_COMBINATOR_MATCH_COMPONENTS = /^()()()([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@]):[^:_>+()!@]+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/; // SAME AS ABOVE ONLY GROUPS 1,2,3 ARE REPLACED WITH EMPTY GROUPS TO PRESERVE COMPONENT INDEXING
+    // https://regex101.com/r/D7wlXm/16 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
+    // https://regex101.com/r/tIaCUX/16 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
+    var REG_ACSS_INSTRUCTION_STRING_WITH_COMBINATOR_MATCH_COMPONENTS = /^([^:_>+()!@]+)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)([_>+](?![_>+]))([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/;
+    var REG_ACSS_INSTRUCTION_STRING_WITHOUT_COMBINATOR_MATCH_COMPONENTS = /^()()()([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/; // SAME AS ABOVE ONLY GROUPS 1,2,3 ARE REPLACED WITH EMPTY GROUPS TO PRESERVE COMPONENT INDEXING
     var REG_ACSS_INSTRUCTION_STRING_IS_WITH_COMBINATOR = /^[^()_>+]+[_>+](?![_>+])/;
     var HTML_TEMPLATES = {
         Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
