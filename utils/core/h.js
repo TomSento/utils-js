@@ -138,6 +138,7 @@ exports.H = function(command, a, b) {
         cc: 'currentColor',
         n: 'none'
     };
+
     var ACSS_RULES = [{ // MANDATORY ORDER
         name: 'Animation',
         instructionName: 'Anim',
@@ -2514,8 +2515,25 @@ exports.H = function(command, a, b) {
         if (!instructionStrings) {
             throw new Error('ACSS instructions string - Unable to match any instruction string.');
         }
-        var media = [];
+        var media = ACSS_composeEmptyMediaGroups();
         return ACSS_compose(styleID, media);
+    }
+    function ACSS_composeEmptyMediaGroups() {
+        var cache = exports.malloc('__H');
+        var media = cache('media');
+        var groups = [];
+        for (var i = 0, l = media.length; i < l; i++) {
+            var v = media[i];
+            groups.push(ACSS_composeEmptyGroup(v.key, v.value));
+        }
+        return groups;
+    }
+    function ACSS_composeEmptyGroup(mediaGroupKey, mediaGroupValue) {
+        return {
+            mediaGroupKey: mediaGroupKey,
+            mediaGroupValue: mediaGroupValue,
+            styles: []
+        };
     }
     function ACSS_compose(styleID, media) {
         return {
