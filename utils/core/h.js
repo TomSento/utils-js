@@ -2582,29 +2582,28 @@ exports.H = function(command, a, b) {
     }
     function CSS2(k, a) {
         if (k && typeof(k) === 'string' && a) {
-            if (typeof(a) === 'string') {
-                if (k.indexOf('@media') >= 0) {
-                    return k + '){' + a + '}';
-                }
-                else {
-                    return k + '{' + cssPROPERTY(a) + '}';
-                }
-            }
-            else if (Array.isArray(a)) {
+            a = typeof(a) === 'string' ? [a] : a;
+            if (Array.isArray(a)) {
                 var b = '';
                 for (var i = 0, l = a.length; i < l; i++) {
                     var v = a[i];
-                    b += v ? cssPROPERTY(v) : '';
+                    if (v) {
+                        b += cssPROPERTY(v);
+                    }
                 }
-                return b ? (k + '{' + b + '}') : '';
-            }
-            else {
+                if (b) {
+                    if (k.indexOf('@media') >= 0) {
+                        return k + '){' + b + '}';
+                    }
+                    else {
+                        return k + '{' + b + '}';
+                    }
+                }
                 return '';
             }
-        }
-        else {
             return '';
         }
+        return '';
     }
     function cssPROPERTY(kv) { // AUTOPREFIXES CSS KEY-VALUE PAIR
         var autovendor = ['filter', 'appearance', 'column-count', 'column-gap', 'column-rule', 'display', 'transform', 'transform-style', 'transform-origin', 'transition', 'user-select', 'animation', 'perspective', 'animation-name', 'animation-duration', 'animation-timing-function', 'animation-delay', 'animation-iteration-count', 'animation-direction', 'animation-play-state', 'opacity', 'background', 'background-image', 'font-smoothing', 'text-size-adjust', 'backface-visibility', 'box-sizing', 'overflow-scrolling'];
