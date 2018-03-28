@@ -50,7 +50,7 @@ exports.H = function(command, a, b) {
     var REG_ACSS_MEDIA_QUERY_VAR_CMD_MATCH_COMPONENTS = /^@(\S+): (\d+)px(?!.)/;
     var REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR = /[^a-z]/;
     var REG_ACSS_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)\S*\(/;
-    var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.+?\)\S*/g;
+    var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.*?\)\S*/g;
     // https://regex101.com/r/D7wlXm/16 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
     // https://regex101.com/r/tIaCUX/16 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
     var REG_ACSS_INSTRUCTION_STRING_WITH_COMBINATOR_MATCH_COMPONENTS = /^([^:_>+()!@]+)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)([_>+](?![_>+]))([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/;
