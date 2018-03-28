@@ -1840,6 +1840,7 @@ exports.H = function(command, a, b) {
             m: 'miter'
         }]
     }];
+
     var PSEUDO_CLASSES = [{
         acssValue: ':a',
         cssValue: ':active'
@@ -1936,6 +1937,23 @@ exports.H = function(command, a, b) {
     }, {
         acssValue: ':vi',
         cssValue: ':visited'
+    }];
+
+    var PSEUDO_ELEMENTS = [{
+        acssValue: '::b',
+        cssValue: '::before'
+    }, {
+        acssValue: '::a',
+        cssValue: '::after'
+    }, {
+        acssValue: '::fl',
+        cssValue: '::first-letter'
+    }, {
+        acssValue: '::fli',
+        cssValue: '::first-line'
+    }, {
+        acssValue: '::ph',
+        cssValue: '::placeholder'
     }];
 
     /**
