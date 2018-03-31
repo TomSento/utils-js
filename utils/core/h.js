@@ -154,18 +154,21 @@ exports.H = function(command, a, b) {
     var ACSS_RULES = [{ // MANDATORY ORDER
         name: 'Animation',
         instructionName: 'Anim',
-        allowCustomArgument: true,
-        css: 'animation:{0}'
+        argumentsCount: 1,
+        css: 'animation:{0}',
+        allowCustomArgument: true
     }, {
         name: 'Animation delay',
         instructionName: 'Animdel',
-        allowCustomArgument: true,
-        css: 'animation-delay:{0}'
+        argumentsCount: 1,
+        css: 'animation-delay:{0}',
+        allowCustomArgument: true
     }, {
         name: 'Animation direction',
         instructionName: 'Animdir',
-        allowCustomArgument: false,
+        argumentsCount: 1,
         css: 'animation-direction:{0}',
+        allowCustomArgument: false,
         arguments: [{
             a: 'alternate',
             ar: 'alternate-reverse',
@@ -175,13 +178,15 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation duration',
         instructionName: 'Animdur',
-        allowCustomArgument: true,
-        css: 'animation-duration:{0}'
+        argumentsCount: 1,
+        css: 'animation-duration:{0}',
+        allowCustomArgument: true
     }, {
         name: 'Animation fill mode',
         instructionName: 'Animfm',
-        allowCustomArgument: false,
+        argumentsCount: 1,
         css: 'animation-fill-mode:{0}',
+        allowCustomArgument: false,
         arguments: [{
             b: 'backwards',
             bo: 'both',
@@ -191,24 +196,27 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation iteration count',
         instructionName: 'Animic',
-        allowCustomArgument: true,
+        argumentsCount: 1,
         css: 'animation-iteration-count:{0}',
+        allowCustomArgument: true,
         arguments: [{
             i: 'infinite'
         }]
     }, {
         name: 'Animation name',
         instructionName: 'Animn',
-        allowCustomArgument: true,
+        argumentsCount: 1,
         css: 'animation-name:{0}',
+        allowCustomArgument: true,
         arguments: [{
             n: 'none'
         }]
     }, {
         name: 'Animation play state',
         instructionName: 'Animps',
-        allowCustomArgument: false,
+        argumentsCount: 1,
         css: 'animation-play-state:{0}',
+        allowCustomArgument: false,
         arguments: [{
             p: 'paused',
             r: 'running'
@@ -216,8 +224,9 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation timing function',
         instructionName: 'Animtf',
-        allowCustomArgument: false,
+        argumentsCount: 1,
         css: 'animation-timing-function:{0}',
+        allowCustomArgument: false,
         arguments: [{
             e: 'ease',
             ei: 'ease-in',
@@ -2566,21 +2575,40 @@ exports.H = function(command, a, b) {
         if (!components) {
             throw new Error('ACSS instruction string - Instruction must follow <Style>[(<value>,<value>?,...)][<!>][:<pseudo-class>][::<pseudo-element>][@<breakpoint-identifier>]');
         }
-        var ruleIndex = arrFindIndex(ACSS_RULES, 'instructionName', components[1]);
-        if (ruleIndex === -1) {
+        var i = arrFindIndex(ACSS_RULES, 'instructionName', components[1]);
+        if (i === -1) {
             throw new Error('Unsupported ACSS rule "' + components[1] + '".');
         }
+        var acssRule = ACSS_RULES[i];
         var args = ACSS_INSTRUCTION_VALUE_parseArguments(components[2]);
+        var err = ACSS_INSTRUCTION_ARGUMENTS_validate(acssRule, args);
+        if (err) {
+            throw err;
+        }
         var important = components[3] === '!';
         var pseudoClassIndexes = ACSS_PSEUDO_CLASS_INDEXES_parse(components[4]);
         var pseudoElementIndexes = ACSS_PSEUDO_ELEMENT_INDEXES_parse(components[5]);
-        return ACSS_INSTRUCTION_compose(ruleIndex, args, important, pseudoClassIndexes, pseudoElementIndexes);
+        return ACSS_INSTRUCTION_compose(acssRule, args, important, pseudoClassIndexes, pseudoElementIndexes);
     }
     function ACSS_INSTRUCTION_VALUE_parseArguments(instructionValue) {
         var del = ',,'; // AS DELIMITER USE SEQUENCE THAT IS UNALLOWED IN COMMAND
         instructionValue = instructionValue.replace(REG_ACSS_INSTRUCTION_VALUE_SPLIT_ARGUMENTS, del);
         instructionValue = ACSS_INSTRUCTION_VALUE_transformColors(instructionValue);
         return instructionValue.split(del);
+    }
+    function ACSS_INSTRUCTION_ARGUMENTS_validate(acssRule, args) {
+        if (!Array.isArray(args) || args.length !== acssRule.argumentsCount) {
+            return new Error('ACSS instruction arguments - No count mismatch.');
+        }
+        var arr = (Array.isArray(acssRule.arguments) && acssRule.arguments.length > 0) ? acssRule.arguments : [{}];
+        for (var i = 0, l = arr.length; i < l; i++) {
+            if (acssRule.allowCustomArgument !== true) {
+                if (!arr[i][args[i]]) {
+                    return new Error('ACSS instruction arguments - No custom argument at: ' + acssRule.instructionName + '[' + i + ']');
+                }
+            }
+        }
+        return null;
     }
     function ACSS_INSTRUCTION_VALUE_transformColors(instructionValue) {
         var m = null;
@@ -2695,9 +2723,9 @@ exports.H = function(command, a, b) {
         }
         return indexes;
     }
-    function ACSS_INSTRUCTION_compose(ruleIndex, args, important, pseudoClassIndexes, pseudoElementIndexes) {
+    function ACSS_INSTRUCTION_compose(acssRule, args, important, pseudoClassIndexes, pseudoElementIndexes) {
         return {
-            ruleIndex: ruleIndex,
+            acssRule: acssRule,
             arguments: args,
             important: important,
             pseudoClassIndexes: pseudoClassIndexes,
