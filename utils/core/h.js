@@ -250,8 +250,8 @@ exports.H = function(command, a, b) {
         instructionName: 'Bdx',
         allowCustomArgument: false,
         css: [
-            'border-{start}:{0}',
-            'border-{end}:{0}'
+            'border-left:{0}',
+            'border-right:{0}'
         ]
     }, {
         name: 'Border Y',
@@ -267,20 +267,20 @@ exports.H = function(command, a, b) {
         allowCustomArgument: false,
         css: 'border-top:{0}'
     }, {
-        name: 'Border end',
-        instructionName: 'Bdend',
+        name: 'Border right',
+        instructionName: 'Bdright',
         allowCustomArgument: false,
-        css: 'border-{end}:{0}'
+        css: 'border-right:{0}'
     }, {
         name: 'Border bottom',
         instructionName: 'Bdb',
         allowCustomArgument: false,
         css: 'border-bottom:{0}'
     }, {
-        name: 'Border start',
-        instructionName: 'Bdstart',
+        name: 'Border left',
+        instructionName: 'Bdleft',
         allowCustomArgument: false,
-        css: 'border-{start}:{0}'
+        css: 'border-left:{0}'
     }, {
         name: 'Border color',
         instructionName: 'Bdc',
@@ -294,10 +294,10 @@ exports.H = function(command, a, b) {
         css: 'border-top-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
-        name: 'Border end color',
-        instructionName: 'Bdendc',
+        name: 'Border right color',
+        instructionName: 'Bdrightc',
         allowCustomArgument: true,
-        css: 'border-{end}-color:{0}',
+        css: 'border-right-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border bottom color',
@@ -306,10 +306,10 @@ exports.H = function(command, a, b) {
         css: 'border-bottom-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
-        name: 'Border start color',
-        instructionName: 'Bdstartc',
+        name: 'Border left color',
+        instructionName: 'Bdleftc',
         allowCustomArgument: true,
-        css: 'border-{start}-color:{0}',
+        css: 'border-left-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border spacing',
@@ -354,10 +354,10 @@ exports.H = function(command, a, b) {
             s: 'solid'
         }]
     }, {
-        name: 'Border end style',
-        instructionName: 'Bdends',
+        name: 'Border right style',
+        instructionName: 'Bdrights',
         allowCustomArgument: false,
-        css: 'border-{end}-style:{0}',
+        css: 'border-right-style:{0}',
         arguments: [{
             d: 'dotted',
             da: 'dashed',
@@ -388,10 +388,10 @@ exports.H = function(command, a, b) {
             s: 'solid'
         }]
     }, {
-        name: 'Border start style',
-        instructionName: 'Bdstarts',
+        name: 'Border left style',
+        instructionName: 'Bdlefts',
         allowCustomArgument: false,
-        css: 'border-{start}-style:{0}',
+        css: 'border-left-style:{0}',
         arguments: [{
             d: 'dotted',
             da: 'dashed',
@@ -425,10 +425,10 @@ exports.H = function(command, a, b) {
             th: 'thick'
         }]
     }, {
-        name: 'Border end width',
-        instructionName: 'Bdendw',
+        name: 'Border right width',
+        instructionName: 'Bdrightw',
         allowCustomArgument: true,
-        css: 'border-{end}-width:{0}',
+        css: 'border-right-width:{0}',
         arguments: [{
             m: 'medium',
             t: 'thin',
@@ -445,10 +445,10 @@ exports.H = function(command, a, b) {
             th: 'thick'
         }]
     }, {
-        name: 'Border start width',
-        instructionName: 'Bdstartw',
+        name: 'Border left width',
+        instructionName: 'Bdleftw',
         allowCustomArgument: true,
-        css: 'border-{start}-width:{0}',
+        css: 'border-left-width:{0}',
         arguments: [{
             m: 'medium',
             t: 'thin',
@@ -461,24 +461,24 @@ exports.H = function(command, a, b) {
         css: 'border-radius:{0}'
     }, {
         name: 'Border radius top right',
-        instructionName: 'Bdrstend',
+        instructionName: 'Bdrstright',
         allowCustomArgument: true,
-        css: 'border-top-{end}-radius:{0}'
+        css: 'border-top-right-radius:{0}'
     }, {
         name: 'Border radius bottom right',
-        instructionName: 'Bdrsbend',
+        instructionName: 'Bdrsbright',
         allowCustomArgument: true,
-        css: 'border-bottom-{end}-radius:{0}'
+        css: 'border-bottom-right-radius:{0}'
     }, {
         name: 'Border radius bottom left',
-        instructionName: 'Bdrsbstart',
+        instructionName: 'Bdrsbleft',
         allowCustomArgument: true,
-        css: 'border-bottom-{start}-radius:{0}'
+        css: 'border-bottom-left-radius:{0}'
     }, {
         name: 'Border radius top left',
-        instructionName: 'Bdrststart',
+        instructionName: 'Bdrstleft',
         allowCustomArgument: true,
-        css: 'border-top-{start}-radius:{0}'
+        css: 'border-top-left-radius:{0}'
     }, {
         name: 'Background',
         instructionName: 'Bg',
@@ -548,12 +548,12 @@ exports.H = function(command, a, b) {
         allowCustomArgument: true,
         css: 'background-position:{0} {1}',
         arguments: [{
-            start_t: '{start} 0',
-            end_t: '{end} 0',
-            start_b: '{start} 100%',
-            end_b: '{end} 100%',
-            start_c: '{start} center',
-            end_c: '{end} center',
+            left_t: 'left 0',
+            right_t: 'right 0',
+            left_b: 'left 100%',
+            right_b: 'right 100%',
+            left_c: 'left center',
+            right_c: 'right center',
             c_b: 'center 100%',
             c_t: 'center 0',
             c: 'center'
@@ -564,8 +564,8 @@ exports.H = function(command, a, b) {
         allowCustomArgument: true,
         css: 'background-position-x:{0}',
         arguments: [{
-            start: '{start}',
-            end: '{end}',
+            left: 'left',
+            right: 'right',
             c: '50%'
         }]
     }, {
@@ -626,8 +626,8 @@ exports.H = function(command, a, b) {
         arguments: [{
             n: 'none',
             b: 'both',
-            start: '{start}',
-            end: '{end}'
+            left: 'left',
+            right: 'right'
         }]
     }, {
         name: 'Color',
@@ -974,8 +974,8 @@ exports.H = function(command, a, b) {
         css: 'float:{0}',
         arguments: [{
             n: 'none',
-            start: '{start}',
-            end: '{end}'
+            left: 'left',
+            right: 'right'
         }]
     }, {
         name: 'Font family',
@@ -1127,8 +1127,8 @@ exports.H = function(command, a, b) {
         instructionName: 'Mx',
         allowCustomArgument: true,
         css: [
-            'margin-{start}:{0}',
-            'margin-{end}:{0}'
+            'margin-left:{0}',
+            'margin-right:{0}'
         ],
         arguments: [{
             // '0': '0',
@@ -1156,10 +1156,10 @@ exports.H = function(command, a, b) {
             a: 'auto'
         }]
     }, {
-        name: 'Margin end',
-        instructionName: 'Mend',
+        name: 'Margin right',
+        instructionName: 'Mright',
         allowCustomArgument: true,
-        css: 'margin-{end}:{0}',
+        css: 'margin-right:{0}',
         arguments: [{
             // '0': '0',
             a: 'auto'
@@ -1174,10 +1174,10 @@ exports.H = function(command, a, b) {
             a: 'auto'
         }]
     }, {
-        name: 'Margin start',
-        instructionName: 'Mstart',
+        name: 'Margin left',
+        instructionName: 'Mleft',
         allowCustomArgument: true,
-        css: 'margin-{start}:{0}',
+        css: 'margin-left:{0}',
         arguments: [{
             // '0': '0',
             a: 'auto'
@@ -1249,10 +1249,10 @@ exports.H = function(command, a, b) {
             a: 'auto'
         }]
     }, {
-        name: 'End',
-        instructionName: 'End',
+        name: 'Right',
+        instructionName: 'Right',
         allowCustomArgument: true,
-        css: '{end}:{0}',
+        css: 'right:{0}',
         arguments: [{
             a: 'auto'
         }]
@@ -1265,10 +1265,10 @@ exports.H = function(command, a, b) {
             a: 'auto'
         }]
     }, {
-        name: 'Start',
-        instructionName: 'Start',
+        name: 'Left',
+        instructionName: 'Left',
         allowCustomArgument: true,
-        css: '{start}:{0}',
+        css: 'left:{0}',
         arguments: [{
             a: 'auto'
         }]
@@ -1333,8 +1333,8 @@ exports.H = function(command, a, b) {
         instructionName: 'Px',
         allowCustomArgument: true,
         css: [
-            'padding-{start}:{0}',
-            'padding-{end}:{0}'
+            'padding-left:{0}',
+            'padding-right:{0}'
         ]
     }, {
         name: 'Padding (Y axis)',
@@ -1350,20 +1350,20 @@ exports.H = function(command, a, b) {
         allowCustomArgument: true,
         css: 'padding-top:{0}'
     }, {
-        name: 'Padding end',
-        instructionName: 'Pend',
+        name: 'Padding right',
+        instructionName: 'Pright',
         allowCustomArgument: true,
-        css: 'padding-{end}:{0}'
+        css: 'padding-right:{0}'
     }, {
         name: 'Padding bottom',
         instructionName: 'Pb',
         allowCustomArgument: true,
         css: 'padding-bottom:{0}'
     }, {
-        name: 'Padding start',
-        instructionName: 'Pstart',
+        name: 'Padding left',
+        instructionName: 'Pleft',
         allowCustomArgument: true,
-        css: 'padding-{start}:{0}'
+        css: 'padding-left:{0}'
     }, {
         name: 'Pointer events',
         instructionName: 'Pe',
@@ -1421,11 +1421,11 @@ exports.H = function(command, a, b) {
         arguments: [{
             c: 'center',
             e: 'end',
-            end: '{end}',
+            right: 'right',
             j: 'justify',
             mp: 'match-parent',
             s: 'start',
-            start: '{start}'
+            left: 'left'
         }]
     }, {
         name: 'Text align last',
@@ -1436,10 +1436,10 @@ exports.H = function(command, a, b) {
             a: 'auto',
             c: 'center',
             e: 'end',
-            end: '{end}',
+            right: 'right',
             j: 'justify',
             s: 'start',
-            start: '{start}'
+            left: 'left'
         }]
     }, {
         name: 'Text decoration',
@@ -1516,15 +1516,15 @@ exports.H = function(command, a, b) {
         css: 'transform-origin:{0} {1}',
         arguments: [{
             t: 'top',
-            end: '{end}',
+            right: 'right',
             bottom: 'bottom',
-            start: '{start}',
+            left: 'left',
             c: 'center'
         }, {
             t: 'top',
-            end: '{end}',
+            right: 'right',
             bottom: 'bottom',
-            start: '{start}',
+            left: 'left',
             c: 'center'
         }]
     }, {
@@ -1551,15 +1551,15 @@ exports.H = function(command, a, b) {
         css: 'perspective-origin:{0} {1}',
         arguments: [{
             t: 'top',
-            end: '{end}',
+            right: 'right',
             bottom: 'bottom',
-            start: '{start}',
+            left: 'left',
             c: 'center'
         }, {
             t: 'top',
-            end: '{end}',
+            right: 'right',
             bottom: 'bottom',
-            start: '{start}',
+            left: 'left',
             c: 'center'
         }]
     }, {
