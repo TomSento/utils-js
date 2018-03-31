@@ -2444,20 +2444,24 @@ exports.H = function(command, a, b) {
             throw new Error('HTML attributes instructions string - Unable to match any instruction string.');
         }
         var attributes = [];
+        var unordered = false;
         for (var i = 0, l = instructionStrings.length; i < l; i++) {
             var instructionString = instructionStrings[i];
             var attribute = HTML_ATTRIBUTES_INSTRUCTION_STRING_parse(instructionString, allowedHTMLAttributes, htmlSelectorTag);
             if (i > 0) {
-                var currIndex = arrFindIndex(allowedHTMLAttributes, 'instructionName', attribute.instructionName);
-                var lastIndex = arrFindIndex(allowedHTMLAttributes, 'instructionName', attributes[attributes.length - 1].instructionName);
-                if (currIndex < lastIndex) {
-                    throw HTML_ATTRIBUTES_INSTRUCTIONS_STRING_composeOrderError(instructionStrings, allowedHTMLAttributes);
+                var va = attribute.score;
+                var vb = attributes[attributes.length - 1].score;
+                if (va < vb) {
+                    unordered = true;
                 }
-                else if (currIndex === lastIndex) {
+                else if (va === vb) {
                     throw new Error('HTML attributes instructions string - Duplicate instructions.');
                 }
             }
             attributes.push(attribute);
+        }
+        if (unordered) {
+            throw HTML_ATTRIBUTES_INSTRUCTIONS_STRING_composeOrderError(attributes);
         }
         return attributes;
     }
@@ -2466,20 +2470,22 @@ exports.H = function(command, a, b) {
         if (!components) {
             throw new Error('HTML attributes instruction string - Instruction must follow <Attribute>(<value>?) syntax.');
         }
-        var allowedHTMLAttribute = arrFind(allowedHTMLAttributes, 'instructionName', components[1]);
-        if (!allowedHTMLAttribute) {
+        var i = arrFindIndex(allowedHTMLAttributes, 'instructionName', components[1]);
+        if (i === -1) {
             throw new Error('Unsupported HTML attribute "' + components[1] + '" for "' + htmlSelectorTag + '" tag.');
         }
-        var err = HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(allowedHTMLAttribute, components);
+        var htmlAttribute = allowedHTMLAttributes[i];
+        var err = HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(htmlAttribute, components);
         if (err) {
             throw err;
         }
         var instructionValue = components[2] || '';
-        return HTML_ATTRIBUTES_INSTRUCTION_compose(allowedHTMLAttribute, instructionValue);
+        var score = i;
+        return HTML_ATTRIBUTES_INSTRUCTION_compose(instructionString, htmlAttribute, instructionValue, score);
     }
-    function HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(allowedHTMLAttribute, components) {
-        if (!allowedHTMLAttribute.allowArgument && components[2]) {
-            return new Error('HTML attributes instruction string - Instruction "' + allowedHTMLAttribute.instructionName + '" must not define parameter.');
+    function HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(htmlAttribute, components) {
+        if (!htmlAttribute.allowArgument && components[2]) {
+            return new Error('HTML attributes instruction string - Instruction "' + htmlAttribute.instructionName + '" must not define parameter.');
         }
         return HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(components[2]);
     }
@@ -2493,30 +2499,26 @@ exports.H = function(command, a, b) {
             return new Error('HTML attributes instruction value - No unallowed char.');
         }
     }
-    function HTML_ATTRIBUTES_INSTRUCTION_compose(allowedHTMLAttribute, instructionValue) {
-        return extend(clone(allowedHTMLAttribute), {
-            instructionValue: instructionValue
+    function HTML_ATTRIBUTES_INSTRUCTION_compose(instructionString, htmlAttribute, instructionValue, score) {
+        return extend(clone(htmlAttribute), {
+            instructionString: instructionString,
+            instructionValue: instructionValue,
+            score: score
         });
     }
-    function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_composeOrderError(instructionStrings, allowedHTMLAttributes) {
-        var instructionNames = [];
-        var i;
-        for (i = 0; i < instructionStrings.length; i++) {
-            var instructionString = instructionStrings[i];
-            var components = instructionString ? instructionString.match(REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS) : [];
-            if (Array.isArray(components) && components[1]) {
-                instructionNames.push(components[1]);
+    function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_composeOrderError(attributes) {
+        var arr = arrSortByNumberASC(attributes, 'score');
+        var b = [];
+        for (var i = 0, l = arr.length; i < l; i++) {
+            var v = arr[i].instructionString;
+            if (v) {
+                b.push(v);
             }
         }
-        var baseMessage = 'HTML attributes instructions string - ';
-        var orderMessage = '';
-        for (i = 0; i < allowedHTMLAttributes.length; i++) {
-            var instructionName = allowedHTMLAttributes[i].instructionName;
-            if (instructionName && instructionNames.indexOf(instructionName) >= 0) {
-                orderMessage += ' ' + instructionName + '()';
-            }
-        }
-        return new Error(orderMessage ? (baseMessage + 'Expected order:' + orderMessage + '.') : (baseMessage + 'Invalid instructions order.'));
+        b = b.join(' ');
+        var msg = 'HTML attributes instructions string - ';
+        msg += b ? ('Expected order: ' + b) : 'Invalid instructions order.';
+        return new Error(msg);
     }
     function ACSS_INSTRUCTIONS_STRING_validate(instructionsString) {
         return validateAll(instructionsString, [
@@ -2911,6 +2913,24 @@ exports.H = function(command, a, b) {
             }
         }
         return -1;
+    }
+    function arrSortByNumberASC(arr, k) {
+        var l = arr.length;
+        for (var i = 0; i < l; i++) {
+            for (var j = 0; j < (l - i - 1); j++) {
+                if (shouldSwap(arr[j], arr[j + 1], k)) {
+                    var saved = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = saved;
+                }
+            }
+        }
+        return arr;
+        function shouldSwap(a, b) {
+            var va = k ? a[k] : a;
+            var vb = k ? b[k] : b;
+            return va > vb;
+        }
     }
     function genStyleID() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
