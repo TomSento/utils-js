@@ -4,6 +4,9 @@
 // ELEMENT ID AND CLASSES ARE ALLOWED ONLY FOR BODYTAG ELEMENTS
 // BOTH ATTRIBUTES AND ACSS INSTRUCTIONS MUST HAVE PARENS () - THIS IS DIFFERENT FROM YAHOO'S ACSS WHICH SUPPORTS HELPERS WITHOUT THEM
 // EACH BODYTAG ELEMENT THAT DEFINES ACSS STYLES HAS GENERATED ACSS ID (AN CSS CLASS) TO SIMPLE REFERENCE THIS ELEMENT IN CSS STYLES
+// OUR ACSS DOES NOT INTENTIONALLY SUPPORT <combinator> AND ALL PARTS LOCATED BEFORE IT - THIS MEANS YOU MUST WORK WITH DOM PLACEHOLDERS AND REDRAW WHOLE COMPONENT INSTEAD OF JUST ADDING STATE CLASS TO PARENT ELEMENT
+// OUR ACSS IS STRICT ORDERED, SCORE ORDER IS COMPUTED LIKE: <@mediaQuery><:pseudoClass><::pseudoElement>
+// OUR ACSS USES "left" and "right" instead of "start" and "end" - OUR ACSS HAS NO RTL FUNCTIONALITY SUPPORT
 exports.H = function(command, a, b) {
     /**
      * CONSTANTS
@@ -11,6 +14,7 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_NO_SPACE_AT_START = /^\s/;
     var REG_BASE_CMD_NO_SPACE_AT_END = /\s$/;
     var REG_BASE_CMD_NO_SPACE_FOLLOWED_BY_COMMA = /\s,/;
+    var REG_BASE_CMD_NO_MISSING_SPACE_AFTER_COMMA = /,\S/;
     var REG_BASE_CMD_NO_MULTIPLE_SPACES = /\s{2,}/;
     var REG_BASE_CMD_NO_MULTIPLE_COMMAS = /,\s*,/;
     var REG_BASE_CMD_NO_MULTIPLE_PIPES = /\|{2,}/;
@@ -51,11 +55,19 @@ exports.H = function(command, a, b) {
     var REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR = /[^a-z]/;
     var REG_ACSS_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)\S*\(/;
     var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.*?\)\S*/g;
-    // https://regex101.com/r/D7wlXm/16 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
-    // https://regex101.com/r/tIaCUX/16 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
-    var REG_ACSS_INSTRUCTION_STRING_WITH_COMBINATOR_MATCH_COMPONENTS = /^([^:_>+()!@]+)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)([_>+](?![_>+]))([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/;
-    var REG_ACSS_INSTRUCTION_STRING_WITHOUT_COMBINATOR_MATCH_COMPONENTS = /^()()()([^:_>+()!@]+)\(([^()]+)\)((?=!)!|)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)((?=::[^:_>+()!@])::[^:_>+()!@]+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/; // SAME AS ABOVE ONLY GROUPS 1,2,3 ARE REPLACED WITH EMPTY GROUPS TO PRESERVE COMPONENT INDEXING
-    var REG_ACSS_INSTRUCTION_STRING_IS_WITH_COMBINATOR = /^[^()_>+]+[_>+](?![_>+])/;
+    // https://regex101.com/r/tIaCUX/20 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
+    // https://regex101.com/r/D7wlXm/20 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
+    var REG_ACSS_INSTRUCTION_STRING_MATCH_COMPONENTS = /^([^:_>+()!@]+)\(([^()]*)\)((?=!)!|)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)((?=::[^:_>+()!@])(?:::[^:_>+()!@]+)+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/;
+    var REG_ACSS_INSTRUCTION_VALUE_SPLIT_ARGUMENTS = /\s*,+\s*/g;
+    // https://regex101.com/r/Mcr8Np/17 - MATCH NEXT ACSS COLOR - TEST
+    // https://regex101.com/r/dJsNNd/13 -  MATCH NEXT ACSS COLOR - JS
+    var REG_ACSS_INSTRUCTION_VALUE_MATCH_NEXT_COLOR = /(^|\s|,)(?=#)(?:#([^.,\s]+))((?=\.)\.[^#,\s]*|)(?:\s|,|$)+/;
+    var REG_ACSS_COLOR_HEX_NO_LOWERCASED_LETTER = /[a-z]/;
+    var REG_ACSS_COLOR_HEX_NO_INVALID_HEX_VALUE = /[^0-9A-F]/;
+    var REG_ACSS_COLOR_HEX_TO_RGB = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i; // https://github.com/acss-io/atomizer/blob/1bd685fe5970af5d1984f96ecfccd5df37e4601f/src/lib/utils.js#L10
+    var REG_ACSS_MATCH_PSEUDO_CLASSES = /(?=:)(:[^:]+)/g;
+    var REG_ACSS_MATCH_PSEUDO_ELEMENTS = /(?=::)(::[^:]+)/g;
+
     var HTML_TEMPLATES = {
         Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
         Head: '<head>{content}</head>',
@@ -142,17 +154,17 @@ exports.H = function(command, a, b) {
     var ACSS_RULES = [{ // MANDATORY ORDER
         name: 'Animation',
         instructionName: 'Anim',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'animation:{0}'
     }, {
         name: 'Animation delay',
         instructionName: 'Animdel',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'animation-delay:{0}'
     }, {
         name: 'Animation direction',
         instructionName: 'Animdir',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'animation-direction:{0}',
         arguments: [{
             a: 'alternate',
@@ -163,12 +175,12 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation duration',
         instructionName: 'Animdur',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'animation-duration:{0}'
     }, {
         name: 'Animation fill mode',
         instructionName: 'Animfm',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'animation-fill-mode:{0}',
         arguments: [{
             b: 'backwards',
@@ -179,7 +191,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation iteration count',
         instructionName: 'Animic',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'animation-iteration-count:{0}',
         arguments: [{
             i: 'infinite'
@@ -187,7 +199,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation name',
         instructionName: 'Animn',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'animation-name:{0}',
         arguments: [{
             n: 'none'
@@ -195,7 +207,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation play state',
         instructionName: 'Animps',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'animation-play-state:{0}',
         arguments: [{
             p: 'paused',
@@ -204,7 +216,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation timing function',
         instructionName: 'Animtf',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'animation-timing-function:{0}',
         arguments: [{
             e: 'ease',
@@ -218,7 +230,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Appearance',
         instructionName: 'Ap',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'appearance:{0}',
         arguments: [{
             a: 'auto',
@@ -227,7 +239,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border',
         instructionName: 'Bd',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border:{0}',
         arguments: [{
             // '0': 0,
@@ -236,7 +248,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border X',
         instructionName: 'Bdx',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: [
             'border-{start}:{0}',
             'border-{end}:{0}'
@@ -244,7 +256,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border Y',
         instructionName: 'Bdy',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: [
             'border-top:{0}',
             'border-bottom:{0}'
@@ -252,57 +264,57 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border top',
         instructionName: 'Bdt',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-top:{0}'
     }, {
         name: 'Border end',
         instructionName: 'Bdend',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-{end}:{0}'
     }, {
         name: 'Border bottom',
         instructionName: 'Bdb',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-bottom:{0}'
     }, {
         name: 'Border start',
         instructionName: 'Bdstart',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-{start}:{0}'
     }, {
         name: 'Border color',
         instructionName: 'Bdc',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border top color',
         instructionName: 'Bdtc',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-top-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border end color',
         instructionName: 'Bdendc',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-{end}-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border bottom color',
         instructionName: 'Bdbc',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-bottom-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border start color',
         instructionName: 'Bdstartc',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-{start}-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Border spacing',
         instructionName: 'Bdsp',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-spacing:{0} {1}',
         arguments: [{
             i: 'inherit'
@@ -310,7 +322,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border style',
         instructionName: 'Bds',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-style:{0}',
         arguments: [{
             d: 'dotted',
@@ -327,7 +339,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border top style',
         instructionName: 'Bdts',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-top-style:{0}',
         arguments: [{
             d: 'dotted',
@@ -344,7 +356,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border end style',
         instructionName: 'Bdends',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-{end}-style:{0}',
         arguments: [{
             d: 'dotted',
@@ -361,7 +373,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border bottom style',
         instructionName: 'Bdbs',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-bottom-style:{0}',
         arguments: [{
             d: 'dotted',
@@ -378,7 +390,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border start style',
         instructionName: 'Bdstarts',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-{start}-style:{0}',
         arguments: [{
             d: 'dotted',
@@ -395,7 +407,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border width',
         instructionName: 'Bdw',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-width:{0}',
         arguments: [{
             m: 'medium',
@@ -405,7 +417,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border top width',
         instructionName: 'Bdtw',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-top-width:{0}',
         arguments: [{
             m: 'medium',
@@ -415,7 +427,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border end width',
         instructionName: 'Bdendw',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-{end}-width:{0}',
         arguments: [{
             m: 'medium',
@@ -425,7 +437,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border bottom width',
         instructionName: 'Bdbw',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-bottom-width:{0}',
         arguments: [{
             m: 'medium',
@@ -435,7 +447,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border start width',
         instructionName: 'Bdstartw',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-{start}-width:{0}',
         arguments: [{
             m: 'medium',
@@ -445,32 +457,32 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border radius',
         instructionName: 'Bdrs',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-radius:{0}'
     }, {
         name: 'Border radius top right',
         instructionName: 'Bdrstend',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-top-{end}-radius:{0}'
     }, {
         name: 'Border radius bottom right',
         instructionName: 'Bdrsbend',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-bottom-{end}-radius:{0}'
     }, {
         name: 'Border radius bottom left',
         instructionName: 'Bdrsbstart',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-bottom-{start}-radius:{0}'
     }, {
         name: 'Border radius top left',
         instructionName: 'Bdrststart',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'border-top-{start}-radius:{0}'
     }, {
         name: 'Background',
         instructionName: 'Bg',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'background:{0}',
         arguments: [{
             n: 'none',
@@ -479,7 +491,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background image',
         instructionName: 'Bgi',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'background-image:{0}',
         arguments: [{
             n: 'none'
@@ -487,13 +499,13 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background color',
         instructionName: 'Bgc',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'background-color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Background clip',
         instructionName: 'Bgcp',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'background-clip:{0}',
         arguments: [{
             bb: 'border-box',
@@ -503,7 +515,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background origin',
         instructionName: 'Bgo',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'background-origin:{0}',
         arguments: [{
             bb: 'border-box',
@@ -513,7 +525,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background size',
         instructionName: 'Bgz',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'background-size:{0}',
         arguments: [{
             a: 'auto',
@@ -523,7 +535,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background attachment',
         instructionName: 'Bga',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'background-attachment:{0}',
         arguments: [{
             f: 'fixed',
@@ -533,7 +545,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background position',
         instructionName: 'Bgp',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'background-position:{0} {1}',
         arguments: [{
             start_t: '{start} 0',
@@ -549,7 +561,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background position (X axis)',
         instructionName: 'Bgpx',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'background-position-x:{0}',
         arguments: [{
             start: '{start}',
@@ -559,7 +571,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background position (Y axis)',
         instructionName: 'Bgpy',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'background-position-y:{0}',
         arguments: [{
             t: '0',
@@ -569,7 +581,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background repeat',
         instructionName: 'Bgr',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'background-repeat:{0}',
         arguments: [{
             nr: 'no-repeat',
@@ -582,7 +594,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border collapse',
         instructionName: 'Bdcl',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'border-collapse:{0}',
         arguments: [{
             c: 'collapse',
@@ -591,7 +603,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Box sizing',
         instructionName: 'Bxz',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'box-sizing:{0}',
         arguments: [{
             cb: 'content-box',
@@ -601,7 +613,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Box shadow',
         instructionName: 'Bxsh',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'box-shadow:{0}',
         arguments: [{
             n: 'none'
@@ -609,7 +621,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Clear',
         instructionName: 'Cl',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'clear:{0}',
         arguments: [{
             n: 'none',
@@ -620,13 +632,13 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Color',
         instructionName: 'C',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'color:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Contain',
         instructionName: 'Ctn',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'contain:{0}',
         arguments: [{
             n: 'none',
@@ -640,7 +652,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Content',
         instructionName: 'Cnt',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'content:{0}',
         arguments: [{
             n: 'none',
@@ -653,7 +665,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Cursor',
         instructionName: 'Cur',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'cursor:{0}',
         arguments: [{
             a: 'auto',
@@ -694,7 +706,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Display',
         instructionName: 'D',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'display:{0}',
         arguments: [{
             n: 'none',
@@ -719,7 +731,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Filter',
         instructionName: 'Fil',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'filter:{0}',
         arguments: [{
             n: 'none'
@@ -727,57 +739,57 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Blur (filter)',
         instructionName: 'Blur',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:blur({0})'
     }, {
         name: 'Brightness (filter)',
         instructionName: 'Brightness',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:brightness({0})'
     }, {
         name: 'Contrast (filter)',
         instructionName: 'Contrast',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:contrast({0})'
     }, {
         name: 'Drop shadow (filter)',
         instructionName: 'Dropshadow',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'filter:drop-shadow({0})'
     }, {
         name: 'Grayscale (filter)',
         instructionName: 'Grayscale',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:grayscale({0})'
     }, {
         name: 'Hue Rotate (filter)',
         instructionName: 'HueRotate',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:hue-rotate({0})'
     }, {
         name: 'Invert (filter)',
         instructionName: 'Invert',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:invert({0})'
     }, {
         name: 'Opacity (filter)',
         instructionName: 'Opacity',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:opacity({0})'
     }, {
         name: 'Saturate (filter)',
         instructionName: 'Saturate',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:saturate({0})'
     }, {
         name: 'Sepia (filter)',
         instructionName: 'Sepia',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'filter:sepia({0})'
     }, {
         name: 'Flex (deprecated)',
         instructionName: 'Flx',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'flex:{0}',
         arguments: [{
             a: 'auto',
@@ -786,7 +798,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex',
         instructionName: 'Fx',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'flex:{0}',
         arguments: [{
             a: 'auto',
@@ -795,27 +807,27 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex grow (deprecated)',
         instructionName: 'Flxg',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'flex-grow:{0}'
     }, {
         name: 'Flex grow',
         instructionName: 'Fxg',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'flex-grow:{0}'
     }, {
         name: 'Flex shrink (deprecated)',
         instructionName: 'Flxs',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'flex-shrink:{0}'
     }, {
         name: 'Flex shrink',
         instructionName: 'Fxs',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'flex-shrink:{0}'
     }, {
         name: 'Flex basis (deprecated)',
         instructionName: 'Flxb',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'flex-basis:{0}',
         arguments: [{
             a: 'auto',
@@ -824,7 +836,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex basis',
         instructionName: 'Fxb',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'flex-basis:{0}',
         arguments: [{
             a: 'auto',
@@ -833,7 +845,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Align self',
         instructionName: 'As',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'align-self:{0}',
         arguments: [{
             a: 'auto',
@@ -846,7 +858,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex direction (deprecated)',
         instructionName: 'Fld',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'flex-direction:{0}',
         arguments: [{
             r: 'row',
@@ -857,7 +869,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex direction',
         instructionName: 'Fxd',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'flex-direction:{0}',
         arguments: [{
             r: 'row',
@@ -868,7 +880,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex flow (deprecated)',
         instructionName: 'Flf',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'flex-flow:{0}',
         arguments: [{
             r: 'row',
@@ -882,7 +894,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex flow',
         instructionName: 'Fxf',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'flex-flow:{0}',
         arguments: [{
             r: 'row',
@@ -896,7 +908,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Align items',
         instructionName: 'Ai',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'align-items:{0}',
         arguments: [{
             fs: 'flex-start',
@@ -908,7 +920,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Align content',
         instructionName: 'Ac',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'align-content:{0}',
         arguments: [{
             fs: 'flex-start',
@@ -921,12 +933,12 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Order',
         instructionName: 'Or',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'order:{0}'
     }, {
         name: 'Justify content',
         instructionName: 'Jc',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'justify-content:{0}',
         arguments: [{
             fs: 'flex-start',
@@ -938,7 +950,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex-wrap (deprecated)',
         instructionName: 'Flw',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'flex-wrap:{0}',
         arguments: [{
             nw: 'nowrap',
@@ -948,7 +960,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Flex-wrap',
         instructionName: 'Fxw',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'flex-wrap:{0}',
         arguments: [{
             nw: 'nowrap',
@@ -957,7 +969,7 @@ exports.H = function(command, a, b) {
         }]
     }, {
         name: 'Float',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         instructionName: 'Fl',
         css: 'float:{0}',
         arguments: [{
@@ -968,7 +980,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Font family',
         instructionName: 'Ff',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'font-family:{0}',
         arguments: [{
             c: '"Monotype Corsiva", "Comic Sans MS", cursive',
@@ -980,7 +992,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Font weight',
         instructionName: 'Fw',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'font-weight:{0}',
         arguments: [{
             // '100': '100',
@@ -1000,12 +1012,12 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Font size',
         instructionName: 'Fz',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'font-size:{0}'
     }, {
         name: 'Font style',
         instructionName: 'Fs',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'font-style:{0}',
         arguments: [{
             n: 'normal',
@@ -1015,7 +1027,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Font variant',
         instructionName: 'Fv',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'font-variant:{0}',
         arguments: [{
             n: 'normal',
@@ -1024,7 +1036,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Height',
         instructionName: 'H',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'height:{0}',
         arguments: [{
             // '0': '0',
@@ -1039,7 +1051,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Hyphens',
         instructionName: 'Hy',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'hyphens:{0}',
         arguments: [{
             a: 'auto',
@@ -1049,7 +1061,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Letter spacing',
         instructionName: 'Lts',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'letter-spacing:{0}',
         arguments: [{
             n: 'normal'
@@ -1057,7 +1069,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'List style type',
         instructionName: 'List',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'list-style-type:{0}',
         arguments: [{
             n: 'none',
@@ -1079,7 +1091,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'List style position',
         instructionName: 'Lisp',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'list-style-position:{0}',
         arguments: [{
             i: 'inside',
@@ -1088,7 +1100,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'List style image',
         instructionName: 'Lisi',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'list-style-image:{0}',
         arguments: [{
             n: 'none'
@@ -1096,7 +1108,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Line height',
         instructionName: 'Lh',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'line-height:{0}',
         arguments: [{
             n: 'normal'
@@ -1104,7 +1116,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Margin (all edges)',
         instructionName: 'M',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'margin:{0}',
         arguments: [{
             // '0': '0',
@@ -1113,7 +1125,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Margin (X axis)',
         instructionName: 'Mx',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: [
             'margin-{start}:{0}',
             'margin-{end}:{0}'
@@ -1125,7 +1137,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Margin (Y axis)',
         instructionName: 'My',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: [
             'margin-top:{0}',
             'margin-bottom:{0}'
@@ -1137,7 +1149,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Margin top',
         instructionName: 'Mt',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'margin-top:{0}',
         arguments: [{
             // '0': '0',
@@ -1146,7 +1158,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Margin end',
         instructionName: 'Mend',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'margin-{end}:{0}',
         arguments: [{
             // '0': '0',
@@ -1155,7 +1167,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Margin bottom',
         instructionName: 'Mb',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'margin-bottom:{0}',
         arguments: [{
             // '0': '0',
@@ -1164,7 +1176,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Margin start',
         instructionName: 'Mstart',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'margin-{start}:{0}',
         arguments: [{
             // '0': '0',
@@ -1173,7 +1185,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Max height',
         instructionName: 'Mah',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'max-height:{0}',
         arguments: [{
             a: 'auto',
@@ -1185,7 +1197,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Max width',
         instructionName: 'Maw',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'max-width:{0}',
         arguments: [{
             n: 'none',
@@ -1197,7 +1209,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Min height',
         instructionName: 'Mih',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'min-height:{0}',
         arguments: [{
             a: 'auto',
@@ -1209,7 +1221,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Min width',
         instructionName: 'Miw',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'min-width:{0}',
         arguments: [{
             a: 'auto',
@@ -1222,7 +1234,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Outline',
         instructionName: 'O',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'outline:{0}',
         arguments: [{
             // '0': '0',
@@ -1231,7 +1243,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Top',
         instructionName: 'T',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'top:{0}',
         arguments: [{
             a: 'auto'
@@ -1239,7 +1251,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'End',
         instructionName: 'End',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: '{end}:{0}',
         arguments: [{
             a: 'auto'
@@ -1247,7 +1259,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Bottom',
         instructionName: 'B',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'bottom:{0}',
         arguments: [{
             a: 'auto'
@@ -1255,7 +1267,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Start',
         instructionName: 'Start',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: '{start}:{0}',
         arguments: [{
             a: 'auto'
@@ -1263,7 +1275,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Opacity',
         instructionName: 'Op',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'opacity:{0}'
         // arguments: [{
         // '0': '0',
@@ -1272,7 +1284,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Overflow',
         instructionName: 'Ov',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'overflow:{0}',
         arguments: [{
             a: 'auto',
@@ -1283,7 +1295,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Overflow (X axis)',
         instructionName: 'Ovx',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'overflow-x:{0}',
         arguments: [{
             a: 'auto',
@@ -1294,7 +1306,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Overflow (Y axis)',
         instructionName: 'Ovy',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'overflow-y:{0}',
         arguments: [{
             a: 'auto',
@@ -1305,7 +1317,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Overflow scrolling',
         instructionName: 'Ovs',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: '-webkit-overflow-scrolling:{0}',
         arguments: [{
             a: 'auto',
@@ -1314,12 +1326,12 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Padding (all edges)',
         instructionName: 'P',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'padding:{0}'
     }, {
         name: 'Padding (X axis)',
         instructionName: 'Px',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: [
             'padding-{start}:{0}',
             'padding-{end}:{0}'
@@ -1327,7 +1339,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Padding (Y axis)',
         instructionName: 'Py',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: [
             'padding-top:{0}',
             'padding-bottom:{0}'
@@ -1335,27 +1347,27 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Padding top',
         instructionName: 'Pt',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'padding-top:{0}'
     }, {
         name: 'Padding end',
         instructionName: 'Pend',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'padding-{end}:{0}'
     }, {
         name: 'Padding bottom',
         instructionName: 'Pb',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'padding-bottom:{0}'
     }, {
         name: 'Padding start',
         instructionName: 'Pstart',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'padding-{start}:{0}'
     }, {
         name: 'Pointer events',
         instructionName: 'Pe',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'pointer-events:{0}',
         arguments: [{
             a: 'auto',
@@ -1372,7 +1384,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Position',
         instructionName: 'Pos',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'position:{0}',
         arguments: [{
             a: 'absolute',
@@ -1384,7 +1396,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Resize',
         instructionName: 'Rsz',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'resize:{0}',
         arguments: [{
             n: 'none',
@@ -1395,7 +1407,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Table layout',
         instructionName: 'Tbl',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'table-layout:{0}',
         arguments: [{
             a: 'auto',
@@ -1404,7 +1416,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Text align',
         instructionName: 'Ta',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'text-align:{0}',
         arguments: [{
             c: 'center',
@@ -1418,7 +1430,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Text align last',
         instructionName: 'Tal',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'text-align-last:{0}',
         arguments: [{
             a: 'auto',
@@ -1432,7 +1444,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Text decoration',
         instructionName: 'Td',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'text-decoration:{0}',
         arguments: [{
             lt: 'line-through',
@@ -1443,12 +1455,12 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Text indent',
         instructionName: 'Ti',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'text-indent:{0}'
     }, {
         name: 'Text overflow',
         instructionName: 'Tov',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'text-overflow:{0}',
         arguments: [{
             c: 'clip',
@@ -1457,7 +1469,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Text rendering',
         instructionName: 'Tren',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'text-rendering:{0}',
         arguments: [{
             a: 'auto',
@@ -1468,7 +1480,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Text replace',
         instructionName: 'Tr',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'text-replace:{0}',
         arguments: [{
             n: 'none'
@@ -1476,7 +1488,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Text transform',
         instructionName: 'Tt',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'text-transform:{0}',
         arguments: [{
             n: 'none',
@@ -1487,7 +1499,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Text shadow',
         instructionName: 'Tsh',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'text-shadow:{0}',
         arguments: [{
             n: 'none'
@@ -1495,12 +1507,12 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Transform',
         instructionName: 'Trf',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'transform:{0}'
     }, {
         name: 'Transform origin',
         instructionName: 'Trfo',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform-origin:{0} {1}',
         arguments: [{
             t: 'top',
@@ -1518,7 +1530,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Transform style',
         instructionName: 'Trfs',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'transform-style:{0}',
         arguments: [{
             f: 'flat',
@@ -1527,7 +1539,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Perspective',
         instructionName: 'Prs',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'perspective:{0}',
         arguments: [{
             n: 'none'
@@ -1535,7 +1547,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Perspective origin',
         instructionName: 'Prso',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'perspective-origin:{0} {1}',
         arguments: [{
             t: 'top',
@@ -1553,7 +1565,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Backface visibility',
         instructionName: 'Bfv',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'backface-visibility:{0}',
         arguments: [{
             h: 'hidden',
@@ -1562,107 +1574,107 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Matrix (transform)',
         instructionName: 'Matrix',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'transform:matrix({0})'
     }, {
         name: 'Matrix 3d (transform)',
         instructionName: 'Matrix3d',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'transform:matrix({0})'
     }, {
         name: 'Rotate (transform)',
         instructionName: 'Rotate',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:rotate({0})'
     }, {
         name: 'Rotate 3d (transform)',
         instructionName: 'Rotate3d',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:rotate3d({0},{1},{2},{3})'
     }, {
         name: 'RotateX (transform)',
         instructionName: 'RotateX',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:rotateX({0})'
     }, {
         name: 'RotateY (transform)',
         instructionName: 'RotateY',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:rotateY({0})'
     }, {
         name: 'RotateZ (transform)',
         instructionName: 'RotateZ',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:rotateZ({0})'
     }, {
         name: 'Scale (transform)',
         instructionName: 'Scale',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:scale({0},{1})'
     }, {
         name: 'Scale 3d (transform)',
         instructionName: 'Scale3d',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:scale3d({0},{1},{2})'
     }, {
         name: 'ScaleX (transform)',
         instructionName: 'ScaleX',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:scaleX({0})'
     }, {
         name: 'ScaleY (transform)',
         instructionName: 'ScaleY',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:scaleY({0})'
     }, {
         name: 'Skew (transform)',
         instructionName: 'Skew',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:skew({0},{1})'
     }, {
         name: 'SkewX (transform)',
         instructionName: 'SkewX',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:skewX({0})'
     }, {
         name: 'SkewY (transform)',
         instructionName: 'SkewY',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:skewY({0})'
     }, {
         name: 'Translate (transform)',
         instructionName: 'Translate',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:translate({0},{1})'
     }, {
         name: 'Translate 3d (transform)',
         instructionName: 'Translate3d',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:translate3d({0},{1},{2})'
     }, {
         name: 'Translate X (transform)',
         instructionName: 'TranslateX',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:translateX({0})'
     }, {
         name: 'Translate Y (transform)',
         instructionName: 'TranslateY',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:translateY({0})'
     }, {
         name: 'Translate Z (transform)',
         instructionName: 'TranslateZ',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transform:translateZ({0})'
     }, {
         name: 'Transition',
         instructionName: 'Trs',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'transition:{0}'
     }, {
         name: 'Transition delay',
         instructionName: 'Trsde',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transition-delay:{0}',
         arguments: [{
             i: 'initial'
@@ -1670,12 +1682,12 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Transition duration',
         instructionName: 'Trsdu',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'transition-duration:{0}'
     }, {
         name: 'Transition property',
         instructionName: 'Trsp',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'transition-property:{0}',
         arguments: [{
             a: 'all'
@@ -1683,7 +1695,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Transition timing function',
         instructionName: 'Trstf',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'transition-timing-function:{0}',
         arguments: [{
             e: 'ease',
@@ -1697,7 +1709,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'User select',
         instructionName: 'Us',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'user-select:{0}',
         arguments: [{
             a: 'all',
@@ -1710,7 +1722,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Vertical align',
         instructionName: 'Va',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'vertical-align:{0}',
         arguments: [{
             b: 'bottom',
@@ -1725,7 +1737,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Visibility',
         instructionName: 'V',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'visibility:{0}',
         arguments: [{
             v: 'visible',
@@ -1735,7 +1747,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'White space',
         instructionName: 'Whs',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'white-space:{0}',
         arguments: [{
             n: 'normal',
@@ -1747,7 +1759,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'White space collapse',
         instructionName: 'Whsc',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'white-space-collapse:{0}',
         arguments: [{
             n: 'normal',
@@ -1759,7 +1771,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Width',
         instructionName: 'W',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'width:{0}',
         arguments: [{
             // '0': '0',
@@ -1774,7 +1786,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Word break',
         instructionName: 'Wob',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'word-break:{0}',
         arguments: [{
             ba: 'break-all',
@@ -1784,7 +1796,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Word wrap',
         instructionName: 'Wow',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'word-wrap:{0}',
         arguments: [{
             bw: 'break-word',
@@ -1793,7 +1805,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Z index',
         instructionName: 'Z',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'z-index:{0}',
         arguments: [{
             a: 'auto'
@@ -1801,19 +1813,19 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Fill (SVG)',
         instructionName: 'Fill',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'fill:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Stroke (SVG)',
         instructionName: 'Stk',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'stroke:{0}',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Stroke width (SVG)',
         instructionName: 'Stkw',
-        // allowParamTransformation: true,
+        allowCustomArgument: true,
         css: 'stroke-width:{0}',
         arguments: [{
             i: 'inherit'
@@ -1821,7 +1833,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Stroke linecap (SVG)',
         instructionName: 'Stklc',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'stroke-linecap:{0}',
         arguments: [{
             i: 'inherit',
@@ -1832,7 +1844,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Stroke linejoin (SVG)',
         instructionName: 'Stklj',
-        // allowParamTransformation: false,
+        allowCustomArgument: false,
         css: 'stroke-linejoin:{0}',
         arguments: [{
             i: 'inherit',
@@ -1985,6 +1997,7 @@ exports.H = function(command, a, b) {
             BASE_CMD_noSpaceAtStart,
             BASE_CMD_noSpaceAtEnd,
             BASE_CMD_noSpaceFollowedByComma,
+            BASE_CMD_noMissingSpaceAfterComma,
             BASE_CMD_noMultipleSpaces,
             BASE_CMD_noMultipleCommas,
             BASE_CMD_noMultiplePipes,
@@ -2018,6 +2031,12 @@ exports.H = function(command, a, b) {
     function BASE_CMD_noSpaceFollowedByComma(v) {
         if (REG_BASE_CMD_NO_SPACE_FOLLOWED_BY_COMMA.test(v)) {
             return new Error('Base command - No space followed by comma.');
+        }
+        return null;
+    }
+    function BASE_CMD_noMissingSpaceAfterComma(v) {
+        if (REG_BASE_CMD_NO_MISSING_SPACE_AFTER_COMMA.test(v)) {
+            return new Error('Base command - No missing space after comma.');
         }
         return null;
     }
@@ -2445,11 +2464,11 @@ exports.H = function(command, a, b) {
     function HTML_ATTRIBUTES_INSTRUCTION_STRING_parse(instructionString, allowedHTMLAttributes, htmlSelectorTag) {
         var components = instructionString.match(REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS);
         if (!components) {
-            throw Error('HTML attributes instruction string - Instruction must follow <Attribute>(<value>?) syntax.');
+            throw new Error('HTML attributes instruction string - Instruction must follow <Attribute>(<value>?) syntax.');
         }
         var allowedHTMLAttribute = arrFind(allowedHTMLAttributes, 'instructionName', components[1]);
         if (!allowedHTMLAttribute) {
-            throw new Error('HTML attribute "' + components[1] + '" is not allowed for "' + htmlSelectorTag + '" tag.');
+            throw new Error('Unsupported HTML attribute "' + components[1] + '" for "' + htmlSelectorTag + '" tag.');
         }
         var err = HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(allowedHTMLAttribute, components);
         if (err) {
@@ -2516,6 +2535,11 @@ exports.H = function(command, a, b) {
             throw new Error('ACSS instructions string - Unable to match any instruction string.');
         }
         var media = ACSS_composeEmptyMediaGroups();
+        for (var i = 0, l = instructionStrings.length; i < l; i++) {
+            var instructionString = instructionStrings[i];
+            var rule = ACSS_INSTRUCTION_STRING_parse(instructionString);
+            console.log('RULE:', rule);
+        }
         return ACSS_compose(styleID, media);
     }
     function ACSS_composeEmptyMediaGroups() {
@@ -2533,6 +2557,149 @@ exports.H = function(command, a, b) {
             mediaGroupKey: mediaGroupKey,
             mediaGroupValue: mediaGroupValue,
             styles: []
+        };
+    }
+    function ACSS_INSTRUCTION_STRING_parse(instructionString) {
+        var components = instructionString.match(REG_ACSS_INSTRUCTION_STRING_MATCH_COMPONENTS);
+        if (!components) {
+            throw new Error('ACSS instruction string - Instruction must follow <Style>[(<value>,<value>?,...)][<!>][:<pseudo-class>][::<pseudo-element>][@<breakpoint-identifier>]');
+        }
+        var ruleIndex = arrFindIndex(ACSS_RULES, 'instructionName', components[1]);
+        if (ruleIndex === -1) {
+            throw new Error('Unsupported ACSS rule "' + components[1] + '".');
+        }
+        var args = ACSS_INSTRUCTION_VALUE_parseArguments(components[2]);
+        var important = components[3] === '!';
+        var pseudoClassIndexes = ACSS_PSEUDO_CLASS_INDEXES_parse(components[4]);
+        var pseudoElementIndexes = ACSS_PSEUDO_ELEMENT_INDEXES_parse(components[5]);
+        return ACSS_INSTRUCTION_compose(ruleIndex, args, important, pseudoClassIndexes, pseudoElementIndexes);
+    }
+    function ACSS_INSTRUCTION_VALUE_parseArguments(instructionValue) {
+        var del = ',,'; // AS DELIMITER USE SEQUENCE THAT IS UNALLOWED IN COMMAND
+        instructionValue = instructionValue.replace(REG_ACSS_INSTRUCTION_VALUE_SPLIT_ARGUMENTS, del);
+        instructionValue = ACSS_INSTRUCTION_VALUE_transformColors(instructionValue);
+        return instructionValue.split(del);
+    }
+    function ACSS_INSTRUCTION_VALUE_transformColors(instructionValue) {
+        var m = null;
+        while (m = REG_ACSS_INSTRUCTION_VALUE_MATCH_NEXT_COLOR.exec(instructionValue)) {
+            if (Array.isArray(m) && m.length > 0) {
+                var i = m.index + m[1].length;
+                var j = i + 1 + m[2].length + m[3].length; // 1 FOR #
+                var color = ACSS_INSTRUCTION_STRING_transformColor(m[2], m[3]);
+                instructionValue = instructionValue.slice(0, i) + color + instructionValue.slice(j);
+                m.lastIndex = j;
+            }
+        }
+        return instructionValue;
+    }
+    function ACSS_INSTRUCTION_STRING_transformColor(hexString, opacityString) {
+        var err = ACSS_COLOR_HEX_validate(hexString);
+        if (err) {
+            throw err;
+        }
+        var rgb = ACSS_COLOR_HEX_parse(hexString);
+        var a = ACSS_COLOR_OPACITY_parse(opacityString);
+        return 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + a + ')';
+    }
+    function ACSS_COLOR_HEX_validate(hexString) {
+        return validateAll(hexString, [
+            ACSS_COLOR_HEX_noLowercasedLetter,
+            ACSS_COLOR_HEX_noInvalidHexValue,
+            ACSS_COLOR_HEX_noInvalidLength
+        ]);
+    }
+    function ACSS_COLOR_HEX_noLowercasedLetter(v) {
+        if (REG_ACSS_COLOR_HEX_NO_LOWERCASED_LETTER.test(v)) {
+            return new Error('ACSS color hex - No lowercased letter.');
+        }
+        return null;
+    }
+    function ACSS_COLOR_HEX_noInvalidHexValue(v) {
+        if (REG_ACSS_COLOR_HEX_NO_INVALID_HEX_VALUE.test(v)) {
+            return new Error('ACSS color hex - No invalid hex value.');
+        }
+        return null;
+    }
+    function ACSS_COLOR_HEX_noInvalidLength(v) {
+        if (v.length !== 6) {
+            return new Error('ACSS color hex - No invalid length.');
+        }
+        return null;
+    }
+    function ACSS_COLOR_HEX_parse(hexString) { // https://github.com/acss-io/atomizer/blob/1bd685fe5970af5d1984f96ecfccd5df37e4601f/src/lib/utils.js#L6
+        var m = hexString.match(REG_ACSS_COLOR_HEX_TO_RGB);
+        if (!m) {
+            throw new Error('ACSS color hex - Unable to parse.');
+        }
+        var r = parseInt(m[1], 16);
+        var g = parseInt(m[2], 16);
+        var b = parseInt(m[3], 16);
+        return ACSS_COLOR_RGB_compose(r, g, b);
+    }
+    function ACSS_COLOR_RGB_compose(r, g, b) {
+        return {
+            r: r,
+            g: g,
+            b: b
+        };
+    }
+    function ACSS_COLOR_OPACITY_parse(opacityString) {
+        if (typeof(opacityString) === 'string' && opacityString.length > 0) {
+            if (opacityString[0] !== '.') {
+                throw new Error('ACSS color opacity - Unable to parse opacity.');
+            }
+            opacityString = '0' + opacityString;
+            var v = parseFloat(opacityString);
+            if (isNaN(v) || ('' + v).length !== opacityString.length || v < 0 || v > 1) {
+                throw new Error('ACSS color opacity - Unable to parse opacity.');
+            }
+            if (opacityString.length > 4) {
+                throw new Error('ACSS color opacity - Max precision 0.01 exceeded.');
+            }
+            return v;
+        }
+        return 100;
+    }
+    function ACSS_PSEUDO_CLASS_INDEXES_parse(pseudosClassesString) {
+        var indexes = [];
+        var m = pseudosClassesString.match(REG_ACSS_MATCH_PSEUDO_CLASSES);
+        if (!Array.isArray(m) || m.length === 0) {
+            return [];
+        }
+        for (var i = 0, l = m.length; i < l; i++) {
+            var v = m[i];
+            var j = arrFindIndex(PSEUDO_CLASSES, 'acssValue', v);
+            if (j === -1) {
+                throw new Error('ACSS pseudo classes - Unsupported class: "' + v + '".');
+            }
+            indexes.push(j);
+        }
+        return indexes;
+    }
+    function ACSS_PSEUDO_ELEMENT_INDEXES_parse(pseudoElementsString) {
+        var indexes = [];
+        var m = pseudoElementsString.match(REG_ACSS_MATCH_PSEUDO_ELEMENTS);
+        if (!Array.isArray(m) || m.length === 0) {
+            return [];
+        }
+        for (var i = 0, l = m.length; i < l; i++) {
+            var v = m[i];
+            var j = arrFindIndex(PSEUDO_ELEMENTS, 'acssValue', v);
+            if (j === -1) {
+                throw new Error('ACSS pseudo elements - Unsupported element: "' + v + '".');
+            }
+            indexes.push(j);
+        }
+        return indexes;
+    }
+    function ACSS_INSTRUCTION_compose(ruleIndex, args, important, pseudoClassIndexes, pseudoElementIndexes) {
+        return {
+            ruleIndex: ruleIndex,
+            arguments: args,
+            important: important,
+            pseudoClassIndexes: pseudoClassIndexes,
+            pseudoElementIndexes: pseudoElementIndexes
         };
     }
     function ACSS_compose(styleID, media) {
