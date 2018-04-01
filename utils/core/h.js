@@ -2586,9 +2586,9 @@ exports.H = function(command, a, b) {
             throw err;
         }
         var important = components[3] === '!';
-        var pseudoClassIndexes = ACSS_PSEUDO_CLASS_INDEXES_parse(components[4]);
+        var pseudoClasses = ACSS_PSEUDO_CLASSES_STRING_parse(components[4]);
         var pseudoElementIndexes = ACSS_PSEUDO_ELEMENT_INDEXES_parse(components[5]);
-        return ACSS_INSTRUCTION_compose(acssRule, args, important, pseudoClassIndexes, pseudoElementIndexes);
+        return ACSS_INSTRUCTION_compose(acssRule, args, important, pseudoClasses, pseudoElementIndexes);
     }
     function ACSS_INSTRUCTION_VALUE_parseArguments(instructionValue) {
         var del = ',,'; // AS DELIMITER USE SEQUENCE THAT IS UNALLOWED IN COMMAND
@@ -2691,21 +2691,66 @@ exports.H = function(command, a, b) {
         }
         return 100;
     }
-    function ACSS_PSEUDO_CLASS_INDEXES_parse(pseudosClassesString) {
-        var indexes = [];
-        var m = pseudosClassesString.match(REG_ACSS_MATCH_PSEUDO_CLASSES);
-        if (!Array.isArray(m) || m.length === 0) {
-            return [];
+    function ACSS_PSEUDO_CLASSES_STRING_parse(pseudoClassesString) {
+        var pseudoClassStrings = pseudoClassesString.match(REG_ACSS_MATCH_PSEUDO_CLASSES);
+        if (!Array.isArray(pseudoClassStrings) || pseudoClassStrings.length === 0) {
+            return ACSS_PSEUDO_CLASSES_compose([], 0);
         }
-        for (var i = 0, l = m.length; i < l; i++) {
-            var v = m[i];
-            var j = arrFindIndex(PSEUDO_CLASSES, 'acssValue', v);
+        var totalScore = 0;
+        var scores = [];
+        var pseudoClasses = [];
+        var unordered = false;
+        for (var i = 0, l = pseudoClassStrings.length; i < l; i++) {
+            var pseudoClassString = pseudoClassStrings[i];
+            var j = arrFindIndex(PSEUDO_CLASSES, 'acssValue', pseudoClassString);
             if (j === -1) {
-                throw new Error('ACSS pseudo classes - Unsupported class: "' + v + '".');
+                throw new Error('ACSS pseudo classes string - Unsupported class: "' + pseudoClassString + '".');
             }
-            indexes.push(j);
+            var score = j + 1; // +1 TO DISTINGUISH "NO PSEUDO CLASS" FROM "PSEUDO CLASS ON INDEX 0"
+            totalScore += score;
+            if (i > 0) {
+                var va = score;
+                var vb = scores[pseudoClasses.length - 1];
+                if (va < vb) {
+                    unordered = true;
+                }
+                else if (va === vb) {
+                    throw new Error('ACSS pseudo classes string - Duplicate pseudo classes.');
+                }
+            }
+            scores.push(score);
+            pseudoClasses.push(PSEUDO_CLASSES[j].cssValue);
         }
-        return indexes;
+        if (unordered) {
+            throw ACSS_PSEUDO_CLASSES_STRING_composeOrderError(scores);
+        }
+        return ACSS_PSEUDO_CLASSES_compose(pseudoClasses, totalScore);
+    }
+    function ACSS_PSEUDO_CLASSES_STRING_composeOrderError(scores) {
+        var arr = arrSortByNumberASC(clone(scores));
+        var ba = [];
+        var bb = [];
+        for (var i = 0, l = arr.length; i < l; i++) {
+            var va = PSEUDO_CLASSES[scores[i] - 1].acssValue;
+            if (va) {
+                ba.push(va);
+            }
+            var vb = PSEUDO_CLASSES[arr[i] - 1].acssValue;
+            if (vb) {
+                bb.push(vb);
+            }
+        }
+        ba = ba.join('');
+        bb = bb.join('');
+        var msg = 'ACSS pseudo classes string - ';
+        msg += (ba && bb) ? ('Found "' + ba + '" expected "' + bb + '".') : 'Invalid pseudo classes order.';
+        return new Error(msg);
+    }
+    function ACSS_PSEUDO_CLASSES_compose(pseudoClasses, score) {
+        return {
+            array: pseudoClasses,
+            score: score
+        };
     }
     function ACSS_PSEUDO_ELEMENT_INDEXES_parse(pseudoElementsString) {
         var indexes = [];
@@ -2723,12 +2768,12 @@ exports.H = function(command, a, b) {
         }
         return indexes;
     }
-    function ACSS_INSTRUCTION_compose(acssRule, args, important, pseudoClassIndexes, pseudoElementIndexes) {
+    function ACSS_INSTRUCTION_compose(acssRule, args, important, pseudoClasses, pseudoElementIndexes) {
         return {
             acssRule: acssRule,
             arguments: args,
             important: important,
-            pseudoClassIndexes: pseudoClassIndexes,
+            pseudoClasses: pseudoClasses,
             pseudoElementIndexes: pseudoElementIndexes
         };
     }
