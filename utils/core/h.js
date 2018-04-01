@@ -2283,10 +2283,13 @@ exports.H = function(command, a, b) {
         }
         if (cmd[1] && cmd[1].length > 0) { // NOT ALL INSTRUCTION NAMES MUST MATCH, WE ARE JUST DIVIDING THERE COMMANDS, IF SOME IS NOT REGISTERED THIS WILL BE VALIDATED IN PER INSTRUCTION VALIDATION
             if (cmd.length === 3 && !htmlAttributesInstructionsString) {
-                throw new Error('HTML attributes instructions string - No all instruction names mismatch.');
+                if (REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(cmd[1])) {
+                    throw new Error('Base command - Command must follow <selector>|<html-attributes>|<acss> syntax.');
+                }
+                throw new Error('Base command - No all instruction names mismatch at position [1].');
             }
             if (cmd.length === 2 && !htmlAttributesInstructionsString && !acssInstructionsString) {
-                throw new Error('HTML attributes instructions string - No all instruction names mismatch.');
+                throw new Error('Base command - No all instruction names mismatch at position [1].');
             }
         }
         if (type === BASE_CMD_TYPE_HTML_METATAG()) {
