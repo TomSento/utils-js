@@ -2516,17 +2516,23 @@ exports.H = function(command, a, b) {
         });
     }
     function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_composeOrderError(attributes) {
-        var arr = arrSortByNumberASC(attributes, 'score');
-        var b = [];
+        var arr = arrSortByNumberASC(clone(attributes), 'score');
+        var ba = [];
+        var bb = [];
         for (var i = 0, l = arr.length; i < l; i++) {
-            var v = arr[i].instructionString;
-            if (v) {
-                b.push(v);
+            var va = attributes[i].instructionString;
+            if (va) {
+                ba.push(va);
+            }
+            var vb = arr[i].instructionString;
+            if (vb) {
+                bb.push(vb);
             }
         }
-        b = b.join(' ');
+        ba = ba.join(' ');
+        bb = bb.join(' ');
         var msg = 'HTML attributes instructions string - ';
-        msg += b ? ('Expected order: ' + b) : 'Invalid instructions order.';
+        msg += (ba && bb) ? ('Found "' + ba + '" expected "' + bb + '".') : 'Invalid instructions order.';
         return new Error(msg);
     }
     function ACSS_INSTRUCTIONS_STRING_validate(instructionsString) {
