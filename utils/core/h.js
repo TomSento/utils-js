@@ -2262,39 +2262,57 @@ exports.H = function(command, a, b) {
         if (!Array.isArray(cmd) || cmd.length === 0) {
             throw new Error('Base command - Unable to parse triple.');
         }
-        if (cmd.length > 3) {
-            throw new Error('Command can contain max 2 pipe separators.');
-        }
         if (type === BASE_CMD_TYPE_HTML_METATAG()) {
             if (cmd.length > 2) {
-                throw new Error('Meta element command must have max 1 pipe separator.');
+                throw new Error('Base command - Max 1 pipe separator.');
+            }
+        }
+        else {
+            if (cmd.length > 3) {
+                throw new Error('Base command - Max 2 pipe separators.');
             }
         }
         var htmlSelectorInstructionString = cmd[0];
         if (!htmlSelectorInstructionString) {
-            throw new Error('Missing HTML selector instruction string.');
+            throw new Error('Base command - Missing <html-selector>.');
         }
-        var htmlAttributesInstructionsString = REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING.test(cmd[1]) ? cmd[1] : null;
-        var acssInstructionsString = REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(cmd[1]) ? cmd[1] : (cmd[2] || null);
-        if (htmlAttributesInstructionsString && acssInstructionsString) {
-            if (htmlAttributesInstructionsString === acssInstructionsString) {
-                throw new Error('Ambigious command.');
+        var htmlAttributesInstructionsString = null;
+        var acssInstructionsString = null;
+        if (cmd.length === 3) {
+            if (cmd[1] && REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING.test(cmd[1])) {
+                htmlAttributesInstructionsString = cmd[1];
+            }
+            else {
+                throw new Error('Base command - Missing or invalid <html-attributes>.');
+            }
+            if (cmd[2] && REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(cmd[2])) {
+                acssInstructionsString = cmd[2];
+            }
+            else {
+                throw new Error('Base command - Missing or invalid <acss>.');
             }
         }
-        if (cmd[1] && cmd[1].length > 0) { // NOT ALL INSTRUCTION NAMES MUST MATCH, WE ARE JUST DIVIDING THERE COMMANDS, IF SOME IS NOT REGISTERED THIS WILL BE VALIDATED IN PER INSTRUCTION VALIDATION
-            if (cmd.length === 3 && !htmlAttributesInstructionsString) {
-                if (REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(cmd[1])) {
-                    throw new Error('Base command - Command must follow <selector>|<html-attributes>|<acss> syntax.');
+        else {
+            if (cmd.length === 2) {
+                if (cmd[1]) {
+                    if (REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING.test(cmd[1])) {
+                        htmlAttributesInstructionsString = cmd[1];
+                    }
+                    else if (REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(cmd[1])) {
+                        acssInstructionsString = cmd[1];
+                    }
+                    else {
+                        throw new Error('Base command - Unable to classify command at [1].');
+                    }
                 }
-                throw new Error('Base command - No all instruction names mismatch at position [1].');
-            }
-            if (cmd.length === 2 && !htmlAttributesInstructionsString && !acssInstructionsString) {
-                throw new Error('Base command - No all instruction names mismatch at position [1].');
+                else {
+                    throw new Error('Base command - Unable to classify command at [1].');
+                }
             }
         }
         if (type === BASE_CMD_TYPE_HTML_METATAG()) {
             if (acssInstructionsString) {
-                throw new Error('HTML metatag element must not define ACSS command.');
+                throw new Error('Base command - Metatag command must not define <acss>.');
             }
         }
         return BASE_CMD_composeTripleObject(type, htmlSelectorInstructionString, htmlAttributesInstructionsString, acssInstructionsString);
