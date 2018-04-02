@@ -83,61 +83,61 @@ exports.H = function(command, a, b) {
     var HTML_ATTRIBUTES = {
         Doc: [{
             name: 'Language',
-            instructionName: 'Lang',
+            func: 'Lang',
             allowArgument: true,
             html: 'lang={0}'
         }],
         Meta: [{ // MANDATORY ORDER
             name: 'Charset',
-            instructionName: 'Charset',
+            func: 'Charset',
             allowArgument: true,
             html: 'charset={0}'
         }, {
             name: 'Name',
-            instructionName: 'Name',
+            func: 'Name',
             allowArgument: true,
             html: 'name={0}'
         }, {
             name: 'Property',
-            instructionName: 'Property',
+            func: 'Property',
             allowArgument: true,
             html: 'property={0}'
         }, {
             name: 'HttpEquiv',
-            instructionName: 'HttpEquiv',
+            func: 'HttpEquiv',
             allowArgument: true,
             html: 'http-equiv={0}'
         }, {
             name: 'Content',
-            instructionName: 'Content',
+            func: 'Content',
             allowArgument: true,
             html: 'content={0}'
         }],
         Input: [{
             name: 'Checked',
-            instructionName: 'Chckd',
+            func: 'Chckd',
             allowArgument: false,
             html: 'checked'
         }, {
             name: 'Readonly',
-            instructionName: 'Readonly',
+            func: 'Readonly',
             allowArgument: false,
             html: 'readonly'
         }, {
             name: 'Disabled',
-            instructionName: 'Disabled',
+            func: 'Disabled',
             allowArgument: false,
             html: 'disabled'
         }],
         Select: [{
             name: 'Disabled',
-            instructionName: 'Disabled',
+            func: 'Disabled',
             allowArgument: false,
             html: 'disabled'
         }],
         Option: [{
             name: 'Selected',
-            instructionName: 'Slctd',
+            func: 'Slctd',
             allowArgument: false,
             html: 'selected'
         }]
@@ -154,7 +154,7 @@ exports.H = function(command, a, b) {
 
     var ACSS_RULES = [{
         name: 'Line clamp',
-        instructionName: 'LineClamp', // https://github.com/acss-io/atomizer/blob/master/src/helpers.js#L267
+        func: 'LineClamp', // https://github.com/acss-io/atomizer/blob/master/src/helpers.js#L267
         styles: {
             '-webkit-line-clamp': '[0]',
             'max-height': '[1]',
@@ -186,22 +186,19 @@ exports.H = function(command, a, b) {
         type: 'HELPER'
     }, { // MANDATORY ORDER
         name: 'Animation',
-        instructionName: 'Anim',
+        func: 'Anim',
         css: 'animation:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Animation delay',
-        instructionName: 'Animdel',
+        func: 'Animdel',
         css: 'animation-delay:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Animation direction',
-        instructionName: 'Animdir',
+        func: 'Animdir',
         css: 'animation-direction:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             a: 'alternate',
             ar: 'alternate-reverse',
             n: 'normal',
@@ -210,16 +207,14 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Animation duration',
-        instructionName: 'Animdur',
+        func: 'Animdur',
         css: 'animation-duration:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Animation fill mode',
-        instructionName: 'Animfm',
+        func: 'Animfm',
         css: 'animation-fill-mode:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             b: 'backwards',
             bo: 'both',
             f: 'forwards',
@@ -228,38 +223,34 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Animation iteration count',
-        instructionName: 'Animic',
+        func: 'Animic',
         css: 'animation-iteration-count:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             i: 'infinite'
         },
         type: 'RULE'
     }, {
         name: 'Animation name',
-        instructionName: 'Animn',
+        func: 'Animn',
         css: 'animation-name:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             n: 'none'
         },
         type: 'RULE'
     }, {
         name: 'Animation play state',
-        instructionName: 'Animps',
+        func: 'Animps',
         css: 'animation-play-state:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             p: 'paused',
             r: 'running'
         },
         type: 'RULE'
     }, {
         name: 'Animation timing function',
-        instructionName: 'Animtf',
+        func: 'Animtf',
         css: 'animation-timing-function:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             e: 'ease',
             ei: 'ease-in',
             eo: 'ease-out',
@@ -271,115 +262,97 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Appearance',
-        instructionName: 'Ap',
+        func: 'Ap',
         css: 'appearance:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             a: 'auto',
             n: 'none'
         },
         type: 'RULE'
     }, {
         name: 'Border',
-        instructionName: 'Bd',
+        func: 'Bd',
         css: 'border:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             n: 'none'
         },
         type: 'RULE'
     }, {
         name: 'Border X',
-        instructionName: 'Bdx',
+        func: 'Bdx',
         css: [
             'border-left:$',
             'border-right:$'
         ],
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border Y',
-        instructionName: 'Bdy',
+        func: 'Bdy',
         css: [
             'border-top:$',
             'border-bottom:$'
         ],
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border top',
-        instructionName: 'Bdt',
+        func: 'Bdt',
         css: 'border-top:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border right',
-        instructionName: 'Bdright',
+        func: 'Bdright',
         css: 'border-right:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border bottom',
-        instructionName: 'Bdb',
+        func: 'Bdb',
         css: 'border-bottom:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border left',
-        instructionName: 'Bdleft',
+        func: 'Bdleft',
         css: 'border-left:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border color',
-        instructionName: 'Bdc',
+        func: 'Bdc',
         css: 'border-color:$',
-        allowCustomArgument: true,
-        arguments: ACSS_COLOR_ARGUMENTS,
+        expanders: ACSS_COLOR_ARGUMENTS,
         type: 'RULE'
     }, {
         name: 'Border top color',
-        instructionName: 'Bdtc',
+        func: 'Bdtc',
         css: 'border-top-color:$',
-        allowCustomArgument: true,
-        arguments: ACSS_COLOR_ARGUMENTS,
+        expanders: ACSS_COLOR_ARGUMENTS,
         type: 'RULE'
     }, {
         name: 'Border right color',
-        instructionName: 'Bdrightc',
+        func: 'Bdrightc',
         css: 'border-right-color:$',
-        allowCustomArgument: true,
-        arguments: ACSS_COLOR_ARGUMENTS,
+        expanders: ACSS_COLOR_ARGUMENTS,
         type: 'RULE'
     }, {
         name: 'Border bottom color',
-        instructionName: 'Bdbc',
+        func: 'Bdbc',
         css: 'border-bottom-color:$',
-        allowCustomArgument: true,
-        arguments: ACSS_COLOR_ARGUMENTS,
+        expanders: ACSS_COLOR_ARGUMENTS,
         type: 'RULE'
     }, {
         name: 'Border left color',
-        instructionName: 'Bdleftc',
+        func: 'Bdleftc',
         css: 'border-left-color:$',
-        allowCustomArgument: true,
-        arguments: ACSS_COLOR_ARGUMENTS,
+        expanders: ACSS_COLOR_ARGUMENTS,
         type: 'RULE'
     }, {
         name: 'Border spacing',
-        instructionName: 'Bdsp',
+        func: 'Bdsp',
         css: 'border-spacing:$',
-        allowCustomArgument: true,
-        arguments: {
-            i: 'inherit'
-        },
         type: 'RULE'
     }, {
         name: 'Border style',
-        instructionName: 'Bds',
+        func: 'Bds',
         css: 'border-style:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -394,10 +367,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border top style',
-        instructionName: 'Bdts',
+        func: 'Bdts',
         css: 'border-top-style:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -412,10 +384,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border right style',
-        instructionName: 'Bdrights',
+        func: 'Bdrights',
         css: 'border-right-style:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -430,10 +401,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border bottom style',
-        instructionName: 'Bdbs',
+        func: 'Bdbs',
         css: 'border-bottom-style:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -448,10 +418,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border left style',
-        instructionName: 'Bdlefts',
+        func: 'Bdlefts',
         css: 'border-left-style:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -466,10 +435,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border width',
-        instructionName: 'Bdw',
+        func: 'Bdw',
         css: 'border-width:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
@@ -477,10 +445,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border top width',
-        instructionName: 'Bdtw',
+        func: 'Bdtw',
         css: 'border-top-width:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
@@ -488,10 +455,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border right width',
-        instructionName: 'Bdrightw',
+        func: 'Bdrightw',
         css: 'border-right-width:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
@@ -499,10 +465,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border bottom width',
-        instructionName: 'Bdbw',
+        func: 'Bdbw',
         css: 'border-bottom-width:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
@@ -510,10 +475,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border left width',
-        instructionName: 'Bdleftw',
+        func: 'Bdleftw',
         css: 'border-left-width:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
@@ -521,66 +485,57 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border radius',
-        instructionName: 'Bdrs',
+        func: 'Bdrs',
         css: 'border-radius:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border radius top right',
-        instructionName: 'Bdrstright',
+        func: 'Bdrstright',
         css: 'border-top-right-radius:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border radius bottom right',
-        instructionName: 'Bdrsbright',
+        func: 'Bdrsbright',
         css: 'border-bottom-right-radius:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border radius bottom left',
-        instructionName: 'Bdrsbleft',
+        func: 'Bdrsbleft',
         css: 'border-bottom-left-radius:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Border radius top left',
-        instructionName: 'Bdrstleft',
+        func: 'Bdrstleft',
         css: 'border-top-left-radius:$',
-        allowCustomArgument: true,
         type: 'RULE'
     }, {
         name: 'Background',
-        instructionName: 'Bg',
+        func: 'Bg',
         css: 'background:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             n: 'none',
             t: 'transparent'
         },
         type: 'RULE'
     }, {
         name: 'Background image',
-        instructionName: 'Bgi',
+        func: 'Bgi',
         css: 'background-image:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             n: 'none'
         },
         type: 'RULE'
     }, {
         name: 'Background color',
-        instructionName: 'Bgc',
+        func: 'Bgc',
         css: 'background-color:$',
-        allowCustomArgument: true,
-        arguments: ACSS_COLOR_ARGUMENTS,
+        expanders: ACSS_COLOR_ARGUMENTS,
         type: 'RULE'
     }, {
         name: 'Background clip',
-        instructionName: 'Bgcp',
+        func: 'Bgcp',
         css: 'background-clip:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             bb: 'border-box',
             cb: 'content-box',
             pb: 'padding-box'
@@ -588,10 +543,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Background origin',
-        instructionName: 'Bgo',
+        func: 'Bgo',
         css: 'background-origin:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             bb: 'border-box',
             cb: 'content-box',
             pb: 'padding-box'
@@ -599,10 +553,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Background size',
-        instructionName: 'Bgz',
+        func: 'Bgz',
         css: 'background-size:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             a: 'auto',
             ct: 'contain',
             cv: 'cover'
@@ -610,10 +563,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Background attachment',
-        instructionName: 'Bga',
+        func: 'Bga',
         css: 'background-attachment:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             f: 'fixed',
             l: 'local',
             s: 'scroll'
@@ -621,10 +573,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Background position',
-        instructionName: 'Bgp',
+        func: 'Bgp',
         css: 'background-position:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             left_t: 'left 0',
             right_t: 'right 0',
             left_b: 'left 100%',
@@ -638,10 +589,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Background position (X axis)',
-        instructionName: 'Bgpx',
+        func: 'Bgpx',
         css: 'background-position-x:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             left: 'left',
             right: 'right',
             c: '50%'
@@ -649,10 +599,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Background position (Y axis)',
-        instructionName: 'Bgpy',
+        func: 'Bgpy',
         css: 'background-position-y:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             t: '0',
             b: '100%',
             c: '50%'
@@ -660,10 +609,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Background repeat',
-        instructionName: 'Bgr',
+        func: 'Bgr',
         css: 'background-repeat:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             nr: 'no-repeat',
             rx: 'repeat-x',
             ry: 'repeat-y',
@@ -674,20 +622,18 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Border collapse',
-        instructionName: 'Bdcl',
+        func: 'Bdcl',
         css: 'border-collapse:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             c: 'collapse',
             s: 'separate'
         },
         type: 'RULE'
     }, {
         name: 'Box sizing',
-        instructionName: 'Bxz',
+        func: 'Bxz',
         css: 'box-sizing:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             cb: 'content-box',
             pb: 'padding-box',
             bb: 'border-box'
@@ -695,38 +641,32 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Box shadow',
-        instructionName: 'Bxsh',
+        func: 'Bxsh',
         css: 'box-shadow:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             n: 'none'
         },
         type: 'RULE'
     }, {
         name: 'Clear',
-        instructionName: 'Cl',
+        func: 'Cl',
         css: 'clear:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             n: 'none',
-            b: 'both',
-            left: 'left',
-            right: 'right'
+            b: 'both'
         },
         type: 'RULE'
     }, {
         name: 'Color',
-        instructionName: 'C',
+        func: 'C',
         css: 'color:$',
-        allowCustomArgument: true,
-        arguments: ACSS_COLOR_ARGUMENTS,
+        expanders: ACSS_COLOR_ARGUMENTS,
         type: 'RULE'
     }, {
         name: 'Content',
-        instructionName: 'Cnt',
+        func: 'Cnt',
         css: 'content:$',
-        allowCustomArgument: true,
-        arguments: {
+        expanders: {
             n: 'none',
             nor: 'normal',
             oq: 'open-quote',
@@ -737,10 +677,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Cursor',
-        instructionName: 'Cur',
+        func: 'Cur',
         css: 'cursor:$',
-        allowCustomArgument: false,
-        arguments: {
+        expanders: {
             a: 'auto',
             as: 'all-scroll',
             c: 'cell',
@@ -779,10 +718,9 @@ exports.H = function(command, a, b) {
         type: 'RULE'
     }, {
         name: 'Display',
-        instructionName: 'D',
-        allowCustomArgument: false,
+        func: 'D',
         css: 'display:$',
-        arguments: [{
+        expanders: {
             n: 'none',
             b: 'block',
             f: 'flex',
@@ -801,162 +739,139 @@ exports.H = function(command, a, b) {
             tbhg: 'table-header-group',
             tbfg: 'table-footer-group',
             tbrg: 'table-row-group'
-        }]
+        }
     }, {
         name: 'Filter',
-        instructionName: 'Fil',
-        allowCustomArgument: false,
+        func: 'Fil',
         css: 'filter:$',
-        arguments: [{
+        expanders: {
             n: 'none'
-        }]
+        }
     }, {
         name: 'Blur (filter)',
-        instructionName: 'Blur',
-        allowCustomArgument: true,
+        func: 'Blur',
         css: 'filter:blur($)'
     }, {
         name: 'Brightness (filter)',
-        instructionName: 'Brightness',
-        allowCustomArgument: true,
+        func: 'Brightness',
         css: 'filter:brightness($)'
     }, {
         name: 'Contrast (filter)',
-        instructionName: 'Contrast',
-        allowCustomArgument: true,
+        func: 'Contrast',
         css: 'filter:contrast($)'
     }, {
         name: 'Drop shadow (filter)',
-        instructionName: 'Dropshadow',
-        allowCustomArgument: false,
+        func: 'Dropshadow',
         css: 'filter:drop-shadow($)'
     }, {
         name: 'Grayscale (filter)',
-        instructionName: 'Grayscale',
-        allowCustomArgument: true,
+        func: 'Grayscale',
         css: 'filter:grayscale($)'
     }, {
         name: 'Hue Rotate (filter)',
-        instructionName: 'HueRotate',
-        allowCustomArgument: true,
+        func: 'HueRotate',
         css: 'filter:hue-rotate($)'
     }, {
         name: 'Invert (filter)',
-        instructionName: 'Invert',
-        allowCustomArgument: true,
+        func: 'Invert',
         css: 'filter:invert($)'
     }, {
         name: 'Opacity (filter)',
-        instructionName: 'Opacity',
-        allowCustomArgument: true,
+        func: 'Opacity',
         css: 'filter:opacity($)'
     }, {
         name: 'Saturate (filter)',
-        instructionName: 'Saturate',
-        allowCustomArgument: true,
+        func: 'Saturate',
         css: 'filter:saturate($)'
     }, {
         name: 'Sepia (filter)',
-        instructionName: 'Sepia',
-        allowCustomArgument: true,
+        func: 'Sepia',
         css: 'filter:sepia($)'
     }, {
         name: 'Flex (deprecated)',
-        instructionName: 'Flx',
-        allowCustomArgument: false,
+        func: 'Flx',
         css: 'flex:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             n: 'none'
-        }]
+        }
     }, {
         name: 'Flex',
-        instructionName: 'Fx',
-        allowCustomArgument: false,
+        func: 'Fx',
         css: 'flex:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             n: 'none'
-        }]
+        }
     }, {
         name: 'Flex grow (deprecated)',
-        instructionName: 'Flxg',
-        allowCustomArgument: true,
+        func: 'Flxg',
         css: 'flex-grow:$'
     }, {
         name: 'Flex grow',
-        instructionName: 'Fxg',
-        allowCustomArgument: true,
+        func: 'Fxg',
         css: 'flex-grow:$'
     }, {
         name: 'Flex shrink (deprecated)',
-        instructionName: 'Flxs',
-        allowCustomArgument: true,
+        func: 'Flxs',
         css: 'flex-shrink:$'
     }, {
         name: 'Flex shrink',
-        instructionName: 'Fxs',
-        allowCustomArgument: true,
+        func: 'Fxs',
         css: 'flex-shrink:$'
     }, {
         name: 'Flex basis (deprecated)',
-        instructionName: 'Flxb',
-        allowCustomArgument: true,
+        func: 'Flxb',
         css: 'flex-basis:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             n: 'none'
-        }]
+        }
     }, {
         name: 'Flex basis',
-        instructionName: 'Fxb',
-        allowCustomArgument: true,
+        func: 'Fxb',
         css: 'flex-basis:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             n: 'none'
-        }]
+        }
     }, {
         name: 'Align self',
-        instructionName: 'As',
-        allowCustomArgument: false,
+        func: 'As',
         css: 'align-self:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             fs: 'flex-start',
             fe: 'flex-end',
             c: 'center',
             b: 'baseline',
             st: 'stretch'
-        }]
+        }
     }, {
         name: 'Flex direction (deprecated)',
-        instructionName: 'Fld',
-        allowCustomArgument: false,
+        func: 'Fld',
         css: 'flex-direction:$',
-        arguments: [{
+        expanders: {
             r: 'row',
             rr: 'row-reverse',
             c: 'column',
             cr: 'column-reverse'
-        }]
+        }
     }, {
         name: 'Flex direction',
-        instructionName: 'Fxd',
-        allowCustomArgument: false,
+        func: 'Fxd',
         css: 'flex-direction:$',
-        arguments: [{
+        expanders: {
             r: 'row',
             rr: 'row-reverse',
             c: 'column',
             cr: 'column-reverse'
-        }]
+        }
     }, {
         name: 'Flex flow (deprecated)',
-        instructionName: 'Flf',
-        allowCustomArgument: false,
+        func: 'Flf',
         css: 'flex-flow:$',
-        arguments: [{
+        expanders: {
             r: 'row',
             rr: 'row-reverse',
             c: 'column',
@@ -964,13 +879,12 @@ exports.H = function(command, a, b) {
             nw: 'nowrap',
             w: 'wrap',
             wr: 'wrap-reverse'
-        }]
+        }
     }, {
         name: 'Flex flow',
-        instructionName: 'Fxf',
-        allowCustomArgument: false,
+        func: 'Fxf',
         css: 'flex-flow:$',
-        arguments: [{
+        expanders: {
             r: 'row',
             rr: 'row-reverse',
             c: 'column',
@@ -978,142 +892,117 @@ exports.H = function(command, a, b) {
             nw: 'nowrap',
             w: 'wrap',
             wr: 'wrap-reverse'
-        }]
+        }
     }, {
         name: 'Align items',
-        instructionName: 'Ai',
-        allowCustomArgument: false,
+        func: 'Ai',
         css: 'align-items:$',
-        arguments: [{
+        expanders: {
             fs: 'flex-start',
             fe: 'flex-end',
             c: 'center',
             b: 'baseline',
             st: 'stretch'
-        }]
+        }
     }, {
         name: 'Align content',
-        instructionName: 'Ac',
-        allowCustomArgument: false,
+        func: 'Ac',
         css: 'align-content:$',
-        arguments: [{
+        expanders: {
             fs: 'flex-start',
             fe: 'flex-end',
             c: 'center',
             sb: 'space-between',
             sa: 'space-around',
             st: 'stretch'
-        }]
+        }
     }, {
         name: 'Order',
-        instructionName: 'Or',
-        allowCustomArgument: true,
+        func: 'Or',
         css: 'order:$'
     }, {
         name: 'Justify content',
-        instructionName: 'Jc',
-        allowCustomArgument: false,
+        func: 'Jc',
         css: 'justify-content:$',
-        arguments: [{
+        expanders: {
             fs: 'flex-start',
             fe: 'flex-end',
             c: 'center',
             sb: 'space-between',
             sa: 'space-around'
-        }]
+        }
     }, {
         name: 'Flex-wrap (deprecated)',
-        instructionName: 'Flw',
-        allowCustomArgument: false,
+        func: 'Flw',
         css: 'flex-wrap:$',
-        arguments: [{
+        expanders: {
             nw: 'nowrap',
             w: 'wrap',
             wr: 'wrap-reverse'
-        }]
+        }
     }, {
         name: 'Flex-wrap',
-        instructionName: 'Fxw',
-        allowCustomArgument: false,
+        func: 'Fxw',
         css: 'flex-wrap:$',
-        arguments: [{
+        expanders: {
             nw: 'nowrap',
             w: 'wrap',
             wr: 'wrap-reverse'
-        }]
+        }
     }, {
         name: 'Float',
-        allowCustomArgument: false,
-        instructionName: 'Fl',
+        func: 'Fl',
         css: 'float:$',
-        arguments: [{
-            n: 'none',
-            left: 'left',
-            right: 'right'
-        }]
+        expanders: {
+            n: 'none'
+        }
     }, {
         name: 'Font family',
-        instructionName: 'Ff',
-        allowCustomArgument: false,
+        func: 'Ff',
         css: 'font-family:$',
-        arguments: [{
+        expanders: {
             c: '"Monotype Corsiva", "Comic Sans MS", cursive',
             f: 'Capitals, Impact, fantasy',
             m: 'Monaco, "Courier New", monospace',
             s: 'Georgia, "Times New Roman", serif',
             ss: 'Helvetica, Arial, sans-serif'
-        }]
+        }
     }, {
         name: 'Font weight',
-        instructionName: 'Fw',
-        allowCustomArgument: false,
+        func: 'Fw',
         css: 'font-weight:$',
-        arguments: [{
-            // '100': '100',
-            // '200': '200',
-            // '300': '300',
-            // '400': '400',
-            // '500': '500',
-            // '600': '600',
-            // '700': '700',
-            // '800': '800',
-            // '900': '900',
+        expanders: {
             b: 'bold',
             br: 'bolder',
             lr: 'lighter',
             n: 'normal'
-        }]
+        }
     }, {
         name: 'Font size',
-        instructionName: 'Fz',
-        allowCustomArgument: true,
+        func: 'Fz',
         css: 'font-size:$'
     }, {
         name: 'Font style',
-        instructionName: 'Fs',
-        allowCustomArgument: false,
+        func: 'Fs',
         css: 'font-style:$',
-        arguments: [{
+        expanders: {
             n: 'normal',
             i: 'italic',
             o: 'oblique'
-        }]
+        }
     }, {
         name: 'Font variant',
-        instructionName: 'Fv',
-        allowCustomArgument: false,
+        func: 'Fv',
         css: 'font-variant:$',
-        arguments: [{
+        expanders: {
             n: 'normal',
             sc: 'small-caps'
-        }]
+        }
     }, {
         name: 'Height',
-        instructionName: 'H',
-        allowCustomArgument: true,
+        func: 'H',
         css: 'height:$',
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto',
             av: 'available',
             bb: 'border-box',
@@ -1121,31 +1010,28 @@ exports.H = function(command, a, b) {
             fc: 'fit-content',
             maxc: 'max-content',
             minc: 'min-content'
-        }]
+        }
     }, {
         name: 'Hyphens',
-        instructionName: 'Hy',
-        allowCustomArgument: false,
+        func: 'Hy',
         css: 'hyphens:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             n: 'normal',
             m: 'manual'
-        }]
+        }
     }, {
         name: 'Letter spacing',
-        instructionName: 'Lts',
-        allowCustomArgument: true,
+        func: 'Lts',
         css: 'letter-spacing:$',
-        arguments: [{
+        expanders: {
             n: 'normal'
-        }]
+        }
     }, {
         name: 'List style type',
-        instructionName: 'List',
-        allowCustomArgument: false,
+        func: 'List',
         css: 'list-style-type:$',
-        arguments: [{
+        expanders: {
             n: 'none',
             d: 'disc',
             c: 'circle',
@@ -1161,291 +1047,245 @@ exports.H = function(command, a, b) {
             g: 'georgian',
             la: 'lower-alpha',
             ua: 'upper-alpha'
-        }]
+        }
     }, {
         name: 'List style position',
-        instructionName: 'Lisp',
-        allowCustomArgument: false,
+        func: 'Lisp',
         css: 'list-style-position:$',
-        arguments: [{
+        expanders: {
             i: 'inside',
             o: 'outside'
-        }]
+        }
     }, {
         name: 'List style image',
-        instructionName: 'Lisi',
-        allowCustomArgument: false,
+        func: 'Lisi',
         css: 'list-style-image:$',
-        arguments: [{
+        expanders: {
             n: 'none'
-        }]
+        }
     }, {
         name: 'Line height',
-        instructionName: 'Lh',
-        allowCustomArgument: true,
+        func: 'Lh',
         css: 'line-height:$',
-        arguments: [{
+        expanders: {
             n: 'normal'
-        }]
+        }
     }, {
         name: 'Margin (all edges)',
-        instructionName: 'M',
-        allowCustomArgument: true,
+        func: 'M',
         css: 'margin:$',
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Margin (X axis)',
-        instructionName: 'Mx',
-        allowCustomArgument: true,
+        func: 'Mx',
         css: [
             'margin-left:$',
             'margin-right:$'
         ],
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Margin (Y axis)',
-        instructionName: 'My',
-        allowCustomArgument: true,
+        func: 'My',
         css: [
             'margin-top:$',
             'margin-bottom:$'
         ],
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Margin top',
-        instructionName: 'Mt',
-        allowCustomArgument: true,
+        func: 'Mt',
         css: 'margin-top:$',
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Margin right',
-        instructionName: 'Mright',
-        allowCustomArgument: true,
+        func: 'Mright',
         css: 'margin-right:$',
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Margin bottom',
-        instructionName: 'Mb',
-        allowCustomArgument: true,
+        func: 'Mb',
         css: 'margin-bottom:$',
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Margin left',
-        instructionName: 'Mleft',
-        allowCustomArgument: true,
+        func: 'Mleft',
         css: 'margin-left:$',
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Max height',
-        instructionName: 'Mah',
-        allowCustomArgument: true,
+        func: 'Mah',
         css: 'max-height:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             maxc: 'max-content',
             minc: 'min-content',
             fa: 'fill-available',
             fc: 'fit-content'
-        }]
+        }
     }, {
         name: 'Max width',
-        instructionName: 'Maw',
-        allowCustomArgument: true,
+        func: 'Maw',
         css: 'max-width:$',
-        arguments: [{
+        expanders: {
             n: 'none',
             fa: 'fill-available',
             fc: 'fit-content',
             maxc: 'max-content',
             minc: 'min-content'
-        }]
+        }
     }, {
         name: 'Min height',
-        instructionName: 'Mih',
-        allowCustomArgument: true,
+        func: 'Mih',
         css: 'min-height:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             fa: 'fill-available',
             fc: 'fit-content',
             maxc: 'max-content',
             minc: 'min-content'
-        }]
+        }
     }, {
         name: 'Min width',
-        instructionName: 'Miw',
-        allowCustomArgument: true,
+        func: 'Miw',
         css: 'min-width:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             fa: 'fill-available',
             fc: 'fit-content',
             ini: 'initial',
             maxc: 'max-content',
             minc: 'min-content'
-        }]
+        }
     }, {
         name: 'Outline',
-        instructionName: 'O',
-        allowCustomArgument: false,
+        func: 'O',
         css: 'outline:$',
-        arguments: [{
-            // '0': '0',
+        expanders: {
             n: 'none'
-        }]
+        }
     }, {
         name: 'Top',
-        instructionName: 'T',
-        allowCustomArgument: true,
+        func: 'T',
         css: 'top:$',
-        arguments: [{
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Right',
-        instructionName: 'Right',
-        allowCustomArgument: true,
+        func: 'Right',
         css: 'right:$',
-        arguments: [{
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Bottom',
-        instructionName: 'B',
-        allowCustomArgument: true,
+        func: 'B',
         css: 'bottom:$',
-        arguments: [{
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Left',
-        instructionName: 'Left',
-        allowCustomArgument: true,
+        func: 'Left',
         css: 'left:$',
-        arguments: [{
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Opacity',
-        instructionName: 'Op',
-        allowCustomArgument: true,
+        func: 'Op',
         css: 'opacity:$'
-        // arguments: [{
-        // '0': '0',
-        // '1': '1'
-        // }]
     }, {
         name: 'Overflow',
-        instructionName: 'Ov',
-        allowCustomArgument: false,
+        func: 'Ov',
         css: 'overflow:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             h: 'hidden',
             s: 'scroll',
             v: 'visible'
-        }]
+        }
     }, {
         name: 'Overflow (X axis)',
-        instructionName: 'Ovx',
-        allowCustomArgument: false,
+        func: 'Ovx',
         css: 'overflow-x:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             h: 'hidden',
             s: 'scroll',
             v: 'visible'
-        }]
+        }
     }, {
         name: 'Overflow (Y axis)',
-        instructionName: 'Ovy',
-        allowCustomArgument: false,
+        func: 'Ovy',
         css: 'overflow-y:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             h: 'hidden',
             s: 'scroll',
             v: 'visible'
-        }]
+        }
     }, {
         name: 'Overflow scrolling',
-        instructionName: 'Ovs',
-        allowCustomArgument: false,
+        func: 'Ovs',
         css: '-webkit-overflow-scrolling:$',
-        arguments: [{
-            a: 'auto',
-            touch: 'touch'
-        }]
+        expanders: {
+            a: 'auto'
+        }
     }, {
         name: 'Padding (all edges)',
-        instructionName: 'P',
-        allowCustomArgument: true,
+        func: 'P',
         css: 'padding:$'
     }, {
         name: 'Padding (X axis)',
-        instructionName: 'Px',
-        allowCustomArgument: true,
+        func: 'Px',
         css: [
             'padding-left:$',
             'padding-right:$'
         ]
     }, {
         name: 'Padding (Y axis)',
-        instructionName: 'Py',
-        allowCustomArgument: true,
+        func: 'Py',
         css: [
             'padding-top:$',
             'padding-bottom:$'
         ]
     }, {
         name: 'Padding top',
-        instructionName: 'Pt',
-        allowCustomArgument: true,
+        func: 'Pt',
         css: 'padding-top:$'
     }, {
         name: 'Padding right',
-        instructionName: 'Pright',
-        allowCustomArgument: true,
+        func: 'Pright',
         css: 'padding-right:$'
     }, {
         name: 'Padding bottom',
-        instructionName: 'Pb',
-        allowCustomArgument: true,
+        func: 'Pb',
         css: 'padding-bottom:$'
     }, {
         name: 'Padding left',
-        instructionName: 'Pleft',
-        allowCustomArgument: true,
+        func: 'Pleft',
         css: 'padding-left:$'
     }, {
         name: 'Pointer events',
-        instructionName: 'Pe',
-        allowCustomArgument: false,
+        func: 'Pe',
         css: 'pointer-events:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
-            all: 'all',
             f: 'fill',
             n: 'none',
             p: 'painted',
@@ -1454,324 +1294,260 @@ exports.H = function(command, a, b) {
             vf: 'visibleFill',
             vp: 'visiblePainted',
             vs: 'visibleStroke'
-        }]
+        }
     }, {
         name: 'Position',
-        instructionName: 'Pos',
-        allowCustomArgument: false,
+        func: 'Pos',
         css: 'position:$',
-        arguments: [{
+        expanders: {
             a: 'absolute',
             f: 'fixed',
             r: 'relative',
             s: 'static',
             st: 'sticky'
-        }]
+        }
     }, {
         name: 'Resize',
-        instructionName: 'Rsz',
-        allowCustomArgument: false,
+        func: 'Rsz',
         css: 'resize:$',
-        arguments: [{
+        expanders: {
             n: 'none',
             b: 'both',
             h: 'horizontal',
             v: 'vertical'
-        }]
+        }
     }, {
         name: 'Table layout',
-        instructionName: 'Tbl',
-        allowCustomArgument: false,
+        func: 'Tbl',
         css: 'table-layout:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             f: 'fixed'
-        }]
+        }
     }, {
         name: 'Text align',
-        instructionName: 'Ta',
-        allowCustomArgument: false,
+        func: 'Ta',
         css: 'text-align:$',
-        arguments: [{
+        expanders: {
             c: 'center',
             e: 'end',
-            right: 'right',
             j: 'justify',
             mp: 'match-parent',
-            s: 'start',
-            left: 'left'
-        }]
+            s: 'start'
+        }
     }, {
         name: 'Text align last',
-        instructionName: 'Tal',
-        allowCustomArgument: false,
+        func: 'Tal',
         css: 'text-align-last:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             c: 'center',
             e: 'end',
-            right: 'right',
             j: 'justify',
-            s: 'start',
-            left: 'left'
-        }]
+            s: 'start'
+        }
     }, {
         name: 'Text decoration',
-        instructionName: 'Td',
-        allowCustomArgument: false,
+        func: 'Td',
         css: 'text-decoration:$',
-        arguments: [{
+        expanders: {
             lt: 'line-through',
             n: 'none',
             o: 'overline',
             u: 'underline'
-        }]
+        }
     }, {
         name: 'Text indent',
-        instructionName: 'Ti',
-        allowCustomArgument: true,
+        func: 'Ti',
         css: 'text-indent:$'
     }, {
         name: 'Text overflow',
-        instructionName: 'Tov',
-        allowCustomArgument: false,
+        func: 'Tov',
         css: 'text-overflow:$',
-        arguments: [{
+        expanders: {
             c: 'clip',
             e: 'ellipsis'
-        }]
+        }
     }, {
         name: 'Text rendering',
-        instructionName: 'Tren',
-        allowCustomArgument: false,
+        func: 'Tren',
         css: 'text-rendering:$',
-        arguments: [{
+        expanders: {
             a: 'auto',
             os: 'optimizeSpeed',
             ol: 'optimizeLegibility',
             gp: 'geometricPrecision'
-        }]
+        }
     }, {
         name: 'Text replace',
-        instructionName: 'Tr',
-        allowCustomArgument: false,
+        func: 'Tr',
         css: 'text-replace:$',
-        arguments: [{
+        expanders: {
             n: 'none'
-        }]
+        }
     }, {
         name: 'Text transform',
-        instructionName: 'Tt',
-        allowCustomArgument: false,
+        func: 'Tt',
         css: 'text-transform:$',
-        arguments: [{
+        expanders: {
             n: 'none',
             c: 'capitalize',
             u: 'uppercase',
             l: 'lowercase'
-        }]
+        }
     }, {
         name: 'Text shadow',
-        instructionName: 'Tsh',
-        allowCustomArgument: false,
+        func: 'Tsh',
         css: 'text-shadow:$',
-        arguments: [{
+        expanders: {
             n: 'none'
-        }]
+        }
     }, {
         name: 'Transform',
-        instructionName: 'Trf',
-        allowCustomArgument: false,
+        func: 'Trf',
         css: 'transform:$'
     }, {
         name: 'Transform origin',
-        instructionName: 'Trfo',
-        allowCustomArgument: true,
+        func: 'Trfo',
         css: 'transform-origin:$ {1}',
-        arguments: [{
+        expanders: {
             t: 'top',
-            right: 'right',
-            bottom: 'bottom',
-            left: 'left',
             c: 'center'
-        }, {
-            t: 'top',
-            right: 'right',
-            bottom: 'bottom',
-            left: 'left',
-            c: 'center'
-        }]
+        }
     }, {
         name: 'Transform style',
-        instructionName: 'Trfs',
-        allowCustomArgument: false,
+        func: 'Trfs',
         css: 'transform-style:$',
-        arguments: [{
+        expanders: {
             f: 'flat',
             p: 'preserve-3d'
-        }]
+        }
     }, {
         name: 'Perspective',
-        instructionName: 'Prs',
-        allowCustomArgument: true,
+        func: 'Prs',
         css: 'perspective:$',
-        arguments: [{
+        expanders: {
             n: 'none'
-        }]
+        }
     }, {
         name: 'Perspective origin',
-        instructionName: 'Prso',
-        allowCustomArgument: true,
+        func: 'Prso',
         css: 'perspective-origin:$ {1}',
-        arguments: [{
+        expanders: {
             t: 'top',
-            right: 'right',
-            bottom: 'bottom',
-            left: 'left',
             c: 'center'
-        }, {
-            t: 'top',
-            right: 'right',
-            bottom: 'bottom',
-            left: 'left',
-            c: 'center'
-        }]
+        }
     }, {
         name: 'Backface visibility',
-        instructionName: 'Bfv',
-        allowCustomArgument: false,
+        func: 'Bfv',
         css: 'backface-visibility:$',
-        arguments: [{
+        expanders: {
             h: 'hidden',
             v: 'visible'
-        }]
+        }
     }, {
         name: 'Matrix (transform)',
-        instructionName: 'Matrix',
-        allowCustomArgument: false,
+        func: 'Matrix',
         css: 'transform:matrix($)'
     }, {
         name: 'Matrix 3d (transform)',
-        instructionName: 'Matrix3d',
-        allowCustomArgument: false,
+        func: 'Matrix3d',
         css: 'transform:matrix($)'
     }, {
         name: 'Rotate (transform)',
-        instructionName: 'Rotate',
-        allowCustomArgument: true,
+        func: 'Rotate',
         css: 'transform:rotate($)'
     }, {
         name: 'Rotate 3d (transform)',
-        instructionName: 'Rotate3d',
-        allowCustomArgument: true,
+        func: 'Rotate3d',
         css: 'transform:rotate3d($,{1},{2},{3})'
     }, {
         name: 'RotateX (transform)',
-        instructionName: 'RotateX',
-        allowCustomArgument: true,
+        func: 'RotateX',
         css: 'transform:rotateX($)'
     }, {
         name: 'RotateY (transform)',
-        instructionName: 'RotateY',
-        allowCustomArgument: true,
+        func: 'RotateY',
         css: 'transform:rotateY($)'
     }, {
         name: 'RotateZ (transform)',
-        instructionName: 'RotateZ',
-        allowCustomArgument: true,
+        func: 'RotateZ',
         css: 'transform:rotateZ($)'
     }, {
         name: 'Scale (transform)',
-        instructionName: 'Scale',
-        allowCustomArgument: true,
+        func: 'Scale',
         css: 'transform:scale($,{1})'
     }, {
         name: 'Scale 3d (transform)',
-        instructionName: 'Scale3d',
-        allowCustomArgument: true,
+        func: 'Scale3d',
         css: 'transform:scale3d($,{1},{2})'
     }, {
         name: 'ScaleX (transform)',
-        instructionName: 'ScaleX',
-        allowCustomArgument: true,
+        func: 'ScaleX',
         css: 'transform:scaleX($)'
     }, {
         name: 'ScaleY (transform)',
-        instructionName: 'ScaleY',
-        allowCustomArgument: true,
+        func: 'ScaleY',
         css: 'transform:scaleY($)'
     }, {
         name: 'Skew (transform)',
-        instructionName: 'Skew',
-        allowCustomArgument: true,
+        func: 'Skew',
         css: 'transform:skew($,{1})'
     }, {
         name: 'SkewX (transform)',
-        instructionName: 'SkewX',
-        allowCustomArgument: true,
+        func: 'SkewX',
         css: 'transform:skewX($)'
     }, {
         name: 'SkewY (transform)',
-        instructionName: 'SkewY',
-        allowCustomArgument: true,
+        func: 'SkewY',
         css: 'transform:skewY($)'
     }, {
         name: 'Translate (transform)',
-        instructionName: 'Translate',
-        allowCustomArgument: true,
+        func: 'Translate',
         css: 'transform:translate($,{1})'
     }, {
         name: 'Translate 3d (transform)',
-        instructionName: 'Translate3d',
-        allowCustomArgument: true,
+        func: 'Translate3d',
         css: 'transform:translate3d($,{1},{2})'
     }, {
         name: 'Translate X (transform)',
-        instructionName: 'TranslateX',
-        allowCustomArgument: true,
+        func: 'TranslateX',
         css: 'transform:translateX($)'
     }, {
         name: 'Translate Y (transform)',
-        instructionName: 'TranslateY',
-        allowCustomArgument: true,
+        func: 'TranslateY',
         css: 'transform:translateY($)'
     }, {
         name: 'Translate Z (transform)',
-        instructionName: 'TranslateZ',
-        allowCustomArgument: true,
+        func: 'TranslateZ',
         css: 'transform:translateZ($)'
     }, {
         name: 'Transition',
-        instructionName: 'Trs',
-        allowCustomArgument: false,
+        func: 'Trs',
         css: 'transition:$'
     }, {
         name: 'Transition delay',
-        instructionName: 'Trsde',
-        allowCustomArgument: true,
+        func: 'Trsde',
         css: 'transition-delay:$',
-        arguments: [{
+        expanders: {
             i: 'initial'
-        }]
+        }
     }, {
         name: 'Transition duration',
-        instructionName: 'Trsdu',
-        allowCustomArgument: true,
+        func: 'Trsdu',
         css: 'transition-duration:$'
     }, {
         name: 'Transition property',
-        instructionName: 'Trsp',
-        allowCustomArgument: false,
+        func: 'Trsp',
         css: 'transition-property:$',
-        arguments: [{
+        expanders: {
             a: 'all'
-        }]
+        }
     }, {
         name: 'Transition timing function',
-        instructionName: 'Trstf',
-        allowCustomArgument: false,
+        func: 'Trstf',
         css: 'transition-timing-function:$',
-        arguments: [{
+        expanders: {
             e: 'ease',
             ei: 'ease-in',
             eo: 'ease-out',
@@ -1779,26 +1555,24 @@ exports.H = function(command, a, b) {
             l: 'linear',
             ss: 'step-start',
             se: 'step-end'
-        }]
+        }
     }, {
         name: 'User select',
-        instructionName: 'Us',
-        allowCustomArgument: false,
+        func: 'Us',
         css: 'user-select:$',
-        arguments: [{
+        expanders: {
             a: 'all',
             el: 'element',
             els: 'elements',
             n: 'none',
             t: 'text',
             to: 'toggle'
-        }]
+        }
     }, {
         name: 'Vertical align',
-        instructionName: 'Va',
-        allowCustomArgument: false,
+        func: 'Va',
         css: 'vertical-align:$',
-        arguments: [{
+        expanders: {
             b: 'bottom',
             bl: 'baseline',
             m: 'middle',
@@ -1807,48 +1581,43 @@ exports.H = function(command, a, b) {
             t: 'top',
             tb: 'text-bottom',
             tt: 'text-top'
-        }]
+        }
     }, {
         name: 'Visibility',
-        instructionName: 'V',
-        allowCustomArgument: false,
+        func: 'V',
         css: 'visibility:$',
-        arguments: [{
+        expanders: {
             v: 'visible',
             h: 'hidden',
             c: 'collapse'
-        }]
+        }
     }, {
         name: 'White space',
-        instructionName: 'Whs',
-        allowCustomArgument: false,
+        func: 'Whs',
         css: 'white-space:$',
-        arguments: [{
+        expanders: {
             n: 'normal',
             p: 'pre',
             nw: 'nowrap',
             pw: 'pre-wrap',
             pl: 'pre-line'
-        }]
+        }
     }, {
         name: 'White space collapse',
-        instructionName: 'Whsc',
-        allowCustomArgument: false,
+        func: 'Whsc',
         css: 'white-space-collapse:$',
-        arguments: [{
+        expanders: {
             n: 'normal',
             ka: 'keep-all',
             l: 'loose',
             bs: 'break-strict',
             ba: 'break-all'
-        }]
+        }
     }, {
         name: 'Width',
-        instructionName: 'W',
-        allowCustomArgument: true,
+        func: 'W',
         css: 'width:$',
-        arguments: [{
-            // '0': '0',
+        expanders: {
             a: 'auto',
             bb: 'border-box',
             cb: 'content-box',
@@ -1856,76 +1625,63 @@ exports.H = function(command, a, b) {
             minc: 'min-content',
             maxc: 'max-content',
             fc: 'fit-content'
-        }]
+        }
     }, {
         name: 'Word break',
-        instructionName: 'Wob',
-        allowCustomArgument: false,
+        func: 'Wob',
         css: 'word-break:$',
-        arguments: [{
+        expanders: {
             ba: 'break-all',
             ka: 'keep-all',
             n: 'normal'
-        }]
+        }
     }, {
         name: 'Word wrap',
-        instructionName: 'Wow',
-        allowCustomArgument: false,
+        func: 'Wow',
         css: 'word-wrap:$',
-        arguments: [{
+        expanders: {
             bw: 'break-word',
             n: 'normal'
-        }]
+        }
     }, {
         name: 'Z index',
-        instructionName: 'Z',
-        allowCustomArgument: true,
+        func: 'Z',
         css: 'z-index:$',
-        arguments: [{
+        expanders: {
             a: 'auto'
-        }]
+        }
     }, {
         name: 'Fill (SVG)',
-        instructionName: 'Fill',
-        allowCustomArgument: false,
+        func: 'Fill',
         css: 'fill:$',
-        arguments: [ACSS_COLOR_ARGUMENTS]
+        expanders: ACSS_COLOR_ARGUMENTS
     }, {
         name: 'Stroke (SVG)',
-        instructionName: 'Stk',
-        allowCustomArgument: false,
+        func: 'Stk',
         css: 'stroke:$',
-        arguments: [ACSS_COLOR_ARGUMENTS]
+        expanders: ACSS_COLOR_ARGUMENTS
     }, {
         name: 'Stroke width (SVG)',
-        instructionName: 'Stkw',
-        allowCustomArgument: true,
-        css: 'stroke-width:$',
-        arguments: [{
-            i: 'inherit'
-        }]
+        func: 'Stkw',
+        css: 'stroke-width:$'
     }, {
         name: 'Stroke linecap (SVG)',
-        instructionName: 'Stklc',
-        allowCustomArgument: false,
+        func: 'Stklc',
         css: 'stroke-linecap:$',
-        arguments: [{
-            i: 'inherit',
+        expanders: {
             b: 'butt',
             r: 'round',
             s: 'square'
-        }]
+        }
     }, {
         name: 'Stroke linejoin (SVG)',
-        instructionName: 'Stklj',
-        allowCustomArgument: false,
+        func: 'Stklj',
         css: 'stroke-linejoin:$',
-        arguments: [{
-            i: 'inherit',
+        expanders: {
             b: 'bevel',
             r: 'round',
             m: 'miter'
-        }]
+        }
     }];
 
     var PSEUDO_CLASSES = [{
@@ -2565,7 +2321,7 @@ exports.H = function(command, a, b) {
         if (!components) {
             throw new Error('HTML attributes instruction string - Instruction must follow <Attribute>(<value>?) syntax.');
         }
-        var i = arrFindIndex(allowedHTMLAttributes, 'instructionName', components[1]);
+        var i = arrFindIndex(allowedHTMLAttributes, 'func', components[1]);
         if (i === -1) {
             throw new Error('Unsupported HTML attribute "' + components[1] + '" for "' + htmlSelectorTag + '" tag.');
         }
@@ -2580,7 +2336,7 @@ exports.H = function(command, a, b) {
     }
     function HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(htmlAttribute, components) {
         if (!htmlAttribute.allowArgument && components[2]) {
-            return new Error('HTML attributes instruction string - Instruction "' + htmlAttribute.instructionName + '" must not define parameter.');
+            return new Error('HTML attributes instruction string - Instruction "' + htmlAttribute.func + '" must not define parameter.');
         }
         return HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(components[2]);
     }
@@ -2667,7 +2423,7 @@ exports.H = function(command, a, b) {
         if (!components) {
             throw new Error('ACSS instruction string - Instruction must follow <Style>[(<value>,<value>?,...)][<!>][:<pseudo-class>][::<pseudo-element>][@<breakpoint-identifier>]');
         }
-        var i = arrFindIndex(ACSS_RULES, 'instructionName', components[1]);
+        var i = arrFindIndex(ACSS_RULES, 'func', components[1]);
         if (i === -1) {
             throw new Error('Unsupported ACSS rule "' + components[1] + '".');
         }
@@ -2696,7 +2452,7 @@ exports.H = function(command, a, b) {
         for (var i = 0, l = arr.length; i < l; i++) {
             if (acssRule.allowCustomArgument !== true) {
                 if (!arr[i][args[i]]) {
-                    return new Error('ACSS instruction arguments - No custom argument at: ' + acssRule.instructionName + '[' + i + ']');
+                    return new Error('ACSS instruction arguments - No custom argument at: ' + acssRule.func + '[' + i + ']');
                 }
             }
         }
