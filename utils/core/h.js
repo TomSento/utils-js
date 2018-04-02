@@ -7,6 +7,7 @@
 // OUR ACSS DOES NOT INTENTIONALLY SUPPORT <combinator> AND ALL PARTS LOCATED BEFORE IT - THIS MEANS YOU MUST WORK WITH DOM PLACEHOLDERS AND REDRAW WHOLE COMPONENT INSTEAD OF JUST ADDING STATE CLASS TO PARENT ELEMENT
 // OUR ACSS IS STRICT ORDERED, SCORE ORDER IS COMPUTED LIKE: <@mediaQuery><:pseudoClass><::pseudoElement>
 // OUR ACSS USES "left" and "right" instead of "start" and "end" - OUR ACSS HAS NO RTL FUNCTIONALITY SUPPORT
+// OUR ACSS RULES MUST HAVE ALWAYS 1 ARGUMENT -> LEADS TO BETTER IDEA WHAT CSS WILL BE ACTUALLY GENERATED AS RESULT. STANDARD ACSS SUPPORTS MULTIPLE ARGUMENTS SEPARATED BY COMMAS
 exports.H = function(command, a, b) {
     /**
      * CONSTANTS
@@ -154,80 +155,79 @@ exports.H = function(command, a, b) {
     var ACSS_RULES = [{ // MANDATORY ORDER
         name: 'Animation',
         instructionName: 'Anim',
-        argumentsCount: 1,
-        css: 'animation:{0}',
-        allowCustomArgument: true
+        css: 'animation:$',
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Animation delay',
         instructionName: 'Animdel',
-        argumentsCount: 1,
-        css: 'animation-delay:{0}',
-        allowCustomArgument: true
+        css: 'animation-delay:$',
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Animation direction',
         instructionName: 'Animdir',
-        argumentsCount: 1,
-        css: 'animation-direction:{0}',
+        css: 'animation-direction:$',
         allowCustomArgument: false,
-        arguments: [{
+        arguments: {
             a: 'alternate',
             ar: 'alternate-reverse',
             n: 'normal',
             r: 'reverse'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Animation duration',
         instructionName: 'Animdur',
-        argumentsCount: 1,
-        css: 'animation-duration:{0}',
-        allowCustomArgument: true
+        css: 'animation-duration:$',
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Animation fill mode',
         instructionName: 'Animfm',
-        argumentsCount: 1,
-        css: 'animation-fill-mode:{0}',
+        css: 'animation-fill-mode:$',
         allowCustomArgument: false,
-        arguments: [{
+        arguments: {
             b: 'backwards',
             bo: 'both',
             f: 'forwards',
             n: 'none'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Animation iteration count',
         instructionName: 'Animic',
-        argumentsCount: 1,
-        css: 'animation-iteration-count:{0}',
+        css: 'animation-iteration-count:$',
         allowCustomArgument: true,
-        arguments: [{
+        arguments: {
             i: 'infinite'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Animation name',
         instructionName: 'Animn',
-        argumentsCount: 1,
-        css: 'animation-name:{0}',
+        css: 'animation-name:$',
         allowCustomArgument: true,
-        arguments: [{
+        arguments: {
             n: 'none'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Animation play state',
         instructionName: 'Animps',
-        argumentsCount: 1,
-        css: 'animation-play-state:{0}',
+        css: 'animation-play-state:$',
         allowCustomArgument: false,
-        arguments: [{
+        arguments: {
             p: 'paused',
             r: 'running'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Animation timing function',
         instructionName: 'Animtf',
-        argumentsCount: 1,
-        css: 'animation-timing-function:{0}',
+        css: 'animation-timing-function:$',
         allowCustomArgument: false,
-        arguments: [{
+        arguments: {
             e: 'ease',
             ei: 'ease-in',
             eo: 'ease-out',
@@ -235,105 +235,119 @@ exports.H = function(command, a, b) {
             l: 'linear',
             se: 'step-end',
             ss: 'step-start'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Appearance',
         instructionName: 'Ap',
-        allowCustomArgument: false,
-        css: 'appearance:{0}',
-        arguments: [{
+        css: 'appearance:$',
+        allowCustomArgument: true,
+        arguments: {
             a: 'auto',
             n: 'none'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border',
         instructionName: 'Bd',
-        allowCustomArgument: false,
-        css: 'border:{0}',
-        arguments: [{
-            // '0': 0,
+        css: 'border:$',
+        allowCustomArgument: true,
+        arguments: {
             n: 'none'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border X',
         instructionName: 'Bdx',
-        allowCustomArgument: false,
         css: [
-            'border-left:{0}',
-            'border-right:{0}'
-        ]
+            'border-left:$',
+            'border-right:$'
+        ],
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Border Y',
         instructionName: 'Bdy',
-        allowCustomArgument: false,
         css: [
-            'border-top:{0}',
-            'border-bottom:{0}'
-        ]
+            'border-top:$',
+            'border-bottom:$'
+        ],
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Border top',
         instructionName: 'Bdt',
-        allowCustomArgument: false,
-        css: 'border-top:{0}'
+        css: 'border-top:$',
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Border right',
         instructionName: 'Bdright',
-        allowCustomArgument: false,
-        css: 'border-right:{0}'
+        css: 'border-right:$',
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Border bottom',
         instructionName: 'Bdb',
-        allowCustomArgument: false,
-        css: 'border-bottom:{0}'
+        css: 'border-bottom:$',
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Border left',
         instructionName: 'Bdleft',
-        allowCustomArgument: false,
-        css: 'border-left:{0}'
+        css: 'border-left:$',
+        allowCustomArgument: true,
+        type: 'RULE'
     }, {
         name: 'Border color',
         instructionName: 'Bdc',
+        css: 'border-color:$',
         allowCustomArgument: true,
-        css: 'border-color:{0}',
-        arguments: [ACSS_COLOR_ARGUMENTS]
+        arguments: ACSS_COLOR_ARGUMENTS,
+        type: 'RULE'
     }, {
         name: 'Border top color',
         instructionName: 'Bdtc',
+        css: 'border-top-color:$',
         allowCustomArgument: true,
-        css: 'border-top-color:{0}',
-        arguments: [ACSS_COLOR_ARGUMENTS]
+        arguments: ACSS_COLOR_ARGUMENTS,
+        type: 'RULE'
     }, {
         name: 'Border right color',
         instructionName: 'Bdrightc',
+        css: 'border-right-color:$',
         allowCustomArgument: true,
-        css: 'border-right-color:{0}',
-        arguments: [ACSS_COLOR_ARGUMENTS]
+        arguments: ACSS_COLOR_ARGUMENTS,
+        type: 'RULE'
     }, {
         name: 'Border bottom color',
         instructionName: 'Bdbc',
+        css: 'border-bottom-color:$',
         allowCustomArgument: true,
-        css: 'border-bottom-color:{0}',
-        arguments: [ACSS_COLOR_ARGUMENTS]
+        arguments: ACSS_COLOR_ARGUMENTS,
+        type: 'RULE'
     }, {
         name: 'Border left color',
         instructionName: 'Bdleftc',
+        css: 'border-left-color:$',
         allowCustomArgument: true,
-        css: 'border-left-color:{0}',
-        arguments: [ACSS_COLOR_ARGUMENTS]
+        arguments: ACSS_COLOR_ARGUMENTS,
+        type: 'RULE'
     }, {
         name: 'Border spacing',
         instructionName: 'Bdsp',
+        css: 'border-spacing:$',
         allowCustomArgument: true,
-        css: 'border-spacing:{0} {1}',
-        arguments: [{
+        arguments: {
             i: 'inherit'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border style',
         instructionName: 'Bds',
+        css: 'border-style:$',
         allowCustomArgument: false,
-        css: 'border-style:{0}',
-        arguments: [{
+        arguments: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -344,13 +358,14 @@ exports.H = function(command, a, b) {
             o: 'outset',
             r: 'ridge',
             s: 'solid'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border top style',
         instructionName: 'Bdts',
+        css: 'border-top-style:$',
         allowCustomArgument: false,
-        css: 'border-top-style:{0}',
-        arguments: [{
+        arguments: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -361,13 +376,14 @@ exports.H = function(command, a, b) {
             o: 'outset',
             r: 'ridge',
             s: 'solid'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border right style',
         instructionName: 'Bdrights',
+        css: 'border-right-style:$',
         allowCustomArgument: false,
-        css: 'border-right-style:{0}',
-        arguments: [{
+        arguments: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -378,13 +394,14 @@ exports.H = function(command, a, b) {
             o: 'outset',
             r: 'ridge',
             s: 'solid'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border bottom style',
         instructionName: 'Bdbs',
+        css: 'border-bottom-style:$',
         allowCustomArgument: false,
-        css: 'border-bottom-style:{0}',
-        arguments: [{
+        arguments: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -395,13 +412,14 @@ exports.H = function(command, a, b) {
             o: 'outset',
             r: 'ridge',
             s: 'solid'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border left style',
         instructionName: 'Bdlefts',
+        css: 'border-left-style:$',
         allowCustomArgument: false,
-        css: 'border-left-style:{0}',
-        arguments: [{
+        arguments: {
             d: 'dotted',
             da: 'dashed',
             do: 'double',
@@ -412,82 +430,93 @@ exports.H = function(command, a, b) {
             o: 'outset',
             r: 'ridge',
             s: 'solid'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border width',
         instructionName: 'Bdw',
+        css: 'border-width:$',
         allowCustomArgument: true,
-        css: 'border-width:{0}',
-        arguments: [{
+        arguments: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border top width',
         instructionName: 'Bdtw',
+        css: 'border-top-width:$',
         allowCustomArgument: true,
-        css: 'border-top-width:{0}',
-        arguments: [{
+        arguments: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border right width',
         instructionName: 'Bdrightw',
+        css: 'border-right-width:$',
         allowCustomArgument: true,
-        css: 'border-right-width:{0}',
-        arguments: [{
+        arguments: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border bottom width',
         instructionName: 'Bdbw',
+        css: 'border-bottom-width:$',
         allowCustomArgument: true,
-        css: 'border-bottom-width:{0}',
-        arguments: [{
+        arguments: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border left width',
         instructionName: 'Bdleftw',
+        css: 'border-left-width:$',
         allowCustomArgument: true,
-        css: 'border-left-width:{0}',
-        arguments: [{
+        arguments: {
             m: 'medium',
             t: 'thin',
             th: 'thick'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border radius',
         instructionName: 'Bdrs',
+        css: 'border-radius:$',
         allowCustomArgument: true,
-        css: 'border-radius:{0}'
+        type: 'RULE'
     }, {
         name: 'Border radius top right',
         instructionName: 'Bdrstright',
+        css: 'border-top-right-radius:$',
         allowCustomArgument: true,
-        css: 'border-top-right-radius:{0}'
+        type: 'RULE'
     }, {
         name: 'Border radius bottom right',
         instructionName: 'Bdrsbright',
+        css: 'border-bottom-right-radius:$',
         allowCustomArgument: true,
-        css: 'border-bottom-right-radius:{0}'
+        type: 'RULE'
     }, {
         name: 'Border radius bottom left',
         instructionName: 'Bdrsbleft',
+        css: 'border-bottom-left-radius:$',
         allowCustomArgument: true,
-        css: 'border-bottom-left-radius:{0}'
+        type: 'RULE'
     }, {
         name: 'Border radius top left',
         instructionName: 'Bdrstleft',
+        css: 'border-top-left-radius:$',
         allowCustomArgument: true,
-        css: 'border-top-left-radius:{0}'
+        type: 'RULE'
     }, {
         name: 'Background',
         instructionName: 'Bg',
