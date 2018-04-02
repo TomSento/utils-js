@@ -675,80 +675,72 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border collapse',
         instructionName: 'Bdcl',
-        allowCustomArgument: false,
         css: 'border-collapse:$',
-        arguments: [{
+        allowCustomArgument: false,
+        arguments: {
             c: 'collapse',
             s: 'separate'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Box sizing',
         instructionName: 'Bxz',
-        allowCustomArgument: false,
         css: 'box-sizing:$',
-        arguments: [{
+        allowCustomArgument: false,
+        arguments: {
             cb: 'content-box',
             pb: 'padding-box',
             bb: 'border-box'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Box shadow',
         instructionName: 'Bxsh',
-        allowCustomArgument: false,
         css: 'box-shadow:$',
-        arguments: [{
+        allowCustomArgument: true,
+        arguments: {
             n: 'none'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Clear',
         instructionName: 'Cl',
-        allowCustomArgument: false,
         css: 'clear:$',
-        arguments: [{
+        allowCustomArgument: false,
+        arguments: {
             n: 'none',
             b: 'both',
             left: 'left',
             right: 'right'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Color',
         instructionName: 'C',
-        allowCustomArgument: true,
         css: 'color:$',
-        arguments: [ACSS_COLOR_ARGUMENTS]
-    }, {
-        name: 'Contain',
-        instructionName: 'Ctn',
-        allowCustomArgument: false,
-        css: 'contain:$',
-        arguments: [{
-            n: 'none',
-            st: 'strict',
-            c: 'content',
-            z: 'size',
-            l: 'layout',
-            s: 'style',
-            p: 'paint'
-        }]
+        allowCustomArgument: true,
+        arguments: ACSS_COLOR_ARGUMENTS,
+        type: 'RULE'
     }, {
         name: 'Content',
         instructionName: 'Cnt',
-        allowCustomArgument: true,
         css: 'content:$',
-        arguments: [{
+        allowCustomArgument: true,
+        arguments: {
             n: 'none',
             nor: 'normal',
             oq: 'open-quote',
             cq: 'close-quote',
             noq: 'no-open-quote',
             ncq: 'no-close-quote'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Cursor',
         instructionName: 'Cur',
-        allowCustomArgument: false,
         css: 'cursor:$',
-        arguments: [{
+        allowCustomArgument: false,
+        arguments: {
             a: 'auto',
             as: 'all-scroll',
             c: 'cell',
@@ -783,7 +775,8 @@ exports.H = function(command, a, b) {
             wr: 'w-resize',
             zi: 'zoom-in',
             zo: 'zoom-out'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Display',
         instructionName: 'D',
