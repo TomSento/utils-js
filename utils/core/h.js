@@ -552,72 +552,79 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background',
         instructionName: 'Bg',
-        allowCustomArgument: false,
         css: 'background:$',
-        arguments: [{
+        allowCustomArgument: true,
+        arguments: {
             n: 'none',
             t: 'transparent'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background image',
         instructionName: 'Bgi',
-        allowCustomArgument: false,
         css: 'background-image:$',
-        arguments: [{
+        allowCustomArgument: true,
+        arguments: {
             n: 'none'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background color',
         instructionName: 'Bgc',
-        allowCustomArgument: true,
         css: 'background-color:$',
-        arguments: [ACSS_COLOR_ARGUMENTS]
+        allowCustomArgument: true,
+        arguments: ACSS_COLOR_ARGUMENTS,
+        type: 'RULE'
     }, {
         name: 'Background clip',
         instructionName: 'Bgcp',
-        allowCustomArgument: false,
         css: 'background-clip:$',
-        arguments: [{
+        allowCustomArgument: false,
+        arguments: {
             bb: 'border-box',
             cb: 'content-box',
             pb: 'padding-box'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background origin',
         instructionName: 'Bgo',
-        allowCustomArgument: false,
         css: 'background-origin:$',
-        arguments: [{
+        allowCustomArgument: false,
+        arguments: {
             bb: 'border-box',
             cb: 'content-box',
             pb: 'padding-box'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background size',
         instructionName: 'Bgz',
-        allowCustomArgument: true,
         css: 'background-size:$',
-        arguments: [{
+        allowCustomArgument: true,
+        arguments: {
             a: 'auto',
             ct: 'contain',
             cv: 'cover'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background attachment',
         instructionName: 'Bga',
-        allowCustomArgument: false,
         css: 'background-attachment:$',
-        arguments: [{
+        allowCustomArgument: false,
+        arguments: {
             f: 'fixed',
             l: 'local',
             s: 'scroll'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background position',
         instructionName: 'Bgp',
+        css: 'background-position:$',
         allowCustomArgument: true,
-        css: 'background-position:$ {1}',
-        arguments: [{
+        arguments: {
             left_t: 'left 0',
             right_t: 'right 0',
             left_b: 'left 100%',
@@ -627,40 +634,44 @@ exports.H = function(command, a, b) {
             c_b: 'center 100%',
             c_t: 'center 0',
             c: 'center'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background position (X axis)',
         instructionName: 'Bgpx',
-        allowCustomArgument: true,
         css: 'background-position-x:$',
-        arguments: [{
+        allowCustomArgument: true,
+        arguments: {
             left: 'left',
             right: 'right',
             c: '50%'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background position (Y axis)',
         instructionName: 'Bgpy',
-        allowCustomArgument: true,
         css: 'background-position-y:$',
-        arguments: [{
+        allowCustomArgument: true,
+        arguments: {
             t: '0',
             b: '100%',
             c: '50%'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Background repeat',
         instructionName: 'Bgr',
-        allowCustomArgument: false,
         css: 'background-repeat:$',
-        arguments: [{
+        allowCustomArgument: false,
+        arguments: {
             nr: 'no-repeat',
             rx: 'repeat-x',
             ry: 'repeat-y',
             r: 'repeat',
             s: 'space',
             ro: 'round'
-        }]
+        },
+        type: 'RULE'
     }, {
         name: 'Border collapse',
         instructionName: 'Bdcl',
