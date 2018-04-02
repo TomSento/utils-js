@@ -152,7 +152,39 @@ exports.H = function(command, a, b) {
         n: 'none'
     };
 
-    var ACSS_RULES = [{ // MANDATORY ORDER
+    var ACSS_RULES = [{
+        name: 'Line clamp',
+        instructionName: 'LineClamp', // https://github.com/acss-io/atomizer/blob/master/src/helpers.js#L267
+        styles: {
+            '-webkit-line-clamp': '[0]',
+            'max-height': '[1]',
+            'display': '-webkit-box',
+            '-webkit-box-orient': 'vertical',
+            'overflow': 'hidden',
+            '@supports (display:-moz-box)': [
+                'display:block'
+            ]
+        },
+        rules: {
+            'a': [
+                'display:inline-block',
+                'display:-webkit-box',
+                '*display:inline',
+                'zoom:1'
+            ],
+            'a:after': [
+                'content:"."',
+                'font-size:0',
+                'visibility:hidden',
+                'display:inline-block', /* 1 */
+                'overflow:hidden', /* 1 */
+                'height:0', /* 1 */
+                'width:0' /* 1 */
+            ]
+        },
+        allowArguments: true,
+        type: 'HELPER'
+    }, { // MANDATORY ORDER
         name: 'Animation',
         instructionName: 'Anim',
         css: 'animation:$',
