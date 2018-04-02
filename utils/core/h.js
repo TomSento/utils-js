@@ -59,7 +59,6 @@ exports.H = function(command, a, b) {
     // https://regex101.com/r/tIaCUX/20 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
     // https://regex101.com/r/D7wlXm/20 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
     var REG_ACSS_INSTRUCTION_STRING_MATCH_COMPONENTS = /^([^:_>+()!@]+)\(([^()]*)\)((?=!)!|)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)((?=::[^:_>+()!@])(?:::[^:_>+()!@]+)+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/;
-    var REG_ACSS_INSTRUCTION_VALUE_SPLIT_ARGUMENTS = /\s*,+\s*/g;
     // https://regex101.com/r/Mcr8Np/17 - MATCH NEXT ACSS COLOR - TEST
     // https://regex101.com/r/dJsNNd/13 -  MATCH NEXT ACSS COLOR - JS
     var REG_ACSS_INSTRUCTION_VALUE_MATCH_NEXT_COLOR = /(^|\s|,)(?=#)(?:#([^.,\s]+))((?=\.)\.[^#,\s]*|)(?:\s|,|$)+/;
@@ -2428,14 +2427,15 @@ exports.H = function(command, a, b) {
             throw new Error('Unsupported ACSS rule "' + components[1] + '".');
         }
         var acssRule = ACSS_RULES[i];
-        var arg = ACSS_INSTRUCTION_VALUE_transform(components[2]);
+        var arg = ACSS_INSTRUCTION_VALUE_transform(acssRule, components[2]);
         var important = components[3] === '!';
         var pseudoClasses = ACSS_PSEUDO_CLASSES_STRING_parse(components[4]);
         var pseudoElements = ACSS_PSEUDO_ELEMENTS_STRING_parse(components[5]);
         return ACSS_INSTRUCTION_compose(acssRule, arg, important, pseudoClasses, pseudoElements);
     }
-    function ACSS_INSTRUCTION_VALUE_transform(instructionValue) {
+    function ACSS_INSTRUCTION_VALUE_transform(acssRule, instructionValue) {
         instructionValue = ACSS_INSTRUCTION_VALUE_transformColors(instructionValue);
+        instructionValue = ACSS_INSTRUCTION_VALUE_transformByExpanders(acssRule, instructionValue);
         return instructionValue;
     }
     function ACSS_INSTRUCTION_VALUE_transformColors(instructionValue) {
@@ -2447,6 +2447,25 @@ exports.H = function(command, a, b) {
                 var color = ACSS_INSTRUCTION_STRING_transformColor(m[2], m[3]);
                 instructionValue = instructionValue.slice(0, i) + color + instructionValue.slice(j);
                 m.lastIndex = j;
+            }
+        }
+        return instructionValue;
+    }
+    function ACSS_INSTRUCTION_VALUE_transformByExpanders(acssRule, instructionValue) {
+        if (!acssRule.expanders || typeof(acssRule.expanders) !== 'object') {
+            return instructionValue;
+        }
+        for (var k in acssRule.expanders) {
+            if (acssRule.expanders.hasOwnProperty(k)) {
+                var exp = new RegExp('(^|\\s)(' + k + ')(\\s|$)', 'g');
+                var m = null;
+                while (m = exp.exec(instructionValue)) {
+                    if (Array.isArray(m) && m.length > 0) {
+                        var i = m.index + m[1].length;
+                        var j = i + m[2].length;
+                        instructionValue = instructionValue.slice(0, i) + acssRule.expanders[k] + instructionValue.slice(j);
+                    }
+                }
             }
         }
         return instructionValue;
