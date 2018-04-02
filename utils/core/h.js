@@ -2428,35 +2428,15 @@ exports.H = function(command, a, b) {
             throw new Error('Unsupported ACSS rule "' + components[1] + '".');
         }
         var acssRule = ACSS_RULES[i];
-        var args = ACSS_INSTRUCTION_VALUE_parseArguments(components[2]);
-        var err = ACSS_INSTRUCTION_ARGUMENTS_validate(acssRule, args);
-        if (err) {
-            throw err;
-        }
+        var arg = ACSS_INSTRUCTION_VALUE_transform(components[2]);
         var important = components[3] === '!';
         var pseudoClasses = ACSS_PSEUDO_CLASSES_STRING_parse(components[4]);
         var pseudoElements = ACSS_PSEUDO_ELEMENTS_STRING_parse(components[5]);
-        return ACSS_INSTRUCTION_compose(acssRule, args, important, pseudoClasses, pseudoElements);
+        return ACSS_INSTRUCTION_compose(acssRule, arg, important, pseudoClasses, pseudoElements);
     }
-    function ACSS_INSTRUCTION_VALUE_parseArguments(instructionValue) {
-        var del = ',,'; // AS DELIMITER USE SEQUENCE THAT IS UNALLOWED IN COMMAND
-        instructionValue = instructionValue.replace(REG_ACSS_INSTRUCTION_VALUE_SPLIT_ARGUMENTS, del);
+    function ACSS_INSTRUCTION_VALUE_transform(instructionValue) {
         instructionValue = ACSS_INSTRUCTION_VALUE_transformColors(instructionValue);
-        return instructionValue.split(del);
-    }
-    function ACSS_INSTRUCTION_ARGUMENTS_validate(acssRule, args) {
-        if (!Array.isArray(args) || args.length !== acssRule.argumentsCount) {
-            return new Error('ACSS instruction arguments - No count mismatch.');
-        }
-        var arr = (Array.isArray(acssRule.arguments) && acssRule.arguments.length > 0) ? acssRule.arguments : [{}];
-        for (var i = 0, l = arr.length; i < l; i++) {
-            if (acssRule.allowCustomArgument !== true) {
-                if (!arr[i][args[i]]) {
-                    return new Error('ACSS instruction arguments - No custom argument at: ' + acssRule.func + '[' + i + ']');
-                }
-            }
-        }
-        return null;
+        return instructionValue;
     }
     function ACSS_INSTRUCTION_VALUE_transformColors(instructionValue) {
         var m = null;
@@ -2661,10 +2641,10 @@ exports.H = function(command, a, b) {
             score: score
         };
     }
-    function ACSS_INSTRUCTION_compose(acssRule, args, important, pseudoClasses, pseudoElements) {
+    function ACSS_INSTRUCTION_compose(acssRule, arg, important, pseudoClasses, pseudoElements) {
         return {
             acssRule: acssRule,
-            arguments: args,
+            argument: arg,
             important: important,
             pseudoClasses: pseudoClasses,
             pseudoElements: pseudoElements
