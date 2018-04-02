@@ -553,7 +553,7 @@ exports.H = function(command, a, b) {
         name: 'Background',
         instructionName: 'Bg',
         allowCustomArgument: false,
-        css: 'background:{0}',
+        css: 'background:$',
         arguments: [{
             n: 'none',
             t: 'transparent'
@@ -562,7 +562,7 @@ exports.H = function(command, a, b) {
         name: 'Background image',
         instructionName: 'Bgi',
         allowCustomArgument: false,
-        css: 'background-image:{0}',
+        css: 'background-image:$',
         arguments: [{
             n: 'none'
         }]
@@ -570,13 +570,13 @@ exports.H = function(command, a, b) {
         name: 'Background color',
         instructionName: 'Bgc',
         allowCustomArgument: true,
-        css: 'background-color:{0}',
+        css: 'background-color:$',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Background clip',
         instructionName: 'Bgcp',
         allowCustomArgument: false,
-        css: 'background-clip:{0}',
+        css: 'background-clip:$',
         arguments: [{
             bb: 'border-box',
             cb: 'content-box',
@@ -586,7 +586,7 @@ exports.H = function(command, a, b) {
         name: 'Background origin',
         instructionName: 'Bgo',
         allowCustomArgument: false,
-        css: 'background-origin:{0}',
+        css: 'background-origin:$',
         arguments: [{
             bb: 'border-box',
             cb: 'content-box',
@@ -596,7 +596,7 @@ exports.H = function(command, a, b) {
         name: 'Background size',
         instructionName: 'Bgz',
         allowCustomArgument: true,
-        css: 'background-size:{0}',
+        css: 'background-size:$',
         arguments: [{
             a: 'auto',
             ct: 'contain',
@@ -606,7 +606,7 @@ exports.H = function(command, a, b) {
         name: 'Background attachment',
         instructionName: 'Bga',
         allowCustomArgument: false,
-        css: 'background-attachment:{0}',
+        css: 'background-attachment:$',
         arguments: [{
             f: 'fixed',
             l: 'local',
@@ -616,7 +616,7 @@ exports.H = function(command, a, b) {
         name: 'Background position',
         instructionName: 'Bgp',
         allowCustomArgument: true,
-        css: 'background-position:{0} {1}',
+        css: 'background-position:$ {1}',
         arguments: [{
             left_t: 'left 0',
             right_t: 'right 0',
@@ -632,7 +632,7 @@ exports.H = function(command, a, b) {
         name: 'Background position (X axis)',
         instructionName: 'Bgpx',
         allowCustomArgument: true,
-        css: 'background-position-x:{0}',
+        css: 'background-position-x:$',
         arguments: [{
             left: 'left',
             right: 'right',
@@ -642,7 +642,7 @@ exports.H = function(command, a, b) {
         name: 'Background position (Y axis)',
         instructionName: 'Bgpy',
         allowCustomArgument: true,
-        css: 'background-position-y:{0}',
+        css: 'background-position-y:$',
         arguments: [{
             t: '0',
             b: '100%',
@@ -652,7 +652,7 @@ exports.H = function(command, a, b) {
         name: 'Background repeat',
         instructionName: 'Bgr',
         allowCustomArgument: false,
-        css: 'background-repeat:{0}',
+        css: 'background-repeat:$',
         arguments: [{
             nr: 'no-repeat',
             rx: 'repeat-x',
@@ -665,7 +665,7 @@ exports.H = function(command, a, b) {
         name: 'Border collapse',
         instructionName: 'Bdcl',
         allowCustomArgument: false,
-        css: 'border-collapse:{0}',
+        css: 'border-collapse:$',
         arguments: [{
             c: 'collapse',
             s: 'separate'
@@ -674,7 +674,7 @@ exports.H = function(command, a, b) {
         name: 'Box sizing',
         instructionName: 'Bxz',
         allowCustomArgument: false,
-        css: 'box-sizing:{0}',
+        css: 'box-sizing:$',
         arguments: [{
             cb: 'content-box',
             pb: 'padding-box',
@@ -684,7 +684,7 @@ exports.H = function(command, a, b) {
         name: 'Box shadow',
         instructionName: 'Bxsh',
         allowCustomArgument: false,
-        css: 'box-shadow:{0}',
+        css: 'box-shadow:$',
         arguments: [{
             n: 'none'
         }]
@@ -692,7 +692,7 @@ exports.H = function(command, a, b) {
         name: 'Clear',
         instructionName: 'Cl',
         allowCustomArgument: false,
-        css: 'clear:{0}',
+        css: 'clear:$',
         arguments: [{
             n: 'none',
             b: 'both',
@@ -703,13 +703,13 @@ exports.H = function(command, a, b) {
         name: 'Color',
         instructionName: 'C',
         allowCustomArgument: true,
-        css: 'color:{0}',
+        css: 'color:$',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Contain',
         instructionName: 'Ctn',
         allowCustomArgument: false,
-        css: 'contain:{0}',
+        css: 'contain:$',
         arguments: [{
             n: 'none',
             st: 'strict',
@@ -723,7 +723,7 @@ exports.H = function(command, a, b) {
         name: 'Content',
         instructionName: 'Cnt',
         allowCustomArgument: true,
-        css: 'content:{0}',
+        css: 'content:$',
         arguments: [{
             n: 'none',
             nor: 'normal',
@@ -736,7 +736,7 @@ exports.H = function(command, a, b) {
         name: 'Cursor',
         instructionName: 'Cur',
         allowCustomArgument: false,
-        css: 'cursor:{0}',
+        css: 'cursor:$',
         arguments: [{
             a: 'auto',
             as: 'all-scroll',
@@ -777,7 +777,7 @@ exports.H = function(command, a, b) {
         name: 'Display',
         instructionName: 'D',
         allowCustomArgument: false,
-        css: 'display:{0}',
+        css: 'display:$',
         arguments: [{
             n: 'none',
             b: 'block',
@@ -802,7 +802,7 @@ exports.H = function(command, a, b) {
         name: 'Filter',
         instructionName: 'Fil',
         allowCustomArgument: false,
-        css: 'filter:{0}',
+        css: 'filter:$',
         arguments: [{
             n: 'none'
         }]
@@ -810,57 +810,57 @@ exports.H = function(command, a, b) {
         name: 'Blur (filter)',
         instructionName: 'Blur',
         allowCustomArgument: true,
-        css: 'filter:blur({0})'
+        css: 'filter:blur($)'
     }, {
         name: 'Brightness (filter)',
         instructionName: 'Brightness',
         allowCustomArgument: true,
-        css: 'filter:brightness({0})'
+        css: 'filter:brightness($)'
     }, {
         name: 'Contrast (filter)',
         instructionName: 'Contrast',
         allowCustomArgument: true,
-        css: 'filter:contrast({0})'
+        css: 'filter:contrast($)'
     }, {
         name: 'Drop shadow (filter)',
         instructionName: 'Dropshadow',
         allowCustomArgument: false,
-        css: 'filter:drop-shadow({0})'
+        css: 'filter:drop-shadow($)'
     }, {
         name: 'Grayscale (filter)',
         instructionName: 'Grayscale',
         allowCustomArgument: true,
-        css: 'filter:grayscale({0})'
+        css: 'filter:grayscale($)'
     }, {
         name: 'Hue Rotate (filter)',
         instructionName: 'HueRotate',
         allowCustomArgument: true,
-        css: 'filter:hue-rotate({0})'
+        css: 'filter:hue-rotate($)'
     }, {
         name: 'Invert (filter)',
         instructionName: 'Invert',
         allowCustomArgument: true,
-        css: 'filter:invert({0})'
+        css: 'filter:invert($)'
     }, {
         name: 'Opacity (filter)',
         instructionName: 'Opacity',
         allowCustomArgument: true,
-        css: 'filter:opacity({0})'
+        css: 'filter:opacity($)'
     }, {
         name: 'Saturate (filter)',
         instructionName: 'Saturate',
         allowCustomArgument: true,
-        css: 'filter:saturate({0})'
+        css: 'filter:saturate($)'
     }, {
         name: 'Sepia (filter)',
         instructionName: 'Sepia',
         allowCustomArgument: true,
-        css: 'filter:sepia({0})'
+        css: 'filter:sepia($)'
     }, {
         name: 'Flex (deprecated)',
         instructionName: 'Flx',
         allowCustomArgument: false,
-        css: 'flex:{0}',
+        css: 'flex:$',
         arguments: [{
             a: 'auto',
             n: 'none'
@@ -869,7 +869,7 @@ exports.H = function(command, a, b) {
         name: 'Flex',
         instructionName: 'Fx',
         allowCustomArgument: false,
-        css: 'flex:{0}',
+        css: 'flex:$',
         arguments: [{
             a: 'auto',
             n: 'none'
@@ -878,27 +878,27 @@ exports.H = function(command, a, b) {
         name: 'Flex grow (deprecated)',
         instructionName: 'Flxg',
         allowCustomArgument: true,
-        css: 'flex-grow:{0}'
+        css: 'flex-grow:$'
     }, {
         name: 'Flex grow',
         instructionName: 'Fxg',
         allowCustomArgument: true,
-        css: 'flex-grow:{0}'
+        css: 'flex-grow:$'
     }, {
         name: 'Flex shrink (deprecated)',
         instructionName: 'Flxs',
         allowCustomArgument: true,
-        css: 'flex-shrink:{0}'
+        css: 'flex-shrink:$'
     }, {
         name: 'Flex shrink',
         instructionName: 'Fxs',
         allowCustomArgument: true,
-        css: 'flex-shrink:{0}'
+        css: 'flex-shrink:$'
     }, {
         name: 'Flex basis (deprecated)',
         instructionName: 'Flxb',
         allowCustomArgument: true,
-        css: 'flex-basis:{0}',
+        css: 'flex-basis:$',
         arguments: [{
             a: 'auto',
             n: 'none'
@@ -907,7 +907,7 @@ exports.H = function(command, a, b) {
         name: 'Flex basis',
         instructionName: 'Fxb',
         allowCustomArgument: true,
-        css: 'flex-basis:{0}',
+        css: 'flex-basis:$',
         arguments: [{
             a: 'auto',
             n: 'none'
@@ -916,7 +916,7 @@ exports.H = function(command, a, b) {
         name: 'Align self',
         instructionName: 'As',
         allowCustomArgument: false,
-        css: 'align-self:{0}',
+        css: 'align-self:$',
         arguments: [{
             a: 'auto',
             fs: 'flex-start',
@@ -929,7 +929,7 @@ exports.H = function(command, a, b) {
         name: 'Flex direction (deprecated)',
         instructionName: 'Fld',
         allowCustomArgument: false,
-        css: 'flex-direction:{0}',
+        css: 'flex-direction:$',
         arguments: [{
             r: 'row',
             rr: 'row-reverse',
@@ -940,7 +940,7 @@ exports.H = function(command, a, b) {
         name: 'Flex direction',
         instructionName: 'Fxd',
         allowCustomArgument: false,
-        css: 'flex-direction:{0}',
+        css: 'flex-direction:$',
         arguments: [{
             r: 'row',
             rr: 'row-reverse',
@@ -951,7 +951,7 @@ exports.H = function(command, a, b) {
         name: 'Flex flow (deprecated)',
         instructionName: 'Flf',
         allowCustomArgument: false,
-        css: 'flex-flow:{0}',
+        css: 'flex-flow:$',
         arguments: [{
             r: 'row',
             rr: 'row-reverse',
@@ -965,7 +965,7 @@ exports.H = function(command, a, b) {
         name: 'Flex flow',
         instructionName: 'Fxf',
         allowCustomArgument: false,
-        css: 'flex-flow:{0}',
+        css: 'flex-flow:$',
         arguments: [{
             r: 'row',
             rr: 'row-reverse',
@@ -979,7 +979,7 @@ exports.H = function(command, a, b) {
         name: 'Align items',
         instructionName: 'Ai',
         allowCustomArgument: false,
-        css: 'align-items:{0}',
+        css: 'align-items:$',
         arguments: [{
             fs: 'flex-start',
             fe: 'flex-end',
@@ -991,7 +991,7 @@ exports.H = function(command, a, b) {
         name: 'Align content',
         instructionName: 'Ac',
         allowCustomArgument: false,
-        css: 'align-content:{0}',
+        css: 'align-content:$',
         arguments: [{
             fs: 'flex-start',
             fe: 'flex-end',
@@ -1004,12 +1004,12 @@ exports.H = function(command, a, b) {
         name: 'Order',
         instructionName: 'Or',
         allowCustomArgument: true,
-        css: 'order:{0}'
+        css: 'order:$'
     }, {
         name: 'Justify content',
         instructionName: 'Jc',
         allowCustomArgument: false,
-        css: 'justify-content:{0}',
+        css: 'justify-content:$',
         arguments: [{
             fs: 'flex-start',
             fe: 'flex-end',
@@ -1021,7 +1021,7 @@ exports.H = function(command, a, b) {
         name: 'Flex-wrap (deprecated)',
         instructionName: 'Flw',
         allowCustomArgument: false,
-        css: 'flex-wrap:{0}',
+        css: 'flex-wrap:$',
         arguments: [{
             nw: 'nowrap',
             w: 'wrap',
@@ -1031,7 +1031,7 @@ exports.H = function(command, a, b) {
         name: 'Flex-wrap',
         instructionName: 'Fxw',
         allowCustomArgument: false,
-        css: 'flex-wrap:{0}',
+        css: 'flex-wrap:$',
         arguments: [{
             nw: 'nowrap',
             w: 'wrap',
@@ -1041,7 +1041,7 @@ exports.H = function(command, a, b) {
         name: 'Float',
         allowCustomArgument: false,
         instructionName: 'Fl',
-        css: 'float:{0}',
+        css: 'float:$',
         arguments: [{
             n: 'none',
             left: 'left',
@@ -1051,7 +1051,7 @@ exports.H = function(command, a, b) {
         name: 'Font family',
         instructionName: 'Ff',
         allowCustomArgument: false,
-        css: 'font-family:{0}',
+        css: 'font-family:$',
         arguments: [{
             c: '"Monotype Corsiva", "Comic Sans MS", cursive',
             f: 'Capitals, Impact, fantasy',
@@ -1063,7 +1063,7 @@ exports.H = function(command, a, b) {
         name: 'Font weight',
         instructionName: 'Fw',
         allowCustomArgument: false,
-        css: 'font-weight:{0}',
+        css: 'font-weight:$',
         arguments: [{
             // '100': '100',
             // '200': '200',
@@ -1083,12 +1083,12 @@ exports.H = function(command, a, b) {
         name: 'Font size',
         instructionName: 'Fz',
         allowCustomArgument: true,
-        css: 'font-size:{0}'
+        css: 'font-size:$'
     }, {
         name: 'Font style',
         instructionName: 'Fs',
         allowCustomArgument: false,
-        css: 'font-style:{0}',
+        css: 'font-style:$',
         arguments: [{
             n: 'normal',
             i: 'italic',
@@ -1098,7 +1098,7 @@ exports.H = function(command, a, b) {
         name: 'Font variant',
         instructionName: 'Fv',
         allowCustomArgument: false,
-        css: 'font-variant:{0}',
+        css: 'font-variant:$',
         arguments: [{
             n: 'normal',
             sc: 'small-caps'
@@ -1107,7 +1107,7 @@ exports.H = function(command, a, b) {
         name: 'Height',
         instructionName: 'H',
         allowCustomArgument: true,
-        css: 'height:{0}',
+        css: 'height:$',
         arguments: [{
             // '0': '0',
             a: 'auto',
@@ -1122,7 +1122,7 @@ exports.H = function(command, a, b) {
         name: 'Hyphens',
         instructionName: 'Hy',
         allowCustomArgument: false,
-        css: 'hyphens:{0}',
+        css: 'hyphens:$',
         arguments: [{
             a: 'auto',
             n: 'normal',
@@ -1132,7 +1132,7 @@ exports.H = function(command, a, b) {
         name: 'Letter spacing',
         instructionName: 'Lts',
         allowCustomArgument: true,
-        css: 'letter-spacing:{0}',
+        css: 'letter-spacing:$',
         arguments: [{
             n: 'normal'
         }]
@@ -1140,7 +1140,7 @@ exports.H = function(command, a, b) {
         name: 'List style type',
         instructionName: 'List',
         allowCustomArgument: false,
-        css: 'list-style-type:{0}',
+        css: 'list-style-type:$',
         arguments: [{
             n: 'none',
             d: 'disc',
@@ -1162,7 +1162,7 @@ exports.H = function(command, a, b) {
         name: 'List style position',
         instructionName: 'Lisp',
         allowCustomArgument: false,
-        css: 'list-style-position:{0}',
+        css: 'list-style-position:$',
         arguments: [{
             i: 'inside',
             o: 'outside'
@@ -1171,7 +1171,7 @@ exports.H = function(command, a, b) {
         name: 'List style image',
         instructionName: 'Lisi',
         allowCustomArgument: false,
-        css: 'list-style-image:{0}',
+        css: 'list-style-image:$',
         arguments: [{
             n: 'none'
         }]
@@ -1179,7 +1179,7 @@ exports.H = function(command, a, b) {
         name: 'Line height',
         instructionName: 'Lh',
         allowCustomArgument: true,
-        css: 'line-height:{0}',
+        css: 'line-height:$',
         arguments: [{
             n: 'normal'
         }]
@@ -1187,7 +1187,7 @@ exports.H = function(command, a, b) {
         name: 'Margin (all edges)',
         instructionName: 'M',
         allowCustomArgument: true,
-        css: 'margin:{0}',
+        css: 'margin:$',
         arguments: [{
             // '0': '0',
             a: 'auto'
@@ -1197,8 +1197,8 @@ exports.H = function(command, a, b) {
         instructionName: 'Mx',
         allowCustomArgument: true,
         css: [
-            'margin-left:{0}',
-            'margin-right:{0}'
+            'margin-left:$',
+            'margin-right:$'
         ],
         arguments: [{
             // '0': '0',
@@ -1209,8 +1209,8 @@ exports.H = function(command, a, b) {
         instructionName: 'My',
         allowCustomArgument: true,
         css: [
-            'margin-top:{0}',
-            'margin-bottom:{0}'
+            'margin-top:$',
+            'margin-bottom:$'
         ],
         arguments: [{
             // '0': '0',
@@ -1220,7 +1220,7 @@ exports.H = function(command, a, b) {
         name: 'Margin top',
         instructionName: 'Mt',
         allowCustomArgument: true,
-        css: 'margin-top:{0}',
+        css: 'margin-top:$',
         arguments: [{
             // '0': '0',
             a: 'auto'
@@ -1229,7 +1229,7 @@ exports.H = function(command, a, b) {
         name: 'Margin right',
         instructionName: 'Mright',
         allowCustomArgument: true,
-        css: 'margin-right:{0}',
+        css: 'margin-right:$',
         arguments: [{
             // '0': '0',
             a: 'auto'
@@ -1238,7 +1238,7 @@ exports.H = function(command, a, b) {
         name: 'Margin bottom',
         instructionName: 'Mb',
         allowCustomArgument: true,
-        css: 'margin-bottom:{0}',
+        css: 'margin-bottom:$',
         arguments: [{
             // '0': '0',
             a: 'auto'
@@ -1247,7 +1247,7 @@ exports.H = function(command, a, b) {
         name: 'Margin left',
         instructionName: 'Mleft',
         allowCustomArgument: true,
-        css: 'margin-left:{0}',
+        css: 'margin-left:$',
         arguments: [{
             // '0': '0',
             a: 'auto'
@@ -1256,7 +1256,7 @@ exports.H = function(command, a, b) {
         name: 'Max height',
         instructionName: 'Mah',
         allowCustomArgument: true,
-        css: 'max-height:{0}',
+        css: 'max-height:$',
         arguments: [{
             a: 'auto',
             maxc: 'max-content',
@@ -1268,7 +1268,7 @@ exports.H = function(command, a, b) {
         name: 'Max width',
         instructionName: 'Maw',
         allowCustomArgument: true,
-        css: 'max-width:{0}',
+        css: 'max-width:$',
         arguments: [{
             n: 'none',
             fa: 'fill-available',
@@ -1280,7 +1280,7 @@ exports.H = function(command, a, b) {
         name: 'Min height',
         instructionName: 'Mih',
         allowCustomArgument: true,
-        css: 'min-height:{0}',
+        css: 'min-height:$',
         arguments: [{
             a: 'auto',
             fa: 'fill-available',
@@ -1292,7 +1292,7 @@ exports.H = function(command, a, b) {
         name: 'Min width',
         instructionName: 'Miw',
         allowCustomArgument: true,
-        css: 'min-width:{0}',
+        css: 'min-width:$',
         arguments: [{
             a: 'auto',
             fa: 'fill-available',
@@ -1305,7 +1305,7 @@ exports.H = function(command, a, b) {
         name: 'Outline',
         instructionName: 'O',
         allowCustomArgument: false,
-        css: 'outline:{0}',
+        css: 'outline:$',
         arguments: [{
             // '0': '0',
             n: 'none'
@@ -1314,7 +1314,7 @@ exports.H = function(command, a, b) {
         name: 'Top',
         instructionName: 'T',
         allowCustomArgument: true,
-        css: 'top:{0}',
+        css: 'top:$',
         arguments: [{
             a: 'auto'
         }]
@@ -1322,7 +1322,7 @@ exports.H = function(command, a, b) {
         name: 'Right',
         instructionName: 'Right',
         allowCustomArgument: true,
-        css: 'right:{0}',
+        css: 'right:$',
         arguments: [{
             a: 'auto'
         }]
@@ -1330,7 +1330,7 @@ exports.H = function(command, a, b) {
         name: 'Bottom',
         instructionName: 'B',
         allowCustomArgument: true,
-        css: 'bottom:{0}',
+        css: 'bottom:$',
         arguments: [{
             a: 'auto'
         }]
@@ -1338,7 +1338,7 @@ exports.H = function(command, a, b) {
         name: 'Left',
         instructionName: 'Left',
         allowCustomArgument: true,
-        css: 'left:{0}',
+        css: 'left:$',
         arguments: [{
             a: 'auto'
         }]
@@ -1346,7 +1346,7 @@ exports.H = function(command, a, b) {
         name: 'Opacity',
         instructionName: 'Op',
         allowCustomArgument: true,
-        css: 'opacity:{0}'
+        css: 'opacity:$'
         // arguments: [{
         // '0': '0',
         // '1': '1'
@@ -1355,7 +1355,7 @@ exports.H = function(command, a, b) {
         name: 'Overflow',
         instructionName: 'Ov',
         allowCustomArgument: false,
-        css: 'overflow:{0}',
+        css: 'overflow:$',
         arguments: [{
             a: 'auto',
             h: 'hidden',
@@ -1366,7 +1366,7 @@ exports.H = function(command, a, b) {
         name: 'Overflow (X axis)',
         instructionName: 'Ovx',
         allowCustomArgument: false,
-        css: 'overflow-x:{0}',
+        css: 'overflow-x:$',
         arguments: [{
             a: 'auto',
             h: 'hidden',
@@ -1377,7 +1377,7 @@ exports.H = function(command, a, b) {
         name: 'Overflow (Y axis)',
         instructionName: 'Ovy',
         allowCustomArgument: false,
-        css: 'overflow-y:{0}',
+        css: 'overflow-y:$',
         arguments: [{
             a: 'auto',
             h: 'hidden',
@@ -1388,7 +1388,7 @@ exports.H = function(command, a, b) {
         name: 'Overflow scrolling',
         instructionName: 'Ovs',
         allowCustomArgument: false,
-        css: '-webkit-overflow-scrolling:{0}',
+        css: '-webkit-overflow-scrolling:$',
         arguments: [{
             a: 'auto',
             touch: 'touch'
@@ -1397,48 +1397,48 @@ exports.H = function(command, a, b) {
         name: 'Padding (all edges)',
         instructionName: 'P',
         allowCustomArgument: true,
-        css: 'padding:{0}'
+        css: 'padding:$'
     }, {
         name: 'Padding (X axis)',
         instructionName: 'Px',
         allowCustomArgument: true,
         css: [
-            'padding-left:{0}',
-            'padding-right:{0}'
+            'padding-left:$',
+            'padding-right:$'
         ]
     }, {
         name: 'Padding (Y axis)',
         instructionName: 'Py',
         allowCustomArgument: true,
         css: [
-            'padding-top:{0}',
-            'padding-bottom:{0}'
+            'padding-top:$',
+            'padding-bottom:$'
         ]
     }, {
         name: 'Padding top',
         instructionName: 'Pt',
         allowCustomArgument: true,
-        css: 'padding-top:{0}'
+        css: 'padding-top:$'
     }, {
         name: 'Padding right',
         instructionName: 'Pright',
         allowCustomArgument: true,
-        css: 'padding-right:{0}'
+        css: 'padding-right:$'
     }, {
         name: 'Padding bottom',
         instructionName: 'Pb',
         allowCustomArgument: true,
-        css: 'padding-bottom:{0}'
+        css: 'padding-bottom:$'
     }, {
         name: 'Padding left',
         instructionName: 'Pleft',
         allowCustomArgument: true,
-        css: 'padding-left:{0}'
+        css: 'padding-left:$'
     }, {
         name: 'Pointer events',
         instructionName: 'Pe',
         allowCustomArgument: false,
-        css: 'pointer-events:{0}',
+        css: 'pointer-events:$',
         arguments: [{
             a: 'auto',
             all: 'all',
@@ -1455,7 +1455,7 @@ exports.H = function(command, a, b) {
         name: 'Position',
         instructionName: 'Pos',
         allowCustomArgument: false,
-        css: 'position:{0}',
+        css: 'position:$',
         arguments: [{
             a: 'absolute',
             f: 'fixed',
@@ -1467,7 +1467,7 @@ exports.H = function(command, a, b) {
         name: 'Resize',
         instructionName: 'Rsz',
         allowCustomArgument: false,
-        css: 'resize:{0}',
+        css: 'resize:$',
         arguments: [{
             n: 'none',
             b: 'both',
@@ -1478,7 +1478,7 @@ exports.H = function(command, a, b) {
         name: 'Table layout',
         instructionName: 'Tbl',
         allowCustomArgument: false,
-        css: 'table-layout:{0}',
+        css: 'table-layout:$',
         arguments: [{
             a: 'auto',
             f: 'fixed'
@@ -1487,7 +1487,7 @@ exports.H = function(command, a, b) {
         name: 'Text align',
         instructionName: 'Ta',
         allowCustomArgument: false,
-        css: 'text-align:{0}',
+        css: 'text-align:$',
         arguments: [{
             c: 'center',
             e: 'end',
@@ -1501,7 +1501,7 @@ exports.H = function(command, a, b) {
         name: 'Text align last',
         instructionName: 'Tal',
         allowCustomArgument: false,
-        css: 'text-align-last:{0}',
+        css: 'text-align-last:$',
         arguments: [{
             a: 'auto',
             c: 'center',
@@ -1515,7 +1515,7 @@ exports.H = function(command, a, b) {
         name: 'Text decoration',
         instructionName: 'Td',
         allowCustomArgument: false,
-        css: 'text-decoration:{0}',
+        css: 'text-decoration:$',
         arguments: [{
             lt: 'line-through',
             n: 'none',
@@ -1526,12 +1526,12 @@ exports.H = function(command, a, b) {
         name: 'Text indent',
         instructionName: 'Ti',
         allowCustomArgument: true,
-        css: 'text-indent:{0}'
+        css: 'text-indent:$'
     }, {
         name: 'Text overflow',
         instructionName: 'Tov',
         allowCustomArgument: false,
-        css: 'text-overflow:{0}',
+        css: 'text-overflow:$',
         arguments: [{
             c: 'clip',
             e: 'ellipsis'
@@ -1540,7 +1540,7 @@ exports.H = function(command, a, b) {
         name: 'Text rendering',
         instructionName: 'Tren',
         allowCustomArgument: false,
-        css: 'text-rendering:{0}',
+        css: 'text-rendering:$',
         arguments: [{
             a: 'auto',
             os: 'optimizeSpeed',
@@ -1551,7 +1551,7 @@ exports.H = function(command, a, b) {
         name: 'Text replace',
         instructionName: 'Tr',
         allowCustomArgument: false,
-        css: 'text-replace:{0}',
+        css: 'text-replace:$',
         arguments: [{
             n: 'none'
         }]
@@ -1559,7 +1559,7 @@ exports.H = function(command, a, b) {
         name: 'Text transform',
         instructionName: 'Tt',
         allowCustomArgument: false,
-        css: 'text-transform:{0}',
+        css: 'text-transform:$',
         arguments: [{
             n: 'none',
             c: 'capitalize',
@@ -1570,7 +1570,7 @@ exports.H = function(command, a, b) {
         name: 'Text shadow',
         instructionName: 'Tsh',
         allowCustomArgument: false,
-        css: 'text-shadow:{0}',
+        css: 'text-shadow:$',
         arguments: [{
             n: 'none'
         }]
@@ -1578,12 +1578,12 @@ exports.H = function(command, a, b) {
         name: 'Transform',
         instructionName: 'Trf',
         allowCustomArgument: false,
-        css: 'transform:{0}'
+        css: 'transform:$'
     }, {
         name: 'Transform origin',
         instructionName: 'Trfo',
         allowCustomArgument: true,
-        css: 'transform-origin:{0} {1}',
+        css: 'transform-origin:$ {1}',
         arguments: [{
             t: 'top',
             right: 'right',
@@ -1601,7 +1601,7 @@ exports.H = function(command, a, b) {
         name: 'Transform style',
         instructionName: 'Trfs',
         allowCustomArgument: false,
-        css: 'transform-style:{0}',
+        css: 'transform-style:$',
         arguments: [{
             f: 'flat',
             p: 'preserve-3d'
@@ -1610,7 +1610,7 @@ exports.H = function(command, a, b) {
         name: 'Perspective',
         instructionName: 'Prs',
         allowCustomArgument: true,
-        css: 'perspective:{0}',
+        css: 'perspective:$',
         arguments: [{
             n: 'none'
         }]
@@ -1618,7 +1618,7 @@ exports.H = function(command, a, b) {
         name: 'Perspective origin',
         instructionName: 'Prso',
         allowCustomArgument: true,
-        css: 'perspective-origin:{0} {1}',
+        css: 'perspective-origin:$ {1}',
         arguments: [{
             t: 'top',
             right: 'right',
@@ -1636,7 +1636,7 @@ exports.H = function(command, a, b) {
         name: 'Backface visibility',
         instructionName: 'Bfv',
         allowCustomArgument: false,
-        css: 'backface-visibility:{0}',
+        css: 'backface-visibility:$',
         arguments: [{
             h: 'hidden',
             v: 'visible'
@@ -1645,107 +1645,107 @@ exports.H = function(command, a, b) {
         name: 'Matrix (transform)',
         instructionName: 'Matrix',
         allowCustomArgument: false,
-        css: 'transform:matrix({0})'
+        css: 'transform:matrix($)'
     }, {
         name: 'Matrix 3d (transform)',
         instructionName: 'Matrix3d',
         allowCustomArgument: false,
-        css: 'transform:matrix({0})'
+        css: 'transform:matrix($)'
     }, {
         name: 'Rotate (transform)',
         instructionName: 'Rotate',
         allowCustomArgument: true,
-        css: 'transform:rotate({0})'
+        css: 'transform:rotate($)'
     }, {
         name: 'Rotate 3d (transform)',
         instructionName: 'Rotate3d',
         allowCustomArgument: true,
-        css: 'transform:rotate3d({0},{1},{2},{3})'
+        css: 'transform:rotate3d($,{1},{2},{3})'
     }, {
         name: 'RotateX (transform)',
         instructionName: 'RotateX',
         allowCustomArgument: true,
-        css: 'transform:rotateX({0})'
+        css: 'transform:rotateX($)'
     }, {
         name: 'RotateY (transform)',
         instructionName: 'RotateY',
         allowCustomArgument: true,
-        css: 'transform:rotateY({0})'
+        css: 'transform:rotateY($)'
     }, {
         name: 'RotateZ (transform)',
         instructionName: 'RotateZ',
         allowCustomArgument: true,
-        css: 'transform:rotateZ({0})'
+        css: 'transform:rotateZ($)'
     }, {
         name: 'Scale (transform)',
         instructionName: 'Scale',
         allowCustomArgument: true,
-        css: 'transform:scale({0},{1})'
+        css: 'transform:scale($,{1})'
     }, {
         name: 'Scale 3d (transform)',
         instructionName: 'Scale3d',
         allowCustomArgument: true,
-        css: 'transform:scale3d({0},{1},{2})'
+        css: 'transform:scale3d($,{1},{2})'
     }, {
         name: 'ScaleX (transform)',
         instructionName: 'ScaleX',
         allowCustomArgument: true,
-        css: 'transform:scaleX({0})'
+        css: 'transform:scaleX($)'
     }, {
         name: 'ScaleY (transform)',
         instructionName: 'ScaleY',
         allowCustomArgument: true,
-        css: 'transform:scaleY({0})'
+        css: 'transform:scaleY($)'
     }, {
         name: 'Skew (transform)',
         instructionName: 'Skew',
         allowCustomArgument: true,
-        css: 'transform:skew({0},{1})'
+        css: 'transform:skew($,{1})'
     }, {
         name: 'SkewX (transform)',
         instructionName: 'SkewX',
         allowCustomArgument: true,
-        css: 'transform:skewX({0})'
+        css: 'transform:skewX($)'
     }, {
         name: 'SkewY (transform)',
         instructionName: 'SkewY',
         allowCustomArgument: true,
-        css: 'transform:skewY({0})'
+        css: 'transform:skewY($)'
     }, {
         name: 'Translate (transform)',
         instructionName: 'Translate',
         allowCustomArgument: true,
-        css: 'transform:translate({0},{1})'
+        css: 'transform:translate($,{1})'
     }, {
         name: 'Translate 3d (transform)',
         instructionName: 'Translate3d',
         allowCustomArgument: true,
-        css: 'transform:translate3d({0},{1},{2})'
+        css: 'transform:translate3d($,{1},{2})'
     }, {
         name: 'Translate X (transform)',
         instructionName: 'TranslateX',
         allowCustomArgument: true,
-        css: 'transform:translateX({0})'
+        css: 'transform:translateX($)'
     }, {
         name: 'Translate Y (transform)',
         instructionName: 'TranslateY',
         allowCustomArgument: true,
-        css: 'transform:translateY({0})'
+        css: 'transform:translateY($)'
     }, {
         name: 'Translate Z (transform)',
         instructionName: 'TranslateZ',
         allowCustomArgument: true,
-        css: 'transform:translateZ({0})'
+        css: 'transform:translateZ($)'
     }, {
         name: 'Transition',
         instructionName: 'Trs',
         allowCustomArgument: false,
-        css: 'transition:{0}'
+        css: 'transition:$'
     }, {
         name: 'Transition delay',
         instructionName: 'Trsde',
         allowCustomArgument: true,
-        css: 'transition-delay:{0}',
+        css: 'transition-delay:$',
         arguments: [{
             i: 'initial'
         }]
@@ -1753,12 +1753,12 @@ exports.H = function(command, a, b) {
         name: 'Transition duration',
         instructionName: 'Trsdu',
         allowCustomArgument: true,
-        css: 'transition-duration:{0}'
+        css: 'transition-duration:$'
     }, {
         name: 'Transition property',
         instructionName: 'Trsp',
         allowCustomArgument: false,
-        css: 'transition-property:{0}',
+        css: 'transition-property:$',
         arguments: [{
             a: 'all'
         }]
@@ -1766,7 +1766,7 @@ exports.H = function(command, a, b) {
         name: 'Transition timing function',
         instructionName: 'Trstf',
         allowCustomArgument: false,
-        css: 'transition-timing-function:{0}',
+        css: 'transition-timing-function:$',
         arguments: [{
             e: 'ease',
             ei: 'ease-in',
@@ -1780,7 +1780,7 @@ exports.H = function(command, a, b) {
         name: 'User select',
         instructionName: 'Us',
         allowCustomArgument: false,
-        css: 'user-select:{0}',
+        css: 'user-select:$',
         arguments: [{
             a: 'all',
             el: 'element',
@@ -1793,7 +1793,7 @@ exports.H = function(command, a, b) {
         name: 'Vertical align',
         instructionName: 'Va',
         allowCustomArgument: false,
-        css: 'vertical-align:{0}',
+        css: 'vertical-align:$',
         arguments: [{
             b: 'bottom',
             bl: 'baseline',
@@ -1808,7 +1808,7 @@ exports.H = function(command, a, b) {
         name: 'Visibility',
         instructionName: 'V',
         allowCustomArgument: false,
-        css: 'visibility:{0}',
+        css: 'visibility:$',
         arguments: [{
             v: 'visible',
             h: 'hidden',
@@ -1818,7 +1818,7 @@ exports.H = function(command, a, b) {
         name: 'White space',
         instructionName: 'Whs',
         allowCustomArgument: false,
-        css: 'white-space:{0}',
+        css: 'white-space:$',
         arguments: [{
             n: 'normal',
             p: 'pre',
@@ -1830,7 +1830,7 @@ exports.H = function(command, a, b) {
         name: 'White space collapse',
         instructionName: 'Whsc',
         allowCustomArgument: false,
-        css: 'white-space-collapse:{0}',
+        css: 'white-space-collapse:$',
         arguments: [{
             n: 'normal',
             ka: 'keep-all',
@@ -1842,7 +1842,7 @@ exports.H = function(command, a, b) {
         name: 'Width',
         instructionName: 'W',
         allowCustomArgument: true,
-        css: 'width:{0}',
+        css: 'width:$',
         arguments: [{
             // '0': '0',
             a: 'auto',
@@ -1857,7 +1857,7 @@ exports.H = function(command, a, b) {
         name: 'Word break',
         instructionName: 'Wob',
         allowCustomArgument: false,
-        css: 'word-break:{0}',
+        css: 'word-break:$',
         arguments: [{
             ba: 'break-all',
             ka: 'keep-all',
@@ -1867,7 +1867,7 @@ exports.H = function(command, a, b) {
         name: 'Word wrap',
         instructionName: 'Wow',
         allowCustomArgument: false,
-        css: 'word-wrap:{0}',
+        css: 'word-wrap:$',
         arguments: [{
             bw: 'break-word',
             n: 'normal'
@@ -1876,7 +1876,7 @@ exports.H = function(command, a, b) {
         name: 'Z index',
         instructionName: 'Z',
         allowCustomArgument: true,
-        css: 'z-index:{0}',
+        css: 'z-index:$',
         arguments: [{
             a: 'auto'
         }]
@@ -1884,19 +1884,19 @@ exports.H = function(command, a, b) {
         name: 'Fill (SVG)',
         instructionName: 'Fill',
         allowCustomArgument: false,
-        css: 'fill:{0}',
+        css: 'fill:$',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Stroke (SVG)',
         instructionName: 'Stk',
         allowCustomArgument: false,
-        css: 'stroke:{0}',
+        css: 'stroke:$',
         arguments: [ACSS_COLOR_ARGUMENTS]
     }, {
         name: 'Stroke width (SVG)',
         instructionName: 'Stkw',
         allowCustomArgument: true,
-        css: 'stroke-width:{0}',
+        css: 'stroke-width:$',
         arguments: [{
             i: 'inherit'
         }]
@@ -1904,7 +1904,7 @@ exports.H = function(command, a, b) {
         name: 'Stroke linecap (SVG)',
         instructionName: 'Stklc',
         allowCustomArgument: false,
-        css: 'stroke-linecap:{0}',
+        css: 'stroke-linecap:$',
         arguments: [{
             i: 'inherit',
             b: 'butt',
@@ -1915,7 +1915,7 @@ exports.H = function(command, a, b) {
         name: 'Stroke linejoin (SVG)',
         instructionName: 'Stklj',
         allowCustomArgument: false,
-        css: 'stroke-linejoin:{0}',
+        css: 'stroke-linejoin:$',
         arguments: [{
             i: 'inherit',
             b: 'bevel',
