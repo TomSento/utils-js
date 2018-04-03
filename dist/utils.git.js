@@ -42,10 +42,10 @@ U.strReplaceBetween = function(str,i,j,part){return str.substring(0,i)+part+str.
 U.strReplaceCharAt = function(str,i,ch){return str.substr(0,i)+ch+str.substr(i+ch.length);};
 U.strReverse = function(str){var rev='';for(var i=str.length-1;i>=0;i--){rev+=str[i];}return rev;};
 U.strHas = function(str,v){return str.includes(v);};
-U.strUntil = function(str,exp){var arr=str.split(exp);return(Array.isArray(arr)&&arr[0])?arr[0]:'';};
-U.strFromUntil = function(str,leftIndex,exp){str=str.substring(leftIndex);var arr=str.split(exp);return(Array.isArray(arr)&&arr[0])?arr[0]:'';};
-U.strReverseUntil = function(str,exp){var rev='';for(var i=str.length-1;i>=0;i--){rev+=str[i];}var arr=rev.split(exp);return(Array.isArray(arr)&&arr[0])?arr[0]:'';};
-U.strReverseFromUntil = function(str,leftIndex,exp){str=str.substring(0,leftIndex);var rev='';for(var i=str.length-1;i>=0;i--){rev+=str[i];}var arr=rev.split(exp);return(Array.isArray(arr)&&arr[0])?arr[0]:'';};
+U.strUntil = function(str,exp){var arr=str.split(exp);if(Array.isArray(arr)){return arr[0]===str?null:arr[0];}return null;};
+U.strFromUntil = function(str,leftIndex,exp){str=str.substring(leftIndex);var arr=str.split(exp);if(Array.isArray(arr)){return arr[0]===str?null:arr[0];}return null;};
+U.strReverseUntil = function(str,exp){var rev='';for(var i=str.length-1;i>=0;i--){rev+=str[i];}var arr=rev.split(exp);if(Array.isArray(arr)){return arr[0]===str?null:arr[0];}return null;};
+U.strReverseFromUntil = function(str,leftIndex,exp){str=str.substring(0,leftIndex);var rev='';for(var i=str.length-1;i>=0;i--){rev+=str[i];}var arr=rev.split(exp);if(Array.isArray(arr)){return arr[0]===str?null:arr[0];}return null;};
 U.strMatchLen = function(str,regex,i){var matches=str.match(regex);i=parseInt(i);i=isNaN(i)?0:i;return(Array.isArray(matches)&&matches[i])?matches[i].length:0;};
 U.strToQueryObj = function(url){url=url.replace(/\+/g,' ');var exp=/[?&]([^=]+)=([^&]*)/g;var o={};var m=null;while(m=exp.exec(url)){var k=m[1]?decodeURIComponent(m[1]):'';var v=m[2]?decodeURIComponent(m[2]):'';if(k){o[k]=v;}}return o;};
 U.numToKeyType = function(keyCode){var map={8:'BACKSPACE',9:'TAB',13:'ENTER',16:'SHIFT',17:'CTRL',18:'ALT',32:'SPACE',37:'LEFT_ARROW',38:'UP_ARROW',39:'RIGHT_ARROW',40:'DOWN_ARROW',65:'A',66:'B',67:'C',68:'D',69:'E',70:'F',71:'G',72:'H',73:'I',74:'J',75:'K',76:'L',77:'M',78:'N',79:'O',80:'P',81:'Q',82:'R',83:'S',84:'T',85:'U',86:'V',87:'W',88:'X',89:'Y',90:'Z'};return map[keyCode]||null;};

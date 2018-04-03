@@ -1060,12 +1060,18 @@ exports.strHas = function(str, v) {
 };
 exports.strUntil = function(str, exp) {
     var arr = str.split(exp);
-    return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
+    if (Array.isArray(arr)) {
+        return arr[0] === str ? null : arr[0];
+    }
+    return null;
 };
 exports.strFromUntil = function(str, leftIndex, exp) {
     str = str.substring(leftIndex);
     var arr = str.split(exp);
-    return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
+    if (Array.isArray(arr)) {
+        return arr[0] === str ? null : arr[0];
+    }
+    return null;
 };
 exports.strReverseUntil = function(str, exp) {
     var rev = '';
@@ -1073,7 +1079,10 @@ exports.strReverseUntil = function(str, exp) {
         rev += str[i];
     }
     var arr = rev.split(exp);
-    return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
+    if (Array.isArray(arr)) {
+        return arr[0] === str ? null : arr[0];
+    }
+    return null;
 };
 exports.strReverseFromUntil = function(str, leftIndex, exp) {
     str = str.substring(0, leftIndex);
@@ -1082,7 +1091,10 @@ exports.strReverseFromUntil = function(str, leftIndex, exp) {
         rev += str[i];
     }
     var arr = rev.split(exp);
-    return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
+    if (Array.isArray(arr)) {
+        return arr[0] === str ? null : arr[0];
+    }
+    return null;
 };
 exports.strMatchLen = function(str, regex, i) {
     var matches = str.match(regex);
