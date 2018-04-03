@@ -32,7 +32,7 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
     var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Lang|Charset|Name|Property|HttpEquiv|Content|Chckd|Slctd|Readonly|Disabled)(?![A-Za-z0-9])/;
-    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdend|Bdb|Bdstart|Bdc|Bdtc|Bdendc|Bdbc|Bdstartc|Bdsp|Bds|Bdts|Bdends|Bdbs|Bdstarts|Bdw|Bdtw|Bdendw|Bdbw|Bdstartw|Bdrs|Bdrstend|Bdrsbend|Bdrsbstart|Bdrststart|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mend|Mb|Mstart|Mah|Maw|Mih|Miw|O|T|End|B|Start|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pend|Pb|Pstart|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
+    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdright|Bdb|Bdleft|Bdc|Bdtc|Bdrightc|Bdbc|Bdleftc|Bdsp|Bds|Bdts|Bdrights|Bdbs|Bdlefts|Bdw|Bdtw|Bdrightw|Bdbw|Bdleftw|Bdrs|Bdrstright|Bdrsbright|Bdrsbleft|Bdrstleft|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mright|Mb|Mleft|Mah|Maw|Mih|Miw|O|T|Right|B|Left|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pright|Pb|Pleft|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_METATAG_CHAR = /[^\w]/;
@@ -182,17 +182,17 @@ exports.H = function(command, a, b) {
             ]
         },
         allowArguments: true,
-        type: 'HELPER'
+        type: ACSS_INSTRUCTION_TYPE_helper()
     }, { // MANDATORY ORDER
         name: 'Animation',
         func: 'Anim',
         css: 'animation:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation delay',
         func: 'Animdel',
         css: 'animation-delay:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation direction',
         func: 'Animdir',
@@ -203,12 +203,12 @@ exports.H = function(command, a, b) {
             n: 'normal',
             r: 'reverse'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation duration',
         func: 'Animdur',
         css: 'animation-duration:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation fill mode',
         func: 'Animfm',
@@ -219,7 +219,7 @@ exports.H = function(command, a, b) {
             f: 'forwards',
             n: 'none'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation iteration count',
         func: 'Animic',
@@ -227,7 +227,7 @@ exports.H = function(command, a, b) {
         expanders: {
             i: 'infinite'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation name',
         func: 'Animn',
@@ -235,7 +235,7 @@ exports.H = function(command, a, b) {
         expanders: {
             n: 'none'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation play state',
         func: 'Animps',
@@ -244,7 +244,7 @@ exports.H = function(command, a, b) {
             p: 'paused',
             r: 'running'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation timing function',
         func: 'Animtf',
@@ -258,7 +258,7 @@ exports.H = function(command, a, b) {
             se: 'step-end',
             ss: 'step-start'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Appearance',
         func: 'Ap',
@@ -267,7 +267,7 @@ exports.H = function(command, a, b) {
             a: 'auto',
             n: 'none'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border',
         func: 'Bd',
@@ -275,7 +275,7 @@ exports.H = function(command, a, b) {
         expanders: {
             n: 'none'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border X',
         func: 'Bdx',
@@ -283,7 +283,7 @@ exports.H = function(command, a, b) {
             'border-left:$',
             'border-right:$'
         ],
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border Y',
         func: 'Bdy',
@@ -291,62 +291,62 @@ exports.H = function(command, a, b) {
             'border-top:$',
             'border-bottom:$'
         ],
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border top',
         func: 'Bdt',
         css: 'border-top:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border right',
         func: 'Bdright',
         css: 'border-right:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border bottom',
         func: 'Bdb',
         css: 'border-bottom:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left',
         func: 'Bdleft',
         css: 'border-left:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border color',
         func: 'Bdc',
         css: 'border-color:$',
         expanders: ACSS_COLOR_ARGUMENTS,
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border top color',
         func: 'Bdtc',
         css: 'border-top-color:$',
         expanders: ACSS_COLOR_ARGUMENTS,
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border right color',
         func: 'Bdrightc',
         css: 'border-right-color:$',
         expanders: ACSS_COLOR_ARGUMENTS,
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border bottom color',
         func: 'Bdbc',
         css: 'border-bottom-color:$',
         expanders: ACSS_COLOR_ARGUMENTS,
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left color',
         func: 'Bdleftc',
         css: 'border-left-color:$',
         expanders: ACSS_COLOR_ARGUMENTS,
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border spacing',
         func: 'Bdsp',
         css: 'border-spacing:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border style',
         func: 'Bds',
@@ -363,7 +363,7 @@ exports.H = function(command, a, b) {
             r: 'ridge',
             s: 'solid'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border top style',
         func: 'Bdts',
@@ -380,7 +380,7 @@ exports.H = function(command, a, b) {
             r: 'ridge',
             s: 'solid'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border right style',
         func: 'Bdrights',
@@ -397,7 +397,7 @@ exports.H = function(command, a, b) {
             r: 'ridge',
             s: 'solid'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border bottom style',
         func: 'Bdbs',
@@ -414,7 +414,7 @@ exports.H = function(command, a, b) {
             r: 'ridge',
             s: 'solid'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left style',
         func: 'Bdlefts',
@@ -431,7 +431,7 @@ exports.H = function(command, a, b) {
             r: 'ridge',
             s: 'solid'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border width',
         func: 'Bdw',
@@ -441,7 +441,7 @@ exports.H = function(command, a, b) {
             t: 'thin',
             th: 'thick'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border top width',
         func: 'Bdtw',
@@ -451,7 +451,7 @@ exports.H = function(command, a, b) {
             t: 'thin',
             th: 'thick'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border right width',
         func: 'Bdrightw',
@@ -461,7 +461,7 @@ exports.H = function(command, a, b) {
             t: 'thin',
             th: 'thick'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border bottom width',
         func: 'Bdbw',
@@ -471,7 +471,7 @@ exports.H = function(command, a, b) {
             t: 'thin',
             th: 'thick'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left width',
         func: 'Bdleftw',
@@ -481,32 +481,32 @@ exports.H = function(command, a, b) {
             t: 'thin',
             th: 'thick'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius',
         func: 'Bdrs',
         css: 'border-radius:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius top right',
         func: 'Bdrstright',
         css: 'border-top-right-radius:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius bottom right',
         func: 'Bdrsbright',
         css: 'border-bottom-right-radius:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius bottom left',
         func: 'Bdrsbleft',
         css: 'border-bottom-left-radius:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius top left',
         func: 'Bdrstleft',
         css: 'border-top-left-radius:$',
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background',
         func: 'Bg',
@@ -515,7 +515,7 @@ exports.H = function(command, a, b) {
             n: 'none',
             t: 'transparent'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background image',
         func: 'Bgi',
@@ -523,13 +523,13 @@ exports.H = function(command, a, b) {
         expanders: {
             n: 'none'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background color',
         func: 'Bgc',
         css: 'background-color:$',
         expanders: ACSS_COLOR_ARGUMENTS,
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background clip',
         func: 'Bgcp',
@@ -539,7 +539,7 @@ exports.H = function(command, a, b) {
             cb: 'content-box',
             pb: 'padding-box'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background origin',
         func: 'Bgo',
@@ -549,7 +549,7 @@ exports.H = function(command, a, b) {
             cb: 'content-box',
             pb: 'padding-box'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background size',
         func: 'Bgz',
@@ -559,7 +559,7 @@ exports.H = function(command, a, b) {
             ct: 'contain',
             cv: 'cover'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background attachment',
         func: 'Bga',
@@ -569,7 +569,7 @@ exports.H = function(command, a, b) {
             l: 'local',
             s: 'scroll'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background position',
         func: 'Bgp',
@@ -585,7 +585,7 @@ exports.H = function(command, a, b) {
             c_t: 'center 0',
             c: 'center'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background position (X axis)',
         func: 'Bgpx',
@@ -595,7 +595,7 @@ exports.H = function(command, a, b) {
             right: 'right',
             c: '50%'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background position (Y axis)',
         func: 'Bgpy',
@@ -605,7 +605,7 @@ exports.H = function(command, a, b) {
             b: '100%',
             c: '50%'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background repeat',
         func: 'Bgr',
@@ -618,7 +618,7 @@ exports.H = function(command, a, b) {
             s: 'space',
             ro: 'round'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border collapse',
         func: 'Bdcl',
@@ -627,7 +627,7 @@ exports.H = function(command, a, b) {
             c: 'collapse',
             s: 'separate'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Box sizing',
         func: 'Bxz',
@@ -637,7 +637,7 @@ exports.H = function(command, a, b) {
             pb: 'padding-box',
             bb: 'border-box'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Box shadow',
         func: 'Bxsh',
@@ -645,7 +645,7 @@ exports.H = function(command, a, b) {
         expanders: {
             n: 'none'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Clear',
         func: 'Cl',
@@ -654,13 +654,13 @@ exports.H = function(command, a, b) {
             n: 'none',
             b: 'both'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Color',
         func: 'C',
         css: 'color:$',
         expanders: ACSS_COLOR_ARGUMENTS,
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Content',
         func: 'Cnt',
@@ -673,7 +673,7 @@ exports.H = function(command, a, b) {
             noq: 'no-open-quote',
             ncq: 'no-close-quote'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Cursor',
         func: 'Cur',
@@ -714,7 +714,7 @@ exports.H = function(command, a, b) {
             zi: 'zoom-in',
             zo: 'zoom-out'
         },
-        type: 'RULE'
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Display',
         func: 'D',
@@ -1682,7 +1682,12 @@ exports.H = function(command, a, b) {
             m: 'miter'
         }
     }];
-
+    function ACSS_INSTRUCTION_TYPE_rule() {
+        return 'RULE';
+    }
+    function ACSS_INSTRUCTION_TYPE_helper() {
+        return 'HELPER';
+    }
     var PSEUDO_CLASSES = [{
         acssValue: ':a',
         cssValue: ':active'
@@ -2427,11 +2432,22 @@ exports.H = function(command, a, b) {
             throw new Error('Unsupported ACSS rule "' + components[1] + '".');
         }
         var acssRule = ACSS_RULES[i];
+        if (acssRule.type === ACSS_INSTRUCTION_TYPE_rule()) {
+            return ACSS_INSTRUCTION_STRING_parseRule(acssRule, components);
+        }
+        else if (acssRule.type === ACSS_INSTRUCTION_TYPE_helper()) {
+            return ACSS_INSTRUCTION_STRING_parseHelper(acssRule, components);
+        }
+        else {
+            throw new Error('ACSS config - Missing "type".');
+        }
+    }
+    function ACSS_INSTRUCTION_STRING_parseRule(acssRule, components) {
         var arg = ACSS_INSTRUCTION_VALUE_transform(acssRule, components[2]);
         var important = components[3] === '!';
         var pseudoClasses = ACSS_PSEUDO_CLASSES_STRING_parse(components[4]);
         var pseudoElements = ACSS_PSEUDO_ELEMENTS_STRING_parse(components[5]);
-        return ACSS_INSTRUCTION_compose(acssRule, arg, important, pseudoClasses, pseudoElements);
+        return ACSS_INSTRUCTION_composeRule(acssRule, arg, important, pseudoClasses, pseudoElements);
     }
     function ACSS_INSTRUCTION_VALUE_transform(acssRule, instructionValue) {
         instructionValue = ACSS_INSTRUCTION_VALUE_transformColors(instructionValue);
@@ -2660,7 +2676,7 @@ exports.H = function(command, a, b) {
             score: score
         };
     }
-    function ACSS_INSTRUCTION_compose(acssRule, arg, important, pseudoClasses, pseudoElements) {
+    function ACSS_INSTRUCTION_composeRule(acssRule, arg, important, pseudoClasses, pseudoElements) {
         return {
             acssRule: acssRule,
             argument: arg,
@@ -2668,6 +2684,10 @@ exports.H = function(command, a, b) {
             pseudoClasses: pseudoClasses,
             pseudoElements: pseudoElements
         };
+    }
+    function ACSS_INSTRUCTION_STRING_parseHelper(/* acssHelper, components */) {
+        console.log('ACSS_INSTRUCTION_STRING_parseHelper()');
+        return {};
     }
     function ACSS_compose(styleID, media) {
         return {
