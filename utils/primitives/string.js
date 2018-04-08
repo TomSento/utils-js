@@ -1048,6 +1048,11 @@ exports.strReplaceBetween = function(str, i, j, part) {
 exports.strReplaceCharAt = function(str, i, ch) {
     return str.substr(0, i) + ch + str.substr(i + ch.length);
 };
+exports.strTrim = function(str, ch) {
+    ch = ch || '\\s';
+    var exp = new RegExp('^' + ch + '+|' + ch + '+$', 'gm');
+    return str.replace(exp, '');
+};
 exports.strReverse = function(str) {
     var rev = '';
     for (var i = str.length - 1; i >= 0; i--) {
