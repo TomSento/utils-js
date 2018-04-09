@@ -1,20 +1,50 @@
 exports.strPadStart = function(str, len, fill) {
     if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
-        return ''.padStart(str, len);
+        return padStart('', str, len);
     }
     else if (typeof(str) === 'string' && typeof(len) === 'number' && typeof(fill) === 'string') {
-        return str.padStart(len, fill);
+        return padStart(str, len, fill);
     }
-    throw new Error('invalidParameter');
+    else {
+        throw new Error('invalidParameter');
+    }
+    function padStart(s, l, f) {
+        l -= s.length;
+        if (l < 0) {
+            return s;
+        }
+        if (f === undefined) {
+            f = ' ';
+        }
+        while (l--) {
+            s = f + s;
+        }
+        return s;
+    }
 };
 exports.strPadEnd = function(str, len, fill) {
     if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
-        return ''.padEnd(str, len);
+        return padEnd('', str, len);
     }
     else if (typeof(str) === 'string' && typeof(len) === 'number' && typeof(fill) === 'string') {
-        return str.padEnd(len, fill);
+        return padEnd(str, len, fill);
     }
-    throw new Error('invalidParameter');
+    else {
+        throw new Error('invalidParameter');
+    }
+    function padEnd(s, l, f) {
+        l -= s.length;
+        if (l < 0) {
+            return s;
+        }
+        if (f === undefined) {
+            f = ' ';
+        }
+        while (l--) {
+            s += f;
+        }
+        return s;
+    }
 };
 exports.strHyphenize = function(str) {
     if (typeof(str) !== 'string') {
