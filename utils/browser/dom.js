@@ -302,7 +302,7 @@ exports.domAttr = function(sel, k, v) {
         return false;
     }
 };
-exports.domData = function(sel, k, v) {
+exports.domData = function(sel, k, v) { // NO ACTION FOR "document"
     if (!sel) {
         throw new Error('invalidParameter');
     }
@@ -346,17 +346,22 @@ exports.domData = function(sel, k, v) {
         if (el.__elementData && el.__elementData[k]) {
             return el.__elementData[k];
         }
-        return el.dataset[k] || null;
+        if (el.dataset) {
+            return el.dataset[k] || null;
+        }
+        return null; // "document" DOES NOT HAVE "dataset"
     }
     function setData(el, k, v) {
-        if (typeof(v) === 'string') {
-            el.dataset[k] = v;
-        }
-        else {
-            if (!el.__elementData) {
-                el.__elementData = {};
+        if (el.dataset) {
+            if (typeof(v) === 'string') {
+                el.dataset[k] = v;
             }
-            el.__elementData[k] = v;
+            else {
+                if (!el.__elementData) {
+                    el.__elementData = {};
+                }
+                el.__elementData[k] = v;
+            }
         }
     }
     function normalizeVal(v) {
