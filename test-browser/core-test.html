@@ -13,12 +13,12 @@
                 assert.expect(4);
                 setTimeout(function() {
                     assert.ok(true, 'ACTUAL0', 'EXPECTED0', 'ASSERT0');
-                    assert.notOk(true, 'ACTUAL1', 'EXPECTED1', 'ASSERT1');
+                    assert.ok(false, 'ACTUAL1', 'EXPECTED1', 'ASSERT1');
                     done();
                 }, 2000);
                 setTimeout(function() {
                     assert.ok(true, 'ACTUAL2', 'EXPECTED2', 'ASSERT2');
-                    assert.notOk(true, 'ACTUAL3', 'EXPECTED3', 'ASSERT3');
+                    assert.ok(false, 'ACTUAL3', 'EXPECTED3', 'ASSERT3');
                     done();
                 }, 4000);
             });
