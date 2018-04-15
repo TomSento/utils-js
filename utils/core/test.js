@@ -202,7 +202,7 @@ exports.test = function(k, fn, maxTimeout) {
                 b += self.expectedAssertions === 1 ? ' assertion' : ' assertions';
                 b += ', but ' + self.assertionCounter;
                 b += self.assertionCounter === 1 ? ' was run.' : ' were run.';
-                self.emitter.trigger('assert.result', self.composeAssertionResult(b, undefined, null, new Error('assert.notOk')));
+                self.emitter.trigger('assert.result', self.composeAssertionResult(b, undefined, null, new Error('assert.expect')));
             }
         };
         self.composeAssertionResult = function(msg, expected, actual, expectedValue, actualValue, err) {
@@ -226,16 +226,6 @@ exports.test = function(k, fn, maxTimeout) {
             }
             else {
                 return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, true, false, expectedValue, actualValue, new Error('assert.ok')));
-            }
-        },
-        notOk: function(bool, actualValue, expectedValue, msg) {
-            var self = this;
-            self.assertionCounter++;
-            if (!bool) {
-                return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, false, false, expectedValue, actualValue, null));
-            }
-            else {
-                return self.emitter.trigger('assert.result', self.composeAssertionResult(msg, false, true, expectedValue, actualValue, new Error('assert.notOk')));
             }
         },
         async: function(expectedCallbacks) {
