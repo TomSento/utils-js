@@ -8,18 +8,10 @@
  * -- RETURN RESULT AS FLAT OBJECT
  */
 exports.userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-parser-js/releases/tag/0.7.17
-    if (str !== undefined && typeof(str) !== 'string') {
+    if (str && typeof(str) !== 'string') {
         throw new Error('invalidParameter');
     }
-    if (typeof(str) === 'string' && !str) {
-        return null;
-    }
-    if (str === undefined && window && window.navigator) {
-        str = window.navigator.userAgent;
-    }
-    if (!str || typeof(str) !== 'string') {
-        return null;
-    }
+    str = typeof(str) === 'string' ? (str || '') : ((window && window.navigator && window.navigator.userAgent) || '');
     // ------------------------------------------------------------------------> CORE
     function mapUserAgent(result, ua, arrays) {
         var i = 0;
