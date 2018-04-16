@@ -13,7 +13,8 @@ exports.userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-
     }
     str = typeof(str) === 'string' ? (str || '') : ((window && window.navigator && window.navigator.userAgent) || '');
     // ------------------------------------------------------------------------> CORE
-    function mapUserAgent(result, ua, arrays) {
+    function mapUserAgent(ua, arrays) {
+        var result = {};
         var i = 0;
         var matches = null;
         while (i < arrays.length && !matches) { // LOOP THROUGH ALL REGEXES MAPS
@@ -83,7 +84,7 @@ exports.userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-
         return match;
         function strHas(str1, str2) {
             if (typeof(str1) === 'string') {
-                return str1.toLowerCase().indexOf(str2.toLowerCase()) !== -1;
+                return str1.toLowerCase().indexOf(str2.toLowerCase()) >= 0;
             }
             return false;
         }
@@ -95,11 +96,11 @@ exports.userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-
         return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
     }
     // ------------------------------------------------------------------------> CONFIG
-    var MODEL = 'model';
     var NAME = 'name';
-    var TYPE = 'type';
-    var VENDOR = 'vendor';
     var VERSION = 'version';
+    var VENDOR = 'vendor';
+    var MODEL = 'model';
+    var TYPE = 'type';
     var ARCHITECTURE = 'architecture';
 
     var CONSOLE = 'CONSOLE';
@@ -502,37 +503,22 @@ exports.userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-
         ], [NAME, VERSION]]
     };
     // ------------------------------------------------------------------------> PROCESS
-    function getBrowser(ua) {
-        return mapUserAgent({ name: null, version: null }, ua, regexes.browser);
-    }
-    function getEngine(ua) {
-        return mapUserAgent({ name: null, version: null }, ua, regexes.engine);
-    }
-    function getCPU(ua) {
-        return mapUserAgent({ architecture: null }, ua, regexes.cpu);
-    }
-    function getDevice(ua) {
-        return mapUserAgent({ vendor: null, model: null, type: null }, ua, regexes.device);
-    }
-    function getOS(ua) {
-        return mapUserAgent({ name: null, version: null }, ua, regexes.os);
-    }
-    var browser = getBrowser(str);
-    var engine = getEngine(str);
-    var os = getOS(str);
-    var device = getDevice(str);
+    var browser = mapUserAgent(str, regexes.browser);
+    var engine = mapUserAgent(str, regexes.engine);
+    var os = mapUserAgent(str, regexes.os);
+    var device = mapUserAgent(str, regexes.device);
     var result = {
         ua: str,
-        browserName: browser.name,
-        browserVersion: browser.version,
-        engineName: engine.name,
-        engineVersion: engine.version,
-        osName: os.name,
-        osVersion: os.version,
-        deviceVendor: device.vendor,
-        deviceModel: device.model,
-        deviceType: device.type,
-        cpu: getCPU().architecture
+        browserName: browser.name || null,
+        browserVersion: browser.version || null,
+        engineName: engine.name || null,
+        engineVersion: engine.version || null,
+        osName: os.name || null,
+        osVersion: os.version || null,
+        deviceVendor: device.vendor || null,
+        deviceModel: device.model || null,
+        deviceType: device.type || null,
+        cpu: mapUserAgent(str, regexes.cpu).architecture || null
     };
     return result;
 };
