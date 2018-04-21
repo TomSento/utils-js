@@ -1,6 +1,8 @@
 var U = require('../../dist/utils.git');
-var browsers = require('./files/test-useragent_browsers.json'); // FROM "ua-parser 0.7.17"
+
+var browsers = require('./files/test-useragent_browsers.json'); // -----------> ALL TEST DATA FROM "ua-parser v0.7.17"
 var engines = require('./files/test-useragent_engines.json');
+var os = require('./files/test-useragent_os.json');
 
 U.arrForEach(browsers, function(test) {
     U.test('(browser) ' + test.desc, function(assert) {
@@ -20,13 +22,22 @@ U.arrForEach(engines, function(test) {
     });
 });
 
-// engines = U.arrMap(engines, function(test) {
+U.arrForEach(os, function(test) {
+    U.test('(os) ' + test.desc, function(assert) {
+        var v = U.userAgent(test.ua).osName;
+        assert.ok(v === test.expect.name, v, test.expect.name, '(os/name) ' + test.desc);
+        v = U.userAgent(test.ua).osVersion;
+        assert.ok(v === test.expect.version, v, test.expect.version, '(os/version) ' + test.desc);
+    });
+});
+
+// os = U.arrMap(os, function(test) {
 //     test.expect.name = strToSnakeCase(test.expect.name);
 //     test.expect.version = strToSnakeCase(test.expect.version);
 //     return test;
 // });
 
-// require('fs').writeFileSync('./files/test-useragent_engines-processed.json', JSON.stringify(engines, null, '    '));
+// require('fs').writeFileSync('./files/test-useragent_os-processed.json', JSON.stringify(os, null, '    '));
 
 // function strToSnakeCase(str) {
 //     if (typeof(str) === 'string') {
