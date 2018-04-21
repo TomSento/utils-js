@@ -63,7 +63,7 @@ exports.userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-
         }
         function strToSnakeCase(str) {
             if (typeof(str) === 'string') {
-                return str.replace(/\s+/, '_').toUpperCase() || null;
+                return str.replace(/\s+/g, '_').toUpperCase() || null;
             }
             return null;
         }
