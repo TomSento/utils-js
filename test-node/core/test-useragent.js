@@ -3,6 +3,7 @@ var U = require('../../dist/utils.git');
 var browsers = require('./files/test-useragent_browsers.json'); // -----------> ALL TEST DATA FROM "ua-parser v0.7.17"
 var engines = require('./files/test-useragent_engines.json');
 var os = require('./files/test-useragent_os.json');
+var devices = require('./files/test-useragent_devices.json');
 
 U.arrForEach(browsers, function(test) {
     U.test('(browser) ' + test.desc, function(assert) {
@@ -28,6 +29,17 @@ U.arrForEach(os, function(test) {
         assert.ok(v === test.expect.name, v, test.expect.name, '(os/name) ' + test.desc);
         v = U.userAgent(test.ua).osVersion;
         assert.ok(v === test.expect.version, v, test.expect.version, '(os/version) ' + test.desc);
+    });
+});
+
+U.arrForEach(devices, function(test) {
+    U.test('(device) ' + test.desc, function(assert) {
+        var v = U.userAgent(test.ua).deviceVendor;
+        assert.ok(v === test.expect.vendor, v, test.expect.vendor, '(device/vendor) ' + test.desc);
+        v = U.userAgent(test.ua).deviceModel;
+        assert.ok(v === test.expect.model, v, test.expect.model, '(device/model) ' + test.desc);
+        v = U.userAgent(test.ua).deviceType;
+        assert.ok(v === test.expect.type, v, test.expect.type, '(device/type) ' + test.desc);
     });
 });
 
