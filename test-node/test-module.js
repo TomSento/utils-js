@@ -20,13 +20,13 @@ U.SETMODULE('Wallet', function(func) {
 
 U.test('module.func (sync)', function(assert) {
     var v = U.MODULE('Wallet').func('plus', 2, 3);
-    assert.ok(v === 5, 'Sync function processes multiple arguments and returns expected result.');
+    assert.ok(v === 5, v, 5, 'Sync function processes multiple arguments and returns expected result.');
 });
 
 U.test('module.func (async)', function(assert) {
     var next = assert.async(1);
     U.MODULE('Wallet').func('calcPriceWithTax', 2, 3, function(err, v) {
-        assert.ok(v === 6, 'Async function processes multiple arguments and returns expected result.');
+        assert.ok(v === 6, v, 6, 'Async function processes multiple arguments and returns expected result.');
         next();
     });
 });

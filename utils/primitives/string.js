@@ -1,20 +1,50 @@
 exports.strPadStart = function(str, len, fill) {
     if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
-        return ''.padStart(str, len);
+        return padStart('', str, len);
     }
     else if (typeof(str) === 'string' && typeof(len) === 'number' && typeof(fill) === 'string') {
-        return str.padStart(len, fill);
+        return padStart(str, len, fill);
     }
-    throw new Error('invalidParameter');
+    else {
+        throw new Error('invalidParameter');
+    }
+    function padStart(s, l, f) {
+        l -= s.length;
+        if (l < 0) {
+            return s;
+        }
+        if (f === undefined) {
+            f = ' ';
+        }
+        while (l--) {
+            s = f + s;
+        }
+        return s;
+    }
 };
 exports.strPadEnd = function(str, len, fill) {
     if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
-        return ''.padEnd(str, len);
+        return padEnd('', str, len);
     }
     else if (typeof(str) === 'string' && typeof(len) === 'number' && typeof(fill) === 'string') {
-        return str.padEnd(len, fill);
+        return padEnd(str, len, fill);
     }
-    throw new Error('invalidParameter');
+    else {
+        throw new Error('invalidParameter');
+    }
+    function padEnd(s, l, f) {
+        l -= s.length;
+        if (l < 0) {
+            return s;
+        }
+        if (f === undefined) {
+            f = ' ';
+        }
+        while (l--) {
+            s += f;
+        }
+        return s;
+    }
 };
 exports.strHyphenize = function(str) {
     if (typeof(str) !== 'string') {
@@ -1048,6 +1078,11 @@ exports.strReplaceBetween = function(str, i, j, part) {
 exports.strReplaceCharAt = function(str, i, ch) {
     return str.substr(0, i) + ch + str.substr(i + ch.length);
 };
+exports.strTrim = function(str, ch) {
+    ch = ch || '\\s';
+    var exp = new RegExp('^' + ch + '+|' + ch + '+$', 'gm');
+    return str.replace(exp, '');
+};
 exports.strReverse = function(str) {
     var rev = '';
     for (var i = str.length - 1; i >= 0; i--) {
@@ -1060,12 +1095,18 @@ exports.strHas = function(str, v) {
 };
 exports.strUntil = function(str, exp) {
     var arr = str.split(exp);
-    return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
+    if (Array.isArray(arr)) {
+        return arr[0] === str ? null : arr[0];
+    }
+    return null;
 };
 exports.strFromUntil = function(str, leftIndex, exp) {
     str = str.substring(leftIndex);
     var arr = str.split(exp);
-    return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
+    if (Array.isArray(arr)) {
+        return arr[0] === str ? null : arr[0];
+    }
+    return null;
 };
 exports.strReverseUntil = function(str, exp) {
     var rev = '';
@@ -1073,7 +1114,10 @@ exports.strReverseUntil = function(str, exp) {
         rev += str[i];
     }
     var arr = rev.split(exp);
-    return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
+    if (Array.isArray(arr)) {
+        return arr[0] === str ? null : arr[0];
+    }
+    return null;
 };
 exports.strReverseFromUntil = function(str, leftIndex, exp) {
     str = str.substring(0, leftIndex);
@@ -1082,7 +1126,10 @@ exports.strReverseFromUntil = function(str, leftIndex, exp) {
         rev += str[i];
     }
     var arr = rev.split(exp);
-    return (Array.isArray(arr) && arr[0]) ? arr[0] : '';
+    if (Array.isArray(arr)) {
+        return arr[0] === str ? null : arr[0];
+    }
+    return null;
 };
 exports.strMatchLen = function(str, regex, i) {
     var matches = str.match(regex);

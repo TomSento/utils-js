@@ -6,6 +6,7 @@ var files = [
     'utils/_internal.js',
     'utils/core/log.js',
     'utils/core/test.js',
+    'utils/core/userAgent.js',
     'utils/core/generators.js',
     'utils/primitives/object.js',
     'utils/primitives/array.js',
@@ -16,6 +17,7 @@ var files = [
     'utils/core/modules.js',
     'utils/core/proc.js',
     'utils/core/h.js',
+    'utils/browser/browser.js',
     'utils/browser/ajax.js',
     'utils/browser/dom.js',
     'utils/browser/route0.js'

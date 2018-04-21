@@ -12,22 +12,22 @@
                 var done = assert.async(2);
                 assert.expect(4);
                 setTimeout(function() {
-                    assert.ok(true, 'ASSERT0');
-                    assert.notOk(true, 'ASSERT1');
+                    assert.ok(true, 'ACTUAL0', 'EXPECTED0', 'ASSERT0');
+                    assert.ok(false, 'ACTUAL1', 'EXPECTED1', 'ASSERT1');
                     done();
                 }, 2000);
                 setTimeout(function() {
-                    assert.ok(true, 'ASSERT2');
-                    assert.notOk(true, 'ASSERT3');
+                    assert.ok(true, 'ACTUAL2', 'EXPECTED2', 'ASSERT2');
+                    assert.ok(false, 'ACTUAL3', 'EXPECTED3', 'ASSERT3');
                     done();
                 }, 4000);
             });
             U.test('errorBuilder.getData().setName()', function(assert) {
                 assert.expect(1);
-                assert.ok(true, 'ASSERT4');
+                assert.ok(true, 'ACTUAL4', 'EXPECTED4', 'ASSERT4');
             });
             U.test('errorBuilder.getData().getAge()', function(assert) {
-                assert.ok(true, 'ASSERT5');
+                assert.ok(true, 'ACTUAL5', 'EXPECTED5', 'ASSERT5');
             });
         });
     </script>
