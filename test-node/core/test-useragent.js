@@ -4,6 +4,7 @@ var browsers = require('./files/test-useragent_browsers.json'); // -----------> 
 var engines = require('./files/test-useragent_engines.json');
 var os = require('./files/test-useragent_os.json');
 var devices = require('./files/test-useragent_devices.json');
+var cpu = require('./files/test-useragent_cpu.json');
 
 U.arrForEach(browsers, function(test) {
     U.test('(browser) ' + test.desc, function(assert) {
@@ -43,17 +44,9 @@ U.arrForEach(devices, function(test) {
     });
 });
 
-// os = U.arrMap(os, function(test) {
-//     test.expect.name = strToSnakeCase(test.expect.name);
-//     test.expect.version = strToSnakeCase(test.expect.version);
-//     return test;
-// });
-
-// require('fs').writeFileSync('./files/test-useragent_os-processed.json', JSON.stringify(os, null, '    '));
-
-// function strToSnakeCase(str) {
-//     if (typeof(str) === 'string') {
-//         return str.replace(/\s+/g, '_').toUpperCase() || null;
-//     }
-//     return null;
-// }
+U.arrForEach(cpu, function(test) {
+    U.test('(cpu) ' + test.desc, function(assert) {
+        var v = U.userAgent(test.ua).cpu;
+        assert.ok(v === test.expect.architecture, v, test.expect.architecture, '(cpu) ' + test.desc);
+    });
+});
