@@ -24,11 +24,8 @@ function Error2(problem, message) {
 }
 Error2.prototype = {
     log: function() {
-        var str = this.id;
-        if (this.message) {
-            str += ': ' + this.message;
-        }
-        exports.logWarn(str);
+        var msg = this.message ? (this.id + ' - ' + this.message) : this.id;
+        exports.logWarn(msg);
     },
     throw: function() {
         throw new Error(this.id);
@@ -36,6 +33,10 @@ Error2.prototype = {
     logAndThrow: function() {
         this.log();
         this.throw();
+    },
+    toNative: function() {
+        var msg = this.message ? (this.id + ' - ' + this.message) : this.id;
+        return new Error(msg);
     },
     toString: function() {
         return JSON.stringify(this, null, '    ');
