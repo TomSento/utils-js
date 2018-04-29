@@ -49,39 +49,17 @@ exports.SETSCHEMA = function(k, fn) {
             }
             return eb;
         },
-        /**
-         * Does not validates.
-         * In case of type missmatch assigns empty value.
-         * In case of empty value use normalized empty value.
-         *
-         * - (nonExisting|typeMissmatch) attr {String|Object|Date|Number} -> null
-         * - (nonExisting|typeMissmatch) attr {Array} -> []
-         * - (nonExisting|typeMissmatch) func -> function() {}
-         */
-        normalize: function(obj) {
-            var norm = {};
+        clean: function(obj) {
+            if (!obj || typeof(obj) !== 'object') {
+                throw new Error('invalidParameter');
+            }
+            var tmp = {};
             for (var k in this.rule) {
                 if (this.rule.hasOwnProperty(k)) {
-                    var rule = this.rule[k];
-                    var val = obj[k];
-                    var typ = Object.prototype.toString.call(val);
-                    if (!val || typ !== rule.type) {
-                        if (rule.type === '[object Array]') {
-                            norm[k] = [];
-                        }
-                        else if (rule.type == '[object Function]') {
-                            norm[k] = function() {};
-                        }
-                        else {
-                            norm[k] = null;
-                        }
-                    }
-                    else {
-                        norm[k] = val;
-                    }
+                    tmp[k] = obj[k];
                 }
             }
-            return norm;
+            return tmp;
         },
         makeError: function(name, lan) {
             if (!name || typeof(name) !== 'string') {

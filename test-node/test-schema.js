@@ -42,6 +42,3 @@ U.log('errors default sk locale: ', errors);
 if (errors.hasError()) {
     // errors.throwFirst();
 }
-U.log('before normalize: ', obj);
-var norm = U.SCHEMA('User').normalize(obj);
-U.log('normalized: ', norm);
