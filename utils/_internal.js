@@ -1,4 +1,6 @@
 /* eslint-disable no-underscore-dangle */
+exports.noop = function() {
+};
 exports.malloc = function(prefix) {
     if (!exports.__cache) {
         exports.__cache = {};
