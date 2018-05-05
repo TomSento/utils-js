@@ -26,13 +26,49 @@ exports.arrFilter = function(arr, fn) {
     }
     return acc;
 };
-exports.arrFind = function(arr, fn) {
-    for (var i = 0; i < arr.length; i++) {
-        if (fn.call(null, arr[i], i, arr)) {
+exports.arrFind = function(arr, fn, v) {
+    var isFN = typeof(fn) === 'function';
+    var isV = v !== undefined;
+    for (var i = 0, len = arr.length; i < len; i++) {
+        if (isFN) {
+            if (fn(arr[i], i)) {
+                return arr[i];
+            }
+            continue;
+        }
+        if (isV) {
+            if (arr[i] && arr[i][fn] === v) {
+                return arr[i];
+            }
+            continue;
+        }
+        if (arr[i] === fn) {
             return arr[i];
         }
     }
     return null;
+};
+exports.arrFindIndex = function(arr, fn, v) {
+    var isFN = typeof(fn) === 'function';
+    var isV = v !== undefined;
+    for (var i = 0, len = arr.length; i < len; i++) {
+        if (isFN) {
+            if (fn(arr[i], i)) {
+                return i;
+            }
+            continue;
+        }
+        if (isV) {
+            if (arr[i] && arr[i][fn] === v) {
+                return i;
+            }
+            continue;
+        }
+        if (arr[i] === fn) {
+            return i;
+        }
+    }
+    return -1;
 };
 exports.arrRemove = function(arr, fn, v) { // FROM TOTAL.JS
     var isFN = typeof(fn) === 'function';
