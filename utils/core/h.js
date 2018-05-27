@@ -154,33 +154,35 @@ exports.H = function(command, a, b) {
     var ACSS_RULES = [{
         name: 'Line clamp',
         func: 'LineClamp', // https://github.com/acss-io/atomizer/blob/master/src/helpers.js#L267
-        styles: {
-            '-webkit-line-clamp': '[0]',
-            'max-height': '[1]',
-            'display': '-webkit-box',
-            '-webkit-box-orient': 'vertical',
-            'overflow': 'hidden',
-            '@supports (display:-moz-box)': [
-                'display:block'
-            ]
-        },
-        rules: {
-            'a': [
-                'display:inline-block',
-                'display:-webkit-box',
-                '*display:inline',
-                'zoom:1'
-            ],
-            'a:after': [
-                'content:"."',
-                'font-size:0',
-                'visibility:hidden',
-                'display:inline-block', /* 1 */
-                'overflow:hidden', /* 1 */
-                'height:0', /* 1 */
-                'width:0' /* 1 */
-            ]
-        },
+        css: [
+            '.[[el]] {',
+            '    -webkit-line-clamp: [0];',
+            '    max-height: [1];',
+            '    display: -webkit-box;',
+            '    -webkit-box-orient: vertical;',
+            '    overflow: hidden;',
+            '}',
+            '@supports (display:-moz-box) {',
+            '    .[[el]] {',
+            '        display: block;',
+            '    }',
+            '}',
+            'a.[[el]] {',
+            '    display: inline-block;',
+            '    display: -webkit-box;',
+            '    *display: inline;',
+            '    zoom: 1;',
+            '}',
+            'a.[[el]]:after {',
+            '    content: ".";',
+            '    font-size: 0;',
+            '    visibility: hidden;',
+            '    display: inline-block;',
+            '    overflow: hidden;',
+            '    height: 0;',
+            '    width: 0;',
+            '}'
+        ],
         allowArguments: true,
         type: ACSS_INSTRUCTION_TYPE_helper()
     }, { // MANDATORY ORDER
