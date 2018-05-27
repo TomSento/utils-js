@@ -33,13 +33,14 @@ exports.SETSCHEMA = function(k, fn) {
                 if (this.rule.hasOwnProperty(k)) {
                     var v = obj[k];
                     var rule = this.rule[k];
+                    var typeMatch = false;
                     if (rule.prepare) {
-                        v = rule.prepare(v, obj);
+                        typeMatch = (Object.prototype.toString.call(v) === rule.type);
+                        v = rule.prepare(v, typeMatch, obj);
                         obj[k] = v;
                     }
-                    var act = Object.prototype.toString.call(v);
-                    var mat = (act === rule.type);
-                    if (rule.validate && !rule.validate(v, mat, obj, act, rule.type)) {
+                    typeMatch = (Object.prototype.toString.call(v) === rule.type);
+                    if (rule.validate && !rule.validate(v, typeMatch, obj)) {
                         var mes = lan
                             ? (rule.message[lan.toUpperCase()] || rule.message['default'])
                             : rule.message['default'];
