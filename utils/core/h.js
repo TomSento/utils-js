@@ -1808,14 +1808,8 @@ exports.H = function(command, a, b) {
     if (!command || typeof(command) !== 'string') {
         throw new Error('invalidParameter');
     }
-    var data = a && b ? a : null;
-    data = (data && typeof(data) === 'object') ? JSON.stringify(data) : data;
-    data = data ? ('' + data) : '';
-    var content = a && b ? (b || '') : (a || '');
-    content = Array.isArray(content) ? content.join('') : content;
-    if (typeof(content) !== 'string') {
-        throw new Error('invalidParameter');
-    }
+    var data = (a && typeof(a) === 'object') ? a : null; // ------------------> data-[key]=""
+    var content = (typeof(a) === 'string' || Array.isArray(a)) ? a : b;
     var err = BASE_CMD_validate(command);
     if (err) {
         throw err;
@@ -1915,10 +1909,10 @@ exports.H = function(command, a, b) {
         return null;
     }
     function BASE_CMD_process(cmd, data, content) {
-        data = BASE_CMD_parse(cmd, data, content);
+        data = BASE_CMD_parse(cmd, content);
         return BASE_CMD_generateHTML(data, content);
     }
-    function BASE_CMD_parse(cmd) {
+    function BASE_CMD_parse(cmd, content) {
         var type = BASE_CMD_GET_TYPE(cmd);
         if (type === BASE_CMD_TYPE_HTML_METATAG() || type === BASE_CMD_TYPE_HTML_BODYTAG()) {
             cmd = BASE_CMD_parseTriple(type, cmd);
@@ -1926,7 +1920,7 @@ exports.H = function(command, a, b) {
             if (err) {
                 throw err;
             }
-            var selector = HTML_SELECTOR_INSTRUCTION_STRING_parse(type, cmd.htmlSelectorInstructionString);
+            var selector = HTML_SELECTOR_INSTRUCTION_STRING_parse(type, cmd.htmlSelectorInstructionString, content);
             var attributes = [];
             if (cmd.htmlAttributesInstructionsString) {
                 err = HTML_ATTRIBUTES_INSTRUCTIONS_STRING_validate(cmd.htmlAttributesInstructionsString);
@@ -2128,7 +2122,7 @@ exports.H = function(command, a, b) {
         }
         return null;
     }
-    function HTML_SELECTOR_INSTRUCTION_STRING_parse(type, instructionString) {
+    function HTML_SELECTOR_INSTRUCTION_STRING_parse(type, instructionString, content) {
         var components = instructionString.match(REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS);
         var tag = null;
         var id = null;
@@ -2158,6 +2152,20 @@ exports.H = function(command, a, b) {
                     }
                     if (!HTML_TEMPLATES[tag]) {
                         throw new Error('Missing template for "' + tag + '" tag.');
+                    }
+                    else { // ------------------------------------------------> NORMALIZE CONTENT ARGUMENT
+                        if (HTML_TEMPLATES[tag].indexOf('[[content]]') === -1) {
+                            if (content !== undefined) {
+                                throw new Error('Unexpected content for "' + tag + '" tag.');
+                            }
+                        }
+                        else {
+                            content = content == null ? '' : content;
+                            if (typeof(content) !== 'string' && !Array.isArray(content)) {
+                                throw new Error('Unexpected content for "' + tag + '" tag.');
+                            }
+                            content = Array.isArray(content) ? content.join('') : content;
+                        }
                     }
                 }
             }
