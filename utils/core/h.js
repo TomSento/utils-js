@@ -25,7 +25,6 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
 
     var REG_BASE_CMD_IS_ACSS_MEDIA_QUERY_VAR = /^@/;
-    var REG_BASE_CMD_IS_ACSS_VAR = /^--/;
     var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Meta|Title)(?![A-Za-z0-9_-])/;
     var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Btn|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-Za-z0-9_-])/; // https://www.w3schools.com/tags/default.asp
 
@@ -1927,9 +1926,6 @@ exports.H = function(command, a, b) {
         if (type === BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR()) {
             return ACSS_MEDIA_QUERY_VAR_CMD_process(cmd);
         }
-        else if (type === BASE_CMD_TYPE_ACSS_VAR()) {
-            return ACSS_VAR_CMD_process(cmd);
-        }
         else if (type === BASE_CMD_TYPE_HTML_METATAG() || type === BASE_CMD_TYPE_HTML_BODYTAG()) {
             cmd = BASE_CMD_parseTriple(type, cmd);
             var err = HTML_SELECTOR_INSTRUCTION_STRING_validate(type, cmd.htmlSelectorInstructionString);
@@ -1969,9 +1965,6 @@ exports.H = function(command, a, b) {
         if (REG_BASE_CMD_IS_ACSS_MEDIA_QUERY_VAR.test(cmd)) {
             return BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR();
         }
-        else if (REG_BASE_CMD_IS_ACSS_VAR.test(cmd)) {
-            return BASE_CMD_TYPE_ACSS_VAR();
-        }
         else if (REG_BASE_CMD_IS_METATAG.test(cmd)) {
             return BASE_CMD_TYPE_HTML_METATAG();
         }
@@ -1984,9 +1977,6 @@ exports.H = function(command, a, b) {
     }
     function BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR() {
         return 'ACSS_MEDIA_QUERY_VAR_CMD';
-    }
-    function BASE_CMD_TYPE_ACSS_VAR() {
-        return 'ACSS_VAR_CMD';
     }
     function BASE_CMD_TYPE_HTML_METATAG() {
         return 'HTML_METATAG_CMD';
@@ -2050,35 +2040,6 @@ exports.H = function(command, a, b) {
         return v;
     }
     function ACSS_MEDIA_QUERY_VAR_compose(key, value) {
-        return {
-            key: key,
-            value: value
-        };
-    }
-    function ACSS_VAR_CMD_process(cmd) {
-        var variable = ACSS_VAR_parse(cmd);
-        var cache = exports.malloc('__H');
-        var variables = cache('variables') || {};
-        if (variables[variable.key]) {
-            throw new Error('No duplicate variable.');
-        }
-        else {
-            variables[variable.key] = variable.value;
-            cache('variables', variables);
-        }
-    }
-    function ACSS_VAR_parse(cmd) {
-        cmd = cmd.split(/\s*:\s*/);
-        var key = cmd[0];
-        var value = cmd[1];
-        if (key && value) {
-            return ACSS_VAR_compose(key, value);
-        }
-        else {
-            throw new Error('Invalid ACSS variable separator.');
-        }
-    }
-    function ACSS_VAR_compose(key, value) {
         return {
             key: key,
             value: value
@@ -2692,7 +2653,6 @@ exports.H = function(command, a, b) {
         }
         var media = cache('media')[i];
         var score = i + 1;
-        console.log('media: ', media);
         return ACSS_MEDIA_compose(media.value, score);
     }
     function ACSS_MEDIA_compose(value, score) {
