@@ -2683,6 +2683,13 @@ exports.H = function(command, a, b) {
                 modifiers = modifiers.concat(tmp.join(' '));
             }
         }
+        if (data && typeof(data) === 'object') {
+            for (var k in data) {
+                if (data.hasOwnProperty(k)) {
+                    modifiers = modifiers.concat(['data-' + k + "='" + JSON.stringify(data[k]) + "'"]);
+                }
+            }
+        }
         modifiers = modifiers.length === 0 ? '' : (' ' + modifiers.join(' '));
         html = html.replace('[[modifiers]]', modifiers);
         html = html.replace('[[content]]', content);
