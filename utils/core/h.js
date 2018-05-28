@@ -46,7 +46,7 @@ exports.H = function(command, a, b) {
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS = /[-_A-Z][-_A-Za-z0-9]*|[.#][-_A-Za-z0-9]+/g;
 
     var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)(?![\s)]|$)/;
-    var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S+/g;
+    var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.*?\)/g;
     var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /([^\s(]+)\((.*)\)/;
     var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR = /[()]/;
 
@@ -65,48 +65,48 @@ exports.H = function(command, a, b) {
     var REG_ACSS_MATCH_PSEUDO_ELEMENTS = /(?=::)(::[^:]+)/g;
 
     var HTML_TEMPLATES = {
-        Doc: '<!DOCTYPE html><html{modifiers}>{content}</html>',
-        Head: '<head>{content}</head>',
-        Meta: '<meta{modifiers}>',
-        Title: '<title>{content}</title>',
-        Div: '<div{modifiers}>{content}</div>',
-        Span: '<span{modifiers}>{content}</span>',
-        Input: '<input{modifiers}>',
-        Select: '<select{modifiers}>{content}</select>',
-        Option: '<option{modifiers}>{content}</option>'
+        Doc: '<!DOCTYPE html><html[[modifiers]]>[[content]]</html>',
+        Head: '<head>[[content]]</head>',
+        Meta: '<meta[[modifiers]]>',
+        Title: '<title>[[content]]</title>',
+        Div: '<div[[modifiers]]>[[content]]</div>',
+        Span: '<span[[modifiers]]>[[content]]</span>',
+        Input: '<input[[modifiers]]>',
+        Select: '<select[[modifiers]]>[[content]]</select>',
+        Option: '<option[[modifiers]]>[[content]]</option>'
     };
     var HTML_ATTRIBUTES = {
         Doc: [{
             name: 'Language',
             func: 'Lang',
             allowArgument: true,
-            html: 'lang={0}'
+            html: 'lang=$'
         }],
         Meta: [{ // MANDATORY ORDER
             name: 'Charset',
             func: 'Charset',
             allowArgument: true,
-            html: 'charset={0}'
+            html: 'charset=$'
         }, {
             name: 'Name',
             func: 'Name',
             allowArgument: true,
-            html: 'name={0}'
+            html: 'name=$'
         }, {
             name: 'Property',
             func: 'Property',
             allowArgument: true,
-            html: 'property={0}'
+            html: 'property=$'
         }, {
             name: 'HttpEquiv',
             func: 'HttpEquiv',
             allowArgument: true,
-            html: 'http-equiv={0}'
+            html: 'http-equiv=$'
         }, {
             name: 'Content',
             func: 'Content',
             allowArgument: true,
-            html: 'content={0}'
+            html: 'content=$'
         }],
         Input: [{
             name: 'Checked',
@@ -1916,6 +1916,7 @@ exports.H = function(command, a, b) {
     }
     function BASE_CMD_process(cmd, data, content) {
         data = BASE_CMD_parse(cmd, data, content);
+        return BASE_CMD_generateHTML(data, content);
     }
     function BASE_CMD_parse(cmd) {
         var type = BASE_CMD_GET_TYPE(cmd);
@@ -2648,6 +2649,36 @@ exports.H = function(command, a, b) {
             attributes: attributes,
             acss: acss
         };
+    }
+    function BASE_CMD_generateHTML(data, content) {
+        var html = BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes, content);
+        return html;
+    }
+    function BASE_CMD_generateElementHTMLStructure(selector, attributes, content) {
+        var html = HTML_TEMPLATES[selector.htmlSelectorTag];
+        var modifiers = [];
+        if (selector.htmlSelectorID) {
+            modifiers = modifiers.concat(['id="' + selector.htmlSelectorID + '"']);
+        }
+        if (Array.isArray(selector.htmlSelectorClasses) && selector.htmlSelectorClasses.length > 0) {
+            modifiers = modifiers.concat(['classes="' + selector.htmlSelectorClasses.join(' ') + '"']);
+        }
+        if (Array.isArray(attributes) && attributes.length > 0) {
+            var tmp = [];
+            for (var i = 0, l = attributes.length; i < l; i++) {
+                var attribute = attributes[i];
+                if (attribute && attribute.html) {
+                    tmp = tmp.concat(attribute.html.indexOf('$') >= 0 ? [attribute.html.replace('$', '"' + attribute.instructionValue + '"')] : [attribute.html]);
+                }
+            }
+            if (tmp.length > 0) {
+                modifiers = modifiers.concat(tmp.join(' '));
+            }
+        }
+        modifiers = modifiers.length === 0 ? '' : (' ' + modifiers.join(' '));
+        html = html.replace('[[modifiers]]', modifiers);
+        html = html.replace('[[content]]', content);
+        return html;
     }
 
     /**
