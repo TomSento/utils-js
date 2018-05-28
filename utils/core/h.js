@@ -1933,7 +1933,7 @@ exports.H = function(command, a, b) {
                 if (err) {
                     throw err;
                 }
-                attributes = HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(selector.htmlSelectorTag, cmd.htmlAttributesInstructionsString);
+                attributes = HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(selector.tag, cmd.htmlAttributesInstructionsString);
             }
             var acss = {};
             if (cmd.acssInstructionsString) {
@@ -1943,7 +1943,7 @@ exports.H = function(command, a, b) {
                 }
                 var styleID = genStyleID();
                 acss = ACSS_INSTRUCTIONS_STRING_parse(styleID, cmd.acssInstructionsString);
-                selector.htmlSelectorClasses.unshift(styleID);
+                selector.classes.unshift(styleID);
             }
             console.log('CMD:', cmd);
             console.log('SELECTOR:', selector);
@@ -2130,45 +2130,45 @@ exports.H = function(command, a, b) {
     }
     function HTML_SELECTOR_INSTRUCTION_STRING_parse(type, instructionString) {
         var components = instructionString.match(REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS);
-        var htmlSelectorTag = null;
-        var htmlSelectorID = null;
-        var htmlSelectorClasses = [];
+        var tag = null;
+        var id = null;
+        var classes = [];
         for (var i = 0, l = components.length; i < l; i++) {
             var component = components[i];
             if (component) {
                 if (i > 0) {
                     var ch = component[0];
                     if (ch === '.') {
-                        htmlSelectorClasses.push(component.slice(1));
+                        classes.push(component.slice(1));
                     }
                     else if (ch === '#') {
-                        if (htmlSelectorClasses.length > 0) {
+                        if (classes.length > 0) {
                             throw new Error('HTML selector instruction string - No invalid order.');
                         }
-                        if (htmlSelectorID) {
+                        if (id) {
                             throw new Error('HTML selector instruction string - No multiple IDs. ');
                         }
-                        htmlSelectorID = component.slice(1);
+                        id = component.slice(1);
                     }
                 }
                 else {
-                    htmlSelectorTag = component;
-                    if (!htmlSelectorTag) {
+                    tag = component;
+                    if (!tag) {
                         throw new Error('Unable to parse HTML selector tag.');
                     }
-                    if (!HTML_TEMPLATES[htmlSelectorTag]) {
-                        throw new Error('Missing template for "' + htmlSelectorTag + '" tag.');
+                    if (!HTML_TEMPLATES[tag]) {
+                        throw new Error('Missing template for "' + tag + '" tag.');
                     }
                 }
             }
         }
-        return HTML_SELECTOR_INSTRUCTION_compose(htmlSelectorTag, htmlSelectorID, htmlSelectorClasses);
+        return HTML_SELECTOR_INSTRUCTION_compose(tag, id, classes);
     }
-    function HTML_SELECTOR_INSTRUCTION_compose(htmlSelectorTag, htmlSelectorID, htmlSelectorClasses) {
+    function HTML_SELECTOR_INSTRUCTION_compose(tag, id, classes) {
         return {
-            htmlSelectorTag: htmlSelectorTag,
-            htmlSelectorID: htmlSelectorID,
-            htmlSelectorClasses: htmlSelectorClasses
+            tag: tag,
+            id: id,
+            classes: classes
         };
     }
     function HTML_ATTRIBUTES_INSTRUCTIONS_STRING_validate(instructionsString) {
@@ -2655,13 +2655,13 @@ exports.H = function(command, a, b) {
         return html;
     }
     function BASE_CMD_generateElementHTMLStructure(selector, attributes, content) {
-        var html = HTML_TEMPLATES[selector.htmlSelectorTag];
+        var html = HTML_TEMPLATES[selector.tag];
         var modifiers = [];
-        if (selector.htmlSelectorID) {
-            modifiers = modifiers.concat(['id="' + selector.htmlSelectorID + '"']);
+        if (selector.id) {
+            modifiers = modifiers.concat(['id="' + selector.id + '"']);
         }
-        if (Array.isArray(selector.htmlSelectorClasses) && selector.htmlSelectorClasses.length > 0) {
-            modifiers = modifiers.concat(['classes="' + selector.htmlSelectorClasses.join(' ') + '"']);
+        if (Array.isArray(selector.classes) && selector.classes.length > 0) {
+            modifiers = modifiers.concat(['classes="' + selector.classes.join(' ') + '"']);
         }
         if (Array.isArray(attributes) && attributes.length > 0) {
             var tmp = [];
