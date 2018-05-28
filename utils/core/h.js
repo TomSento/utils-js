@@ -24,7 +24,6 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN = /\(\s/;
     var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
 
-    var REG_BASE_CMD_IS_ACSS_MEDIA_QUERY_VAR = /^@/;
     var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Meta|Title)(?![A-Za-z0-9_-])/;
     var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Btn|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-Za-z0-9_-])/; // https://www.w3schools.com/tags/default.asp
 
@@ -51,8 +50,6 @@ exports.H = function(command, a, b) {
     var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /([^\s(]+)\((.*)\)/;
     var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR = /[()]/;
 
-    var REG_ACSS_MEDIA_QUERY_VAR_CMD_MATCH_COMPONENTS = /^@(\S+): (\d+)px(?!.)/;
-    var REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR = /[^a-z]/;
     var REG_ACSS_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)\S*\(/;
     var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.*?\)\S*/g;
     // https://regex101.com/r/tIaCUX/20 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
@@ -1918,15 +1915,11 @@ exports.H = function(command, a, b) {
         return null;
     }
     function BASE_CMD_process(cmd, data, content) {
-        ACSS_MEDIA_QUERY_VAR_setDefault();
         data = BASE_CMD_parse(cmd, data, content);
     }
     function BASE_CMD_parse(cmd) {
         var type = BASE_CMD_GET_TYPE(cmd);
-        if (type === BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR()) {
-            return ACSS_MEDIA_QUERY_VAR_CMD_process(cmd);
-        }
-        else if (type === BASE_CMD_TYPE_HTML_METATAG() || type === BASE_CMD_TYPE_HTML_BODYTAG()) {
+        if (type === BASE_CMD_TYPE_HTML_METATAG() || type === BASE_CMD_TYPE_HTML_BODYTAG()) {
             cmd = BASE_CMD_parseTriple(type, cmd);
             var err = HTML_SELECTOR_INSTRUCTION_STRING_validate(type, cmd.htmlSelectorInstructionString);
             if (err) {
@@ -1962,10 +1955,7 @@ exports.H = function(command, a, b) {
         }
     }
     function BASE_CMD_GET_TYPE(cmd) {
-        if (REG_BASE_CMD_IS_ACSS_MEDIA_QUERY_VAR.test(cmd)) {
-            return BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR();
-        }
-        else if (REG_BASE_CMD_IS_METATAG.test(cmd)) {
+        if (REG_BASE_CMD_IS_METATAG.test(cmd)) {
             return BASE_CMD_TYPE_HTML_METATAG();
         }
         else if (REG_BASE_CMD_IS_BODYTAG.test(cmd)) {
@@ -1975,75 +1965,11 @@ exports.H = function(command, a, b) {
             return null;
         }
     }
-    function BASE_CMD_TYPE_ACSS_MEDIA_QUERY_VAR() {
-        return 'ACSS_MEDIA_QUERY_VAR_CMD';
-    }
     function BASE_CMD_TYPE_HTML_METATAG() {
         return 'HTML_METATAG_CMD';
     }
     function BASE_CMD_TYPE_HTML_BODYTAG() {
         return 'HTML_BODYTAG_CMD';
-    }
-    function ACSS_MEDIA_QUERY_VAR_setDefault() {
-        var cache = exports.malloc('__H');
-        if (!cache('media')) {
-            cache('media', [ACSS_MEDIA_QUERY_VAR_compose('@default', null)]);
-        }
-    }
-    function ACSS_MEDIA_QUERY_VAR_CMD_process(cmd) {
-        var breakpoint = ACSS_MEDIA_QUERY_VAR_parse(cmd);
-        var cache = exports.malloc('__H');
-        var media = cache('media');
-        if (arrFindIndex(media, 'key', breakpoint.key) >= 0) {
-            throw new Error('ACSS media query variable - No duplicate key.');
-        }
-        var i = arrFindIndex(media, function(v) {
-            if (!isNaN(parseInt(v.value))) {
-                return breakpoint.value <= v.value;
-            }
-        });
-        if (i >= 0) {
-            throw new Error('ACSS media query variable - No duplicate or unordered value.');
-        }
-        media = media.concat([breakpoint]);
-        cache('media', media);
-    }
-    function ACSS_MEDIA_QUERY_VAR_parse(cmd) {
-        var components = cmd.match(REG_ACSS_MEDIA_QUERY_VAR_CMD_MATCH_COMPONENTS);
-        if (!components) {
-            throw new Error('ACSS media query variable - Command must follow @<breakpoint>: <value>px syntax.');
-        }
-        var key = components[1];
-        var err = ACSS_MEDIA_QUERY_VAR_KEY_validate(key);
-        if (err) {
-            throw err;
-        }
-        var value = ACSS_MEDIA_QUERY_VAR_VALUE_parse(components[2]);
-        return ACSS_MEDIA_QUERY_VAR_compose('@' + key, value);
-    }
-    function ACSS_MEDIA_QUERY_VAR_KEY_validate(v) {
-        return validateAll(v, [
-            ACSS_MEDIA_QUERY_VAR_KEY_noUnallowedChar
-        ]);
-    }
-    function ACSS_MEDIA_QUERY_VAR_KEY_noUnallowedChar(v) {
-        if (REG_ACSS_MEDIA_QUERY_VAR_KEY_NO_UNALLOWED_CHAR.test(v)) {
-            return new Error('ACSS media query variable key - No unallowed char.');
-        }
-        return null;
-    }
-    function ACSS_MEDIA_QUERY_VAR_VALUE_parse(v) {
-        v = parseInt(v);
-        if (isNaN(v) || v < 0) {
-            throw new Error('ACSS media query variable value - Unable to parse.');
-        }
-        return v;
-    }
-    function ACSS_MEDIA_QUERY_VAR_compose(key, value) {
-        return {
-            key: key,
-            value: value
-        };
     }
     function BASE_CMD_parseTriple(type, cmd) {
         cmd = cmd.split(REG_BASE_CMD_SPLIT_BY_PIPE);
@@ -2366,7 +2292,7 @@ exports.H = function(command, a, b) {
         for (var i = 0, l = instructionStrings.length; i < l; i++) {
             var instructionString = instructionStrings[i];
             var rule = ACSS_INSTRUCTION_STRING_parse(instructionString);
-            var score = ACSS_INSTRUCTION_composeInstructionScore(instructionString, rule.score, rule.pseudoScore, rule.mediaScore);
+            var score = ACSS_INSTRUCTION_composeInstructionScore(instructionString, rule.score, rule.pseudoScore, rule.mediaValue);
             if (i > 0) {
                 var va = score.score;
                 var vb = scores[scores.length - 1].score;
@@ -2415,8 +2341,8 @@ exports.H = function(command, a, b) {
             throw new Error('ACSS instruction string - Define either "pseudo classes" or "pseudo elements" exclusively.');
         }
         var pseudoScore = pseudoClasses.score || pseudoElements.score;
-        var media = ACSS_MEDIA_STRING_parse(components[6]);
-        return ACSS_INSTRUCTION_composeRule(acssRule, score, arg, important, pseudoClasses.array, pseudoElements.array, pseudoScore, media.value, media.score);
+        var mediaValue = ACSS_MEDIA_STRING_parse(components[6]);
+        return ACSS_INSTRUCTION_composeRule(acssRule, score, arg, important, pseudoClasses.array, pseudoElements.array, pseudoScore, mediaValue);
     }
     function ACSS_INSTRUCTION_VALUE_transform(acssRule, instructionValue) {
         instructionValue = ACSS_INSTRUCTION_VALUE_transformColors(instructionValue);
@@ -2646,22 +2572,16 @@ exports.H = function(command, a, b) {
         };
     }
     function ACSS_MEDIA_STRING_parse(mediaString) {
-        var cache = exports.malloc('__H');
-        var i = arrFindIndex(cache('media'), 'key', mediaString);
-        if (i === -1) {
-            return ACSS_MEDIA_compose(cache('media')[0].value, 1);
+        if (!mediaString) {
+            return 0; // -----------------------------------------------------> DEFAULT MEDIA QUERY
         }
-        var media = cache('media')[i];
-        var score = i + 1;
-        return ACSS_MEDIA_compose(media.value, score);
+        var mediaValue = parseInt(mediaString.slice(1));
+        if (isNaN(mediaValue) || mediaValue <= 0 || mediaValue > 9000) {
+            throw new Error('ACSS instruction string - Media query value must be in range 0..9000.');
+        }
+        return mediaValue;
     }
-    function ACSS_MEDIA_compose(value, score) {
-        return {
-            value: value,
-            score: score
-        };
-    }
-    function ACSS_INSTRUCTION_composeRule(acssRule, score, arg, important, pseudoClasses, pseudoElements, pseudoScore, mediaValue, mediaScore) {
+    function ACSS_INSTRUCTION_composeRule(acssRule, score, arg, important, pseudoClasses, pseudoElements, pseudoScore, mediaValue) {
         return {
             acssRule: acssRule,
             score: score,
@@ -2670,8 +2590,7 @@ exports.H = function(command, a, b) {
             pseudoClasses: pseudoClasses,
             pseudoElements: pseudoElements,
             pseudoScore: pseudoScore,
-            mediaValue: mediaValue,
-            mediaScore: mediaScore
+            mediaValue: mediaValue
         };
     }
     function ACSS_INSTRUCTION_STRING_parseHelper(acssHelper, score, components) {
@@ -2688,13 +2607,13 @@ exports.H = function(command, a, b) {
             score: score,
             args: args,
             pseudoScore: 0,
-            mediaScore: 0
+            mediaValue: 0
         };
     }
-    function ACSS_INSTRUCTION_composeInstructionScore(instructionString, ruleScore, pseudoScore, mediaScore) {
+    function ACSS_INSTRUCTION_composeInstructionScore(instructionString, ruleScore, pseudoScore, mediaValue) {
         return {
             instructionString: instructionString,
-            score: (ruleScore * 1000000) + (pseudoScore * 100) + mediaScore
+            score: parseInt(padEnd('' + (mediaValue + 1), 5, '0') + padEnd('' + ruleScore, 4, '0') + padEnd('' + pseudoScore, 2, '0'))
         };
     }
     function ACSS_INSTRUCTIONS_STRING_composeOrderError(scores) {
@@ -2944,6 +2863,19 @@ exports.H = function(command, a, b) {
             var vb = k ? b[k] : b;
             return va > vb;
         }
+    }
+    function padEnd(s, l, f) {
+        l -= s.length;
+        if (l < 0) {
+            return s;
+        }
+        if (f === undefined) {
+            f = ' ';
+        }
+        while (l--) {
+            s += f;
+        }
+        return s;
     }
     function genStyleID() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
