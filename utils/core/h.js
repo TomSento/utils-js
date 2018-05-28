@@ -2399,30 +2399,30 @@ exports.H = function(command, a, b) {
         if (!instructionStrings) {
             throw new Error('ACSS instructions string - Unable to match any instruction string.');
         }
-        var media = ACSS_composeEmptyMediaGroups();
+        var scores = [];
+        var rules = [];
+        var unordered = false;
         for (var i = 0, l = instructionStrings.length; i < l; i++) {
             var instructionString = instructionStrings[i];
             var rule = ACSS_INSTRUCTION_STRING_parse(instructionString);
-            console.log('RULE:', rule);
+            var score = ACSS_INSTRUCTION_composeInstructionScore(instructionString, rule.score, rule.pseudoScore, rule.mediaScore);
+            if (i > 0) {
+                var va = score.score;
+                var vb = scores[scores.length - 1].score;
+                if (va < vb) {
+                    unordered = true;
+                }
+                else if (va === vb) {
+                    throw new Error('ACSS instructions string - Duplicate ACSS instructions.');
+                }
+            }
+            scores.push(score);
+            rules.push(rule);
         }
-        return ACSS_compose(styleID, media);
-    }
-    function ACSS_composeEmptyMediaGroups() {
-        var cache = exports.malloc('__H');
-        var media = cache('media');
-        var groups = [];
-        for (var i = 0, l = media.length; i < l; i++) {
-            var v = media[i];
-            groups.push(ACSS_composeEmptyGroup(v.key, v.value));
+        if (unordered) {
+            throw ACSS_INSTRUCTIONS_STRING_composeOrderError(scores);
         }
-        return groups;
-    }
-    function ACSS_composeEmptyGroup(mediaGroupKey, mediaGroupValue) {
-        return {
-            mediaGroupKey: mediaGroupKey,
-            mediaGroupValue: mediaGroupValue,
-            styles: []
-        };
+        return ACSS_compose(styleID, rules);
     }
     function ACSS_INSTRUCTION_STRING_parse(instructionString) {
         var components = instructionString.match(REG_ACSS_INSTRUCTION_STRING_MATCH_COMPONENTS);
@@ -2433,23 +2433,29 @@ exports.H = function(command, a, b) {
         if (i === -1) {
             throw new Error('Unsupported ACSS rule "' + components[1] + '".');
         }
+        var score = i + 1;
         var acssRule = ACSS_RULES[i];
         if (acssRule.type === ACSS_INSTRUCTION_TYPE_rule()) {
-            return ACSS_INSTRUCTION_STRING_parseRule(acssRule, components);
+            return ACSS_INSTRUCTION_STRING_parseRule(acssRule, score, components);
         }
         else if (acssRule.type === ACSS_INSTRUCTION_TYPE_helper()) {
-            return ACSS_INSTRUCTION_STRING_parseHelper(acssRule, components);
+            return ACSS_INSTRUCTION_STRING_parseHelper(acssRule, score, components);
         }
         else {
             throw new Error('ACSS config - Missing "type".');
         }
     }
-    function ACSS_INSTRUCTION_STRING_parseRule(acssRule, components) {
+    function ACSS_INSTRUCTION_STRING_parseRule(acssRule, score, components) {
         var arg = ACSS_INSTRUCTION_VALUE_transform(acssRule, components[2]);
         var important = components[3] === '!';
         var pseudoClasses = ACSS_PSEUDO_CLASSES_STRING_parse(components[4]);
         var pseudoElements = ACSS_PSEUDO_ELEMENTS_STRING_parse(components[5]);
-        return ACSS_INSTRUCTION_composeRule(acssRule, arg, important, pseudoClasses, pseudoElements);
+        if (Array.isArray(pseudoClasses.array) && pseudoClasses.array.length > 0 && Array.isArray(pseudoElements.array) && pseudoElements.array.length > 0) {
+            throw new Error('ACSS instruction string - Define either "pseudo classes" or "pseudo elements" exclusively.');
+        }
+        var pseudoScore = pseudoClasses.score || pseudoElements.score;
+        var media = ACSS_MEDIA_STRING_parse(components[6]);
+        return ACSS_INSTRUCTION_composeRule(acssRule, score, arg, important, pseudoClasses.array, pseudoElements.array, pseudoScore, media.value, media.score);
     }
     function ACSS_INSTRUCTION_VALUE_transform(acssRule, instructionValue) {
         instructionValue = ACSS_INSTRUCTION_VALUE_transformColors(instructionValue);
@@ -2632,7 +2638,7 @@ exports.H = function(command, a, b) {
             if (j === -1) {
                 throw new Error('ACSS pseudo elements string - Unsupported element: "' + pseudoElementString + '".');
             }
-            var score = j + 1; // +1 TO DISTINGUISH "NO PSEUDO CLASS" FROM "PSEUDO CLASS ON INDEX 0"
+            var score = PSEUDO_CLASSES.length + j + 1; // --------------------> +1 TO DISTINGUISH "NO PSEUDO CLASS" FROM "PSEUDO CLASS ON INDEX 0"
             totalScore += score;
             if (i > 0) {
                 var va = score;
@@ -2678,23 +2684,83 @@ exports.H = function(command, a, b) {
             score: score
         };
     }
-    function ACSS_INSTRUCTION_composeRule(acssRule, arg, important, pseudoClasses, pseudoElements) {
+    function ACSS_MEDIA_STRING_parse(mediaString) {
+        var cache = exports.malloc('__H');
+        var i = arrFindIndex(cache('media'), 'key', mediaString);
+        if (i === -1) {
+            return ACSS_MEDIA_compose(cache('media')[0].value, 1);
+        }
+        var media = cache('media')[i];
+        var score = i + 1;
+        console.log('media: ', media);
+        return ACSS_MEDIA_compose(media.value, score);
+    }
+    function ACSS_MEDIA_compose(value, score) {
         return {
-            acssRule: acssRule,
-            argument: arg,
-            important: important,
-            pseudoClasses: pseudoClasses,
-            pseudoElements: pseudoElements
+            value: value,
+            score: score
         };
     }
-    function ACSS_INSTRUCTION_STRING_parseHelper(/* acssHelper, components */) {
-        console.log('ACSS_INSTRUCTION_STRING_parseHelper()');
-        return {};
+    function ACSS_INSTRUCTION_composeRule(acssRule, score, arg, important, pseudoClasses, pseudoElements, pseudoScore, mediaValue, mediaScore) {
+        return {
+            acssRule: acssRule,
+            score: score,
+            arg: arg,
+            important: important,
+            pseudoClasses: pseudoClasses,
+            pseudoElements: pseudoElements,
+            pseudoScore: pseudoScore,
+            mediaValue: mediaValue,
+            mediaScore: mediaScore
+        };
     }
-    function ACSS_compose(styleID, media) {
+    function ACSS_INSTRUCTION_STRING_parseHelper(acssHelper, score, components) {
+        if (components[3] || components[4] || components[5] || components[6]) {
+            throw new Error('ACSS instruction string - Helper must follow <Helper> syntax.');
+        }
+        var args = components[2].split(/\s*,\s*/);
+        args = !args[0] ? [] : args;
+        return ACSS_INSTRUCTION_composeHelper(acssHelper, score, args);
+    }
+    function ACSS_INSTRUCTION_composeHelper(acssHelper, score, args) {
+        return {
+            acssHelper: acssHelper,
+            score: score,
+            args: args,
+            pseudoScore: 0,
+            mediaScore: 0
+        };
+    }
+    function ACSS_INSTRUCTION_composeInstructionScore(instructionString, ruleScore, pseudoScore, mediaScore) {
+        return {
+            instructionString: instructionString,
+            score: (ruleScore * 1000000) + (pseudoScore * 100) + mediaScore
+        };
+    }
+    function ACSS_INSTRUCTIONS_STRING_composeOrderError(scores) {
+        var arr = arrSortByNumberASC(clone(scores), 'score');
+        var ba = [];
+        var bb = [];
+        for (var i = 0, len = arr.length; i < len; i++) {
+            var va = scores[i].instructionString;
+            if (va) {
+                ba.push(va);
+            }
+            var vb = arr[i].instructionString;
+            if (vb) {
+                bb.push(vb);
+            }
+        }
+        ba = ba.join(' ');
+        bb = bb.join(' ');
+        var msg = 'ACSS instructions string - ';
+        msg += (ba && bb) ? ('Found "' + ba + '" expected "' + bb + '".') : 'Invalid ACSS instructions order.';
+        return new Error(msg);
+    }
+    function ACSS_compose(styleID, rules) {
         return {
             styleID: styleID,
-            media: media
+            rules: rules
         };
     }
     function BASE_CMD_compose(selector, attributes, acss) {
