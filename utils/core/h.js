@@ -30,7 +30,7 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
     var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Lang|Charset|Name|Property|HttpEquiv|Content|Chckd|Slctd|Readonly|Disabled)(?![A-Za-z0-9])/;
-    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdright|Bdb|Bdleft|Bdc|Bdtc|Bdrightc|Bdbc|Bdleftc|Bdsp|Bds|Bdts|Bdrights|Bdbs|Bdlefts|Bdw|Bdtw|Bdrightw|Bdbw|Bdleftw|Bdrs|Bdrstright|Bdrsbright|Bdrsbleft|Bdrstleft|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mright|Mb|Mleft|Mah|Maw|Mih|Miw|O|T|Right|B|Left|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pright|Pb|Pleft|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
+    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:LineClamp|Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdright|Bdb|Bdleft|Bdc|Bdtc|Bdrightc|Bdbc|Bdleftc|Bdsp|Bds|Bdts|Bdrights|Bdbs|Bdlefts|Bdw|Bdtw|Bdrightw|Bdbw|Bdleftw|Bdrs|Bdrstright|Bdrsbright|Bdrsbleft|Bdrstleft|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mright|Mb|Mleft|Mah|Maw|Mih|Miw|O|T|Right|B|Left|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pright|Pb|Pleft|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_METATAG_CHAR = /[^\w]/;
@@ -1929,7 +1929,7 @@ exports.H = function(command, a, b) {
                 }
                 attributes = HTML_ATTRIBUTES_INSTRUCTIONS_STRING_parse(selector.tag, cmd.htmlAttributesInstructionsString);
             }
-            var acss = {};
+            var acss = ACSS_compose(null, []);
             if (cmd.acssInstructionsString) {
                 err = ACSS_INSTRUCTIONS_STRING_validate(cmd.acssInstructionsString);
                 if (err) {
@@ -2659,8 +2659,34 @@ exports.H = function(command, a, b) {
         };
     }
     function BASE_CMD_generateHTML(data, content) {
-        var html = BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes, content);
-        return html;
+        var css = [
+            BASE_CMD_generateElementStylesByHelpers(data.acss)
+        ].join('\n');
+        if (css) {
+            return [
+                ('<style>\n' + css + '\n</style>'),
+                BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes, content)
+            ].join('\n');
+        }
+        return BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes, content);
+    }
+    function BASE_CMD_generateElementStylesByHelpers(acss) {
+        var b = [];
+        var line = null;
+        for (var i = 0, l = acss.rules.length; i < l; i++) {
+            var rule = acss.rules[i];
+            if (rule && rule.acssHelper) {
+                var tmp = [];
+                while ((line = rule.acssHelper.css.shift()) != null) {
+                    tmp = tmp.concat(['    ' + line]);
+                }
+                tmp = tmp.join('\n');
+                tmp = tmp.replace(/\[\[el\]\]/g, acss.styleID);
+                tmp = strFormatBySingleBrackets(tmp, rule.args);
+                b = b.concat([tmp]);
+            }
+        }
+        return b.join('\n');
     }
     function BASE_CMD_generateElementHTMLStructure(selector, attributes, content) {
         var html = HTML_TEMPLATES[selector.tag];
@@ -2669,7 +2695,7 @@ exports.H = function(command, a, b) {
             modifiers = modifiers.concat(['id="' + selector.id + '"']);
         }
         if (Array.isArray(selector.classes) && selector.classes.length > 0) {
-            modifiers = modifiers.concat(['classes="' + selector.classes.join(' ') + '"']);
+            modifiers = modifiers.concat(['class="' + selector.classes.join(' ') + '"']);
         }
         if (Array.isArray(attributes) && attributes.length > 0) {
             var tmp = [];
@@ -2922,6 +2948,12 @@ exports.H = function(command, a, b) {
             s += f;
         }
         return s;
+    }
+    function strFormatBySingleBrackets(str, args) {
+        return str.replace(/\[\d+\]/g, function(text) {
+            var value = args[+text.substring(1, text.length - 1)];
+            return value === null ? '' : value;
+        });
     }
     function genStyleID() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
