@@ -2695,8 +2695,43 @@ exports.H = function(command, a, b) {
         return b.join('\n');
     }
     function BASE_CMD_generateElementStylesByRules(acss) {
-        var media = ACSS_RULES_groupByMedia(ACSS_RULES_filterAndTransform(acss));
+        var media = ACSS_RULES_mergeBySelector(ACSS_RULES_groupByMedia(ACSS_RULES_filterAndTransform(acss)));
         console.log('media: ', media);
+    }
+    function ACSS_RULES_mergeBySelector(media) {
+        var len = media.length;
+        var newMedia = [];
+        while (len--) {
+            var i;
+            var l;
+            var rules = media.shift();
+            var rule = null;
+            var uniqueSelectors = [];
+            for (i = 0, l = rules.length; i < l; i++) {
+                rule = rules[i];
+                if (uniqueSelectors.indexOf(rule.selector) === -1) {
+                    uniqueSelectors.push(rule.selector);
+                }
+            }
+            var group = [];
+            for (i = 0, l = uniqueSelectors.length; i < l; i++) {
+                var merged = ACSS_TRANSFORMED_RULE_compose(rules[0].mediaValue, uniqueSelectors[i], []);
+                for (var j = 0, lenlen = rules.length; j < lenlen; j++) {
+                    rule = rules[j];
+                    if (rule && rule.selector === merged.selector) {
+                        merged.css.push(rule.css);
+                    }
+                }
+                merged.css = merged.css.join('\n');
+                if (strTrim(merged.css).length > 0) {
+                    group.push(merged);
+                }
+            }
+            if (group.length > 0) {
+                newMedia.push(group);
+            }
+        }
+        return newMedia;
     }
     function ACSS_RULES_groupByMedia(rules) {
         var media = [];
@@ -2878,7 +2913,7 @@ exports.H = function(command, a, b) {
                         rows.push('-ms-' + k + sep + v);
                     }
                 }
-                return rows.join(del) + del;
+                return rows.join(del + '\n') + del;
             }
         }
         else {
@@ -3040,6 +3075,9 @@ exports.H = function(command, a, b) {
             }
         }
         return result;
+    }
+    function strTrim(str) {
+        return str.replace(/^\s+|\s+$/gm, '');
     }
     function genStyleID() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
