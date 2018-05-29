@@ -2665,7 +2665,8 @@ exports.H = function(command, a, b) {
     }
     function BASE_CMD_generateHTML(data, content) {
         var css = [
-            BASE_CMD_generateElementStylesByHelpers(data.acss)
+            BASE_CMD_generateElementStylesByHelpers(data.acss),
+            BASE_CMD_generateElementStylesByRules(data.acss)
         ].join('\n');
         if (css) {
             return [
@@ -2692,6 +2693,56 @@ exports.H = function(command, a, b) {
             }
         }
         return b.join('\n');
+    }
+    function BASE_CMD_generateElementStylesByRules(acss) {
+        var media = ACSS_RULES_groupByMedia(ACSS_RULES_filterAndTransform(acss));
+        console.log('media: ', media);
+    }
+    function ACSS_RULES_groupByMedia(rules) {
+        var media = [];
+        var group = [];
+        for (var i = 0, l = rules.length; i < l; i++) {
+            var rule = rules[i];
+            var last = rules[i - 1];
+            if (i === 0 || (last && last.mediaValue === rule.mediaValue)) {
+                group.push(rule);
+            }
+            if (i === rules.length - 1 || (last && last.mediaValue !== rule.mediaValue)) {
+                media.push(group);
+                group = [rule];
+            }
+        }
+        return media;
+    }
+    function ACSS_RULES_filterAndTransform(acss) {
+        var rules = [];
+        for (var i = 0, l = acss.rules.length; i < l; i++) {
+            var rule = acss.rules[i];
+            if (rule && rule.acssRule) {
+                rules.push(ACSS_RULE_transform(acss, rule));
+            }
+        }
+        return rules;
+    }
+    function ACSS_RULE_transform(acss, rule) {
+        var css = Array.isArray(rule.acssRule.css) ? rule.acssRule.css : [rule.acssRule.css];
+        for (var i = 0, l = css.length; i < l; i++) {
+            if (rule.important) {
+                css[i] += '!important';
+            }
+            css[i] = cssPROPERTY(css[i]); // ---------------------------------> AUTOPREFIX
+        }
+        css = css.join('\n'); // ---------------------------------------------> JOIN
+        css = css.replace(/\$/g, rule.arg); // -------------------------------> FILL ARGUMENT TO PLACE(S)
+        var selector = acss.styleID + rule.pseudoClasses.join('') + rule.pseudoElements.join('');
+        return ACSS_TRANSFORMED_RULE_compose(rule.mediaValue, selector, css);
+    }
+    function ACSS_TRANSFORMED_RULE_compose(mediaValue, selector, css) {
+        return {
+            mediaValue: mediaValue,
+            selector: selector,
+            css: css
+        };
     }
     function BASE_CMD_generateElementHTMLStructure(selector, attributes, content) {
         var html = HTML_TEMPLATES[selector.tag];
