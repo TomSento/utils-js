@@ -1942,10 +1942,6 @@ exports.H = function(command, a, b) {
                 acss = ACSS_INSTRUCTIONS_STRING_parse(styleID, cmd.acssInstructionsString);
                 selector.classes.unshift(styleID);
             }
-            console.log('CMD:', cmd);
-            console.log('SELECTOR:', selector);
-            console.log('ATTRIBUTES:', attributes);
-            console.log('ACSS:', acss);
             return BASE_CMD_compose(selector, attributes, acss);
         }
         else {
@@ -2844,63 +2840,6 @@ exports.H = function(command, a, b) {
         html = html.replace('[[content]]', content);
         return html;
     }
-
-    /**
-     * CSS
-     */
-    function CSS_getCSSReset() { // https://github.com/jgthms/minireset.css/tree/0.0.3
-        var b = CSS2('html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6', [
-            'margin:0',
-            'padding:0'
-        ]);
-        b += CSS2('h1,h2,h3,h4,h5,h6', [
-            'font-size:100%',
-            'font-weight:normal'
-        ]);
-        b += CSS2('ul', 'list-style:none');
-        b += CSS2('button,input,select,textarea', 'margin:0');
-        b += CSS2('html', 'box-sizing:border-box');
-        b += CSS2('*,*:before,*:after', 'box-sizing:inherit');
-        b += CSS2('img,embed,iframe,object,audio,video', [
-            'height:auto',
-            'max-width:100%'
-        ]);
-        b += CSS2('iframe', 'border:0');
-        b += CSS2('table', [
-            'border-collapse:collapse',
-            'border-spacing:0'
-        ]);
-        b += CSS2('td,th', [
-            'padding:0',
-            'text-align:left'
-        ]);
-        return b;
-    }
-    function CSS2(k, a) {
-        if (k && typeof(k) === 'string' && a) {
-            a = typeof(a) === 'string' ? [a] : a;
-            if (Array.isArray(a)) {
-                var b = '';
-                for (var i = 0, l = a.length; i < l; i++) {
-                    var v = a[i];
-                    if (v) {
-                        b += cssPROPERTY(v);
-                    }
-                }
-                if (b) {
-                    if (k.indexOf('@media') >= 0) {
-                        return k + '){' + b + '}';
-                    }
-                    else {
-                        return k + '{' + b + '}';
-                    }
-                }
-                return '';
-            }
-            return '';
-        }
-        return '';
-    }
     function cssPROPERTY(kv) { // AUTOPREFIXES CSS KEY-VALUE PAIR
         var autovendor = ['filter', 'appearance', 'column-count', 'column-gap', 'column-rule', 'display', 'transform', 'transform-style', 'transform-origin', 'transition', 'user-select', 'animation', 'perspective', 'animation-name', 'animation-duration', 'animation-timing-function', 'animation-delay', 'animation-iteration-count', 'animation-direction', 'animation-play-state', 'opacity', 'background', 'background-image', 'font-smoothing', 'text-size-adjust', 'backface-visibility', 'box-sizing', 'overflow-scrolling'];
         kv = kv.replace(/\s{2,}/g, ' ');
@@ -3011,13 +2950,6 @@ exports.H = function(command, a, b) {
             base[key] = clone(obj[key]);
         }
         return base;
-    }
-    function arrFind(arr, fn, value) {
-        var index = arrFindIndex(arr, fn, value);
-        if (index === -1) {
-            return null;
-        }
-        return arr[index];
     }
     function arrFindIndex(arr, fn, value) {
         var isFN = typeof(fn) === 'function';
