@@ -1,6 +1,9 @@
 var U = require('../dist/utils.git');
 
-U.ls('../utils', 'R', function(path, stat, next) {
+U.ls([
+    '../utils',
+    '../test-node'
+], 'R', function(path, stat, next) {
     U.log('path: ' + path);
     return next();
 }, function(err) {
