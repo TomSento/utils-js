@@ -2611,7 +2611,13 @@ exports.H = function(command, a, b) {
         }
         var args = components[2].split(/\s*,\s*/);
         args = !args[0] ? [] : args;
-        var expected = arrUnique(acssHelper.css.join('').match(/\[\d+\]/g));
+        var expected = [];
+        var tmp = acssHelper.css.join('').match(/\[\d+\]/g);
+        for (var i = 0, l = tmp.length; i < l; i++) {
+            if (expected.indexOf(tmp[i]) === -1) {
+                expected.push(tmp[i]);
+            }
+        }
         if (expected.length !== args.length) {
             throw new Error('ACSS instruction string - Passed ' + args.length + ' argument(s), expected ' + expected.length + ' for "' + acssHelper.func + '" helper.');
         }
@@ -3071,36 +3077,6 @@ exports.H = function(command, a, b) {
             var value = args[+text.substring(1, text.length - 1)];
             return value === null ? '' : value;
         });
-    }
-    function arrUnique(arr, k) {
-        var result = [];
-        var sublen = 0;
-        for (var i = 0, len = arr.length; i < len; i++) {
-            var v = arr[i];
-            if (!k) {
-                if (result.indexOf(v) === -1) {
-                    result.push(v);
-                }
-                continue;
-            }
-            if (sublen === 0) {
-                result.push(v);
-                sublen++;
-                continue;
-            }
-            var is = true;
-            for (var j = 0; j < sublen; j++) {
-                if (result[j][k] === v[k]) {
-                    is = false;
-                    break;
-                }
-            }
-            if (is) {
-                result.push(v);
-                sublen++;
-            }
-        }
-        return result;
     }
     function strTrim(str) {
         return str.replace(/^\s+|\s+$/gm, '');
