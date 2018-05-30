@@ -187,17 +187,17 @@ exports.H = function(command, a, b) {
     }, { // MANDATORY ORDER
         name: 'Animation',
         func: 'Anim',
-        css: 'animation:$',
+        css: 'animation: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation delay',
         func: 'Animdel',
-        css: 'animation-delay:$',
+        css: 'animation-delay: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation direction',
         func: 'Animdir',
-        css: 'animation-direction:$',
+        css: 'animation-direction: $',
         expanders: {
             a: 'alternate',
             ar: 'alternate-reverse',
@@ -208,12 +208,12 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation duration',
         func: 'Animdur',
-        css: 'animation-duration:$',
+        css: 'animation-duration: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Animation fill mode',
         func: 'Animfm',
-        css: 'animation-fill-mode:$',
+        css: 'animation-fill-mode: $',
         expanders: {
             b: 'backwards',
             bo: 'both',
@@ -224,7 +224,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation iteration count',
         func: 'Animic',
-        css: 'animation-iteration-count:$',
+        css: 'animation-iteration-count: $',
         expanders: {
             i: 'infinite'
         },
@@ -232,7 +232,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation name',
         func: 'Animn',
-        css: 'animation-name:$',
+        css: 'animation-name: $',
         expanders: {
             n: 'none'
         },
@@ -240,7 +240,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation play state',
         func: 'Animps',
-        css: 'animation-play-state:$',
+        css: 'animation-play-state: $',
         expanders: {
             p: 'paused',
             r: 'running'
@@ -249,7 +249,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Animation timing function',
         func: 'Animtf',
-        css: 'animation-timing-function:$',
+        css: 'animation-timing-function: $',
         expanders: {
             e: 'ease',
             ei: 'ease-in',
@@ -263,7 +263,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Appearance',
         func: 'Ap',
-        css: 'appearance:$',
+        css: 'appearance: $',
         expanders: {
             a: 'auto',
             n: 'none'
@@ -272,7 +272,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border',
         func: 'Bd',
-        css: 'border:$',
+        css: 'border: $',
         expanders: {
             n: 'none'
         },
@@ -281,77 +281,77 @@ exports.H = function(command, a, b) {
         name: 'Border X',
         func: 'Bdx',
         css: [
-            'border-left:$',
-            'border-right:$'
+            'border-left: $',
+            'border-right: $'
         ],
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border Y',
         func: 'Bdy',
         css: [
-            'border-top:$',
-            'border-bottom:$'
+            'border-top: $',
+            'border-bottom: $'
         ],
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border top',
         func: 'Bdt',
-        css: 'border-top:$',
+        css: 'border-top: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border right',
         func: 'Bdright',
-        css: 'border-right:$',
+        css: 'border-right: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border bottom',
         func: 'Bdb',
-        css: 'border-bottom:$',
+        css: 'border-bottom: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left',
         func: 'Bdleft',
-        css: 'border-left:$',
+        css: 'border-left: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border color',
         func: 'Bdc',
-        css: 'border-color:$',
+        css: 'border-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border top color',
         func: 'Bdtc',
-        css: 'border-top-color:$',
+        css: 'border-top-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border right color',
         func: 'Bdrightc',
-        css: 'border-right-color:$',
+        css: 'border-right-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border bottom color',
         func: 'Bdbc',
-        css: 'border-bottom-color:$',
+        css: 'border-bottom-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left color',
         func: 'Bdleftc',
-        css: 'border-left-color:$',
+        css: 'border-left-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border spacing',
         func: 'Bdsp',
-        css: 'border-spacing:$',
+        css: 'border-spacing: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border style',
         func: 'Bds',
-        css: 'border-style:$',
+        css: 'border-style: $',
         expanders: {
             d: 'dotted',
             da: 'dashed',
@@ -368,7 +368,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border top style',
         func: 'Bdts',
-        css: 'border-top-style:$',
+        css: 'border-top-style: $',
         expanders: {
             d: 'dotted',
             da: 'dashed',
@@ -385,7 +385,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border right style',
         func: 'Bdrights',
-        css: 'border-right-style:$',
+        css: 'border-right-style: $',
         expanders: {
             d: 'dotted',
             da: 'dashed',
@@ -402,7 +402,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border bottom style',
         func: 'Bdbs',
-        css: 'border-bottom-style:$',
+        css: 'border-bottom-style: $',
         expanders: {
             d: 'dotted',
             da: 'dashed',
@@ -419,7 +419,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border left style',
         func: 'Bdlefts',
-        css: 'border-left-style:$',
+        css: 'border-left-style: $',
         expanders: {
             d: 'dotted',
             da: 'dashed',
@@ -436,7 +436,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border width',
         func: 'Bdw',
-        css: 'border-width:$',
+        css: 'border-width: $',
         expanders: {
             m: 'medium',
             t: 'thin',
@@ -446,7 +446,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border top width',
         func: 'Bdtw',
-        css: 'border-top-width:$',
+        css: 'border-top-width: $',
         expanders: {
             m: 'medium',
             t: 'thin',
@@ -456,7 +456,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border right width',
         func: 'Bdrightw',
-        css: 'border-right-width:$',
+        css: 'border-right-width: $',
         expanders: {
             m: 'medium',
             t: 'thin',
@@ -466,7 +466,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border bottom width',
         func: 'Bdbw',
-        css: 'border-bottom-width:$',
+        css: 'border-bottom-width: $',
         expanders: {
             m: 'medium',
             t: 'thin',
@@ -476,7 +476,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border left width',
         func: 'Bdleftw',
-        css: 'border-left-width:$',
+        css: 'border-left-width: $',
         expanders: {
             m: 'medium',
             t: 'thin',
@@ -486,32 +486,32 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border radius',
         func: 'Bdrs',
-        css: 'border-radius:$',
+        css: 'border-radius: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius top right',
         func: 'Bdrstright',
-        css: 'border-top-right-radius:$',
+        css: 'border-top-right-radius: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius bottom right',
         func: 'Bdrsbright',
-        css: 'border-bottom-right-radius:$',
+        css: 'border-bottom-right-radius: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius bottom left',
         func: 'Bdrsbleft',
-        css: 'border-bottom-left-radius:$',
+        css: 'border-bottom-left-radius: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius top left',
         func: 'Bdrstleft',
-        css: 'border-top-left-radius:$',
+        css: 'border-top-left-radius: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background',
         func: 'Bg',
-        css: 'background:$',
+        css: 'background: $',
         expanders: {
             n: 'none',
             t: 'transparent'
@@ -520,7 +520,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background image',
         func: 'Bgi',
-        css: 'background-image:$',
+        css: 'background-image: $',
         expanders: {
             n: 'none'
         },
@@ -528,13 +528,13 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background color',
         func: 'Bgc',
-        css: 'background-color:$',
+        css: 'background-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background clip',
         func: 'Bgcp',
-        css: 'background-clip:$',
+        css: 'background-clip: $',
         expanders: {
             bb: 'border-box',
             cb: 'content-box',
@@ -544,7 +544,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background origin',
         func: 'Bgo',
-        css: 'background-origin:$',
+        css: 'background-origin: $',
         expanders: {
             bb: 'border-box',
             cb: 'content-box',
@@ -554,7 +554,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background size',
         func: 'Bgz',
-        css: 'background-size:$',
+        css: 'background-size: $',
         expanders: {
             a: 'auto',
             ct: 'contain',
@@ -564,7 +564,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background attachment',
         func: 'Bga',
-        css: 'background-attachment:$',
+        css: 'background-attachment: $',
         expanders: {
             f: 'fixed',
             l: 'local',
@@ -574,7 +574,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background position',
         func: 'Bgp',
-        css: 'background-position:$',
+        css: 'background-position: $',
         expanders: {
             left_t: 'left 0',
             right_t: 'right 0',
@@ -590,7 +590,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background position (X axis)',
         func: 'Bgpx',
-        css: 'background-position-x:$',
+        css: 'background-position-x: $',
         expanders: {
             left: 'left',
             right: 'right',
@@ -600,7 +600,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background position (Y axis)',
         func: 'Bgpy',
-        css: 'background-position-y:$',
+        css: 'background-position-y: $',
         expanders: {
             t: '0',
             b: '100%',
@@ -610,7 +610,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Background repeat',
         func: 'Bgr',
-        css: 'background-repeat:$',
+        css: 'background-repeat: $',
         expanders: {
             nr: 'no-repeat',
             rx: 'repeat-x',
@@ -623,7 +623,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Border collapse',
         func: 'Bdcl',
-        css: 'border-collapse:$',
+        css: 'border-collapse: $',
         expanders: {
             c: 'collapse',
             s: 'separate'
@@ -632,7 +632,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Box sizing',
         func: 'Bxz',
-        css: 'box-sizing:$',
+        css: 'box-sizing: $',
         expanders: {
             cb: 'content-box',
             pb: 'padding-box',
@@ -642,7 +642,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Box shadow',
         func: 'Bxsh',
-        css: 'box-shadow:$',
+        css: 'box-shadow: $',
         expanders: {
             n: 'none'
         },
@@ -650,7 +650,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Clear',
         func: 'Cl',
-        css: 'clear:$',
+        css: 'clear: $',
         expanders: {
             n: 'none',
             b: 'both'
@@ -659,13 +659,13 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Color',
         func: 'C',
-        css: 'color:$',
+        css: 'color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Content',
         func: 'Cnt',
-        css: 'content:$',
+        css: 'content: $',
         expanders: {
             n: 'none',
             nor: 'normal',
@@ -678,7 +678,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Cursor',
         func: 'Cur',
-        css: 'cursor:$',
+        css: 'cursor: $',
         expanders: {
             a: 'auto',
             as: 'all-scroll',
@@ -719,7 +719,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Display',
         func: 'D',
-        css: 'display:$',
+        css: 'display: $',
         expanders: {
             n: 'none',
             b: 'block',
@@ -739,106 +739,98 @@ exports.H = function(command, a, b) {
             tbhg: 'table-header-group',
             tbfg: 'table-footer-group',
             tbrg: 'table-row-group'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Filter',
         func: 'Fil',
-        css: 'filter:$',
+        css: 'filter: $',
         expanders: {
             n: 'none'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Blur (filter)',
         func: 'Blur',
-        css: 'filter:blur($)'
+        css: 'filter: blur($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Brightness (filter)',
         func: 'Brightness',
-        css: 'filter:brightness($)'
+        css: 'filter: brightness($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Contrast (filter)',
         func: 'Contrast',
-        css: 'filter:contrast($)'
+        css: 'filter: contrast($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Drop shadow (filter)',
         func: 'Dropshadow',
-        css: 'filter:drop-shadow($)'
+        css: 'filter: drop-shadow($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Grayscale (filter)',
         func: 'Grayscale',
-        css: 'filter:grayscale($)'
+        css: 'filter: grayscale($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Hue Rotate (filter)',
         func: 'HueRotate',
-        css: 'filter:hue-rotate($)'
+        css: 'filter: hue-rotate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Invert (filter)',
         func: 'Invert',
-        css: 'filter:invert($)'
+        css: 'filter: invert($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Opacity (filter)',
         func: 'Opacity',
-        css: 'filter:opacity($)'
+        css: 'filter: opacity($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Saturate (filter)',
         func: 'Saturate',
-        css: 'filter:saturate($)'
+        css: 'filter: saturate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Sepia (filter)',
         func: 'Sepia',
-        css: 'filter:sepia($)'
-    }, {
-        name: 'Flex (deprecated)',
-        func: 'Flx',
-        css: 'flex:$',
-        expanders: {
-            a: 'auto',
-            n: 'none'
-        }
+        css: 'filter: sepia($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex',
         func: 'Fx',
-        css: 'flex:$',
+        css: 'flex: $',
         expanders: {
             a: 'auto',
             n: 'none'
-        }
-    }, {
-        name: 'Flex grow (deprecated)',
-        func: 'Flxg',
-        css: 'flex-grow:$'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex grow',
         func: 'Fxg',
-        css: 'flex-grow:$'
-    }, {
-        name: 'Flex shrink (deprecated)',
-        func: 'Flxs',
-        css: 'flex-shrink:$'
+        css: 'flex-grow: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex shrink',
         func: 'Fxs',
-        css: 'flex-shrink:$'
-    }, {
-        name: 'Flex basis (deprecated)',
-        func: 'Flxb',
-        css: 'flex-basis:$',
-        expanders: {
-            a: 'auto',
-            n: 'none'
-        }
+        css: 'flex-shrink: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex basis',
         func: 'Fxb',
-        css: 'flex-basis:$',
+        css: 'flex-basis: $',
         expanders: {
             a: 'auto',
             n: 'none'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Align self',
         func: 'As',
-        css: 'align-self:$',
+        css: 'align-self: $',
         expanders: {
             a: 'auto',
             fs: 'flex-start',
@@ -846,44 +838,23 @@ exports.H = function(command, a, b) {
             c: 'center',
             b: 'baseline',
             st: 'stretch'
-        }
-    }, {
-        name: 'Flex direction (deprecated)',
-        func: 'Fld',
-        css: 'flex-direction:$',
-        expanders: {
-            r: 'row',
-            rr: 'row-reverse',
-            c: 'column',
-            cr: 'column-reverse'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex direction',
         func: 'Fxd',
-        css: 'flex-direction:$',
+        css: 'flex-direction: $',
         expanders: {
             r: 'row',
             rr: 'row-reverse',
             c: 'column',
             cr: 'column-reverse'
-        }
-    }, {
-        name: 'Flex flow (deprecated)',
-        func: 'Flf',
-        css: 'flex-flow:$',
-        expanders: {
-            r: 'row',
-            rr: 'row-reverse',
-            c: 'column',
-            cr: 'column-reverse',
-            nw: 'nowrap',
-            w: 'wrap',
-            wr: 'wrap-reverse'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex flow',
         func: 'Fxf',
-        css: 'flex-flow:$',
+        css: 'flex-flow: $',
         expanders: {
             r: 'row',
             rr: 'row-reverse',
@@ -892,22 +863,24 @@ exports.H = function(command, a, b) {
             nw: 'nowrap',
             w: 'wrap',
             wr: 'wrap-reverse'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Align items',
         func: 'Ai',
-        css: 'align-items:$',
+        css: 'align-items: $',
         expanders: {
             fs: 'flex-start',
             fe: 'flex-end',
             c: 'center',
             b: 'baseline',
             st: 'stretch'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Align content',
         func: 'Ac',
-        css: 'align-content:$',
+        css: 'align-content: $',
         expanders: {
             fs: 'flex-start',
             fe: 'flex-end',
@@ -915,89 +888,90 @@ exports.H = function(command, a, b) {
             sb: 'space-between',
             sa: 'space-around',
             st: 'stretch'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Order',
         func: 'Or',
-        css: 'order:$'
+        css: 'order: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Justify content',
         func: 'Jc',
-        css: 'justify-content:$',
+        css: 'justify-content: $',
         expanders: {
             fs: 'flex-start',
             fe: 'flex-end',
             c: 'center',
             sb: 'space-between',
             sa: 'space-around'
-        }
-    }, {
-        name: 'Flex-wrap (deprecated)',
-        func: 'Flw',
-        css: 'flex-wrap:$',
-        expanders: {
-            nw: 'nowrap',
-            w: 'wrap',
-            wr: 'wrap-reverse'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex-wrap',
         func: 'Fxw',
-        css: 'flex-wrap:$',
+        css: 'flex-wrap: $',
         expanders: {
             nw: 'nowrap',
             w: 'wrap',
             wr: 'wrap-reverse'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Float',
         func: 'Fl',
-        css: 'float:$',
+        css: 'float: $',
         expanders: {
             n: 'none'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Font family',
         func: 'Ff',
-        css: 'font-family:$',
+        css: 'font-family: $',
         expanders: {
             c: '"Monotype Corsiva", "Comic Sans MS", cursive',
             f: 'Capitals, Impact, fantasy',
             m: 'Monaco, "Courier New", monospace',
             s: 'Georgia, "Times New Roman", serif',
             ss: 'Helvetica, Arial, sans-serif'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Font weight',
         func: 'Fw',
-        css: 'font-weight:$',
+        css: 'font-weight: $',
         expanders: {
             b: 'bold',
             br: 'bolder',
             lr: 'lighter',
             n: 'normal'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Font size',
         func: 'Fz',
-        css: 'font-size:$'
+        css: 'font-size: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Font style',
         func: 'Fs',
-        css: 'font-style:$',
+        css: 'font-style: $',
         expanders: {
             n: 'normal',
             i: 'italic',
             o: 'oblique'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Font variant',
         func: 'Fv',
-        css: 'font-variant:$',
+        css: 'font-variant: $',
         expanders: {
             n: 'normal',
             sc: 'small-caps'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Height',
         func: 'H',
