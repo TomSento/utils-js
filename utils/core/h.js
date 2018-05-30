@@ -71,6 +71,7 @@ exports.H = function(command, a, b) {
         Head: '<head>[[content]]</head>',
         Meta: '<meta[[modifiers]]>',
         Title: '<title>[[content]]</title>',
+        Body: '<body>[[content]]</body>',
         Div: '<div[[modifiers]]>[[content]]</div>',
         Span: '<span[[modifiers]]>[[content]]</span>',
         Input: '<input[[modifiers]]>',
@@ -1811,14 +1812,14 @@ exports.H = function(command, a, b) {
     if (!command || typeof(command) !== 'string') {
         throw new Error('invalidParameter');
     }
-    var data = (a && typeof(a) === 'object') ? a : null; // ------------------> data-[key]=""
+    var data = (a && Object.prototype.toString.call(a) === '[object Object]') ? a : null; // data-[key]=""
     var content = (typeof(a) === 'string' || Array.isArray(a)) ? a : b;
     var err = BASE_CMD_validate(command);
     if (err) {
         throw err;
     }
     else {
-        return BASE_CMD_process(command, data, content);
+        return BASE_CMD_process(command, data);
     }
 
     function BASE_CMD_validate(v) {
@@ -1911,11 +1912,11 @@ exports.H = function(command, a, b) {
         }
         return null;
     }
-    function BASE_CMD_process(cmd, data, content) {
-        data = BASE_CMD_parse(cmd, content);
-        return BASE_CMD_generateHTML(data, content);
+    function BASE_CMD_process(cmd, data) {
+        data = BASE_CMD_parse(cmd);
+        return BASE_CMD_generateHTML(data);
     }
-    function BASE_CMD_parse(cmd, content) {
+    function BASE_CMD_parse(cmd) {
         var type = BASE_CMD_GET_TYPE(cmd);
         if (type === BASE_CMD_TYPE_HTML_METATAG() || type === BASE_CMD_TYPE_HTML_BODYTAG()) {
             cmd = BASE_CMD_parseTriple(type, cmd);
@@ -1923,7 +1924,7 @@ exports.H = function(command, a, b) {
             if (err) {
                 throw err;
             }
-            var selector = HTML_SELECTOR_INSTRUCTION_STRING_parse(type, cmd.htmlSelectorInstructionString, content);
+            var selector = HTML_SELECTOR_INSTRUCTION_STRING_parse(type, cmd.htmlSelectorInstructionString);
             var attributes = [];
             if (cmd.htmlAttributesInstructionsString) {
                 err = HTML_ATTRIBUTES_INSTRUCTIONS_STRING_validate(cmd.htmlAttributesInstructionsString);
@@ -2121,7 +2122,7 @@ exports.H = function(command, a, b) {
         }
         return null;
     }
-    function HTML_SELECTOR_INSTRUCTION_STRING_parse(type, instructionString, content) {
+    function HTML_SELECTOR_INSTRUCTION_STRING_parse(type, instructionString) {
         var components = instructionString.match(REG_HTML_SELECTOR_INSTRUCTION_STRING_MATCH_COMPONENTS);
         var tag = null;
         var id = null;
@@ -2163,7 +2164,7 @@ exports.H = function(command, a, b) {
                             if (typeof(content) !== 'string' && !Array.isArray(content)) {
                                 throw new Error('Unexpected content for "' + tag + '" tag.');
                             }
-                            content = Array.isArray(content) ? content.join('') : content;
+                            content = Array.isArray(content) ? content.join('\n') : content;
                         }
                     }
                 }
@@ -2667,18 +2668,18 @@ exports.H = function(command, a, b) {
             acss: acss
         };
     }
-    function BASE_CMD_generateHTML(data, content) {
+    function BASE_CMD_generateHTML(data) {
         var css = [
             BASE_CMD_generateElementStylesByHelpers(data.acss),
             BASE_CMD_generateElementStylesByRules(data.acss)
         ].join('\n');
-        if (css) {
+        if (strTrim(css).length > 0) {
             return [
                 ('<style>\n    ' + css.replace(/\n/g, '\n    ') + '\n</style>'),
-                BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes, content)
+                BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes)
             ].join('\n');
         }
-        return BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes, content);
+        return BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes);
     }
     function BASE_CMD_generateElementStylesByHelpers(acss) {
         var b = [];
@@ -2807,7 +2808,7 @@ exports.H = function(command, a, b) {
             css: css
         };
     }
-    function BASE_CMD_generateElementHTMLStructure(selector, attributes, content) {
+    function BASE_CMD_generateElementHTMLStructure(selector, attributes) {
         var html = HTML_TEMPLATES[selector.tag];
         var modifiers = [];
         if (selector.id) {
