@@ -21,7 +21,8 @@ var files = [
     'utils/browser/ajax.js',
     'utils/browser/dom.js',
     'utils/browser/route0.js',
-    'utils/node/fs.js'
+    'utils/node/fs.js',
+    'utils/node/server.js'
 ];
 compiler.compileUtils(v, files, 'U', keys, './dist/utils.js');
 compiler.compileUtils(v, files, 'U', null, './dist/utils.git.js');
