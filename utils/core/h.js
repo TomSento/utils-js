@@ -2164,7 +2164,7 @@ exports.H = function(command, a, b) {
                             if (typeof(content) !== 'string' && !Array.isArray(content)) {
                                 throw new Error('Unexpected content for "' + tag + '" tag.');
                             }
-                            content = Array.isArray(content) ? content.join('\n') : content;
+                            content = Array.isArray(content) ? content.join('') : content;
                         }
                     }
                 }
