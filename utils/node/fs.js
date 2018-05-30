@@ -57,7 +57,7 @@ function Watcher(t) {
     };
 }
 Watcher.prototype = {
-    push: function(filepath) {
+    watch: function(filepath) {
         var self = this;
         require('fs').watchFile(filepath, { // eslint-disable-line global-require
             interval: self.t || 1000 // --------------------------------------> DEFAULT: POLL EACH SECOND
