@@ -48,3 +48,27 @@ exports.ls = function(a, flag, fn, next) {
         }(dirPath));
     }());
 };
+function Watcher(t) {
+    this.t = t;
+    this.fn = {};
+    this.trigger = function(k, a1, a2, a3) {
+        var fn = this.fn[k];
+        return fn && fn(a1, a2, a3);
+    };
+}
+Watcher.prototype = {
+    push: function(filepath) {
+        var self = this;
+        require('fs').watchFile(filepath, { // eslint-disable-line global-require
+            interval: self.t || 1000 // --------------------------------------> DEFAULT: POLL EACH SECOND
+        }, function(curr, prev) {
+            if (curr && prev && curr.mtime !== prev.mtime) {
+                return self.trigger('change', filepath, curr, prev);
+            }
+        });
+    },
+    on: function(k, fn) {
+        this.fn[k] = fn;
+    }
+};
+exports.Watcher = Watcher;
