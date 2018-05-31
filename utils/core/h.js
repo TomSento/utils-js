@@ -25,13 +25,13 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN = /\(\s/;
     var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
 
-    var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Meta|Title)(?![A-Za-z0-9_-])/;
-    var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Btn|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-Za-z0-9_-])/; // https://www.w3schools.com/tags/default.asp
+    var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Link|Meta|Title)(?![A-Za-z0-9_-])/;
+    var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Btn|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|TFoot|THead|Table|Tbody|Td|Template|TextArea|Th|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-Za-z0-9_-])/; // https://www.w3schools.com/tags/default.asp
 
     var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
-    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Lang|Charset|Name|Property|HttpEquiv|Content|Chckd|Slctd|Readonly|Disabled)(?![A-Za-z0-9])/;
-    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:LineClamp|Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|Bd|Bdx|Bdy|Bdt|Bdright|Bdb|Bdleft|Bdc|Bdtc|Bdrightc|Bdbc|Bdleftc|Bdsp|Bds|Bdts|Bdrights|Bdbs|Bdlefts|Bdw|Bdtw|Bdrightw|Bdbw|Bdleftw|Bdrs|Bdrstright|Bdrsbright|Bdrsbleft|Bdrstleft|Bg|Bgi|Bgc|Bgcp|Bgo|Bgz|Bga|Bgp|Bgpx|Bgpy|Bgr|Bdcl|Bxz|Bxsh|Cl|C|Ctn|Cnt|Cur|D|Fil|Blur|Brightness|Contrast|Dropshadow|Grayscale|HueRotate|Invert|Opacity|Saturate|Sepia|Flx|Fx|Flxg|Fxg|Flxs|Fxs|Flxb|Fxb|As|Fld|Fxd|Flf|Fxf|Ai|Ac|Or|Jc|Flw|Fxw|Fl|Ff|Fw|Fz|Fs|Fv|H|Hy|Lts|List|Lisp|Lisi|Lh|M|Mx|My|Mt|Mright|Mb|Mleft|Mah|Maw|Mih|Miw|O|T|Right|B|Left|Op|Ov|Ovx|Ovy|Ovs|P|Px|Py|Pt|Pright|Pb|Pleft|Pe|Pos|Rsz|Tbl|Ta|Tal|Td|Ti|Tov|Tren|Tr|Tt|Tsh|Trf|Trfo|Trfs|Prs|Prso|Bfv|Matrix|Matrix3d|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Scale|Scale3d|ScaleX|ScaleY|Skew|SkewX|SkewY|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Trs|Trsde|Trsdu|Trsp|Trstf|Us|Va|V|Whs|Whsc|W|Wob|Wow|Z|Fill|Stk|Stkw|Stklc|Stklj)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
+    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Charset|Chckd|Content|Disabled|Href|HttpEquiv|Lang|Name|Property|Readonly|Rel|Slctd|Src|Type)(?![A-Za-z0-9])/;
+    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Ac|Ai|Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|As|B|Bd|Bdb|Bdbc|Bdbs|Bdbw|Bdc|Bdcl|Bdleft|Bdleftc|Bdlefts|Bdleftw|Bdright|Bdrightc|Bdrights|Bdrightw|Bdrs|Bdrsbleft|Bdrsbright|Bdrstleft|Bdrstright|Bds|Bdsp|Bdt|Bdtc|Bdts|Bdtw|Bdw|Bdx|Bdy|Bfv|Bg|Bga|Bgc|Bgcp|Bgi|Bgo|Bgp|Bgpx|Bgpy|Bgr|Bgz|Blur|Brightness|Bxsh|Bxz|C|Cl|Cnt|Contrast|Ctn|Cur|D|Dropshadow|Ff|Fil|Fill|Fl|Fld|Flf|Flw|Flx|Flxb|Flxg|Flxs|Fs|Fv|Fw|Fx|Fxb|Fxd|Fxf|Fxg|Fxs|Fxw|Fz|Grayscale|H|HueRotate|Hy|Invert|Jc|Left|Lh|LineClamp|Lisi|Lisp|List|Lts|M|Mah|Matrix|Matrix3d|Maw|Mb|Mih|Miw|Mleft|Mright|Mt|Mx|My|O|Op|Opacity|Or|Ov|Ovs|Ovx|Ovy|P|Pb|Pe|Pleft|Pos|Pright|Prs|Prso|Pt|Px|Py|Right|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Rsz|Saturate|Scale|Scale3d|ScaleX|ScaleY|Sepia|Skew|SkewX|SkewY|Stk|Stklc|Stklj|Stkw|T|Ta|Tal|Tbl|Td|Ti|Tov|Tr|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Tren|Trf|Trfo|Trfs|Trs|Trsde|Trsdu|Trsp|Trstf|Tsh|Tt|Us|V|Va|W|Whs|Whsc|Wob|Wow|Z)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_METATAG_CHAR = /[^\w]/;
@@ -71,12 +71,14 @@ exports.H = function(command, a, b) {
         Head: '<head>[[content]]</head>',
         Meta: '<meta[[modifiers]]>',
         Title: '<title>[[content]]</title>',
+        Link: '<link[[modifiers]]>',
         Body: '<body>[[content]]</body>',
         Div: '<div[[modifiers]]>[[content]]</div>',
         Span: '<span[[modifiers]]>[[content]]</span>',
         Input: '<input[[modifiers]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
-        Option: '<option[[modifiers]]>[[content]]</option>'
+        Option: '<option[[modifiers]]>[[content]]</option>',
+        Script: '<script[[modifiers]]></script>'
     };
     var HTML_ATTRIBUTES = {
         Doc: [{
@@ -111,6 +113,22 @@ exports.H = function(command, a, b) {
             allowArgument: true,
             html: 'content=$'
         }],
+        Link: [{
+            name: 'Rel',
+            func: 'Rel',
+            allowArgument: true,
+            html: 'rel=$'
+        }, {
+            name: 'Type',
+            func: 'Type',
+            allowArgument: true,
+            html: 'type=$'
+        }, {
+            name: 'Href',
+            func: 'Href',
+            allowArgument: true,
+            html: 'href=$'
+        }],
         Input: [{
             name: 'Checked',
             func: 'Chckd',
@@ -138,6 +156,12 @@ exports.H = function(command, a, b) {
             func: 'Slctd',
             allowArgument: false,
             html: 'selected'
+        }],
+        Script: [{
+            name: 'Src',
+            func: 'Src',
+            allowArgument: true,
+            html: 'src=$'
         }]
     };
 
@@ -2643,15 +2667,15 @@ exports.H = function(command, a, b) {
         };
     }
     function BASE_CMD_generateHTML(data) {
-        var css = [
+        var css = strTrim([
             BASE_CMD_generateElementStylesByHelpers(data.acss),
             BASE_CMD_generateElementStylesByRules(data.acss)
-        ].join('\n');
-        if (strTrim(css).length > 0) {
+        ].join('\n'));
+        if (css.length > 0) {
             return [
                 ('<style>\n    ' + css.replace(/\n/g, '\n    ') + '\n</style>'),
                 BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes)
-            ].join('\n');
+            ].join('');
         }
         return BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes);
     }
@@ -2822,7 +2846,7 @@ exports.H = function(command, a, b) {
         kv = kv.split(/\s*:\s*/);
         var k = kv[0];
         var v = kv[1];
-        var sep = ':';
+        var sep = ': ';
         var del = ';';
         if (k && v) {
             if (autovendor.indexOf(k) === -1) {
@@ -2986,7 +3010,7 @@ exports.H = function(command, a, b) {
         });
     }
     function strTrim(str) {
-        return str.replace(/^\s+|\s+$/gm, '');
+        return str.replace(/^\s+|\s+$/, '');
     }
     function genStyleID() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
