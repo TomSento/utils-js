@@ -1021,7 +1021,7 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Height',
         func: 'H',
-        css: 'height:$',
+        css: 'height: $',
         expanders: {
             a: 'auto',
             av: 'available',
@@ -1030,27 +1030,30 @@ exports.H = function(command, a, b) {
             fc: 'fit-content',
             maxc: 'max-content',
             minc: 'min-content'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Hyphens',
         func: 'Hy',
-        css: 'hyphens:$',
+        css: 'hyphens: $',
         expanders: {
             a: 'auto',
             n: 'normal',
             m: 'manual'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Letter spacing',
         func: 'Lts',
-        css: 'letter-spacing:$',
+        css: 'letter-spacing: $',
         expanders: {
             n: 'normal'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'List style type',
         func: 'List',
-        css: 'list-style-type:$',
+        css: 'list-style-type: $',
         expanders: {
             n: 'none',
             d: 'disc',
@@ -1067,33 +1070,37 @@ exports.H = function(command, a, b) {
             g: 'georgian',
             la: 'lower-alpha',
             ua: 'upper-alpha'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'List style position',
         func: 'Lisp',
-        css: 'list-style-position:$',
+        css: 'list-style-position: $',
         expanders: {
             i: 'inside',
             o: 'outside'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'List style image',
         func: 'Lisi',
-        css: 'list-style-image:$',
+        css: 'list-style-image: $',
         expanders: {
             n: 'none'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Line height',
         func: 'Lh',
-        css: 'line-height:$',
+        css: 'line-height: $',
         expanders: {
             n: 'normal'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Margin (all edges)',
         func: 'M',
-        css: 'margin:$',
+        css: 'margin: $',
         expanders: {
             a: 'auto'
         },
@@ -1102,87 +1109,96 @@ exports.H = function(command, a, b) {
         name: 'Margin (X axis)',
         func: 'Mx',
         css: [
-            'margin-left:$',
-            'margin-right:$'
+            'margin-left: $',
+            'margin-right: $'
         ],
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Margin (Y axis)',
         func: 'My',
         css: [
-            'margin-top:$',
-            'margin-bottom:$'
+            'margin-top: $',
+            'margin-bottom: $'
         ],
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Margin top',
         func: 'Mt',
-        css: 'margin-top:$',
+        css: 'margin-top: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Margin right',
         func: 'Mright',
-        css: 'margin-right:$',
+        css: 'margin-right: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Margin bottom',
         func: 'Mb',
-        css: 'margin-bottom:$',
+        css: 'margin-bottom: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Margin left',
         func: 'Mleft',
-        css: 'margin-left:$',
+        css: 'margin-left: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Max height',
         func: 'Mah',
-        css: 'max-height:$',
+        css: 'max-height: $',
         expanders: {
             a: 'auto',
             maxc: 'max-content',
             minc: 'min-content',
             fa: 'fill-available',
             fc: 'fit-content'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Max width',
         func: 'Maw',
-        css: 'max-width:$',
+        css: 'max-width: $',
         expanders: {
             n: 'none',
             fa: 'fill-available',
             fc: 'fit-content',
             maxc: 'max-content',
             minc: 'min-content'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Min height',
         func: 'Mih',
-        css: 'min-height:$',
+        css: 'min-height: $',
         expanders: {
             a: 'auto',
             fa: 'fill-available',
             fc: 'fit-content',
             maxc: 'max-content',
             minc: 'min-content'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Min width',
         func: 'Miw',
-        css: 'min-width:$',
+        css: 'min-width: $',
         expanders: {
             a: 'auto',
             fa: 'fill-available',
@@ -1190,121 +1206,139 @@ exports.H = function(command, a, b) {
             ini: 'initial',
             maxc: 'max-content',
             minc: 'min-content'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Outline',
         func: 'O',
-        css: 'outline:$',
+        css: 'outline: $',
         expanders: {
             n: 'none'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Top',
         func: 'T',
-        css: 'top:$',
+        css: 'top: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Right',
         func: 'Right',
-        css: 'right:$',
+        css: 'right: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Bottom',
         func: 'B',
-        css: 'bottom:$',
+        css: 'bottom: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Left',
         func: 'Left',
-        css: 'left:$',
+        css: 'left: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Opacity',
         func: 'Op',
-        css: 'opacity:$'
+        css: 'opacity: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Overflow',
         func: 'Ov',
-        css: 'overflow:$',
+        css: 'overflow: $',
         expanders: {
             a: 'auto',
             h: 'hidden',
             s: 'scroll',
             v: 'visible'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Overflow (X axis)',
         func: 'Ovx',
-        css: 'overflow-x:$',
+        css: 'overflow-x: $',
         expanders: {
             a: 'auto',
             h: 'hidden',
             s: 'scroll',
             v: 'visible'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Overflow (Y axis)',
         func: 'Ovy',
-        css: 'overflow-y:$',
+        css: 'overflow-y: $',
         expanders: {
             a: 'auto',
             h: 'hidden',
             s: 'scroll',
             v: 'visible'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Overflow scrolling',
         func: 'Ovs',
-        css: '-webkit-overflow-scrolling:$',
+        css: '-webkit-overflow-scrolling: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Padding (all edges)',
         func: 'P',
-        css: 'padding:$'
+        css: 'padding: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Padding (X axis)',
         func: 'Px',
         css: [
-            'padding-left:$',
-            'padding-right:$'
-        ]
+            'padding-left: $',
+            'padding-right: $'
+        ],
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Padding (Y axis)',
         func: 'Py',
         css: [
-            'padding-top:$',
-            'padding-bottom:$'
-        ]
+            'padding-top: $',
+            'padding-bottom: $'
+        ],
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Padding top',
         func: 'Pt',
-        css: 'padding-top:$'
+        css: 'padding-top: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Padding right',
         func: 'Pright',
-        css: 'padding-right:$'
+        css: 'padding-right: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Padding bottom',
         func: 'Pb',
-        css: 'padding-bottom:$'
+        css: 'padding-bottom: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Padding left',
         func: 'Pleft',
-        css: 'padding-left:$'
+        css: 'padding-left: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Pointer events',
         func: 'Pe',
-        css: 'pointer-events:$',
+        css: 'pointer-events: $',
         expanders: {
             a: 'auto',
             f: 'fill',
@@ -1315,114 +1349,127 @@ exports.H = function(command, a, b) {
             vf: 'visibleFill',
             vp: 'visiblePainted',
             vs: 'visibleStroke'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Position',
         func: 'Pos',
-        css: 'position:$',
+        css: 'position: $',
         expanders: {
             a: 'absolute',
             f: 'fixed',
             r: 'relative',
             s: 'static',
             st: 'sticky'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Resize',
         func: 'Rsz',
-        css: 'resize:$',
+        css: 'resize: $',
         expanders: {
             n: 'none',
             b: 'both',
             h: 'horizontal',
             v: 'vertical'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Table layout',
         func: 'Tbl',
-        css: 'table-layout:$',
+        css: 'table-layout: $',
         expanders: {
             a: 'auto',
             f: 'fixed'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text align',
         func: 'Ta',
-        css: 'text-align:$',
+        css: 'text-align: $',
         expanders: {
             c: 'center',
             e: 'end',
             j: 'justify',
             mp: 'match-parent',
             s: 'start'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text align last',
         func: 'Tal',
-        css: 'text-align-last:$',
+        css: 'text-align-last: $',
         expanders: {
             a: 'auto',
             c: 'center',
             e: 'end',
             j: 'justify',
             s: 'start'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text decoration',
         func: 'Td',
-        css: 'text-decoration:$',
+        css: 'text-decoration: $',
         expanders: {
             lt: 'line-through',
             n: 'none',
             o: 'overline',
             u: 'underline'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text indent',
         func: 'Ti',
-        css: 'text-indent:$'
+        css: 'text-indent: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text overflow',
         func: 'Tov',
-        css: 'text-overflow:$',
+        css: 'text-overflow: $',
         expanders: {
             c: 'clip',
             e: 'ellipsis'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text rendering',
         func: 'Tren',
-        css: 'text-rendering:$',
+        css: 'text-rendering: $',
         expanders: {
             a: 'auto',
             os: 'optimizeSpeed',
             ol: 'optimizeLegibility',
             gp: 'geometricPrecision'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text replace',
         func: 'Tr',
-        css: 'text-replace:$',
+        css: 'text-replace: $',
         expanders: {
             n: 'none'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text transform',
         func: 'Tt',
-        css: 'text-transform:$',
+        css: 'text-transform: $',
         expanders: {
             n: 'none',
             c: 'capitalize',
             u: 'uppercase',
             l: 'lowercase'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Text shadow',
         func: 'Tsh',
-        css: 'text-shadow:$',
+        css: 'text-shadow: $',
         expanders: {
             n: 'none'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transform',
         func: 'Trf',
