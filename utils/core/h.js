@@ -30,7 +30,7 @@ exports.H = function(command, a, b) {
 
     var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
-    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Charset|Chckd|Content|Disabled|Href|HttpEquiv|Lang|Name|Property|Readonly|Rel|Slctd|Src|Type)(?![A-Za-z0-9])/;
+    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Charset|Chckd|Content|Disabled|For|Href|HttpEquiv|Lang|Name|Ph|Property|Rel|Ro|Slctd|Src|Type)(?![A-Za-z0-9])/;
     var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Ac|Ai|Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|As|B|Bd|Bdb|Bdbc|Bdbs|Bdbw|Bdc|Bdcl|Bdleft|Bdleftc|Bdlefts|Bdleftw|Bdright|Bdrightc|Bdrights|Bdrightw|Bdrs|Bdrsbleft|Bdrsbright|Bdrstleft|Bdrstright|Bds|Bdsp|Bdt|Bdtc|Bdts|Bdtw|Bdw|Bdx|Bdy|Bfv|Bg|Bga|Bgc|Bgcp|Bgi|Bgo|Bgp|Bgpx|Bgpy|Bgr|Bgz|Blur|Brightness|Bxsh|Bxz|C|Cl|Cnt|Contrast|Ctn|Cur|D|Dropshadow|Ff|Fil|Fill|Fl|Fld|Flf|Flw|Flx|Flxb|Flxg|Flxs|Fs|Fv|Fw|Fx|Fxb|Fxd|Fxf|Fxg|Fxs|Fxw|Fz|Grayscale|H|HueRotate|Hy|Invert|Jc|Left|Lh|LineClamp|Lisi|Lisp|List|Lts|M|Mah|Matrix|Matrix3d|Maw|Mb|Mih|Miw|Mleft|Mright|Mt|Mx|My|O|Op|Opacity|Or|Ov|Ovs|Ovx|Ovy|P|Pb|Pe|Pleft|Pos|Pright|Prs|Prso|Pt|Px|Py|Right|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Rsz|Saturate|Scale|Scale3d|ScaleX|ScaleY|Sepia|Skew|SkewX|SkewY|Stk|Stklc|Stklj|Stkw|T|Ta|Tal|Tbl|Td|Ti|Tov|Tr|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Tren|Trf|Trfo|Trfs|Trs|Trsde|Trsdu|Trsp|Trstf|Tsh|Tt|Us|V|Va|W|Whs|Whsc|Wob|Wow|Z)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
@@ -75,6 +75,7 @@ exports.H = function(command, a, b) {
         Body: '<body>[[content]]</body>',
         Div: '<div[[modifiers]]>[[content]]</div>',
         Span: '<span[[modifiers]]>[[content]]</span>',
+        Label: '<label[[modifiers]]>[[content]]</label>',
         Input: '<input[[modifiers]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
         Option: '<option[[modifiers]]>[[content]]</option>',
@@ -87,6 +88,7 @@ exports.H = function(command, a, b) {
             allowArgument: true,
             html: 'lang=$'
         }],
+        Head: [],
         Meta: [{ // MANDATORY ORDER
             name: 'Charset',
             func: 'Charset',
@@ -113,6 +115,7 @@ exports.H = function(command, a, b) {
             allowArgument: true,
             html: 'content=$'
         }],
+        Title: [],
         Link: [{
             name: 'Rel',
             func: 'Rel',
@@ -129,14 +132,33 @@ exports.H = function(command, a, b) {
             allowArgument: true,
             html: 'href=$'
         }],
+        Body: [],
+        Div: [],
+        Span: [],
+        Label: [{
+            name: 'For',
+            func: 'For',
+            allowArgument: true,
+            html: 'for=$'
+        }],
         Input: [{
+            name: 'Type',
+            func: 'Type',
+            allowArgument: true,
+            html: 'type=$'
+        }, {
+            name: 'Placeholder',
+            func: 'Ph',
+            allowArgument: true,
+            html: 'placeholder=$'
+        }, {
             name: 'Checked',
             func: 'Chckd',
             allowArgument: false,
             html: 'checked'
         }, {
             name: 'Readonly',
-            func: 'Readonly',
+            func: 'Ro',
             allowArgument: false,
             html: 'readonly'
         }, {
