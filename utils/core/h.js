@@ -56,6 +56,9 @@ exports.H = function(command, a, b) {
     // https://regex101.com/r/tIaCUX/20 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR - TEST
     // https://regex101.com/r/D7wlXm/20 - MATCH ACSS INSTRUCTION COMPONENTS - WITH COMBINATOR
     var REG_ACSS_INSTRUCTION_STRING_MATCH_COMPONENTS = /^([^:_>+()!@]+)\(([^()]*)\)((?=!)!|)((?=:[^:_>+()!@])(?::[^:_>+()!@]+)+|)((?=::[^:_>+()!@])(?:::[^:_>+()!@]+)+|)((?=@[^:_>+()!@])@[^:_>+()!@]+|)$/;
+    var REG_ACSS_INSTRUCTION_VALUE_NO_MISSING_SPACE_AFTER_COMMA = /,\S/;
+    var REG_ACSS_INSTRUCTION_VALUE_NO_MISSING_SPACE_AFTER_COMMA_SKIP = /url\[(.*?)\]/g;
+    var REG_ACSS_INSTRUCTION_VALUE_BRACKETS = [/\[/g, /\]/g];
     // https://regex101.com/r/Mcr8Np/17 - MATCH NEXT ACSS COLOR - TEST
     // https://regex101.com/r/dJsNNd/13 -  MATCH NEXT ACSS COLOR - JS
     var REG_ACSS_INSTRUCTION_VALUE_MATCH_NEXT_COLOR = /(^|\s|,)(?=#)(?:#([^.,\s]+))((?=\.)\.[^#,\s]*|)(?:\s|,|$)+/;
@@ -246,7 +249,7 @@ exports.H = function(command, a, b) {
             '    width: 0;',
             '}'
         ],
-        allowArguments: true,
+        allowArgument: true,
         type: ACSS_INSTRUCTION_TYPE_helper()
     }, { // MANDATORY ORDER
         name: 'Animation',
@@ -2459,6 +2462,10 @@ exports.H = function(command, a, b) {
         }
         var score = i + 1;
         var acssRule = ACSS_RULES[i];
+        var err = ACSS_INSTRUCTION_VALUE_validate(acssRule, components[2]);
+        if (err) {
+            throw err;
+        }
         if (acssRule.type === ACSS_INSTRUCTION_TYPE_rule()) {
             return ACSS_INSTRUCTION_STRING_parseRule(acssRule, score, components);
         }
@@ -2468,6 +2475,21 @@ exports.H = function(command, a, b) {
         else {
             throw new Error('ACSS config - Missing "type".');
         }
+    }
+    function ACSS_INSTRUCTION_VALUE_validate(acssRule, v) {
+        if (acssRule.type === ACSS_INSTRUCTION_TYPE_helper()) {
+            if (!acssRule.allowArgument && v) {
+                return new Error('ACSS instruction value - Instruction "' + acssRule.func + '" must not define parameter."');
+            }
+        }
+        return ACSS_INSTRUCTION_VALUE_noMissingSpaceAfterComma(v);
+    }
+    function ACSS_INSTRUCTION_VALUE_noMissingSpaceAfterComma(v) {
+        v = v.replace(REG_ACSS_INSTRUCTION_VALUE_NO_MISSING_SPACE_AFTER_COMMA_SKIP, '');
+        if (REG_ACSS_INSTRUCTION_VALUE_NO_MISSING_SPACE_AFTER_COMMA.test(v)) {
+            return new Error('ACSS instruction value - No missing space after comma.');
+        }
+        return null;
     }
     function ACSS_INSTRUCTION_STRING_parseRule(acssRule, score, components) {
         var arg = ACSS_INSTRUCTION_VALUE_transform(acssRule, components[2]);
@@ -2482,6 +2504,8 @@ exports.H = function(command, a, b) {
         return ACSS_INSTRUCTION_composeRule(acssRule, score, arg, important, pseudoClasses.array, pseudoElements.array, pseudoScore, mediaValue);
     }
     function ACSS_INSTRUCTION_VALUE_transform(acssRule, instructionValue) {
+        instructionValue = instructionValue.replace(REG_ACSS_INSTRUCTION_VALUE_BRACKETS[0], '(');
+        instructionValue = instructionValue.replace(REG_ACSS_INSTRUCTION_VALUE_BRACKETS[1], ')');
         instructionValue = ACSS_INSTRUCTION_VALUE_transformColors(instructionValue);
         instructionValue = ACSS_INSTRUCTION_VALUE_transformByExpanders(acssRule, instructionValue);
         return instructionValue;
