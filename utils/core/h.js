@@ -1473,148 +1473,177 @@ exports.H = function(command, a, b) {
     }, {
         name: 'Transform',
         func: 'Trf',
-        css: 'transform:$'
+        css: 'transform: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transform origin',
         func: 'Trfo',
-        css: 'transform-origin:$ {1}',
+        css: 'transform-origin: $',
         expanders: {
             t: 'top',
             c: 'center'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transform style',
         func: 'Trfs',
-        css: 'transform-style:$',
+        css: 'transform-style: $',
         expanders: {
             f: 'flat',
             p: 'preserve-3d'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Perspective',
         func: 'Prs',
-        css: 'perspective:$',
+        css: 'perspective: $',
         expanders: {
             n: 'none'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Perspective origin',
         func: 'Prso',
-        css: 'perspective-origin:$ {1}',
+        css: 'perspective-origin: $',
         expanders: {
             t: 'top',
             c: 'center'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Backface visibility',
         func: 'Bfv',
-        css: 'backface-visibility:$',
+        css: 'backface-visibility: $',
         expanders: {
             h: 'hidden',
             v: 'visible'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Matrix (transform)',
         func: 'Matrix',
-        css: 'transform:matrix($)'
+        css: 'transform: matrix($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Matrix 3d (transform)',
         func: 'Matrix3d',
-        css: 'transform:matrix($)'
+        css: 'transform: matrix($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Rotate (transform)',
         func: 'Rotate',
-        css: 'transform:rotate($)'
+        css: 'transform: rotate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Rotate 3d (transform)',
         func: 'Rotate3d',
-        css: 'transform:rotate3d($,{1},{2},{3})'
+        css: 'transform: rotate3d($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'RotateX (transform)',
         func: 'RotateX',
-        css: 'transform:rotateX($)'
+        css: 'transform: rotateX($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'RotateY (transform)',
         func: 'RotateY',
-        css: 'transform:rotateY($)'
+        css: 'transform: rotateY($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'RotateZ (transform)',
         func: 'RotateZ',
-        css: 'transform:rotateZ($)'
+        css: 'transform: rotateZ($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Scale (transform)',
         func: 'Scale',
-        css: 'transform:scale($,{1})'
+        css: 'transform: scale($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Scale 3d (transform)',
         func: 'Scale3d',
-        css: 'transform:scale3d($,{1},{2})'
+        css: 'transform: scale3d($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'ScaleX (transform)',
         func: 'ScaleX',
-        css: 'transform:scaleX($)'
+        css: 'transform: scaleX($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'ScaleY (transform)',
         func: 'ScaleY',
-        css: 'transform:scaleY($)'
+        css: 'transform: scaleY($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Skew (transform)',
         func: 'Skew',
-        css: 'transform:skew($,{1})'
+        css: 'transform: skew($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'SkewX (transform)',
         func: 'SkewX',
-        css: 'transform:skewX($)'
+        css: 'transform: skewX($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'SkewY (transform)',
         func: 'SkewY',
-        css: 'transform:skewY($)'
+        css: 'transform: skewY($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Translate (transform)',
         func: 'Translate',
-        css: 'transform:translate($,{1})'
+        css: 'transform: translate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Translate 3d (transform)',
         func: 'Translate3d',
-        css: 'transform:translate3d($,{1},{2})'
+        css: 'transform: translate3d($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Translate X (transform)',
         func: 'TranslateX',
-        css: 'transform:translateX($)'
+        css: 'transform: translateX($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Translate Y (transform)',
         func: 'TranslateY',
-        css: 'transform:translateY($)'
+        css: 'transform: translateY($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Translate Z (transform)',
         func: 'TranslateZ',
-        css: 'transform:translateZ($)'
+        css: 'transform: translateZ($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transition',
         func: 'Trs',
-        css: 'transition:$'
+        css: 'transition: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transition delay',
         func: 'Trsde',
-        css: 'transition-delay:$',
+        css: 'transition-delay: $',
         expanders: {
             i: 'initial'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transition duration',
         func: 'Trsdu',
-        css: 'transition-duration:$'
+        css: 'transition-duration: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transition property',
         func: 'Trsp',
-        css: 'transition-property:$',
+        css: 'transition-property: $',
         expanders: {
             a: 'all'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transition timing function',
         func: 'Trstf',
-        css: 'transition-timing-function:$',
+        css: 'transition-timing-function: $',
         expanders: {
             e: 'ease',
             ei: 'ease-in',
@@ -1623,11 +1652,12 @@ exports.H = function(command, a, b) {
             l: 'linear',
             ss: 'step-start',
             se: 'step-end'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'User select',
         func: 'Us',
-        css: 'user-select:$',
+        css: 'user-select: $',
         expanders: {
             a: 'all',
             el: 'element',
@@ -1635,11 +1665,12 @@ exports.H = function(command, a, b) {
             n: 'none',
             t: 'text',
             to: 'toggle'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Vertical align',
         func: 'Va',
-        css: 'vertical-align:$',
+        css: 'vertical-align: $',
         expanders: {
             b: 'bottom',
             bl: 'baseline',
@@ -1649,42 +1680,46 @@ exports.H = function(command, a, b) {
             t: 'top',
             tb: 'text-bottom',
             tt: 'text-top'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Visibility',
         func: 'V',
-        css: 'visibility:$',
+        css: 'visibility: $',
         expanders: {
             v: 'visible',
             h: 'hidden',
             c: 'collapse'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'White space',
         func: 'Whs',
-        css: 'white-space:$',
+        css: 'white-space: $',
         expanders: {
             n: 'normal',
             p: 'pre',
             nw: 'nowrap',
             pw: 'pre-wrap',
             pl: 'pre-line'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'White space collapse',
         func: 'Whsc',
-        css: 'white-space-collapse:$',
+        css: 'white-space-collapse: $',
         expanders: {
             n: 'normal',
             ka: 'keep-all',
             l: 'loose',
             bs: 'break-strict',
             ba: 'break-all'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Width',
         func: 'W',
-        css: 'width:$',
+        css: 'width: $',
         expanders: {
             a: 'auto',
             bb: 'border-box',
@@ -1693,63 +1728,72 @@ exports.H = function(command, a, b) {
             minc: 'min-content',
             maxc: 'max-content',
             fc: 'fit-content'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Word break',
         func: 'Wob',
-        css: 'word-break:$',
+        css: 'word-break: $',
         expanders: {
             ba: 'break-all',
             ka: 'keep-all',
             n: 'normal'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Word wrap',
         func: 'Wow',
-        css: 'word-wrap:$',
+        css: 'word-wrap: $',
         expanders: {
             bw: 'break-word',
             n: 'normal'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Z index',
         func: 'Z',
-        css: 'z-index:$',
+        css: 'z-index: $',
         expanders: {
             a: 'auto'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Fill (SVG)',
         func: 'Fill',
-        css: 'fill:$',
-        expanders: ACSS_COLOR_ARGUMENTS
+        css: 'fill: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Stroke (SVG)',
         func: 'Stk',
-        css: 'stroke:$',
-        expanders: ACSS_COLOR_ARGUMENTS
+        css: 'stroke: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Stroke width (SVG)',
         func: 'Stkw',
-        css: 'stroke-width:$'
+        css: 'stroke-width: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Stroke linecap (SVG)',
         func: 'Stklc',
-        css: 'stroke-linecap:$',
+        css: 'stroke-linecap: $',
         expanders: {
             b: 'butt',
             r: 'round',
             s: 'square'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Stroke linejoin (SVG)',
         func: 'Stklj',
-        css: 'stroke-linejoin:$',
+        css: 'stroke-linejoin: $',
         expanders: {
             b: 'bevel',
             r: 'round',
             m: 'miter'
-        }
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
     }];
     function ACSS_INSTRUCTION_TYPE_rule() {
         return 'RULE';
