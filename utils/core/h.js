@@ -218,6 +218,101 @@ exports.H = function(command, a, b) {
     };
 
     var ACSS_RULES = [{
+        name: 'Border',
+        func: 'Bd',
+        css: [
+            '.[[el]] {',
+            '    border-width: 1px;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border X 1px solid',
+        func: 'BdX',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 0;',
+            '    border-right-width: 1px;',
+            '    border-bottom-width: 0;',
+            '    border-left-width: 1px;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border Y 1px solid',
+        func: 'BdY',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 1px;',
+            '    border-right-width: 0;',
+            '    border-bottom-width: 1px;',
+            '    border-left-width: 0;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border Top 1px solid',
+        func: 'BdT',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 1px;',
+            '    border-right-width: 0;',
+            '    border-bottom-width: 0;',
+            '    border-left-width: 0;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border Right 1px solid',
+        func: 'BdRight',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 0;',
+            '    border-right-width: 1px;',
+            '    border-bottom-width: 0;',
+            '    border-left-width: 0;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border Bottom 1px solid',
+        func: 'BdB',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 0;',
+            '    border-right-width: 0;',
+            '    border-bottom-width: 1px;',
+            '    border-left-width: 0;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border Left 1px solid',
+        func: 'BdLeft',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 0;',
+            '    border-right-width: 0;',
+            '    border-bottom-width: 0;',
+            '    border-left-width: 1px;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
         name: 'Line clamp',
         func: 'LineClamp', // https://github.com/acss-io/atomizer/blob/master/src/helpers.js#L267
         css: [
