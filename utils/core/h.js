@@ -16,7 +16,6 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_NO_SPACE_AT_START = /^\s/;
     var REG_BASE_CMD_NO_SPACE_AT_END = /\s$/;
     var REG_BASE_CMD_NO_SPACE_FOLLOWED_BY_COMMA = /\s,/;
-    var REG_BASE_CMD_NO_MISSING_SPACE_AFTER_COMMA = /,\S/;
     var REG_BASE_CMD_NO_MULTIPLE_SPACES = /\s{2,}/;
     var REG_BASE_CMD_NO_MULTIPLE_COMMAS = /,\s*,/;
     var REG_BASE_CMD_NO_MULTIPLE_PIPES = /\|{2,}/;
@@ -50,6 +49,7 @@ exports.H = function(command, a, b) {
     var REG_HTML_ATTRIBUTES_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.*?\)/g;
     var REG_HTML_ATTRIBUTES_INSTRUCTION_STRING_MATCH_COMPONENTS = /([^\s(]+)\((.*)\)/;
     var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR = /[()]/;
+    var REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_MISSING_SPACE_AFTER_COMMA = /,\S/;
 
     var REG_ACSS_INSTRUCTIONS_STRING_NO_MISSING_SPACE_BETWEEN_INSTRUCTIONS = /\)\S*\(/;
     var REG_ACSS_INSTRUCTIONS_STRING_MATCH_INSTRUCTION_STRINGS = /\S*\(.*?\)\S*/g;
@@ -86,51 +86,60 @@ exports.H = function(command, a, b) {
             name: 'Language',
             func: 'Lang',
             allowArgument: true,
-            html: 'lang=$'
+            html: 'lang=$',
+            noMissingSpaceAfterComma: true
         }],
         Head: [],
         Meta: [{ // MANDATORY ORDER
             name: 'Charset',
             func: 'Charset',
             allowArgument: true,
-            html: 'charset=$'
+            html: 'charset=$',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Name',
             func: 'Name',
             allowArgument: true,
-            html: 'name=$'
+            html: 'name=$',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Property',
             func: 'Property',
             allowArgument: true,
-            html: 'property=$'
+            html: 'property=$',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'HttpEquiv',
             func: 'HttpEquiv',
             allowArgument: true,
-            html: 'http-equiv=$'
+            html: 'http-equiv=$',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Content',
             func: 'Content',
             allowArgument: true,
-            html: 'content=$'
+            html: 'content=$',
+            noMissingSpaceAfterComma: true
         }],
         Title: [],
         Link: [{
             name: 'Rel',
             func: 'Rel',
             allowArgument: true,
-            html: 'rel=$'
+            html: 'rel=$',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Type',
             func: 'Type',
             allowArgument: true,
-            html: 'type=$'
+            html: 'type=$',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Href',
             func: 'Href',
             allowArgument: true,
-            html: 'href=$'
+            html: 'href=$',
+            noMissingSpaceAfterComma: false
         }],
         Body: [],
         Div: [],
@@ -139,51 +148,60 @@ exports.H = function(command, a, b) {
             name: 'For',
             func: 'For',
             allowArgument: true,
-            html: 'for=$'
+            html: 'for=$',
+            noMissingSpaceAfterComma: true
         }],
         Input: [{
             name: 'Type',
             func: 'Type',
             allowArgument: true,
-            html: 'type=$'
+            html: 'type=$',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Placeholder',
             func: 'Ph',
             allowArgument: true,
-            html: 'placeholder=$'
+            html: 'placeholder=$',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Checked',
             func: 'Chckd',
             allowArgument: false,
-            html: 'checked'
+            html: 'checked',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Readonly',
             func: 'Ro',
             allowArgument: false,
-            html: 'readonly'
+            html: 'readonly',
+            noMissingSpaceAfterComma: true
         }, {
             name: 'Disabled',
             func: 'Disabled',
             allowArgument: false,
-            html: 'disabled'
+            html: 'disabled',
+            noMissingSpaceAfterComma: true
         }],
         Select: [{
             name: 'Disabled',
             func: 'Disabled',
             allowArgument: false,
-            html: 'disabled'
+            html: 'disabled',
+            noMissingSpaceAfterComma: true
         }],
         Option: [{
             name: 'Selected',
             func: 'Slctd',
             allowArgument: false,
-            html: 'selected'
+            html: 'selected',
+            noMissingSpaceAfterComma: true
         }],
         Script: [{
             name: 'Src',
             func: 'Src',
             allowArgument: true,
-            html: 'src=$'
+            html: 'src=$',
+            noMissingSpaceAfterComma: false
         }]
     };
 
@@ -1938,7 +1956,6 @@ exports.H = function(command, a, b) {
             BASE_CMD_noSpaceAtStart,
             BASE_CMD_noSpaceAtEnd,
             BASE_CMD_noSpaceFollowedByComma,
-            BASE_CMD_noMissingSpaceAfterComma,
             BASE_CMD_noMultipleSpaces,
             BASE_CMD_noMultipleCommas,
             BASE_CMD_noMultiplePipes,
@@ -1972,12 +1989,6 @@ exports.H = function(command, a, b) {
     function BASE_CMD_noSpaceFollowedByComma(v) {
         if (REG_BASE_CMD_NO_SPACE_FOLLOWED_BY_COMMA.test(v)) {
             return new Error('Base command - No space followed by comma.');
-        }
-        return null;
-    }
-    function BASE_CMD_noMissingSpaceAfterComma(v) {
-        if (REG_BASE_CMD_NO_MISSING_SPACE_AFTER_COMMA.test(v)) {
-            return new Error('Base command - No missing space after comma.');
         }
         return null;
     }
@@ -2339,7 +2350,7 @@ exports.H = function(command, a, b) {
             throw new Error('Unsupported HTML attribute "' + components[1] + '" for "' + htmlSelectorTag + '" tag.');
         }
         var htmlAttribute = allowedHTMLAttributes[i];
-        var err = HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(htmlAttribute, components);
+        var err = HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(htmlAttribute, components[2]);
         if (err) {
             throw err;
         }
@@ -2347,21 +2358,27 @@ exports.H = function(command, a, b) {
         var score = i;
         return HTML_ATTRIBUTES_INSTRUCTION_compose(instructionString, htmlAttribute, instructionValue, score);
     }
-    function HTML_ATTRIBUTES_INSTRUCTION_COMPONENTS_validate(htmlAttribute, components) {
-        if (!htmlAttribute.allowArgument && components[2]) {
+    function HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(htmlAttribute, v) {
+        if (!htmlAttribute.allowArgument && v) {
             return new Error('HTML attributes instruction string - Instruction "' + htmlAttribute.func + '" must not define parameter.');
         }
-        return HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(components[2]);
-    }
-    function HTML_ATTRIBUTES_INSTRUCTION_VALUE_validate(v) {
-        return validateAll(v, [
-            HTML_ATTRIBUTES_INSTRUCTION_VALUE_noUnallowedChar
-        ]);
+        var arr = [HTML_ATTRIBUTES_INSTRUCTION_VALUE_noUnallowedChar];
+        if (htmlAttribute.noMissingSpaceAfterComma) {
+            arr.push(HTML_ATTRIBUTES_INSTRUCTION_VALUE_noMissingSpaceAfterComma);
+        }
+        return validateAll(v, arr);
     }
     function HTML_ATTRIBUTES_INSTRUCTION_VALUE_noUnallowedChar(v) {
         if (REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_UNALLOWED_CHAR.test(v)) {
             return new Error('HTML attributes instruction value - No unallowed char.');
         }
+        return null;
+    }
+    function HTML_ATTRIBUTES_INSTRUCTION_VALUE_noMissingSpaceAfterComma(v) {
+        if (REG_HTML_ATTRIBUTES_INSTRUCTION_VALUE_NO_MISSING_SPACE_AFTER_COMMA.test(v)) {
+            return new Error('HTML attributes instruction value - No missing space after comma.');
+        }
+        return null;
     }
     function HTML_ATTRIBUTES_INSTRUCTION_compose(instructionString, htmlAttribute, instructionValue, score) {
         return extend(clone(htmlAttribute), {
