@@ -30,7 +30,7 @@ exports.H = function(command, a, b) {
     var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
     var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Charset|Chckd|Content|Disabled|For|Href|HttpEquiv|Lang|Name|Ph|Property|Rel|Ro|Slctd|Src|Type)(?![A-Za-z0-9])/;
-    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Ac|Ai|Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|As|B|Bd|Bdb|Bdbc|Bdbs|Bdbw|Bdc|Bdcl|Bdleft|Bdleftc|Bdlefts|Bdleftw|Bdrad|Bdradbleft|Bdradbr|Bdradtleft|Bdradtr|BdR|Bdr|Bdrc|Bdrs|Bdrw|Bds|Bdsp|Bdt|Bdtc|Bdts|Bdtw|Bdw|Bdx|Bdy|Bfv|Bg|Bga|Bgc|Bgcp|Bgi|Bgo|Bgp|Bgpx|Bgpy|Bgr|Bgz|Blur|Brightness|Bxsh|Bxz|C|Cl|Cnt|Contrast|Ctn|Cur|D|Dropshadow|Ff|Fil|Fill|Fl|Fld|Flf|Flw|Flx|Flxb|Flxg|Flxs|Fs|Fv|Fw|Fx|Fxb|Fxd|Fxf|Fxg|Fxs|Fxw|Fz|Grayscale|H|HueRotate|Hy|Invert|Jc|Left|Lh|LineClamp|Lisi|Lisp|List|Lts|M|Mah|Matrix|Matrix3d|Maw|Mb|Mih|Miw|Mleft|Mr|Mt|Mx|My|O|Op|Opacity|Or|Ov|Ovs|Ovx|Ovy|P|Pb|Pe|Pleft|Pos|Pr|Prs|Prso|Pt|Px|Py|R|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Rsz|Saturate|Scale|Scale3d|ScaleX|ScaleY|Sepia|Skew|SkewX|SkewY|Stk|Stklc|Stklj|Stkw|T|Ta|Tal|Tbl|Td|Ti|Tov|Tr|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Tren|Trf|Trfo|Trfs|Trs|Trsde|Trsdu|Trsp|Trstf|Tsh|Tt|Us|V|Va|W|Whs|Whsc|Wob|Wow|Z)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
+    var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Ac|Ai|Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|As|B|Bd|Bdb|Bdbc|Bdbs|Bdbw|Bdc|Bdcl|BdL|Bdl|Bdlc|Bdls|Bdlw|Bdrad|Bdradbl|Bdradbr|Bdradtl|Bdradtr|BdR|Bdr|Bdrc|Bdrs|Bdrw|Bds|Bdsp|Bdt|Bdtc|Bdts|Bdtw|Bdw|Bdx|Bdy|Bfv|Bg|Bga|Bgc|Bgcp|Bgi|Bgo|Bgp|Bgpx|Bgpy|Bgr|Bgz|Blur|Brightness|Bxsh|Bxz|C|Cl|Cnt|Contrast|Ctn|Cur|D|Dropshadow|Ff|Fil|Fill|Fl|Fld|Flf|Flw|Flx|Flxb|Flxg|Flxs|Fs|Fv|Fw|Fx|Fxb|Fxd|Fxf|Fxg|Fxs|Fxw|Fz|Grayscale|H|HueRotate|Hy|Invert|Jc|L|Lh|LineClamp|Lisi|Lisp|List|Lts|M|Mah|Matrix|Matrix3d|Maw|Mb|Mih|Miw|Ml|Mr|Mt|Mx|My|O|Op|Opacity|Or|Ov|Ovs|Ovx|Ovy|P|Pb|Pe|Pl|Pos|Pr|Prs|Prso|Pt|Px|Py|R|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Rsz|Saturate|Scale|Scale3d|ScaleX|ScaleY|Sepia|Skew|SkewX|SkewY|Stk|Stklc|Stklj|Stkw|T|Ta|Tal|Tbl|Td|Ti|Tov|Tr|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Tren|Trf|Trfo|Trfs|Trs|Trsde|Trsdu|Trsp|Trstf|Tsh|Tt|Us|V|Va|W|Whs|Whsc|Wob|Wow|Z)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_UNALLOWED_METATAG_CHAR = /[^\w]/;
@@ -300,7 +300,7 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_helper()
     }, {
         name: 'Border Left 1px solid',
-        func: 'BdLeft',
+        func: 'BdL',
         css: [
             '.[[el]] {',
             '    border-top-width: 0;',
@@ -472,7 +472,7 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left',
-        func: 'Bdleft',
+        func: 'Bdl',
         css: 'border-left: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -501,7 +501,7 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left color',
-        func: 'Bdleftc',
+        func: 'Bdlc',
         css: 'border-left-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
@@ -580,7 +580,7 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left style',
-        func: 'Bdlefts',
+        func: 'Bdls',
         css: 'border-left-style: $',
         expanders: {
             d: 'dotted',
@@ -637,7 +637,7 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border left width',
-        func: 'Bdleftw',
+        func: 'Bdlw',
         css: 'border-left-width: $',
         expanders: {
             m: 'medium',
@@ -662,12 +662,12 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius bottom left',
-        func: 'Bdradbleft',
+        func: 'Bdradbl',
         css: 'border-bottom-left-radius: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Border radius top left',
-        func: 'Bdradtleft',
+        func: 'Bdradtl',
         css: 'border-top-left-radius: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1269,7 +1269,7 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Margin left',
-        func: 'Mleft',
+        func: 'Ml',
         css: 'margin-left: $',
         expanders: {
             a: 'auto'
@@ -1358,7 +1358,7 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Left',
-        func: 'Left',
+        func: 'L',
         css: 'left: $',
         expanders: {
             a: 'auto'
@@ -1448,7 +1448,7 @@ exports.H = function(command, a, b) {
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Padding left',
-        func: 'Pleft',
+        func: 'Pl',
         css: 'padding-left: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
