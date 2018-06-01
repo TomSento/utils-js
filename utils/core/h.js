@@ -2046,7 +2046,7 @@ exports.H = function(cmd, a, b) {
         throw err;
     }
     else {
-        return BASE_CMD_process(data);
+        return BASE_CMD_process();
     }
 
     function BASE_CMD_validate() {
@@ -2132,9 +2132,9 @@ exports.H = function(cmd, a, b) {
         }
         return null;
     }
-    function BASE_CMD_process(data) {
-        data = BASE_CMD_parse();
-        return BASE_CMD_generateHTML(data);
+    function BASE_CMD_process() {
+        cmd = BASE_CMD_parse();
+        return BASE_CMD_generateHTML();
     }
     function BASE_CMD_parse() {
         var type = BASE_CMD_GET_TYPE();
@@ -2918,18 +2918,18 @@ exports.H = function(cmd, a, b) {
             acss: acss
         };
     }
-    function BASE_CMD_generateHTML(data) {
+    function BASE_CMD_generateHTML() {
         var css = strTrim([
-            BASE_CMD_generateElementStylesByHelpers(data.acss),
-            BASE_CMD_generateElementStylesByRules(data.acss)
+            BASE_CMD_generateElementStylesByHelpers(cmd.acss),
+            BASE_CMD_generateElementStylesByRules(cmd.acss)
         ].join('\n'));
         if (css.length > 0) {
             return [
                 ('<style>\n    ' + css.replace(/\n/g, '\n    ') + '\n</style>'),
-                BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes)
+                BASE_CMD_generateElementHTMLStructure(cmd.selector, cmd.attributes)
             ].join('');
         }
-        return BASE_CMD_generateElementHTMLStructure(data.selector, data.attributes);
+        return BASE_CMD_generateElementHTMLStructure(cmd.selector, cmd.attributes);
     }
     function BASE_CMD_generateElementStylesByHelpers(acss) {
         var b = [];
