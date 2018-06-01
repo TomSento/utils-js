@@ -410,6 +410,182 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Border bottom width',
+        func: 'Bdbw',
+        css: 'border-bottom-width: $',
+        expanders: {
+            m: 'medium',
+            t: 'thin',
+            th: 'thick'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border color',
+        func: 'Bdc',
+        css: 'border-color: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border collapse',
+        func: 'Bdcl',
+        css: 'border-collapse: $',
+        expanders: {
+            c: 'collapse',
+            s: 'separate'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border Left 1px solid',
+        func: 'BdL',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 0;',
+            '    border-right-width: 0;',
+            '    border-bottom-width: 0;',
+            '    border-left-width: 1px;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border left',
+        func: 'Bdl',
+        css: 'border-left: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border left color',
+        func: 'Bdlc',
+        css: 'border-left-color: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border left style',
+        func: 'Bdls',
+        css: 'border-left-style: $',
+        expanders: {
+            d: 'dotted',
+            da: 'dashed',
+            do: 'double',
+            g: 'groove',
+            h: 'hidden',
+            i: 'inset',
+            n: 'none',
+            o: 'outset',
+            r: 'ridge',
+            s: 'solid'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border left width',
+        func: 'Bdlw',
+        css: 'border-left-width: $',
+        expanders: {
+            m: 'medium',
+            t: 'thin',
+            th: 'thick'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border Right 1px solid',
+        func: 'BdR',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 0;',
+            '    border-right-width: 1px;',
+            '    border-bottom-width: 0;',
+            '    border-left-width: 0;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border right',
+        func: 'Bdr',
+        css: 'border-right: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border radius',
+        func: 'Bdrad',
+        css: 'border-radius: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border radius bottom left',
+        func: 'Bdradbl',
+        css: 'border-bottom-left-radius: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border radius bottom right',
+        func: 'Bdradbr',
+        css: 'border-bottom-right-radius: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border radius top left',
+        func: 'Bdradtl',
+        css: 'border-top-left-radius: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border radius top right',
+        func: 'Bdradtr',
+        css: 'border-top-right-radius: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border right color',
+        func: 'Bdrc',
+        css: 'border-right-color: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border right style',
+        func: 'Bdrs',
+        css: 'border-right-style: $',
+        expanders: {
+            d: 'dotted',
+            da: 'dashed',
+            do: 'double',
+            g: 'groove',
+            h: 'hidden',
+            i: 'inset',
+            n: 'none',
+            o: 'outset',
+            r: 'ridge',
+            s: 'solid'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border right width',
+        func: 'Bdrw',
+        css: 'border-right-width: $',
+        expanders: {
+            m: 'medium',
+            t: 'thin',
+            th: 'thick'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border style',
+        func: 'Bds',
+        css: 'border-style: $',
+        expanders: {
+            d: 'dotted',
+            da: 'dashed',
+            do: 'double',
+            g: 'groove',
+            h: 'hidden',
+            i: 'inset',
+            n: 'none',
+            o: 'outset',
+            r: 'ridge',
+            s: 'solid'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border spacing',
+        func: 'Bdsp',
+        css: 'border-spacing: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Border X 1px solid',
         func: 'BdX',
         css: [
@@ -473,127 +649,15 @@ exports.H = function(cmd, a, b) {
         css: 'border-top: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Border Right 1px solid',
-        func: 'BdR',
-        css: [
-            '.[[el]] {',
-            '    border-top-width: 0;',
-            '    border-right-width: 1px;',
-            '    border-bottom-width: 0;',
-            '    border-left-width: 0;',
-            '    border-style: solid;',
-            '}'
-        ],
-        allowArgument: false,
-        type: ACSS_INSTRUCTION_TYPE_helper()
-    }, {
-        name: 'Border right',
-        func: 'Bdr',
-        css: 'border-right: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border Left 1px solid',
-        func: 'BdL',
-        css: [
-            '.[[el]] {',
-            '    border-top-width: 0;',
-            '    border-right-width: 0;',
-            '    border-bottom-width: 0;',
-            '    border-left-width: 1px;',
-            '    border-style: solid;',
-            '}'
-        ],
-        allowArgument: false,
-        type: ACSS_INSTRUCTION_TYPE_helper()
-    }, {
-        name: 'Border left',
-        func: 'Bdl',
-        css: 'border-left: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border color',
-        func: 'Bdc',
-        css: 'border-color: $',
-        expanders: ACSS_COLOR_ARGUMENTS,
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Border top color',
         func: 'Bdtc',
         css: 'border-top-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Border right color',
-        func: 'Bdrc',
-        css: 'border-right-color: $',
-        expanders: ACSS_COLOR_ARGUMENTS,
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border left color',
-        func: 'Bdlc',
-        css: 'border-left-color: $',
-        expanders: ACSS_COLOR_ARGUMENTS,
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border spacing',
-        func: 'Bdsp',
-        css: 'border-spacing: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border style',
-        func: 'Bds',
-        css: 'border-style: $',
-        expanders: {
-            d: 'dotted',
-            da: 'dashed',
-            do: 'double',
-            g: 'groove',
-            h: 'hidden',
-            i: 'inset',
-            n: 'none',
-            o: 'outset',
-            r: 'ridge',
-            s: 'solid'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Border top style',
         func: 'Bdts',
         css: 'border-top-style: $',
-        expanders: {
-            d: 'dotted',
-            da: 'dashed',
-            do: 'double',
-            g: 'groove',
-            h: 'hidden',
-            i: 'inset',
-            n: 'none',
-            o: 'outset',
-            r: 'ridge',
-            s: 'solid'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border right style',
-        func: 'Bdrs',
-        css: 'border-right-style: $',
-        expanders: {
-            d: 'dotted',
-            da: 'dashed',
-            do: 'double',
-            g: 'groove',
-            h: 'hidden',
-            i: 'inset',
-            n: 'none',
-            o: 'outset',
-            r: 'ridge',
-            s: 'solid'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border left style',
-        func: 'Bdls',
-        css: 'border-left-style: $',
         expanders: {
             d: 'dotted',
             da: 'dashed',
@@ -626,61 +690,6 @@ exports.H = function(cmd, a, b) {
             t: 'thin',
             th: 'thick'
         },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border right width',
-        func: 'Bdrw',
-        css: 'border-right-width: $',
-        expanders: {
-            m: 'medium',
-            t: 'thin',
-            th: 'thick'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border bottom width',
-        func: 'Bdbw',
-        css: 'border-bottom-width: $',
-        expanders: {
-            m: 'medium',
-            t: 'thin',
-            th: 'thick'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border left width',
-        func: 'Bdlw',
-        css: 'border-left-width: $',
-        expanders: {
-            m: 'medium',
-            t: 'thin',
-            th: 'thick'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border radius',
-        func: 'Bdrad',
-        css: 'border-radius: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border radius top right',
-        func: 'Bdradtr',
-        css: 'border-top-right-radius: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border radius bottom right',
-        func: 'Bdradbr',
-        css: 'border-bottom-right-radius: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border radius bottom left',
-        func: 'Bdradbl',
-        css: 'border-bottom-left-radius: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border radius top left',
-        func: 'Bdradtl',
-        css: 'border-top-left-radius: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Background',
@@ -792,15 +801,6 @@ exports.H = function(cmd, a, b) {
             r: 'repeat',
             s: 'space',
             ro: 'round'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border collapse',
-        func: 'Bdcl',
-        css: 'border-collapse: $',
-        expanders: {
-            c: 'collapse',
-            s: 'separate'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
