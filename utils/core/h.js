@@ -2374,7 +2374,7 @@ exports.H = function(cmd, a, b) {
                         throw new Error('Missing template for "' + tag + '" tag.');
                     }
                     else { // ------------------------------------------------> NORMALIZE CONTENT ARGUMENT
-                        if (HTML_TEMPLATES[tag].indexOf('[[modifiers]]')) {
+                        if (HTML_TEMPLATES[tag].indexOf('[[modifiers]]') >= 0) {
                             if (HTML_TEMPLATES[tag].indexOf('[[content]]') >= 0) {
                                 if (['[object Array]', '[object String]', '[object Undefined]'].indexOf(typ(a)) >= 0 && b === undefined) {
                                     data = {};
