@@ -2388,7 +2388,7 @@ exports.H = function(cmd, a, b) {
                                     throw new Error("Expected types fn('', [] || '', undefined) or fn('', {}, [] || '').");
                                 }
                             }
-                            else { // -----------------------------------------> Meta, Link, Input, Script,...
+                            else { // ----------------------------------------> Meta, Link, Input, Script,...
                                 data = {};
                                 content = '';
                                 if (HTML_TEMPLATES[tag].indexOf('[[value]]') >= 0) { // Input
