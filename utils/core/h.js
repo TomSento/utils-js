@@ -217,7 +217,32 @@ exports.H = function(cmd, a, b) {
         n: 'none'
     };
 
-    var ACSS_RULES = [{ // MANDATORY ORDER
+    var ACSS_RULES = [{ // ---------------------------------------------------> MANDATORY ORDER
+        name: 'Align content',
+        func: 'Ac',
+        css: 'align-content: $',
+        expanders: {
+            fs: 'flex-start',
+            fe: 'flex-end',
+            c: 'center',
+            sb: 'space-between',
+            sa: 'space-around',
+            st: 'stretch'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Align items',
+        func: 'Ai',
+        css: 'align-items: $',
+        expanders: {
+            fs: 'flex-start',
+            fe: 'flex-end',
+            c: 'center',
+            b: 'baseline',
+            st: 'stretch'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Animation',
         func: 'Anim',
         css: 'animation: $',
@@ -303,6 +328,27 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Align self',
+        func: 'As',
+        css: 'align-self: $',
+        expanders: {
+            a: 'auto',
+            fs: 'flex-start',
+            fe: 'flex-end',
+            c: 'center',
+            b: 'baseline',
+            st: 'stretch'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Bottom',
+        func: 'B',
+        css: 'bottom: $',
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Border All Edges',
         func: 'BdA',
         css: [
@@ -319,6 +365,48 @@ exports.H = function(cmd, a, b) {
         css: 'border: $',
         expanders: {
             n: 'none'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border Bottom 1px solid',
+        func: 'BdB',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 0;',
+            '    border-right-width: 0;',
+            '    border-bottom-width: 1px;',
+            '    border-left-width: 0;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border bottom',
+        func: 'Bdb',
+        css: 'border-bottom: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border bottom color',
+        func: 'Bdbc',
+        css: 'border-bottom-color: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border bottom style',
+        func: 'Bdbs',
+        css: 'border-bottom-style: $',
+        expanders: {
+            d: 'dotted',
+            da: 'dashed',
+            do: 'double',
+            g: 'groove',
+            h: 'hidden',
+            i: 'inset',
+            n: 'none',
+            o: 'outset',
+            r: 'ridge',
+            s: 'solid'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -404,25 +492,6 @@ exports.H = function(cmd, a, b) {
         css: 'border-right: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Border Bottom 1px solid',
-        func: 'BdB',
-        css: [
-            '.[[el]] {',
-            '    border-top-width: 0;',
-            '    border-right-width: 0;',
-            '    border-bottom-width: 1px;',
-            '    border-left-width: 0;',
-            '    border-style: solid;',
-            '}'
-        ],
-        allowArgument: false,
-        type: ACSS_INSTRUCTION_TYPE_helper()
-    }, {
-        name: 'Border bottom',
-        func: 'Bdb',
-        css: 'border-bottom: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Border Left 1px solid',
         func: 'BdL',
         css: [
@@ -457,12 +526,6 @@ exports.H = function(cmd, a, b) {
         name: 'Border right color',
         func: 'Bdrc',
         css: 'border-right-color: $',
-        expanders: ACSS_COLOR_ARGUMENTS,
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border bottom color',
-        func: 'Bdbc',
-        css: 'border-bottom-color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -514,23 +577,6 @@ exports.H = function(cmd, a, b) {
         name: 'Border right style',
         func: 'Bdrs',
         css: 'border-right-style: $',
-        expanders: {
-            d: 'dotted',
-            da: 'dashed',
-            do: 'double',
-            g: 'groove',
-            h: 'hidden',
-            i: 'inset',
-            n: 'none',
-            o: 'outset',
-            r: 'ridge',
-            s: 'solid'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border bottom style',
-        func: 'Bdbs',
-        css: 'border-bottom-style: $',
         expanders: {
             d: 'dotted',
             da: 'dashed',
@@ -956,19 +1002,6 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Align self',
-        func: 'As',
-        css: 'align-self: $',
-        expanders: {
-            a: 'auto',
-            fs: 'flex-start',
-            fe: 'flex-end',
-            c: 'center',
-            b: 'baseline',
-            st: 'stretch'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Flex direction',
         func: 'Fxd',
         css: 'flex-direction: $',
@@ -991,31 +1024,6 @@ exports.H = function(cmd, a, b) {
             nw: 'nowrap',
             w: 'wrap',
             wr: 'wrap-reverse'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Align items',
-        func: 'Ai',
-        css: 'align-items: $',
-        expanders: {
-            fs: 'flex-start',
-            fe: 'flex-end',
-            c: 'center',
-            b: 'baseline',
-            st: 'stretch'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Align content',
-        func: 'Ac',
-        css: 'align-content: $',
-        expanders: {
-            fs: 'flex-start',
-            fe: 'flex-end',
-            c: 'center',
-            sb: 'space-between',
-            sa: 'space-around',
-            st: 'stretch'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1344,14 +1352,6 @@ exports.H = function(cmd, a, b) {
         name: 'Right',
         func: 'R',
         css: 'right: $',
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Bottom',
-        func: 'B',
-        css: 'bottom: $',
         expanders: {
             a: 'auto'
         },
