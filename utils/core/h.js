@@ -79,7 +79,7 @@ exports.H = function(cmd, a, b) {
         Div: '<div[[modifiers]]>[[content]]</div>',
         Span: '<span[[modifiers]]>[[content]]</span>',
         Label: '<label[[modifiers]]>[[content]]</label>',
-        Input: "<input[[modifiers]] value='[[value]]'>",
+        Input: '<input[[modifiers]] value=[[value]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
         Option: '<option[[modifiers]]>[[content]]</option>',
         Script: '<script[[modifiers]]></script>'
