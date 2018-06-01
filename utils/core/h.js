@@ -2376,16 +2376,16 @@ exports.H = function(cmd, a, b) {
                     else { // ------------------------------------------------> NORMALIZE CONTENT ARGUMENT
                         if (HTML_TEMPLATES[tag].indexOf('[[modifiers]]')) {
                             if (HTML_TEMPLATES[tag].indexOf('[[content]]') >= 0) {
-                                if (['[object Array]', '[object String]'].indexOf(typ(a)) >= 0 && b === undefined) {
+                                if (['[object Array]', '[object String]', '[object Undefined]'].indexOf(typ(a)) >= 0 && b === undefined) {
                                     data = {};
                                     content = a;
                                 }
-                                else if (typ(a) === '[object Object]' && ['[object Array]', '[object String]'].indexOf(typ(b)) >= 0) {
+                                else if (typ(a) === '[object Object]' && ['[object Array]', '[object String]', '[object Undefined]'].indexOf(typ(b)) >= 0) {
                                     data = a;
                                     content = b;
                                 }
                                 else {
-                                    throw new Error("Expected types fn('', [] || '', undefined) or fn('', {}, [] || '').");
+                                    throw new Error("Expected types fn('', [] || '' || undefined, undefined) or fn('', {}, [] || '' || undefined).");
                                 }
                             }
                             else { // ----------------------------------------> Meta, Link, Input, Script,...
@@ -2403,17 +2403,18 @@ exports.H = function(cmd, a, b) {
                             }
                         }
                         else if (HTML_TEMPLATES[tag].indexOf('[[content]]') >= 0) {
-                            if (['[object Array]', '[object String]'].indexOf(typ(a)) >= 0 && b === undefined) {
+                            if (['[object Array]', '[object String]', '[object Undefined]'].indexOf(typ(a)) >= 0 && b === undefined) {
                                 data = {};
                                 content = a;
                             }
                             else {
-                                throw new Error("Expected types fn('', [] || '', undefined).");
+                                throw new Error("Expected types fn('', [] || '' || undefined, undefined).");
                             }
                         }
                         else {
                             throw new Error('invalidTemplate');
                         }
+                        content = Array.isArray(content) ? content.join('') : (content || '');
                     }
                 }
             }
