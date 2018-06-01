@@ -2577,6 +2577,9 @@ exports.H = function(command, a, b) {
                 return new Error('ACSS instruction value - Instruction "' + acssRule.func + '" must not define parameter."');
             }
         }
+        else if (!strTrim(v)) {
+            return new Error('ACSS instruction value - Instruction "' + acssRule.func + '" must define parameter.');
+        }
         return ACSS_INSTRUCTION_VALUE_noMissingSpaceAfterComma(v);
     }
     function ACSS_INSTRUCTION_VALUE_noMissingSpaceAfterComma(v) {
