@@ -9,7 +9,7 @@
 // OUR ACSS USES "left" and "right" instead of "start" and "end" - OUR ACSS HAS NO RTL FUNCTIONALITY SUPPORT
 // OUR ACSS RULES MUST HAVE ALWAYS 1 ARGUMENT -> LEADS TO BETTER IDEA WHAT CSS WILL BE ACTUALLY GENERATED AS RESULT. STANDARD ACSS SUPPORTS MULTIPLE ARGUMENTS SEPARATED BY COMMAS
 // SET HTML5 DATA BY PASSING OBJECT TO "a" ARGUMENT
-exports.H = function(command, a, b) {
+exports.H = function(cmd, a, b) {
     /**
      * CONSTANTS
      */
@@ -2035,22 +2035,22 @@ exports.H = function(command, a, b) {
     /**
      * MAIN
      */
-    command = command instanceof RegExp ? command.toString().slice(1, -1) : command;
-    if (!command || typeof(command) !== 'string') {
+    cmd = cmd instanceof RegExp ? cmd.toString().slice(1, -1) : cmd;
+    if (!cmd || typeof(cmd) !== 'string') {
         throw new Error('invalidParameter');
     }
     var data = (a && Object.prototype.toString.call(a) === '[object Object]') ? a : null; // data-[key]=""
     var content = (typeof(a) === 'string' || Array.isArray(a)) ? a : b;
-    var err = BASE_CMD_validate(command);
+    var err = BASE_CMD_validate();
     if (err) {
         throw err;
     }
     else {
-        return BASE_CMD_process(command, data);
+        return BASE_CMD_process(data);
     }
 
-    function BASE_CMD_validate(v) {
-        return validateAll(v, [
+    function BASE_CMD_validate() {
+        return validateAll(cmd, [
             BASE_CMD_noSpaceAtStart,
             BASE_CMD_noSpaceAtEnd,
             BASE_CMD_noSpaceFollowedByComma,
@@ -2132,14 +2132,14 @@ exports.H = function(command, a, b) {
         }
         return null;
     }
-    function BASE_CMD_process(cmd, data) {
-        data = BASE_CMD_parse(cmd);
+    function BASE_CMD_process(data) {
+        data = BASE_CMD_parse();
         return BASE_CMD_generateHTML(data);
     }
-    function BASE_CMD_parse(cmd) {
-        var type = BASE_CMD_GET_TYPE(cmd);
+    function BASE_CMD_parse() {
+        var type = BASE_CMD_GET_TYPE();
         if (type === BASE_CMD_TYPE_HTML_METATAG() || type === BASE_CMD_TYPE_HTML_BODYTAG()) {
-            cmd = BASE_CMD_parseTriple(type, cmd);
+            cmd = BASE_CMD_parseTriple(type);
             var err = HTML_SELECTOR_INSTRUCTION_STRING_validate(type, cmd.htmlSelectorInstructionString);
             if (err) {
                 throw err;
@@ -2169,7 +2169,7 @@ exports.H = function(command, a, b) {
             throw new Error('Unsupported command type.');
         }
     }
-    function BASE_CMD_GET_TYPE(cmd) {
+    function BASE_CMD_GET_TYPE() {
         if (REG_BASE_CMD_IS_METATAG.test(cmd)) {
             return BASE_CMD_TYPE_HTML_METATAG();
         }
@@ -2186,49 +2186,49 @@ exports.H = function(command, a, b) {
     function BASE_CMD_TYPE_HTML_BODYTAG() {
         return 'HTML_BODYTAG_CMD';
     }
-    function BASE_CMD_parseTriple(type, cmd) {
-        cmd = cmd.split(REG_BASE_CMD_SPLIT_BY_PIPE);
-        if (!Array.isArray(cmd) || cmd.length === 0) {
+    function BASE_CMD_parseTriple(type) {
+        var tmp = cmd.split(REG_BASE_CMD_SPLIT_BY_PIPE);
+        if (!Array.isArray(tmp) || tmp.length === 0) {
             throw new Error('Base command - Unable to parse triple.');
         }
         if (type === BASE_CMD_TYPE_HTML_METATAG()) {
-            if (cmd.length > 2) {
+            if (tmp.length > 2) {
                 throw new Error('Base command - Max 1 pipe separator.');
             }
         }
         else {
-            if (cmd.length > 3) {
+            if (tmp.length > 3) {
                 throw new Error('Base command - Max 2 pipe separators.');
             }
         }
-        var htmlSelectorInstructionString = cmd[0];
+        var htmlSelectorInstructionString = tmp[0];
         if (!htmlSelectorInstructionString) {
             throw new Error('Base command - Missing <html-selector>.');
         }
         var htmlAttributesInstructionsString = null;
         var acssInstructionsString = null;
-        if (cmd.length === 3) {
-            if (cmd[1] && REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING.test(cmd[1])) {
-                htmlAttributesInstructionsString = cmd[1];
+        if (tmp.length === 3) {
+            if (tmp[1] && REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING.test(tmp[1])) {
+                htmlAttributesInstructionsString = tmp[1];
             }
             else {
                 throw new Error('Base command - Missing or invalid <html-attributes>.');
             }
-            if (cmd[2] && REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(cmd[2])) {
-                acssInstructionsString = cmd[2];
+            if (tmp[2] && REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(tmp[2])) {
+                acssInstructionsString = tmp[2];
             }
             else {
                 throw new Error('Base command - Missing or invalid <acss>.');
             }
         }
         else {
-            if (cmd.length === 2) {
-                if (cmd[1]) {
-                    if (REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING.test(cmd[1])) {
-                        htmlAttributesInstructionsString = cmd[1];
+            if (tmp.length === 2) {
+                if (tmp[1]) {
+                    if (REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING.test(tmp[1])) {
+                        htmlAttributesInstructionsString = tmp[1];
                     }
-                    else if (REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(cmd[1])) {
-                        acssInstructionsString = cmd[1];
+                    else if (REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING.test(tmp[1])) {
+                        acssInstructionsString = tmp[1];
                     }
                     else {
                         throw new Error('Base command - Unable to classify command at [1].');
