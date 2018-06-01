@@ -79,7 +79,7 @@ exports.H = function(cmd, a, b) {
         Div: '<div[[modifiers]]>[[content]]</div>',
         Span: '<span[[modifiers]]>[[content]]</span>',
         Label: '<label[[modifiers]]>[[content]]</label>',
-        Input: '<input[[modifiers]]>',
+        Input: "<input[[modifiers]] value='[[value]]'>",
         Select: '<select[[modifiers]]>[[content]]</select>',
         Option: '<option[[modifiers]]>[[content]]</option>',
         Script: '<script[[modifiers]]></script>'
@@ -2039,8 +2039,8 @@ exports.H = function(cmd, a, b) {
     if (!cmd || typeof(cmd) !== 'string') {
         throw new Error('invalidParameter');
     }
-    var data = (a && Object.prototype.toString.call(a) === '[object Object]') ? a : null; // data-[key]=""
-    var content = (typeof(a) === 'string' || Array.isArray(a)) ? a : b;
+    var data; // -------------------------------------------------------------> data-[key]=""
+    var content;
     var err = BASE_CMD_validate();
     if (err) {
         throw err;
@@ -2374,17 +2374,45 @@ exports.H = function(cmd, a, b) {
                         throw new Error('Missing template for "' + tag + '" tag.');
                     }
                     else { // ------------------------------------------------> NORMALIZE CONTENT ARGUMENT
-                        if (HTML_TEMPLATES[tag].indexOf('[[content]]') === -1) {
-                            if (content !== undefined) {
-                                throw new Error('Unexpected content for "' + tag + '" tag.');
+                        if (HTML_TEMPLATES[tag].indexOf('[[modifiers]]')) {
+                            if (HTML_TEMPLATES[tag].indexOf('[[content]]') >= 0) {
+                                if (['[object Array]', '[object String]'].indexOf(typ(a)) >= 0 && b === undefined) {
+                                    data = {};
+                                    content = a;
+                                }
+                                else if (typ(a) === '[object Object]' && ['[object Array]', '[object String]'].indexOf(typ(b)) >= 0) {
+                                    data = a;
+                                    content = b;
+                                }
+                                else {
+                                    throw new Error("Expected types fn('', [] || '', undefined) or fn('', {}, [] || '').");
+                                }
+                            }
+                            else { // -----------------------------------------> Meta, Link, Input, Script,...
+                                data = {};
+                                content = '';
+                                if (HTML_TEMPLATES[tag].indexOf('[[value]]') >= 0) { // Input
+                                    if (b !== undefined) {
+                                        throw new Error("Expected types fn('', any, undefined).");
+                                    }
+                                    HTML_TEMPLATES[tag] = HTML_TEMPLATES[tag].replace('[[value]]', JSON.stringify(a));
+                                }
+                                else if (a !== undefined || b !== undefined) {
+                                    throw new Error("Expected types fn('', undefined, undefined).");
+                                }
+                            }
+                        }
+                        else if (HTML_TEMPLATES[tag].indexOf('[[content]]') >= 0) {
+                            if (['[object Array]', '[object String]'].indexOf(typ(a)) >= 0 && b === undefined) {
+                                data = {};
+                                content = a;
+                            }
+                            else {
+                                throw new Error("Expected types fn('', [] || '', undefined).");
                             }
                         }
                         else {
-                            content = content == null ? '' : content;
-                            if (typeof(content) !== 'string' && !Array.isArray(content)) {
-                                throw new Error('Unexpected content for "' + tag + '" tag.');
-                            }
-                            content = Array.isArray(content) ? content.join('') : content;
+                            throw new Error('invalidTemplate');
                         }
                     }
                 }
@@ -3263,6 +3291,9 @@ exports.H = function(cmd, a, b) {
     }
     function strTrim(str) {
         return str.replace(/^\s+|\s+$/, '');
+    }
+    function typ(v) {
+        return Object.prototype.toString.call(v);
     }
     function genStyleID() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
