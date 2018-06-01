@@ -2856,7 +2856,7 @@ exports.H = function(command, a, b) {
         var args = components[2].split(/\s*,\s*/);
         args = !args[0] ? [] : args;
         var expected = [];
-        var tmp = acssHelper.css.join('').match(/\[\d+\]/g);
+        var tmp = acssHelper.css.join('').match(/\[\d+\]/g) || [];
         for (var i = 0, l = tmp.length; i < l; i++) {
             if (expected.indexOf(tmp[i]) === -1) {
                 expected.push(tmp[i]);
@@ -2879,7 +2879,7 @@ exports.H = function(command, a, b) {
     function ACSS_INSTRUCTION_composeInstructionScore(instructionString, ruleScore, pseudoScore, mediaValue) {
         return {
             instructionString: instructionString,
-            score: parseInt(padEnd('' + (mediaValue + 1), 5, '0') + padEnd('' + ruleScore, 4, '0') + padEnd('' + pseudoScore, 2, '0'))
+            score: parseInt('10' + padStart('' + (mediaValue + 1), 4, '0') + padStart('' + ruleScore, 4, '0') + padStart('' + pseudoScore, 3, '0'))
         };
     }
     function ACSS_INSTRUCTIONS_STRING_composeOrderError(scores) {
@@ -3239,7 +3239,7 @@ exports.H = function(command, a, b) {
             return va > vb;
         }
     }
-    function padEnd(s, l, f) {
+    function padStart(s, l, f) {
         l -= s.length;
         if (l < 0) {
             return s;
@@ -3248,7 +3248,7 @@ exports.H = function(command, a, b) {
             f = ' ';
         }
         while (l--) {
-            s += f;
+            s = f + s;
         }
         return s;
     }
