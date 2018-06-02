@@ -1217,26 +1217,6 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Opacity (filter)',
-        func: 'Opacity',
-        css: 'filter: opacity($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Saturate (filter)',
-        func: 'Saturate',
-        css: 'filter: saturate($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Sepia (filter)',
-        func: 'Sepia',
-        css: 'filter: sepia($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Order',
-        func: 'Or',
-        css: 'order: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Letter spacing',
         func: 'Lts',
         css: 'letter-spacing: $',
@@ -1248,60 +1228,6 @@ exports.H = function(cmd, a, b) {
         name: 'Margin (all edges)',
         func: 'M',
         css: 'margin: $',
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Margin (X axis)',
-        func: 'Mx',
-        css: [
-            'margin-left: $',
-            'margin-right: $'
-        ],
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Margin (Y axis)',
-        func: 'My',
-        css: [
-            'margin-top: $',
-            'margin-bottom: $'
-        ],
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Margin top',
-        func: 'Mt',
-        css: 'margin-top: $',
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Margin right',
-        func: 'Mr',
-        css: 'margin-right: $',
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Margin bottom',
-        func: 'Mb',
-        css: 'margin-bottom: $',
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Margin left',
-        func: 'Ml',
-        css: 'margin-left: $',
         expanders: {
             a: 'auto'
         },
@@ -1319,6 +1245,16 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Matrix (transform)',
+        func: 'Matrix',
+        css: 'transform: matrix($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Matrix 3d (transform)',
+        func: 'Matrix3d',
+        css: 'transform: matrix($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Max width',
         func: 'Maw',
         css: 'max-width: $',
@@ -1328,6 +1264,14 @@ exports.H = function(cmd, a, b) {
             fc: 'fit-content',
             maxc: 'max-content',
             minc: 'min-content'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Margin bottom',
+        func: 'Mb',
+        css: 'margin-bottom: $',
+        expanders: {
+            a: 'auto'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1356,12 +1300,102 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Margin left',
+        func: 'Ml',
+        css: 'margin-left: $',
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Margin right',
+        func: 'Mr',
+        css: 'margin-right: $',
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Margin top',
+        func: 'Mt',
+        css: 'margin-top: $',
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Margin (X axis)',
+        func: 'Mx',
+        css: [
+            'margin-left: $',
+            'margin-right: $'
+        ],
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Margin (Y axis)',
+        func: 'My',
+        css: [
+            'margin-top: $',
+            'margin-bottom: $'
+        ],
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Outline',
         func: 'O',
         css: 'outline: $',
         expanders: {
             n: 'none'
         },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Opacity',
+        func: 'Op',
+        css: 'opacity: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Opacity (filter)',
+        func: 'Opacity',
+        css: 'filter: opacity($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Order',
+        func: 'Or',
+        css: 'order: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Overflow',
+        func: 'Ov',
+        css: 'overflow: $',
+        expanders: {
+            a: 'auto',
+            h: 'hidden',
+            s: 'scroll',
+            v: 'visible'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Overflow scrolling',
+        func: 'Ovs',
+        css: '-webkit-overflow-scrolling: $',
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Saturate (filter)',
+        func: 'Saturate',
+        css: 'filter: saturate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Sepia (filter)',
+        func: 'Sepia',
+        css: 'filter: sepia($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Top',
@@ -1377,22 +1411,6 @@ exports.H = function(cmd, a, b) {
         css: 'right: $',
         expanders: {
             a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Opacity',
-        func: 'Op',
-        css: 'opacity: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Overflow',
-        func: 'Ov',
-        css: 'overflow: $',
-        expanders: {
-            a: 'auto',
-            h: 'hidden',
-            s: 'scroll',
-            v: 'visible'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1415,14 +1433,6 @@ exports.H = function(cmd, a, b) {
             h: 'hidden',
             s: 'scroll',
             v: 'visible'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Overflow scrolling',
-        func: 'Ovs',
-        css: '-webkit-overflow-scrolling: $',
-        expanders: {
-            a: 'auto'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1640,16 +1650,6 @@ exports.H = function(cmd, a, b) {
             t: 'top',
             c: 'center'
         },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Matrix (transform)',
-        func: 'Matrix',
-        css: 'transform: matrix($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Matrix 3d (transform)',
-        func: 'Matrix3d',
-        css: 'transform: matrix($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Rotate (transform)',
