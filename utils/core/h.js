@@ -1846,6 +1846,20 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Width',
+        func: 'W',
+        css: 'width: $',
+        expanders: {
+            a: 'auto',
+            bb: 'border-box',
+            cb: 'content-box',
+            av: 'available',
+            minc: 'min-content',
+            maxc: 'max-content',
+            fc: 'fit-content'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'White space',
         func: 'Whs',
         css: 'white-space: $',
@@ -1867,20 +1881,6 @@ exports.H = function(cmd, a, b) {
             l: 'loose',
             bs: 'break-strict',
             ba: 'break-all'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Width',
-        func: 'W',
-        css: 'width: $',
-        expanders: {
-            a: 'auto',
-            bb: 'border-box',
-            cb: 'content-box',
-            av: 'available',
-            minc: 'min-content',
-            maxc: 'max-content',
-            fc: 'fit-content'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
