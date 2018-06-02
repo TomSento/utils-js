@@ -790,16 +790,6 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Background size',
-        func: 'Bgz',
-        css: 'background-size: $',
-        expanders: {
-            a: 'auto',
-            ct: 'contain',
-            cv: 'cover'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Background repeat',
         func: 'Bgr',
         css: 'background-repeat: $',
@@ -813,14 +803,24 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Box sizing',
-        func: 'Bxz',
-        css: 'box-sizing: $',
+        name: 'Background size',
+        func: 'Bgz',
+        css: 'background-size: $',
         expanders: {
-            cb: 'content-box',
-            pb: 'padding-box',
-            bb: 'border-box'
+            a: 'auto',
+            ct: 'contain',
+            cv: 'cover'
         },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Blur (filter)',
+        func: 'Blur',
+        css: 'filter: blur($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Brightness (filter)',
+        func: 'Brightness',
+        css: 'filter: brightness($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Box shadow',
@@ -831,12 +831,13 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Clear',
-        func: 'Cl',
-        css: 'clear: $',
+        name: 'Box sizing',
+        func: 'Bxz',
+        css: 'box-sizing: $',
         expanders: {
-            n: 'none',
-            b: 'both'
+            cb: 'content-box',
+            pb: 'padding-box',
+            bb: 'border-box'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -844,6 +845,15 @@ exports.H = function(cmd, a, b) {
         func: 'C',
         css: 'color: $',
         expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Clear',
+        func: 'Cl',
+        css: 'clear: $',
+        expanders: {
+            n: 'none',
+            b: 'both'
+        },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Content',
@@ -857,6 +867,11 @@ exports.H = function(cmd, a, b) {
             noq: 'no-open-quote',
             ncq: 'no-close-quote'
         },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Contrast (filter)',
+        func: 'Contrast',
+        css: 'filter: contrast($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Cursor',
@@ -925,6 +940,23 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Drop shadow (filter)',
+        func: 'Dropshadow',
+        css: 'filter: drop-shadow($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Font family',
+        func: 'Ff',
+        css: 'font-family: $',
+        expanders: {
+            c: '"Monotype Corsiva", "Comic Sans MS", cursive',
+            f: 'Capitals, Impact, fantasy',
+            m: 'Monaco, "Courier New", monospace',
+            s: 'Georgia, "Times New Roman", serif',
+            ss: 'Helvetica, Arial, sans-serif'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Filter',
         func: 'Fil',
         css: 'filter: $',
@@ -933,24 +965,48 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Blur (filter)',
-        func: 'Blur',
-        css: 'filter: blur($)',
+        name: 'Fill (SVG)',
+        func: 'Fill',
+        css: 'fill: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Brightness (filter)',
-        func: 'Brightness',
-        css: 'filter: brightness($)',
+        name: 'Float',
+        func: 'Fl',
+        css: 'float: $',
+        expanders: {
+            n: 'none'
+        },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Contrast (filter)',
-        func: 'Contrast',
-        css: 'filter: contrast($)',
+        name: 'Font style',
+        func: 'Fs',
+        css: 'font-style: $',
+        expanders: {
+            n: 'normal',
+            i: 'italic',
+            o: 'oblique'
+        },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Drop shadow (filter)',
-        func: 'Dropshadow',
-        css: 'filter: drop-shadow($)',
+        name: 'Font variant',
+        func: 'Fv',
+        css: 'font-variant: $',
+        expanders: {
+            n: 'normal',
+            sc: 'small-caps'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Font weight',
+        func: 'Fw',
+        css: 'font-weight: $',
+        expanders: {
+            b: 'bold',
+            br: 'bolder',
+            lr: 'lighter',
+            n: 'normal'
+        },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Grayscale (filter)',
@@ -1063,59 +1119,9 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Float',
-        func: 'Fl',
-        css: 'float: $',
-        expanders: {
-            n: 'none'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Font family',
-        func: 'Ff',
-        css: 'font-family: $',
-        expanders: {
-            c: '"Monotype Corsiva", "Comic Sans MS", cursive',
-            f: 'Capitals, Impact, fantasy',
-            m: 'Monaco, "Courier New", monospace',
-            s: 'Georgia, "Times New Roman", serif',
-            ss: 'Helvetica, Arial, sans-serif'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Font weight',
-        func: 'Fw',
-        css: 'font-weight: $',
-        expanders: {
-            b: 'bold',
-            br: 'bolder',
-            lr: 'lighter',
-            n: 'normal'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Font size',
         func: 'Fz',
         css: 'font-size: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Font style',
-        func: 'Fs',
-        css: 'font-style: $',
-        expanders: {
-            n: 'normal',
-            i: 'italic',
-            o: 'oblique'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Font variant',
-        func: 'Fv',
-        css: 'font-variant: $',
-        expanders: {
-            n: 'normal',
-            sc: 'small-caps'
-        },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Height',
@@ -1872,12 +1878,6 @@ exports.H = function(cmd, a, b) {
         expanders: {
             a: 'auto'
         },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Fill (SVG)',
-        func: 'Fill',
-        css: 'fill: $',
-        expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Stroke (SVG)',
