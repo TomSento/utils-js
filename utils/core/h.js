@@ -1682,64 +1682,11 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Text rendering',
-        func: 'Tren',
-        css: 'text-rendering: $',
-        expanders: {
-            a: 'auto',
-            os: 'optimizeSpeed',
-            ol: 'optimizeLegibility',
-            gp: 'geometricPrecision'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Text replace',
         func: 'Tr',
         css: 'text-replace: $',
         expanders: {
             n: 'none'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Text transform',
-        func: 'Tt',
-        css: 'text-transform: $',
-        expanders: {
-            n: 'none',
-            c: 'capitalize',
-            u: 'uppercase',
-            l: 'lowercase'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Text shadow',
-        func: 'Tsh',
-        css: 'text-shadow: $',
-        expanders: {
-            n: 'none'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Transform',
-        func: 'Trf',
-        css: 'transform: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Transform origin',
-        func: 'Trfo',
-        css: 'transform-origin: $',
-        expanders: {
-            t: 'top',
-            c: 'center'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Transform style',
-        func: 'Trfs',
-        css: 'transform-style: $',
-        expanders: {
-            f: 'flat',
-            p: 'preserve-3d'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1766,6 +1713,40 @@ exports.H = function(cmd, a, b) {
         name: 'Translate Z (transform)',
         func: 'TranslateZ',
         css: 'transform: translateZ($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Text rendering',
+        func: 'Tren',
+        css: 'text-rendering: $',
+        expanders: {
+            a: 'auto',
+            os: 'optimizeSpeed',
+            ol: 'optimizeLegibility',
+            gp: 'geometricPrecision'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Transform',
+        func: 'Trf',
+        css: 'transform: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Transform origin',
+        func: 'Trfo',
+        css: 'transform-origin: $',
+        expanders: {
+            t: 'top',
+            c: 'center'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Transform style',
+        func: 'Trfs',
+        css: 'transform-style: $',
+        expanders: {
+            f: 'flat',
+            p: 'preserve-3d'
+        },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Transition',
@@ -1808,6 +1789,25 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Text shadow',
+        func: 'Tsh',
+        css: 'text-shadow: $',
+        expanders: {
+            n: 'none'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Text transform',
+        func: 'Tt',
+        css: 'text-transform: $',
+        expanders: {
+            n: 'none',
+            c: 'capitalize',
+            u: 'uppercase',
+            l: 'lowercase'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'User select',
         func: 'Us',
         css: 'user-select: $',
@@ -1818,6 +1818,16 @@ exports.H = function(cmd, a, b) {
             n: 'none',
             t: 'text',
             to: 'toggle'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Visibility',
+        func: 'V',
+        css: 'visibility: $',
+        expanders: {
+            v: 'visible',
+            h: 'hidden',
+            c: 'collapse'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1833,16 +1843,6 @@ exports.H = function(cmd, a, b) {
             t: 'top',
             tb: 'text-bottom',
             tt: 'text-top'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Visibility',
-        func: 'V',
-        css: 'visibility: $',
-        expanders: {
-            v: 'visible',
-            h: 'hidden',
-            c: 'collapse'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
