@@ -1545,9 +1545,75 @@ exports.H = function(cmd, a, b) {
         css: 'filter: saturate($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Scale (transform)',
+        func: 'Scale',
+        css: 'transform: scale($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Scale 3d (transform)',
+        func: 'Scale3d',
+        css: 'transform: scale3d($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'ScaleX (transform)',
+        func: 'ScaleX',
+        css: 'transform: scaleX($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'ScaleY (transform)',
+        func: 'ScaleY',
+        css: 'transform: scaleY($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Sepia (filter)',
         func: 'Sepia',
         css: 'filter: sepia($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Skew (transform)',
+        func: 'Skew',
+        css: 'transform: skew($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'SkewX (transform)',
+        func: 'SkewX',
+        css: 'transform: skewX($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'SkewY (transform)',
+        func: 'SkewY',
+        css: 'transform: skewY($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Stroke (SVG)',
+        func: 'Stk',
+        css: 'stroke: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Stroke linecap (SVG)',
+        func: 'Stklc',
+        css: 'stroke-linecap: $',
+        expanders: {
+            b: 'butt',
+            r: 'round',
+            s: 'square'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Stroke linejoin (SVG)',
+        func: 'Stklj',
+        css: 'stroke-linejoin: $',
+        expanders: {
+            b: 'bevel',
+            r: 'round',
+            m: 'miter'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Stroke width (SVG)',
+        func: 'Stkw',
+        css: 'stroke-width: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Top',
@@ -1555,15 +1621,6 @@ exports.H = function(cmd, a, b) {
         css: 'top: $',
         expanders: {
             a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Table layout',
-        func: 'Tbl',
-        css: 'table-layout: $',
-        expanders: {
-            a: 'auto',
-            f: 'fixed'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1588,6 +1645,15 @@ exports.H = function(cmd, a, b) {
             e: 'end',
             j: 'justify',
             s: 'start'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Table layout',
+        func: 'Tbl',
+        css: 'table-layout: $',
+        expanders: {
+            a: 'auto',
+            f: 'fixed'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1675,41 +1741,6 @@ exports.H = function(cmd, a, b) {
             f: 'flat',
             p: 'preserve-3d'
         },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Scale (transform)',
-        func: 'Scale',
-        css: 'transform: scale($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Scale 3d (transform)',
-        func: 'Scale3d',
-        css: 'transform: scale3d($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'ScaleX (transform)',
-        func: 'ScaleX',
-        css: 'transform: scaleX($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'ScaleY (transform)',
-        func: 'ScaleY',
-        css: 'transform: scaleY($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Skew (transform)',
-        func: 'Skew',
-        css: 'transform: skew($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'SkewX (transform)',
-        func: 'SkewX',
-        css: 'transform: skewX($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'SkewY (transform)',
-        func: 'SkewY',
-        css: 'transform: skewY($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Translate (transform)',
@@ -1877,37 +1908,6 @@ exports.H = function(cmd, a, b) {
         css: 'z-index: $',
         expanders: {
             a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Stroke (SVG)',
-        func: 'Stk',
-        css: 'stroke: $',
-        expanders: ACSS_COLOR_ARGUMENTS,
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Stroke width (SVG)',
-        func: 'Stkw',
-        css: 'stroke-width: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Stroke linecap (SVG)',
-        func: 'Stklc',
-        css: 'stroke-linecap: $',
-        expanders: {
-            b: 'butt',
-            r: 'round',
-            s: 'square'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Stroke linejoin (SVG)',
-        func: 'Stklj',
-        css: 'stroke-linejoin: $',
-        expanders: {
-            b: 'bevel',
-            r: 'round',
-            m: 'miter'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }];
