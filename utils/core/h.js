@@ -1009,36 +1009,6 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Grayscale (filter)',
-        func: 'Grayscale',
-        css: 'filter: grayscale($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Hue Rotate (filter)',
-        func: 'HueRotate',
-        css: 'filter: hue-rotate($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Invert (filter)',
-        func: 'Invert',
-        css: 'filter: invert($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Opacity (filter)',
-        func: 'Opacity',
-        css: 'filter: opacity($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Saturate (filter)',
-        func: 'Saturate',
-        css: 'filter: saturate($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Sepia (filter)',
-        func: 'Sepia',
-        css: 'filter: sepia($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Flex',
         func: 'Fx',
         css: 'flex: $',
@@ -1046,16 +1016,6 @@ exports.H = function(cmd, a, b) {
             a: 'auto',
             n: 'none'
         },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Flex grow',
-        func: 'Fxg',
-        css: 'flex-grow: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Flex shrink',
-        func: 'Fxs',
-        css: 'flex-shrink: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex basis',
@@ -1092,21 +1052,14 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Order',
-        func: 'Or',
-        css: 'order: $',
+        name: 'Flex grow',
+        func: 'Fxg',
+        css: 'flex-grow: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Justify content',
-        func: 'Jc',
-        css: 'justify-content: $',
-        expanders: {
-            fs: 'flex-start',
-            fe: 'flex-end',
-            c: 'center',
-            sb: 'space-between',
-            sa: 'space-around'
-        },
+        name: 'Flex shrink',
+        func: 'Fxs',
+        css: 'flex-shrink: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Flex-wrap',
@@ -1124,6 +1077,11 @@ exports.H = function(cmd, a, b) {
         css: 'font-size: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Grayscale (filter)',
+        func: 'Grayscale',
+        css: 'filter: grayscale($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Height',
         func: 'H',
         css: 'height: $',
@@ -1138,6 +1096,11 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Hue Rotate (filter)',
+        func: 'HueRotate',
+        css: 'filter: hue-rotate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Hyphens',
         func: 'Hy',
         css: 'hyphens: $',
@@ -1148,42 +1111,36 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Letter spacing',
-        func: 'Lts',
-        css: 'letter-spacing: $',
+        name: 'Invert (filter)',
+        func: 'Invert',
+        css: 'filter: invert($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Justify content',
+        func: 'Jc',
+        css: 'justify-content: $',
+        expanders: {
+            fs: 'flex-start',
+            fe: 'flex-end',
+            c: 'center',
+            sb: 'space-between',
+            sa: 'space-around'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Left',
+        func: 'L',
+        css: 'left: $',
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Line height',
+        func: 'Lh',
+        css: 'line-height: $',
         expanders: {
             n: 'normal'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'List style type',
-        func: 'List',
-        css: 'list-style-type: $',
-        expanders: {
-            n: 'none',
-            d: 'disc',
-            c: 'circle',
-            s: 'square',
-            dc: 'decimal',
-            dclz: 'decimal-leading-zero',
-            lr: 'lower-roman',
-            lg: 'lower-greek',
-            ll: 'lower-latin',
-            ur: 'upper-roman',
-            ul: 'upper-latin',
-            a: 'armenian',
-            g: 'georgian',
-            la: 'lower-alpha',
-            ua: 'upper-alpha'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'List style position',
-        func: 'Lisp',
-        css: 'list-style-position: $',
-        expanders: {
-            i: 'inside',
-            o: 'outside'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1229,9 +1186,60 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Line height',
-        func: 'Lh',
-        css: 'line-height: $',
+        name: 'List style position',
+        func: 'Lisp',
+        css: 'list-style-position: $',
+        expanders: {
+            i: 'inside',
+            o: 'outside'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'List style type',
+        func: 'List',
+        css: 'list-style-type: $',
+        expanders: {
+            n: 'none',
+            d: 'disc',
+            c: 'circle',
+            s: 'square',
+            dc: 'decimal',
+            dclz: 'decimal-leading-zero',
+            lr: 'lower-roman',
+            lg: 'lower-greek',
+            ll: 'lower-latin',
+            ur: 'upper-roman',
+            ul: 'upper-latin',
+            a: 'armenian',
+            g: 'georgian',
+            la: 'lower-alpha',
+            ua: 'upper-alpha'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Opacity (filter)',
+        func: 'Opacity',
+        css: 'filter: opacity($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Saturate (filter)',
+        func: 'Saturate',
+        css: 'filter: saturate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Sepia (filter)',
+        func: 'Sepia',
+        css: 'filter: sepia($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Order',
+        func: 'Or',
+        css: 'order: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Letter spacing',
+        func: 'Lts',
+        css: 'letter-spacing: $',
         expanders: {
             n: 'normal'
         },
@@ -1367,14 +1375,6 @@ exports.H = function(cmd, a, b) {
         name: 'Right',
         func: 'R',
         css: 'right: $',
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Left',
-        func: 'L',
-        css: 'left: $',
         expanders: {
             a: 'auto'
         },
