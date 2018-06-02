@@ -34,3 +34,6 @@ exports.logError = function(/* ...args */) {
     }
     console.error.apply(null, args);
 };
+exports.logClear = function() {
+    console.clear();
+};
