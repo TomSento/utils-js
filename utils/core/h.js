@@ -586,6 +586,68 @@ exports.H = function(cmd, a, b) {
         css: 'border-spacing: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Border Top 1px solid',
+        func: 'BdT',
+        css: [
+            '.[[el]] {',
+            '    border-top-width: 1px;',
+            '    border-right-width: 0;',
+            '    border-bottom-width: 0;',
+            '    border-left-width: 0;',
+            '    border-style: solid;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
+        name: 'Border top',
+        func: 'Bdt',
+        css: 'border-top: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border top color',
+        func: 'Bdtc',
+        css: 'border-top-color: $',
+        expanders: ACSS_COLOR_ARGUMENTS,
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border top style',
+        func: 'Bdts',
+        css: 'border-top-style: $',
+        expanders: {
+            d: 'dotted',
+            da: 'dashed',
+            do: 'double',
+            g: 'groove',
+            h: 'hidden',
+            i: 'inset',
+            n: 'none',
+            o: 'outset',
+            r: 'ridge',
+            s: 'solid'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border top width',
+        func: 'Bdtw',
+        css: 'border-top-width: $',
+        expanders: {
+            m: 'medium',
+            t: 'thin',
+            th: 'thick'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Border width',
+        func: 'Bdw',
+        css: 'border-width: $',
+        expanders: {
+            m: 'medium',
+            t: 'thin',
+            th: 'thick'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Border X 1px solid',
         func: 'BdX',
         css: [
@@ -630,65 +692,12 @@ exports.H = function(cmd, a, b) {
         ],
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Border Top 1px solid',
-        func: 'BdT',
-        css: [
-            '.[[el]] {',
-            '    border-top-width: 1px;',
-            '    border-right-width: 0;',
-            '    border-bottom-width: 0;',
-            '    border-left-width: 0;',
-            '    border-style: solid;',
-            '}'
-        ],
-        allowArgument: false,
-        type: ACSS_INSTRUCTION_TYPE_helper()
-    }, {
-        name: 'Border top',
-        func: 'Bdt',
-        css: 'border-top: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border top color',
-        func: 'Bdtc',
-        css: 'border-top-color: $',
-        expanders: ACSS_COLOR_ARGUMENTS,
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border top style',
-        func: 'Bdts',
-        css: 'border-top-style: $',
+        name: 'Backface visibility',
+        func: 'Bfv',
+        css: 'backface-visibility: $',
         expanders: {
-            d: 'dotted',
-            da: 'dashed',
-            do: 'double',
-            g: 'groove',
             h: 'hidden',
-            i: 'inset',
-            n: 'none',
-            o: 'outset',
-            r: 'ridge',
-            s: 'solid'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border width',
-        func: 'Bdw',
-        css: 'border-width: $',
-        expanders: {
-            m: 'medium',
-            t: 'thin',
-            th: 'thick'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Border top width',
-        func: 'Bdtw',
-        css: 'border-top-width: $',
-        expanders: {
-            m: 'medium',
-            t: 'thin',
-            th: 'thick'
+            v: 'visible'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -701,11 +710,13 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Background image',
-        func: 'Bgi',
-        css: 'background-image: $',
+        name: 'Background attachment',
+        func: 'Bga',
+        css: 'background-attachment: $',
         expanders: {
-            n: 'none'
+            f: 'fixed',
+            l: 'local',
+            s: 'scroll'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -725,6 +736,14 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Background image',
+        func: 'Bgi',
+        css: 'background-image: $',
+        expanders: {
+            n: 'none'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Background origin',
         func: 'Bgo',
         css: 'background-origin: $',
@@ -732,26 +751,6 @@ exports.H = function(cmd, a, b) {
             bb: 'border-box',
             cb: 'content-box',
             pb: 'padding-box'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Background size',
-        func: 'Bgz',
-        css: 'background-size: $',
-        expanders: {
-            a: 'auto',
-            ct: 'contain',
-            cv: 'cover'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Background attachment',
-        func: 'Bga',
-        css: 'background-attachment: $',
-        expanders: {
-            f: 'fixed',
-            l: 'local',
-            s: 'scroll'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -788,6 +787,16 @@ exports.H = function(cmd, a, b) {
             t: '0',
             b: '100%',
             c: '50%'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Background size',
+        func: 'Bgz',
+        css: 'background-size: $',
+        expanders: {
+            a: 'auto',
+            ct: 'contain',
+            cv: 'cover'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1624,15 +1633,6 @@ exports.H = function(cmd, a, b) {
         expanders: {
             t: 'top',
             c: 'center'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Backface visibility',
-        func: 'Bfv',
-        css: 'backface-visibility: $',
-        expanders: {
-            h: 'hidden',
-            v: 'visible'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
