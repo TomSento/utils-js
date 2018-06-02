@@ -100,6 +100,18 @@ exports.H = function(cmd, a, b) {
             html: 'charset=$',
             noMissingSpaceAfterComma: true
         }, {
+            name: 'Content',
+            func: 'Content',
+            allowArgument: true,
+            html: 'content=$',
+            noMissingSpaceAfterComma: true
+        }, {
+            name: 'HttpEquiv',
+            func: 'HttpEquiv',
+            allowArgument: true,
+            html: 'http-equiv=$',
+            noMissingSpaceAfterComma: true
+        }, {
             name: 'Name',
             func: 'Name',
             allowArgument: true,
@@ -111,21 +123,15 @@ exports.H = function(cmd, a, b) {
             allowArgument: true,
             html: 'property=$',
             noMissingSpaceAfterComma: true
-        }, {
-            name: 'HttpEquiv',
-            func: 'HttpEquiv',
-            allowArgument: true,
-            html: 'http-equiv=$',
-            noMissingSpaceAfterComma: true
-        }, {
-            name: 'Content',
-            func: 'Content',
-            allowArgument: true,
-            html: 'content=$',
-            noMissingSpaceAfterComma: true
         }],
         Title: [],
         Link: [{
+            name: 'Href',
+            func: 'Href',
+            allowArgument: true,
+            html: 'href=$',
+            noMissingSpaceAfterComma: false
+        }, {
             name: 'Rel',
             func: 'Rel',
             allowArgument: true,
@@ -137,12 +143,6 @@ exports.H = function(cmd, a, b) {
             allowArgument: true,
             html: 'type=$',
             noMissingSpaceAfterComma: true
-        }, {
-            name: 'Href',
-            func: 'Href',
-            allowArgument: true,
-            html: 'href=$',
-            noMissingSpaceAfterComma: false
         }],
         Body: [],
         Div: [],
@@ -155,10 +155,16 @@ exports.H = function(cmd, a, b) {
             noMissingSpaceAfterComma: true
         }],
         Input: [{
-            name: 'Type',
-            func: 'Type',
-            allowArgument: true,
-            html: 'type=$',
+            name: 'Checked',
+            func: 'Chckd',
+            allowArgument: false,
+            html: 'checked',
+            noMissingSpaceAfterComma: true
+        }, {
+            name: 'Disabled',
+            func: 'Disabled',
+            allowArgument: false,
+            html: 'disabled',
             noMissingSpaceAfterComma: true
         }, {
             name: 'Placeholder',
@@ -167,22 +173,16 @@ exports.H = function(cmd, a, b) {
             html: 'placeholder=$',
             noMissingSpaceAfterComma: true
         }, {
-            name: 'Checked',
-            func: 'Chckd',
-            allowArgument: false,
-            html: 'checked',
-            noMissingSpaceAfterComma: true
-        }, {
             name: 'Readonly',
             func: 'Ro',
             allowArgument: false,
             html: 'readonly',
             noMissingSpaceAfterComma: true
         }, {
-            name: 'Disabled',
-            func: 'Disabled',
-            allowArgument: false,
-            html: 'disabled',
+            name: 'Type',
+            func: 'Type',
+            allowArgument: true,
+            html: 'type=$',
             noMissingSpaceAfterComma: true
         }],
         Select: [{
