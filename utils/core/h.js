@@ -1388,32 +1388,6 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Saturate (filter)',
-        func: 'Saturate',
-        css: 'filter: saturate($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Sepia (filter)',
-        func: 'Sepia',
-        css: 'filter: sepia($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Top',
-        func: 'T',
-        css: 'top: $',
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Right',
-        func: 'R',
-        css: 'right: $',
-        expanders: {
-            a: 'auto'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Overflow (X axis)',
         func: 'Ovx',
         css: 'overflow-x: $',
@@ -1441,40 +1415,9 @@ exports.H = function(cmd, a, b) {
         css: 'padding: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
-        name: 'Padding (X axis)',
-        func: 'Px',
-        css: [
-            'padding-left: $',
-            'padding-right: $'
-        ],
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Padding (Y axis)',
-        func: 'Py',
-        css: [
-            'padding-top: $',
-            'padding-bottom: $'
-        ],
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Padding top',
-        func: 'Pt',
-        css: 'padding-top: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Padding right',
-        func: 'Pr',
-        css: 'padding-right: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
         name: 'Padding bottom',
         func: 'Pb',
         css: 'padding-bottom: $',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Padding left',
-        func: 'Pl',
-        css: 'padding-left: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Pointer events',
@@ -1493,6 +1436,11 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Padding left',
+        func: 'Pl',
+        css: 'padding-left: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Position',
         func: 'Pos',
         css: 'position: $',
@@ -1505,6 +1453,82 @@ exports.H = function(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Padding right',
+        func: 'Pr',
+        css: 'padding-right: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Perspective',
+        func: 'Prs',
+        css: 'perspective: $',
+        expanders: {
+            n: 'none'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Perspective origin',
+        func: 'Prso',
+        css: 'perspective-origin: $',
+        expanders: {
+            t: 'top',
+            c: 'center'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Padding top',
+        func: 'Pt',
+        css: 'padding-top: $',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Padding (X axis)',
+        func: 'Px',
+        css: [
+            'padding-left: $',
+            'padding-right: $'
+        ],
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Padding (Y axis)',
+        func: 'Py',
+        css: [
+            'padding-top: $',
+            'padding-bottom: $'
+        ],
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Right',
+        func: 'R',
+        css: 'right: $',
+        expanders: {
+            a: 'auto'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Rotate (transform)',
+        func: 'Rotate',
+        css: 'transform: rotate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Rotate 3d (transform)',
+        func: 'Rotate3d',
+        css: 'transform: rotate3d($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'RotateX (transform)',
+        func: 'RotateX',
+        css: 'transform: rotateX($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'RotateY (transform)',
+        func: 'RotateY',
+        css: 'transform: rotateY($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'RotateZ (transform)',
+        func: 'RotateZ',
+        css: 'transform: rotateZ($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
         name: 'Resize',
         func: 'Rsz',
         css: 'resize: $',
@@ -1513,6 +1537,24 @@ exports.H = function(cmd, a, b) {
             b: 'both',
             h: 'horizontal',
             v: 'vertical'
+        },
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Saturate (filter)',
+        func: 'Saturate',
+        css: 'filter: saturate($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Sepia (filter)',
+        func: 'Sepia',
+        css: 'filter: sepia($)',
+        type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Top',
+        func: 'T',
+        css: 'top: $',
+        expanders: {
+            a: 'auto'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
@@ -1633,48 +1675,6 @@ exports.H = function(cmd, a, b) {
             f: 'flat',
             p: 'preserve-3d'
         },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Perspective',
-        func: 'Prs',
-        css: 'perspective: $',
-        expanders: {
-            n: 'none'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Perspective origin',
-        func: 'Prso',
-        css: 'perspective-origin: $',
-        expanders: {
-            t: 'top',
-            c: 'center'
-        },
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Rotate (transform)',
-        func: 'Rotate',
-        css: 'transform: rotate($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'Rotate 3d (transform)',
-        func: 'Rotate3d',
-        css: 'transform: rotate3d($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'RotateX (transform)',
-        func: 'RotateX',
-        css: 'transform: rotateX($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'RotateY (transform)',
-        func: 'RotateY',
-        css: 'transform: rotateY($)',
-        type: ACSS_INSTRUCTION_TYPE_rule()
-    }, {
-        name: 'RotateZ (transform)',
-        func: 'RotateZ',
-        css: 'transform: rotateZ($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
         name: 'Scale (transform)',
