@@ -148,7 +148,7 @@ function Controller1(req, res) {
 Controller1.prototype = {
     routeError: function(status, err) {
         status = parseInt(status);
-        this.status = (isNaN(status) || status < 300 || status >= 600) ? 500 : status;
+        this.status = (isNaN(status) || status < 400 || status >= 600) ? 500 : status;
         this.error = err;
         this.execTime = 0; // ------------------------------------------------> GIVE CONTROLLER NEXT 10 SECONDS
         var cache = exports.malloc('__SERVER');
