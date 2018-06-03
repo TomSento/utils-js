@@ -95,27 +95,11 @@ function Controller1(req, res) {
             }
         }
     };
-    self.ROUTE1 = function(url, controller) {
-        var routes = cache('routes');
-        if ((routes || []).length === 0) {
-            throw new Error('missingRoute');
-        }
-        if (typeof(url) !== 'string' || (url[0] !== '/' && ['#public', '#error'].indexOf(url) === -1)) {
-            throw new Error('invalidParameter');
-        }
-        for (var i = 0, l = routes.length; i < l; i++) {
-            var v = routes[i];
-            if (v && v.exp.test(self.toPathname(url))) {
-                return invokeRoute();
-            }
-        }
-        throw new Error('routeNotFound'); // ---------------------------------> INTERNAL ERROR - INCORRECT "Controller" IMPLEMENTATION (MUST NEVER BE THROWN!)
-        function invokeRoute() {
-            controller.startInterval();
-            processMiddlewares(function() {
-                controller.route.fn.apply(controller, controller.args);
-            });
-        }
+    self.invokeRoute = function() {
+        self.startInterval();
+        processMiddlewares(function() {
+            self.route.fn.apply(self, self.args);
+        });
         function processMiddlewares(next) {
             return next();
         }
@@ -149,11 +133,13 @@ Controller1.prototype = {
     routeError: function(status, err) {
         status = parseInt(status);
         this.status = (isNaN(status) || status < 400 || status >= 600) ? 500 : status;
-        this.error = err;
-        this.execTime = 0; // ------------------------------------------------> GIVE CONTROLLER NEXT 10 SECONDS
+        if (err) {
+            this.error = err;
+        }
+        this.execTime = 0; // ------------------------------------------------> GIVE CONTROLLER NEXT 20 SECONDS
         var cache = exports.malloc('__SERVER');
         this.route = cache('errorRoute');
-        this.ROUTE1('#error', this);
+        this.invokeRoute();
     },
     json: function(status, obj) { // -----------------------------------------> DYNAMIC CONTENT
         var self = this;
@@ -203,13 +189,7 @@ exports.SERVER = function(config) {
         this.handleRequest = function(req, res) {
             var controller = new exports.Controller1(req, res);
             controller.prepare(function(preparedController) {
-                if (preparedController.status >= 400) {
-                    return preparedController.ROUTE1('#error', preparedController);
-                }
-                else if (preparedController.route && preparedController.route.route === '#public') {
-                    return preparedController.ROUTE1('#public', preparedController);
-                }
-                preparedController.ROUTE1(preparedController.req.url, preparedController);
+                preparedController.invokeRoute();
             });
         };
         this.server = require('http').createServer(this.handleRequest).listen(config.port, config.host);
