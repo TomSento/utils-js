@@ -16,7 +16,7 @@ exports.SETROUTE1 = function(route, fn) {
     else if (route === '#public') {
         return cache('publicRoute', v);
     }
-    function composeRoute(route, fn) {
+    function composeRoute() {
         return {
             route: route,
             exp: new RegExp('^' + route.replace(/{(\w+)}/g, '(\\w+)') + '$'),
