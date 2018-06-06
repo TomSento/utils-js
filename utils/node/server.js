@@ -135,31 +135,31 @@ Controller1.prototype = {
         this.route = cache('errorRoute');
         this.invokeRoute();
     },
-    json: function(status, obj) { // -----------------------------------------> DYNAMIC CONTENT
+    json: function(status, a) {
         var self = this;
         self.restrictionResponse(function() {
             self.res.writeHead(self.prepareStatus(status), {
                 'Content-Type': 'application/json'
             });
-            return self.res.end(JSON.stringify(obj, null, '    '));
+            self.res.end(JSON.stringify(a, null, '    '));
         });
     },
-    html: function(status, html) { // ----------------------------------------> DYNAMIC CONTENT
+    html: function(status, str) {
         var self = this;
         self.restrictionResponse(function() {
             self.res.writeHead(self.prepareStatus(status), {
                 'Content-Type': 'text/html'
             });
-            return self.res.end('' + html);
+            self.res.end('' + str);
         });
     },
-    plain: function(status, text) {
+    plain: function(status, str) {
         var self = this;
         self.restrictionResponse(function() {
             self.res.writeHead(self.prepareStatus(status), {
                 'Content-Type': 'text/plain'
             });
-            return self.res.end('' + text);
+            self.res.end('' + str);
         });
     }
 };
