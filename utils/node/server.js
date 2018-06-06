@@ -110,13 +110,12 @@ function Controller1(req, res) {
         });
     };
     self.restrictionResponse = function(next) {
-        if (self.responseSended) {
-            throw new Error('responseAlreadySended');
-        }
-        self.responseSended = true;
-        if (self.execTime < cache('app').config.maxRouteTimeout) { // --------> ELSE "errorRoute" IS CALLED FROM INSIDE "interval"
-            clearInterval(self.interval);
-            return next();
+        if (!self.responseSended) {
+            if (self.execTime < cache('app').config.maxRouteTimeout) { // ----> ELSE "errorRoute" IS CALLED FROM INSIDE "interval"
+                clearInterval(self.interval);
+                self.responseSended = true;
+                next();
+            }
         }
     };
     self.prepareStatus = function(status) { // -------------------------------> https://httpstatuses.com/
