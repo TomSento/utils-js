@@ -41,22 +41,6 @@ function Controller1(req, res) {
             }
         }, 1000);
     };
-    self.toPathname = function(v) {
-        return v.split(/\?+/)[0] || '/';
-    };
-    self.findRoute = function() {
-        var routes = cache('routes');
-        if ((routes || []).length === 0) {
-            throw new Error('missingRoute');
-        }
-        for (var i = 0, l = routes.length; i < l; i++) {
-            var v = routes[i];
-            if (v && v.exp.test(self.toPathname(self.req.url))) {
-                return v;
-            }
-        }
-        return null;
-    };
     self.prepare = function(next) {
         self.status = 200;
         self.error = null;
@@ -94,6 +78,22 @@ function Controller1(req, res) {
                 return next(self);
             }
         }
+    };
+    self.findRoute = function() {
+        var routes = cache('routes');
+        if ((routes || []).length === 0) {
+            throw new Error('missingRoute');
+        }
+        for (var i = 0, l = routes.length; i < l; i++) {
+            var v = routes[i];
+            if (v && v.exp.test(self.toPathname(self.req.url))) {
+                return v;
+            }
+        }
+        return null;
+    };
+    self.toPathname = function(v) {
+        return v.split(/\?+/)[0] || '/';
     };
     self.invokeRoute = function() {
         self.startInterval();
