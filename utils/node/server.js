@@ -32,7 +32,8 @@ function Controller1(req, res) {
     self.args = [];
     self.responseSended = false;
     self.execTime = 0;
-    self.startInterval = function() {
+    self.restartInterval = function() {
+        self.execTime = 0;
         self.interval = setInterval(function() {
             self.execTime += 1000;
             if (self.execTime >= cache('app').config.maxRouteTimeout) {
@@ -96,7 +97,7 @@ function Controller1(req, res) {
         return v.split(/\?+/)[0] || '/';
     };
     self.invokeRoute = function() {
-        self.startInterval();
+        self.restartInterval();
         self.route.fn.apply(self, self.args);
     };
     self.stream = function(status, filepath) {
@@ -130,7 +131,6 @@ Controller1.prototype = {
         if (err) {
             this.error = err;
         }
-        this.execTime = 0; // ------------------------------------------------> GIVE CONTROLLER NEXT 20 SECONDS
         var cache = exports.malloc('__SERVER');
         this.route = cache('errorRoute');
         this.invokeRoute();
