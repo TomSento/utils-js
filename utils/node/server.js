@@ -97,12 +97,7 @@ function Controller1(req, res) {
     };
     self.invokeRoute = function() {
         self.startInterval();
-        processMiddlewares(function() {
-            self.route.fn.apply(self, self.args);
-        });
-        function processMiddlewares(next) {
-            return next();
-        }
+        self.route.fn.apply(self, self.args);
     };
     self.stream = function(status, filepath) {
         self.restrictionResponse(function() {
