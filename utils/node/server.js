@@ -29,7 +29,6 @@ function Controller1(req, res) {
     var self = this;
     self.req = req;
     self.res = res;
-    self.args = [];
     self.responseSended = false;
     self.execTime = 0;
     self.restartInterval = function() {
@@ -47,11 +46,9 @@ function Controller1(req, res) {
         self.error = null;
         self.route = self.findRoute();
         if (self.route) {
-            var m = self.toPathname(self.req.url).match(self.route.exp);
-            if ((m || []).length > 1) {
-                self.args = m.slice(1);
-            }
-            return next(self);
+            self.prepareRequest(function() {
+                next(self);
+            });
         }
         else {
             var pathname = self.toPathname(self.req.url);
@@ -95,6 +92,50 @@ function Controller1(req, res) {
     };
     self.toPathname = function(v) {
         return v.split(/\?+/)[0] || '/';
+    };
+    self.prepareRequest = function(next) {
+        var url = require('url').parse(self.req.url);
+        var m = (url.pathname || '').match(self.route.exp);
+        self.args = (m || []).length > 1 ? m.slice(1) : [];
+        self.query = (url.query && typeof(url.query) === 'string') ? require('querystring').parse(url.query) : null;
+        self.body = null;
+        self.req.on('error', function(err) {
+            exports.log(err);
+            self.routeError(500);
+        });
+        var typ = self.req.headers['content-type'];
+        if (typ === 'application/json') {
+            self.prepareRequestJSON(next);
+        }
+        else if ([undefined, 'text/html', 'text/plain'].indexOf(typ) >= 0) {
+            next();
+        }
+        else {
+            self.routeError(400);
+        }
+    };
+    self.prepareRequestJSON = function(next) {
+        if (['POST', 'PUT'].indexOf(self.req.method).indexOf === -1) {
+            return next();
+        }
+        var b = [];
+        self.req.on('data', function(chunk) {
+            b.push(chunk);
+        });
+        self.req.on('end', function() {
+            try {
+                var v = JSON.parse(Buffer.concat(b).toString());
+                if (Object.prototype.toString.call(v) !== '[object Object]') {
+                    return self.routeError(400);
+                }
+                self.body = v;
+                next();
+            }
+            catch (err) {
+                exports.log(err);
+                self.routeError(400);
+            }
+        });
     };
     self.invokeRoute = function() {
         self.restartInterval();
