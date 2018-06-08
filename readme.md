@@ -19,7 +19,7 @@ U.myUtil1(a,b) = function(){};U.myUtil1.prototype={}; // (function|string|number
 - Build is well readable API reference
 - You can always remove files from [./utils](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils) and code your own :zap:
 
-## COMPILE
+## Compile
 
 Compile all utilities
 ```bash
@@ -35,5 +35,5 @@ v=1.6.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError,Error,Err
 - `v=` - *optional* - Must match with [package.json](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/package.json) version
 - `keys=` - *optional* - Comma separated utility names. Order is not critical. Build is always ordered correctly, as defined in [./compile.js](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/compile.js)
 
-## TIPS
+## Tips
 - You can use built-in `malloc cache`, e.g. [./utils/browser/dom.js](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils/browser/dom.js)
