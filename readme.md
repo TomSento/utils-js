@@ -17,7 +17,7 @@ U.myUtil1(a,b) = function(){};U.myUtil1.prototype={}; // (function|string|number
 - Comes with precoded **schemas**, **errors**, **dom**, etc.
 - Can solve browser compatibility issues
 - Build is well readable API reference
-- You can always remove files from [./utils](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils) and code your custom utils :zap:
+- You can always remove files from [./utils](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils) and code your own :zap:
 
 ## COMPILE
 
