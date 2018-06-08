@@ -1,5 +1,5 @@
 {
-    "name": "utilizer-js",
+    "name": "utilizerjs",
     "version": "1.6.0",
     "description": "Minify everything to single, well readable object.",
     "main": "compile.js",

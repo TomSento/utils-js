@@ -1,7 +1,7 @@
-# utilizer-js
+# Utilizer.js
 JavaScript utilities storage
 
-[![Join the chat at https://gitter.im/tomas-sentkeresty/utilizer-js](https://badges.gitter.im/tomas-sentkeresty/utilizer-js.svg)](https://gitter.im/tomas-sentkeresty/utilizer-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/tomas-sentkeresty/utilizerjs](https://badges.gitter.im/tomas-sentkeresty/utilizerjs.svg)](https://gitter.im/tomas-sentkeresty/utilizerjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 > *Still experimental and unstable*
 
@@ -18,7 +18,7 @@ U.myUtil1(a,b) = function(){};U.myUtil1.prototype={}; // (function|string|number
 ```
 
 - Supports partial build with version checking and check if function is implemented or not.
-- Builds `partial` and [`full build`](https://github.com/tomas-sentkeresty/utilizer-js/blob/master/dist/utils.git.js) under `./dist` folder at same moment
+- Builds `partial` and [`full build`](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist/utils.git.js) under `./dist` folder at same moment
 - Supports function `prototyping`
 
 ## PROS
@@ -60,7 +60,7 @@ U.myUtil1(a,b) = function(){};U.myUtil1.prototype={}; // (function|string|number
 - Keep utils structure flat.
 - Avoid creating objects to wrap your utils.
 - Use build in `malloc` cache or custom cache implementation to store data. This makes data available inside function body even when function is called multiple times.
-- Build in `malloc` cache uses prefix to specify utilities group. e.g see [`utils/browser/dom.js`](https://github.com/tomas-sentkeresty/utilizer-js/blob/master/utils/browser/dom.js).
+- Build in `malloc` cache uses prefix to specify utilities group. e.g see [`utils/browser/dom.js`](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils/browser/dom.js).
 
 ## COMPILE
 Compile all utility functions:
