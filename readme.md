@@ -14,7 +14,7 @@ U.myUtil1(a,b) = function(){};U.myUtil1.prototype={}; // (function|string|number
 - Builds `partial` and [full build](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist/utils.git.js) under [./dist](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist) at same moment
 - Supports function `prototyping`
 - Plays well with both **browser** and **node** enviroment
-- Comes with precoded **schemas**, **errors**, **dom** and a lot more
+- Comes with precoded **schemas**, **errors**, **dom**, etc.
 - Can solve browser compatibility issues
 - Compiled result is well readable API reference
 - Utils structure must be flat *- for readability*
