@@ -32,7 +32,7 @@ v=1.6.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError,Error,Err
 ```
 
 **ENV variables**
-- `v=` - *optional* - Must match with version in [package.json](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/package.json)
+- `v=` - *optional* - Must match with [package.json](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/package.json) version
 - `keys=` - *optional* - Comma separated utility names. Order is not critical. Build is always ordered correctly, as defined in [./compile.js](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/compile.js)
 
 ## TIPS
