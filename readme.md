@@ -1,102 +1,43 @@
 # Utilizer.js
-JavaScript utilities storage
 
-[![Join the chat at https://gitter.im/tomas-sentkeresty/utilizerjs](https://badges.gitter.im/tomas-sentkeresty/utilizerjs.svg)](https://gitter.im/tomas-sentkeresty/utilizerjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+> :small_orange_diamond: *experimental & unstable*
 
-> *Still experimental and unstable*
-
-## FEATURES
-
-- **Compiles utils from multiple files to single object, where each utility is single line of code**
+**Compile utilities to single object, one utility per line**
 
 ```javascript
-// COMPILE COMMAND COMMENT
+// keys=myUtil1 node compile
 var U = {};
-// INTERNALS
 U.myUtil1(a,b) = function(){};U.myUtil1.prototype={}; // (function|string|number|object|date)
-// MORE UTILS...
 ```
 
-- Supports partial build with version checking and check if function is implemented or not.
-- Builds `partial` and [`full build`](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist/utils.git.js) under `./dist` folder at same moment
+- Supports partial build with version checking and check if function is implemented or not
+- Builds `partial` and [full build](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist/utils.git.js) under [./dist](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist) at same moment
 - Supports function `prototyping`
-
-## PROS
-**Lightweight**
-- Compile only what you need.
-
-**Multipurpose**
-- Private scope usage: for standalone module or library.
-- Global scope usage: for business project.
-- Plays well with both **browser** and **node** enviroment.
-
-**Flexible**
-- Just remove files from utils and code your custom utils. :)
-
-**Functional**
-- No need to reinvent standard functionality always from scratch.
-
-**Out of a box solution**
-- Comes with precoded utilities like **schemas**, **errors**, **dom** and a lot more.
-
-**Safe**
-- Can solve browser backward compatibility.
-
-**Managable**
-- Saves target's project lines of code.
-- Compiled result is very well readable API reference.
-- Usage of utils makes target project more readable.
-
-**Fast**
-- Brutal fast compilation.
-
-## CONS
-- Required compile step.
-- Utils structure must be flat *(readability is on 1st place by design)*.
-- Manual compilation.
-- Manual pasting utils to target project.
-
-## TIPS
-- Keep utils structure flat.
-- Avoid creating objects to wrap your utils.
-- Use build in `malloc` cache or custom cache implementation to store data. This makes data available inside function body even when function is called multiple times.
-- Build in `malloc` cache uses prefix to specify utilities group. e.g see [`utils/browser/dom.js`](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils/browser/dom.js).
+- Plays well with both **browser** and **node** enviroment
+- Comes with precoded **schemas**, **errors**, **dom** and a lot more
+- Can solve browser compatibility issues
+- Compiled result is well readable API reference
+- Utils structure must be flat *- for readability*
+- You can always remove files from [./utils](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils) and code your custom utils :zap:
 
 ## COMPILE
-Compile all utility functions:
+
+Compile all utilities
 ```bash
 node compile
 ```
-**ENV variables**
-- `v=` - `x.x.x` (optional) Version of your module, library, project or whatever.
-- `keys=` - List of comma separated keys - which utils to compile.
 
-### CORE SET
-If you use included utils this is total minimum which must be always compiled:
-```bash
-v=1.6.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError node compile
-```
-
-### BASE SET
-To compile more utilities append more util keys:
-> Order must be preserved.
-##### \+ ERRORS *(OPTIONAL)*
-```
-...,Error,ErrorBuilder
-```
-##### \+ SCHEMAS *(OPTIONAL)*
-```
-...,SETSCHEMA,SCHEMA
-```
-##### \+ PRIMITIVE UTILS *(OPTIONAL)*
-##### \+ BROWSER UTILS *(OPTIONAL)*
-
-#### EXAMPLE
+Compile by keys
 ```bash
 v=1.6.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError,Error,ErrorBuilder,SETSCHEMA,SCHEMA node compile
 ```
 
-### NOTES
-> - Value assigned to key can be `any` type.  
-> - Only place where `object` is allowed is in `utils/_internal.js` file, used for common cache for all utilities.
-> - Other than that you should always assign `function`.
+**ENV variables**
+- `v=` - *optional* - Must match with version in [package.json](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/package.json)
+- `keys=` - *optional* - Comma separated utility names
+
+### KEYS ORDERING
+Order of compile command `keys` is not critical. Build is always ordered correctly, as defined in [./compile.js](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/compile.js)
+
+## TIPS
+- You can use built-in `malloc cache`, e.g. [./utils/browser/dom.js](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils/browser/dom.js)
