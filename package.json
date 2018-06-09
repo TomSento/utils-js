@@ -18,6 +18,7 @@
     },
     "homepage": "https://github.com/tomas-sentkeresty/utils-js#readme",
     "dependencies": {
+        "atomizerjs": "1.2.0",
         "qunit": "2.5.0"
     },
     "devDependencies": {

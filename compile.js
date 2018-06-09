@@ -1,4 +1,4 @@
-var compiler = require('./compiler/compiler.js');
+var atomizerjs = require('atomizerjs');
 
 var keys = process.env.keys ? process.env.keys.split(/\s*,\s*/) : null;
 var v = process.env.v ? process.env.v : null;
@@ -24,5 +24,5 @@ var files = [
     'utils/node/fs.js',
     'utils/node/server.js'
 ];
-compiler.compileUtils(v, files, 'U', keys, './dist/utils.js');
-compiler.compileUtils(v, files, 'U', null, './dist/utils.git.js');
+atomizerjs.compileUtils(v, files, 'U', keys, './dist/utils.js');
+atomizerjs.compileUtils(v, files, 'U', null, './dist/utils.git.js');
