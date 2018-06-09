@@ -8,7 +8,16 @@ exports.SETROUTE1 = function(route, fn) {
     var cache = exports.malloc('__SERVER');
     var routes = cache('routes') || [];
     var v = composeRoute(route, fn);
-    routes.push(v);
+    var replaced = false;
+    for (var i = 0, l = routes.length; i < l; i++) {
+        if (routes[i].route === v.route) {
+            routes[i] = v;
+            replaced = true;
+        }
+    }
+    if (!replaced) {
+        routes.push(v);
+    }
     cache('routes', routes);
     if (route === '#error') {
         return cache('errorRoute', v);
@@ -205,13 +214,18 @@ Controller1.prototype = {
     }
 };
 exports.Controller1 = Controller1;
-exports.SERVER = function(config) {
+exports.SERVER = function(envMode, packageJSON, config) {
     var cache = exports.malloc('__SERVER');
     if (!config) {
         return cache('app') || null;
     }
     function App() {
+        this.js = [];
         this.configure = function() {
+            if (['DEBUG', 'TEST', 'RELEASE'].indexOf(envMode) === -1) {
+                throw new Error('invalidMode');
+            }
+            this[envMode] = true;
             var tmp = parseInt(config.maxRouteTimeout);
             config.maxRouteTimeout = (isNaN(tmp) || tmp < 1000) ? 20000 : tmp;
             config.publicDirectory = require('path').resolve(config.publicDirectory || './public');
@@ -227,12 +241,73 @@ exports.SERVER = function(config) {
                 preparedController.invokeRoute();
             });
         };
-        this.server = require('http').createServer(this.handleRequest).listen(config.port, config.host);
     }
+    App.prototype = {
+        pushJS: function(filepath) {
+            this.js.push(filepath);
+        },
+        loadJS: function(next) {
+            var self = this;
+            (function loop(i) {
+                var filepath = self.js[i];
+                if (!filepath) {
+                    return next && next();
+                }
+                require.cache[filepath] = undefined;
+                var file = require(filepath);
+                if (typeof(file.init) !== 'function') {
+                    throw new Error('Missing "init()" in "' + filepath + '".');
+                }
+                file.init(function() {
+                    loop(++i);
+                });
+            }(0));
+        },
+        create: function() {
+            var self = this;
+            self.server = require('http').createServer(self.handleRequest).listen(self.config.port, self.config.host);
+            var socketCounter = 0;
+            self.socket = {};
+            self.server.on('connection', function(socket) {
+                var k = socketCounter++;
+                self.socket[k] = socket;
+                socket.on('close', function() {
+                    delete self.socket[k];
+                });
+            });
+        },
+        createLog: function() {
+            /* eslint-disable no-console */
+            console.clear();
+            console.log('@pid ' + process.pid + ' (' + [
+                new Date().toGMTString(),
+                'Node.js: ' + process.version,
+                'OS: ' + require('os').platform() + ' ' + require('os').release()
+            ].join('; ') + ')');
+            console.log('');
+            console.log('mode    : ' + envMode);
+            console.log('name    : ' + packageJSON.name || '-');
+            console.log('version : ' + packageJSON.version || '-');
+            console.log('author  : ' + packageJSON.author || '-');
+            console.log('');
+            console.log('http://' + this.config.host + ':' + this.config.port + '/\n');
+            /* eslint-enable no-console */
+        },
+        destroy: function() {
+            this.server.close();
+            for (var k in this.socket) {
+                if (this.socket.hasOwnProperty(k)) {
+                    this.socket[k].destroy();
+                }
+            }
+        }
+    };
     exports.SETROUTE1('#public', function() { // -----------------------------> LIKE CONTROLLER
         var pathname = this.toPathname(this.req.url);
         var filepath = require('path').resolve(config.publicDirectory, ('.' + pathname));
         this.stream(200, filepath);
     });
-    cache('app', new App());
+    var app = new App();
+    cache('app', app);
+    return app;
 };
