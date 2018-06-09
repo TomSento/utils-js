@@ -2,7 +2,7 @@
  * @param {String} flag R - recursive
  */
 exports.ls = function(a, flag, fn, next) {
-    var fs = require('fs'); // eslint-disable-line global-require
+    var fs = require('fs');
     if (next === undefined) {
         next = fn;
         fn = flag;
@@ -15,7 +15,7 @@ exports.ls = function(a, flag, fn, next) {
             return next();
         }
         (function listDirectory(dirPath, callback) {
-            fs.readdir(dirPath, function(err, files) { // eslint-disable-line global-require
+            fs.readdir(dirPath, function(err, files) {
                 if (err) {
                     return next(err);
                 }
@@ -24,7 +24,7 @@ exports.ls = function(a, flag, fn, next) {
                     if (!file) {
                         return callback ? callback() : nextDirPath();
                     } // -----------------------------------------------------> TO ABSOLUTE PATH
-                    file = require('path').resolve(dirPath + '/' + file); // eslint-disable-line global-require
+                    file = require('path').resolve(dirPath + '/' + file);
                     fs.stat(file, function(err, stat) {
                         if (err) {
                             return next(err);
@@ -59,7 +59,7 @@ function Watcher(t) {
 Watcher.prototype = {
     watch: function(filepath) {
         var self = this;
-        require('fs').watchFile(filepath, { // eslint-disable-line global-require
+        require('fs').watchFile(filepath, {
             interval: self.t || 1000 // --------------------------------------> DEFAULT: POLL EACH SECOND
         }, function(curr, prev) {
             if (curr && prev && curr.mtime !== prev.mtime) {

@@ -237,7 +237,7 @@
         ],
         "no-buffer-constructor": "error",
         "handle-callback-err": "off",
-        "global-require": "warn",
+        "global-require": "off",
         "callback-return": "off",
         "wrap-regex": "off",
         "unicode-bom": [
@@ -478,12 +478,7 @@
         "no-continue": "off",
         "no-bitwise": "error",
         "no-array-constructor": "error",
-        "newline-per-chained-call": [
-            "error",
-            {
-                "ignoreChainWithDepth": 4
-            }
-        ],
+        "newline-per-chained-call": "off",
         "newline-before-return": "off",
         "newline-after-var": "off",
         "new-parens": "error",
@@ -829,7 +824,7 @@
                 "allow": []
             }
         ],
-        "import/no-dynamic-require": "warn",
+        "import/no-dynamic-require": "off",
         "import/no-absolute-path": "error",
         "import/max-dependencies": [
             "off",
