@@ -236,8 +236,8 @@ exports.SERVER = function(env, packageJSON, config) {
             if (!Number.isInteger(config.port) || config.port <= 0) {
                 throw new Error('invalid-port');
             }
-            var tmp = config.maxRouteTimeout === undefined ? 20000 : parseInt(config.maxRouteTimeout);
-            if (isNaN(tmp) || tmp < 1000) {
+            var tmp = config.maxRouteTimeout === undefined ? 20000 : config.maxRouteTimeout;
+            if (!Number.isInteger(tmp) || tmp < 1000) {
                 throw new Error('invalid-maxRouteTimeout');
             }
             config.maxRouteTimeout = tmp;
