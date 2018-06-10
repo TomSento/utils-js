@@ -6,7 +6,7 @@ exports.strPadStart = function(str, len, fill) {
         return padStart(str, len, fill);
     }
     else {
-        throw new Error('invalidParameter');
+        throw new Error('invalidArguments');
     }
     function padStart(s, l, f) {
         l -= s.length;
@@ -30,7 +30,7 @@ exports.strPadEnd = function(str, len, fill) {
         return padEnd(str, len, fill);
     }
     else {
-        throw new Error('invalidParameter');
+        throw new Error('invalidArguments');
     }
     function padEnd(s, l, f) {
         l -= s.length;
