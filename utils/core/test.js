@@ -1,9 +1,9 @@
 exports.test = function(k, fn, maxTimeout) {
     if (!k || typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     if (typeof(fn) !== 'function') {
-        throw new Error('invalidParameter');
+        throw new Error('api-fn');
     }
     // ------------------------------------------------------------------------> LOAD PROTOTYPES
     function getEnv() {
@@ -231,7 +231,7 @@ exports.test = function(k, fn, maxTimeout) {
         async: function(expectedCallbacks) {
             var self = this;
             if (isNaN(parseInt(expectedCallbacks)) || expectedCallbacks <= 0) {
-                throw new Error('invalidParameter');
+                throw new Error('api-expectedCallbacks');
             }
             self.isAsync = true;
             self.callbackCounter = expectedCallbacks;
@@ -240,7 +240,7 @@ exports.test = function(k, fn, maxTimeout) {
         expect: function(expectedAssertions) {
             var self = this;
             if (isNaN(parseInt(expectedAssertions)) || expectedAssertions <= 0) {
-                throw new Error('invalidParameter');
+                throw new Error('api-expectedAssertions');
             }
             self.expectedAssertions = expectedAssertions;
         }
