@@ -3,7 +3,7 @@
 */
 var U = {};
 U.noop = function(){};
-U.malloc = function(prefix){if(!U.__cache){U.__cache={};}if(!U.__cache[prefix]){U.__cache[prefix]={};}var obj=U.__cache[prefix];return function(k,v){if(typeof(k)==='object'&&v===undefined){obj=k;return;}if(k===undefined&&v===undefined){return obj;}if(typeof(k)!=='string'){throw new Error('invalidParameter');}if(v===undefined){return obj[k];}else{obj[k]=v;}};};
+U.malloc = function(prefix){if(!U.__cache){U.__cache={};}if(!U.__cache[prefix]){U.__cache[prefix]={};}var obj=U.__cache[prefix];return function(k,v){if(typeof(k)==='object'&&v===undefined){obj=k;return;}if(k===undefined&&v===undefined){return obj;}if(typeof(k)!=='string'){throw new Error('api-k');}if(v===undefined){return obj[k];}else{obj[k]=v;}};};
 U.toDebugStr = function(){var str='';for(var i=0;i<arguments.length;i++){var arg=arguments[i];if(arg){if(typeof(arg)==='object'||Array.isArray(arg)){if(Array.isArray(arg)){str+='Array('+arg.length+'): \n';}else if(typeof(arg)==='object'){str+='Object: \n';}str+=JSON.stringify(arg,null,'    ');str+='\n';}else{str+=(i>0?' ':'')+arg;}}else{str+=(i>0?' ':'')+arg;}}return str;};
 U.logPrefix = function(str){var c=U.malloc('__LOG');c('prefix',str);};
 U.log = function(){var cache=U.malloc('__LOG');var args=[].slice.call(arguments);if(cache('prefix')){args.unshift(cache('prefix')+':');}console.log.apply(null,args);};

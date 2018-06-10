@@ -18,7 +18,7 @@ exports.malloc = function(prefix) {
             return obj;
         }
         if (typeof(k) !== 'string') {
-            throw new Error('invalidParameter');
+            throw new Error('api-k');
         }
         if (v === undefined) {
             return obj[k];
