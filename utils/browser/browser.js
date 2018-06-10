@@ -4,7 +4,7 @@ exports.browserSupportsEvent = function(sel, eventName) { // https://stackoverfl
         el = sel;
     }
     else if (typeof(sel) === 'string') {
-        el = createElementWithAttributes(sel);
+        el = createElementWithAttributes();
     }
     else {
         return false;
@@ -21,18 +21,18 @@ exports.browserSupportsEvent = function(sel, eventName) { // https://stackoverfl
         return false;
     }
     else {
-        throw new Error('missingElement');
+        throw new Error('api-sel');
     }
-    function createElementWithAttributes(selector) {
+    function createElementWithAttributes() {
         var exp = /^<(\S+)[^>]/;
-        var m = selector.match(exp);
+        var m = sel.match(exp);
         if (!Array.isArray(m) || m.length === 0) {
             return null;
         }
         var el = document.createElement(m[1]);
         exp = /(\S+)="(\S+)"/g;
         m = null;
-        while (m = exp.exec(selector)) {
+        while (m = exp.exec(sel)) {
             if (Array.isArray(m) && m.length > 0) {
                 el.setAttribute(m[1], m[2]);
             }
