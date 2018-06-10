@@ -15,11 +15,11 @@ function Error2(problem, message) {
             this.message = message || null;
         }
         else {
-            throw new Error('invalidParameter');
+            throw new Error('api-problem');
         }
     }
     else {
-        throw new Error('invalidParameter');
+        throw new Error('api-problem');
     }
 }
 Error2.prototype = {
@@ -65,11 +65,11 @@ function ErrorBuilder(err) {
                             arr.push(new exports.Error(v));
                         }
                         else {
-                            throw new Error('invalidParameter');
+                            throw new Error('api-err');
                         }
                     }
                     else {
-                        throw new Error('invalidParameter');
+                        throw new Error('api-err');
                     }
                 }
             }
@@ -79,7 +79,7 @@ function ErrorBuilder(err) {
             this.errors = err.errors;
         }
         else {
-            throw new Error('invalidParameter');
+            throw new Error('api-err');
         }
     }
     else {
@@ -97,7 +97,7 @@ ErrorBuilder.prototype = {
             return this;
         }
         else {
-            throw new Error('invalidParameter');
+            throw new Error('api-err');
         }
     },
     remove: function(id) {
