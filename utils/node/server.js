@@ -1,9 +1,9 @@
 exports.SETROUTE1 = function(route, fn) {
     if (typeof(route) !== 'string' || (route[0] !== '/' && ['#public', '#error'].indexOf(route) === -1)) {
-        throw new Error('invalidParameter');
+        throw new Error('invalid-argument');
     }
     if (typeof(fn) !== 'function') {
-        throw new Error('invalidParameter');
+        throw new Error('invalid-argument');
     }
     var cache = exports.malloc('__SERVER');
     var routes = cache('routes') || [];
@@ -67,7 +67,7 @@ function Controller1(req, res) {
                 require('fs').stat(filepath, function(err) {
                     if (err) {
                         if (!cache('errorRoute')) {
-                            throw new Error('missingErrorRoute');
+                            throw new Error('missing-errorRoute');
                         }
                         self.status = err.code === 'ENOENT' ? 404 : 500;
                         self.route = cache('errorRoute');
@@ -89,7 +89,7 @@ function Controller1(req, res) {
     self.findRoute = function() {
         var routes = cache('routes');
         if ((routes || []).length === 0) {
-            throw new Error('missingRoute');
+            throw new Error('missing-routes');
         }
         for (var i = 0, l = routes.length; i < l; i++) {
             var v = routes[i];
@@ -223,9 +223,12 @@ exports.SERVER = function(envMode, packageJSON, config) {
         this.js = [];
         this.configure = function() {
             if (['DEBUG', 'TEST', 'RELEASE'].indexOf(envMode) === -1) {
-                throw new Error('invalidMode');
+                throw new Error('invalid-envMode');
             }
             this[envMode] = true;
+            if (typeof(config.https) !== 'boolean') {
+                throw new Error('invalid-https');
+            }
             var tmp = parseInt(config.maxRouteTimeout);
             config.maxRouteTimeout = (isNaN(tmp) || tmp < 1000) ? 20000 : tmp;
             config.publicDirectory = require('path').resolve(config.publicDirectory || './public');
@@ -265,7 +268,16 @@ exports.SERVER = function(envMode, packageJSON, config) {
         },
         create: function() {
             var self = this;
-            self.server = require('http').createServer(self.handleRequest).listen(self.config.port, self.config.host);
+            if (self.config.https) {
+                var options = {
+                    key: self.config.key,
+                    cert: self.config.cert
+                };
+                self.server = require('https').createServer(options, self.handleRequest).listen(self.config.port, self.config.host);
+            }
+            else {
+                self.server = require('http').createServer(self.handleRequest).listen(self.config.port, self.config.host);
+            }
             var socketCounter = 0;
             self.socket = {};
             self.server.on('connection', function(socket) {
