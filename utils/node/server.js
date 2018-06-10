@@ -214,7 +214,7 @@ Controller1.prototype = {
     }
 };
 exports.Controller1 = Controller1;
-exports.SERVER = function(envMode, packageJSON, config) {
+exports.SERVER = function(env, packageJSON, config) {
     var cache = exports.malloc('__SERVER');
     if (!config) {
         return cache('app') || null;
@@ -222,10 +222,11 @@ exports.SERVER = function(envMode, packageJSON, config) {
     function App() {
         this.js = [];
         this.configure = function() {
-            if (['DEBUG', 'TEST', 'RELEASE'].indexOf(envMode) === -1) {
-                throw new Error('invalid-envMode');
+            if (['DEBUG', 'TEST', 'RELEASE'].indexOf(env) === -1) {
+                throw new Error('invalid-env');
             }
-            this[envMode] = true;
+            this.env = env;
+            this[env] = true;
             if (typeof(config.https) !== 'boolean') {
                 throw new Error('invalid-https');
             }
@@ -297,7 +298,7 @@ exports.SERVER = function(envMode, packageJSON, config) {
                 'OS: ' + require('os').platform() + ' ' + require('os').release()
             ].join('; ') + ')');
             console.log('');
-            console.log('mode    : ' + envMode);
+            console.log('env     : ' + env);
             console.log('name    : ' + packageJSON.name || '-');
             console.log('version : ' + packageJSON.version || '-');
             console.log('author  : ' + packageJSON.author || '-');
