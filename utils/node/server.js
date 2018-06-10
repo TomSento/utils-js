@@ -1,9 +1,9 @@
 exports.SETROUTE1 = function(route, fn) {
     if (typeof(route) !== 'string' || (route[0] !== '/' && ['#public', '#error'].indexOf(route) === -1)) {
-        throw new Error('invalid-argument');
+        throw new Error('api-route');
     }
     if (typeof(fn) !== 'function') {
-        throw new Error('invalid-argument');
+        throw new Error('api-fn');
     }
     var cache = exports.malloc('__SERVER');
     var routes = cache('routes') || [];
@@ -223,34 +223,34 @@ exports.SERVER = function(env, packageJSON, config) {
         this.js = [];
         this.configure = function() {
             if (['DEBUG', 'TEST', 'RELEASE'].indexOf(env) === -1) {
-                throw new Error('invalid-env');
+                throw new Error('api-env');
             }
             this.env = env;
             this[env] = true;
             if (typeof(config.https) !== 'boolean') {
-                throw new Error('invalid-https');
+                throw new Error('api-config[https]');
             }
             if (!config.host || typeof(config.host) !== 'string') {
-                throw new Error('invalid-host');
+                throw new Error('api-config[host]');
             }
             if (!Number.isInteger(config.port) || config.port <= 0) {
-                throw new Error('invalid-port');
+                throw new Error('api-config[port]');
             }
             var tmp = config.maxRouteTimeout === undefined ? 20000 : config.maxRouteTimeout;
             if (!Number.isInteger(tmp) || tmp < 1000) {
-                throw new Error('invalid-maxRouteTimeout');
+                throw new Error('api-config[maxRouteTimeout]');
             }
             config.maxRouteTimeout = tmp;
             tmp = config.publicDirectory === undefined ? './public' : config.publicDirectory;
             if (!tmp || typeof(tmp) !== 'string') {
-                throw new Error('invalid-publicDirectory');
+                throw new Error('api-config[publicDirectory]');
             }
             config.publicDirectory = tmp;
             tmp = config.staticAccepts === undefined
                 ? ['.jpg', '.png', '.gif', '.ico', '.js', '.coffee', '.css', '.txt', '.xml', '.woff', '.woff2', '.otf', '.ttf', '.eot', '.svg', '.zip', '.rar', '.pdf', '.docx', '.xlsx', '.doc', '.xls', '.html', '.htm', '.appcache', '.map', '.ogg', '.mp4', '.mp3', '.webp', '.webm', '.swf', '.package', '.json', '.md']
                 : config.staticAccepts;
             if (!Array.isArray(tmp)) {
-                throw new Error('invalid-staticAccepts');
+                throw new Error('api-config[staticAccepts]');
             }
             config.staticAccepts = tmp;
             this.config = config;
