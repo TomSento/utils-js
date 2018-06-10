@@ -2037,7 +2037,7 @@ exports.H = function(cmd, a, b) {
      */
     cmd = cmd instanceof RegExp ? cmd.toString().slice(1, -1) : cmd;
     if (!cmd || typeof(cmd) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-cmd');
     }
     var data; // -------------------------------------------------------------> data-[key]=""
     var content;
