@@ -237,9 +237,13 @@ exports.SERVER = function(env, packageJSON, config) {
                 throw new Error('invalid-publicDirectory');
             }
             config.publicDirectory = tmp;
-            config.staticAccepts = Array.isArray(config.staticAccepts)
-                ? config.staticAccepts
-                : ['.jpg', '.png', '.gif', '.ico', '.js', '.coffee', '.css', '.txt', '.xml', '.woff', '.woff2', '.otf', '.ttf', '.eot', '.svg', '.zip', '.rar', '.pdf', '.docx', '.xlsx', '.doc', '.xls', '.html', '.htm', '.appcache', '.map', '.ogg', '.mp4', '.mp3', '.webp', '.webm', '.swf', '.package', '.json', '.md'];
+            tmp = config.staticAccepts === undefined
+                ? ['.jpg', '.png', '.gif', '.ico', '.js', '.coffee', '.css', '.txt', '.xml', '.woff', '.woff2', '.otf', '.ttf', '.eot', '.svg', '.zip', '.rar', '.pdf', '.docx', '.xlsx', '.doc', '.xls', '.html', '.htm', '.appcache', '.map', '.ogg', '.mp4', '.mp3', '.webp', '.webm', '.swf', '.package', '.json', '.md']
+                : config.staticAccepts;
+            if (!Array.isArray(tmp)) {
+                throw new Error('invalid-staticAccepts');
+            }
+            config.staticAccepts = tmp;
             this.config = config;
         };
         this.configure();
