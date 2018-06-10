@@ -230,6 +230,12 @@ exports.SERVER = function(env, packageJSON, config) {
             if (typeof(config.https) !== 'boolean') {
                 throw new Error('invalid-https');
             }
+            if (!config.host || typeof(config.host) !== 'string') {
+                throw new Error('invalid-host');
+            }
+            if (!Number.isInteger(config.port) || config.port <= 0) {
+                throw new Error('invalid-port');
+            }
             var tmp = config.maxRouteTimeout === undefined ? 20000 : parseInt(config.maxRouteTimeout);
             if (isNaN(tmp) || tmp < 1000) {
                 throw new Error('invalid-maxRouteTimeout');
