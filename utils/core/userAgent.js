@@ -9,7 +9,7 @@
  */
 exports.userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-parser-js/releases/tag/0.7.17
     if (str && typeof(str) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-str');
     }
     str = typeof(str) === 'string' ? (str || '') : ((window && window.navigator && window.navigator.userAgent) || '');
     // ------------------------------------------------------------------------> CORE
