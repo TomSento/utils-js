@@ -232,7 +232,11 @@ exports.SERVER = function(env, packageJSON, config) {
             }
             var tmp = parseInt(config.maxRouteTimeout);
             config.maxRouteTimeout = (isNaN(tmp) || tmp < 1000) ? 20000 : tmp;
-            config.publicDirectory = require('path').resolve(config.publicDirectory || './public');
+            tmp = config.publicDirectory === undefined ? './public' : config.publicDirectory;
+            if (!tmp || typeof(tmp) !== 'string') {
+                throw new Error('invalid-publicDirectory');
+            }
+            config.publicDirectory = tmp;
             config.staticAccepts = Array.isArray(config.staticAccepts)
                 ? config.staticAccepts
                 : ['.jpg', '.png', '.gif', '.ico', '.js', '.coffee', '.css', '.txt', '.xml', '.woff', '.woff2', '.otf', '.ttf', '.eot', '.svg', '.zip', '.rar', '.pdf', '.docx', '.xlsx', '.doc', '.xls', '.html', '.htm', '.appcache', '.map', '.ogg', '.mp4', '.mp3', '.webp', '.webm', '.swf', '.package', '.json', '.md'];
