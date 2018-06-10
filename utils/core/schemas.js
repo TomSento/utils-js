@@ -1,9 +1,9 @@
 exports.SETSCHEMA = function(k, fn) {
     if (!k || typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     if (typeof(fn) !== 'function') {
-        throw new Error('invalidParameter');
+        throw new Error('api-fn');
     }
     var Co = function(fn) {
         this.rule = {};
@@ -23,10 +23,10 @@ exports.SETSCHEMA = function(k, fn) {
     Co.prototype = {
         prepareAndValidate: function(obj, lan) { // Can be called without normalize.
             if (!obj || typeof(obj) !== 'object') {
-                throw new Error('invalidParameter');
+                throw new Error('api-obj');
             }
             if (lan && typeof(lan) !== 'string') {
-                throw new Error('invalidParameter');
+                throw new Error('api-lan');
             }
             var eb = new exports.ErrorBuilder();
             for (var k in this.rule) {
@@ -52,7 +52,7 @@ exports.SETSCHEMA = function(k, fn) {
         },
         clean: function(obj) {
             if (!obj || typeof(obj) !== 'object') {
-                throw new Error('invalidParameter');
+                throw new Error('api-obj');
             }
             var tmp = {};
             for (var k in this.rule) {
@@ -64,10 +64,10 @@ exports.SETSCHEMA = function(k, fn) {
         },
         makeError: function(name, lan) {
             if (!name || typeof(name) !== 'string') {
-                throw new Error('invalidParameter');
+                throw new Error('api-name');
             }
             if (lan && typeof(lan) !== 'string') {
-                throw new Error('invalidParameter');
+                throw new Error('api-lan');
             }
             for (var k in this.rule) {
                 if (this.rule.hasOwnProperty(k)) {
@@ -85,11 +85,11 @@ exports.SETSCHEMA = function(k, fn) {
     };
     function attr(name, type) { // Starts attribute definition
         if (!name || typeof(name) !== 'string') {
-            throw new Error('invalidParameter');
+            throw new Error('api-name');
         }
         type = strType(type);
         if (!type) {
-            throw new Error('invalidParameter');
+            throw new Error('api-type');
         }
         this.currentKey = name;
         this.rule[this.currentKey] = {
@@ -101,7 +101,7 @@ exports.SETSCHEMA = function(k, fn) {
     }
     function func(name) { // Starts function definition
         if (!name || typeof(name) !== 'string') {
-            throw new Error('invalidParameter');
+            throw new Error('api-name');
         }
         this.currentKey = name;
         this.rule[this.currentKey] = {
@@ -113,10 +113,10 @@ exports.SETSCHEMA = function(k, fn) {
     }
     function attrError(a, b) { // Sets default or localized error message.
         if (!a || typeof(a) !== 'string') {
-            throw new Error('invalidParameter');
+            throw new Error('api-a');
         }
         if (b && typeof(b) !== 'string') {
-            throw new Error('invalidParameter');
+            throw new Error('api-b');
         }
         var lan = (a && b) ? a.toUpperCase() : 'default';
         var mes = (a && b) ? b : a;
@@ -130,7 +130,7 @@ exports.SETSCHEMA = function(k, fn) {
     }
     function attrPrepare(fn) {
         if (!fn || typeof(fn) !== 'function') {
-            throw new Error('invalidParameter');
+            throw new Error('api-fn');
         }
         if (!this.rule[this.currentKey]) {
             throw new Error('invalidOrder');
@@ -139,7 +139,7 @@ exports.SETSCHEMA = function(k, fn) {
     }
     function attrValidate(fn) {
         if (!fn || typeof(fn) !== 'function') {
-            throw new Error('invalidParameter');
+            throw new Error('api-fn');
         }
         if (!this.rule[this.currentKey]) {
             throw new Error('invalidOrder');
@@ -180,7 +180,7 @@ exports.SETSCHEMA = function(k, fn) {
 };
 exports.SCHEMA = function(k) {
     if (!k || typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     var cache = exports.malloc('__SCHEMA');
     return cache(k) || null;
