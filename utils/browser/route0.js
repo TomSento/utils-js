@@ -14,10 +14,10 @@
 exports.SETROUTE0 = function(route, fn) {
     var cache = exports.malloc('_ROUTE0');
     if (!route || typeof(route) !== 'string' || route[0] !== '#') {
-        throw new Error('invalidParameter');
+        throw new Error('api-route');
     }
     if (typeof(fn) !== 'function') {
-        throw new Error('invalidParameter');
+        throw new Error('api-fn');
     }
     var routes = cache('routes');
     if (!routes) {
@@ -50,16 +50,16 @@ exports.ROUTE0 = function(url, err) {
     var cache = exports.malloc('_ROUTE0');
     var routes = cache('routes');
     if (!Array.isArray(routes) || routes.length === 0) {
-        throw new Error('missingRoute');
+        throw new Error('missing-routes');
     }
     if (url !== undefined && typeof(url) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-url');
     }
     if (typeof(url) === 'string' && url[0] !== '#') {
-        throw new Error('invalidParameter');
+        throw new Error('api-url');
     }
     if (!url && err) {
-        throw new Error('invalidParameter');
+        throw new Error('api-url');
     }
     var hash = [null, locationHash()];
     if (!window.onhashchange) {
@@ -193,7 +193,7 @@ Controller0.prototype = {
             return;
         }
         if (typeof(html) !== 'string') {
-            throw new Error('invalidParameter');
+            throw new Error('api-html');
         }
         if (self.viewCalled) {
             throw new Error('invocationCount');
