@@ -67,7 +67,7 @@ function Controller1(req, res) {
                 require('fs').stat(filepath, function(err) {
                     if (err) {
                         if (!cache('errorRoute')) {
-                            throw new Error('missing-errorRoute');
+                            throw new Error('missingErrorRoute');
                         }
                         self.status = err.code === 'ENOENT' ? 404 : 500;
                         self.route = cache('errorRoute');
@@ -89,7 +89,7 @@ function Controller1(req, res) {
     self.findRoute = function() {
         var routes = cache('routes');
         if ((routes || []).length === 0) {
-            throw new Error('missing-routes');
+            throw new Error('missingRoutes');
         }
         for (var i = 0, l = routes.length; i < l; i++) {
             var v = routes[i];

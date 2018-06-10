@@ -50,7 +50,7 @@ exports.ROUTE0 = function(url, err) {
     var cache = exports.malloc('_ROUTE0');
     var routes = cache('routes');
     if (!Array.isArray(routes) || routes.length === 0) {
-        throw new Error('missing-routes');
+        throw new Error('missingRoutes');
     }
     if (url !== undefined && typeof(url) !== 'string') {
         throw new Error('api-url');
