@@ -20,7 +20,7 @@ exports.domMatches = function(el, sel) { // https://developer.mozilla.org/en-US/
 exports.domFind = function(sel, el) {
     var list = null;
     if (!sel || typeof(sel) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (el && exports.domIsEl(el)) {
         list = el.querySelectorAll(sel);
@@ -63,7 +63,7 @@ exports.domFind = function(sel, el) {
 };
 exports.domHasClass = function(el, name) {
     if (!el || !exports.domIsEl(el)) {
-        throw new Error('invalidParameter');
+        throw new Error('api-el');
     }
     if (el.classList) {
         return el.classList.contains(name);
@@ -75,10 +75,10 @@ exports.domHasClass = function(el, name) {
 };
 exports.domAddClass = function(sel, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (!v || typeof(v) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -116,8 +116,11 @@ exports.domAddClass = function(sel, v) {
     }
 };
 exports.domRemoveClass = function(sel, v) {
-    if (!sel || !v || typeof(v) !== 'string') {
-        throw new Error('invalidParameter');
+    if (!sel) {
+        throw new Error('api-sel');
+    }
+    if (!v || typeof(v) !== 'string') {
+        throw new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -156,10 +159,10 @@ exports.domRemoveClass = function(sel, v) {
 };
 exports.domToggleClass = function(sel, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (!v || typeof(v) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -193,10 +196,10 @@ exports.domToggleClass = function(sel, v) {
 };
 exports.domVal = function(sel, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (v && typeof(v) !== 'string' && isNaN(parseInt(v))) {
-        return new Error('invalidParameter');
+        return new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -244,13 +247,13 @@ exports.domVal = function(sel, v) {
 };
 exports.domAttr = function(sel, k, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (!k || typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     if (v && typeof(v) !== 'string' && isNaN(parseInt(v)) && v !== null) {
-        throw new Error('invalidParameter');
+        throw new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -304,16 +307,16 @@ exports.domAttr = function(sel, k, v) {
 };
 exports.domData = function(sel, k, v) { // NO ACTION FOR "document"
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (!k || typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     try {
         v = normalizeVal(v);
     }
     catch (err) {
-        throw new Error('unableToParse');
+        throw err;
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -381,7 +384,7 @@ exports.domData = function(sel, k, v) { // NO ACTION FOR "document"
             return v.toString();
         }
         else {
-            throw new Error('invalidParameter');
+            throw new Error('api-v');
         }
     }
     function selectingOne(sel) {
@@ -397,10 +400,10 @@ exports.domData = function(sel, k, v) { // NO ACTION FOR "document"
 };
 exports.domHTML = function(sel, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (v && typeof(v) !== 'string') {
-        return new Error('invalidParameter');
+        return new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -448,10 +451,10 @@ exports.domHTML = function(sel, v) {
 };
 exports.domText = function(sel, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (v && typeof(v) !== 'string') {
-        return new Error('invalidParameter');
+        return new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -499,7 +502,7 @@ exports.domText = function(sel, v) {
 };
 exports.domParent = function(sel) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -538,7 +541,7 @@ exports.domParent = function(sel) {
 };
 exports.domChildren = function(sel) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -582,7 +585,7 @@ exports.domChildren = function(sel) {
 };
 exports.domSiblings = function(sel) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -629,7 +632,7 @@ exports.domSiblings = function(sel) {
 };
 exports.domPrev = function(sel) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -683,7 +686,7 @@ exports.domPrev = function(sel) {
 };
 exports.domPrevAll = function(sel) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -731,7 +734,7 @@ exports.domPrevAll = function(sel) {
 };
 exports.domNext = function(sel, nsel) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -785,7 +788,7 @@ exports.domNext = function(sel, nsel) {
 };
 exports.domNextAll = function(sel) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -836,13 +839,13 @@ exports.domNextAll = function(sel) {
 };
 exports.domStyle = function(sel, k, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (!k || typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     if (v && (typeof(v) !== 'string' && isNaN(parseInt(v)))) {
-        throw new Error('invalidParameter');
+        throw new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -890,7 +893,7 @@ exports.domStyle = function(sel, k, v) {
 };
 exports.domFadeIn = function(sel, t) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -918,7 +921,7 @@ exports.domFadeIn = function(sel, t) {
 };
 exports.domFadeOut = function(sel, t) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -946,10 +949,10 @@ exports.domFadeOut = function(sel, t) {
 };
 exports.domFadeTo = function(sel, o, t) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (!o || isNaN(o) || o > 100 || o < 0) {
-        throw new Error('invalidParameter');
+        throw new Error('api-o');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -977,7 +980,7 @@ exports.domFadeTo = function(sel, o, t) {
 };
 exports.domFadeToggle = function(sel, t) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1015,10 +1018,13 @@ exports.domFadeToggle = function(sel, t) {
 };
 exports.domOn = function(sel, k, fn) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
-    if (!k || typeof(k) !== 'string' || typeof(fn) !== 'function') {
-        throw new Error('invalidParameter');
+    if (!k || typeof(k) !== 'string') {
+        throw new Error('api-k');
+    }
+    if (typeof(fn) !== 'function') {
+        throw new Error('api-fn');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1056,10 +1062,10 @@ exports.domOn = function(sel, k, fn) {
 };
 exports.domOff = function(sel, k) { // https://stackoverflow.com/a/4386514
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (k && typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1107,10 +1113,10 @@ exports.domOff = function(sel, k) { // https://stackoverflow.com/a/4386514
 };
 exports.domTriggerNativeEvent = function(sel, k) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (!k || typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1140,10 +1146,10 @@ exports.domTriggerNativeEvent = function(sel, k) {
 };
 exports.domTriggerEvent = function(sel, k, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (!k || typeof(k) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-k');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1181,10 +1187,10 @@ exports.domTriggerEvent = function(sel, k, v) {
 };
 exports.domAppend = function(sel, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (typeof(v) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1211,10 +1217,10 @@ exports.domAppend = function(sel, v) {
 };
 exports.domPrepend = function(sel, v) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     if (typeof(v) !== 'string') {
-        throw new Error('invalidParameter');
+        throw new Error('api-v');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1241,7 +1247,7 @@ exports.domPrepend = function(sel, v) {
 };
 exports.domRemove = function(sel) {
     if (!sel) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -1272,11 +1278,11 @@ exports.domScrollTo = function(sel) {
             sel = '#' + sel;
         }
         else {
-            throw new Error('invalidParameter');
+            throw new Error('api-sel');
         }
     }
     else if (sel && !exports.domIsEl(sel)) {
-        throw new Error('invalidParameter');
+        throw new Error('api-sel');
     }
     else if (!sel) {
         return;
