@@ -2,22 +2,11 @@
 
 > :small_orange_diamond: *experimental & unstable*
 
-**Compile utilities to single object, one utility per line**
+**Utilizer.js** is collection of standalone JavaScript utilities
 
-```javascript
-// keys=myUtil1 node compile
-var U = {};
-U.myUtil1(a,b) = function(){};U.myUtil1.prototype={}; // (function|string|number|object|date)
-```
-
-- Supports partial build with version checking and check if function is implemented or not
-- Builds `partial` and [full build](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist/utils.git.js) under [./dist](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist) at same moment
-- Supports function `prototyping`
-- Plays well with both **browser** and **node** enviroment
-- Comes with precoded **schemas**, **errors**, **dom**, etc.
-- Can solve browser compatibility issues
-- Build is well readable API reference
-- You can always remove files from [./utils](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils) and code your own :zap:
+ - Included are utilities for **browser** and **Node.js** environment, e.g. **schemas**, **errors**, **dom**,...
+ - See [full build](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist/utils.git.js) for complete list of available utilities
+ - See [./utils](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/utils) for their implementations
 
 ## Compile
 
@@ -30,6 +19,10 @@ Compile by keys
 ```bash
 v=1.6.0 keys=malloc,toDebugStr,logPrefix,log,logDebug,logWarn,logError,Error,ErrorBuilder,SETSCHEMA,SCHEMA node compile
 ```
+
+> **Utilizer.js** uses [Atomizer.js](https://github.com/atomizerjs/atomizerjs) - very simple one line per utility minifier
+
+`node compile` creates at once **partial build** and [full build](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist/utils.git.js) under [./dist](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/dist)
 
 **ENV variables**
 - `v=` - *optional* - Must match with [package.json](https://github.com/tomas-sentkeresty/utilizerjs/blob/master/package.json) version
