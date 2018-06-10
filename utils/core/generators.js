@@ -22,7 +22,7 @@ exports.genSID = function(len) {
     len = parseInt(len);
     len = isNaN(len) ? 5 : len;
     if (len < 0) {
-        throw new Error('invalidParameter');
+        throw new Error('api-len');
     }
     var str = '';
     if (len > 0) {
@@ -42,7 +42,7 @@ exports.genIID = function(len) {
     len = parseInt(len);
     len = isNaN(len) ? 3 : len;
     if (len <= 0) {
-        throw new Error('invalidParameter');
+        throw new Error('api-len');
     }
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     var num = chars.length;
