@@ -230,8 +230,11 @@ exports.SERVER = function(env, packageJSON, config) {
             if (typeof(config.https) !== 'boolean') {
                 throw new Error('invalid-https');
             }
-            var tmp = parseInt(config.maxRouteTimeout);
-            config.maxRouteTimeout = (isNaN(tmp) || tmp < 1000) ? 20000 : tmp;
+            var tmp = config.maxRouteTimeout === undefined ? 20000 : parseInt(config.maxRouteTimeout);
+            if (isNaN(tmp) || tmp < 1000) {
+                throw new Error('invalid-maxRouteTimeout');
+            }
+            config.maxRouteTimeout = tmp;
             tmp = config.publicDirectory === undefined ? './public' : config.publicDirectory;
             if (!tmp || typeof(tmp) !== 'string') {
                 throw new Error('invalid-publicDirectory');
