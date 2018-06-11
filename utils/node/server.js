@@ -228,29 +228,29 @@ exports.SERVER = function(env, packageJSON, config) {
             this.env = env;
             this[env] = true;
             if (typeof(config.https) !== 'boolean') {
-                throw new Error('api-config[https]');
+                throw new Error('api-config.https');
             }
             if (!config.host || typeof(config.host) !== 'string') {
-                throw new Error('api-config[host]');
+                throw new Error('api-config.host');
             }
             if (!Number.isInteger(config.port) || config.port <= 0) {
-                throw new Error('api-config[port]');
+                throw new Error('api-config.port');
             }
             var tmp = config.maxRouteTimeout === undefined ? 20000 : config.maxRouteTimeout;
             if (!Number.isInteger(tmp) || tmp < 1000) {
-                throw new Error('api-config[maxRouteTimeout]');
+                throw new Error('api-config.maxRouteTimeout');
             }
             config.maxRouteTimeout = tmp;
             tmp = config.publicDirectory === undefined ? './public' : config.publicDirectory;
             if (!tmp || typeof(tmp) !== 'string') {
-                throw new Error('api-config[publicDirectory]');
+                throw new Error('api-config.publicDirectory');
             }
             config.publicDirectory = tmp;
             tmp = config.staticAccepts === undefined
                 ? ['.jpg', '.png', '.gif', '.ico', '.js', '.coffee', '.css', '.txt', '.xml', '.woff', '.woff2', '.otf', '.ttf', '.eot', '.svg', '.zip', '.rar', '.pdf', '.docx', '.xlsx', '.doc', '.xls', '.html', '.htm', '.appcache', '.map', '.ogg', '.mp4', '.mp3', '.webp', '.webm', '.swf', '.package', '.json', '.md']
                 : config.staticAccepts;
             if (!Array.isArray(tmp)) {
-                throw new Error('api-config[staticAccepts]');
+                throw new Error('api-config.staticAccepts');
             }
             config.staticAccepts = tmp;
             this.config = config;
