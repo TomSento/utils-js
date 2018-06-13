@@ -301,7 +301,7 @@ exports.SERVER = function(env, packageJSON, config) {
             self.server.on('connection', function(socket) {
                 var k = socketCounter++;
                 self.socket[k] = socket;
-                socket.on('close', function() {
+                socket.once('close', function() {
                     delete self.socket[k];
                 });
             });
