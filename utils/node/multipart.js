@@ -1,12 +1,10 @@
-
-/* eslint-disable no-fallthrough, no-bitwise */
 function MultipartParser() { // ----------------------------------------------> https://github.com/felixge/node-formidable/blob/v1.2.1/lib/multipart_parser.js
     this.boundary = null;
     this.boundaryChars = null;
     this.lookbehind = null;
     this.index = null;
     this.flags = 0;
-    this.STATE = {
+    this.S = {
         PARSER_UNINITIALIZED: 0,
         START: 1,
         START_BOUNDARY: 2,
@@ -21,12 +19,11 @@ function MultipartParser() { // ----------------------------------------------> 
         PART_END: 11,
         END: 12
     };
-    this.state = this.STATE.PARSER_UNINITIALIZED;
+    this.state = this.S.PARSER_UNINITIALIZED;
     this.stateToString = function(stateNumber) {
-        for (var k in this.STATE) {
-            if (this.STATE.hasOwnProperty(k)) {
-                var number = this.STATE[k];
-                if (number === stateNumber) {
+        for (var k in this.S) {
+            if (this.S.hasOwnProperty(k)) {
+                if (this.S[k] === stateNumber) {
                     return k;
                 }
             }
@@ -44,7 +41,7 @@ MultipartParser.prototype = {
         this.boundary.write('\r\n--', 0);
         this.boundary.write(str, 4);
         this.lookbehind = Buffer.alloc(this.boundary.length + 8);
-        this.state = this.STATE.START;
+        this.state = this.S.START;
         this.boundaryChars = {};
         for (var i = 0; i < this.boundary.length; i++) {
             this.boundaryChars[this.boundary[i]] = true;
@@ -94,9 +91,6 @@ MultipartParser.prototype = {
             var fn = self[callbackSymbol];
             return fn && fn(buffer, start, end);
         }
-        function lower(c) {
-            return c | 0x20;
-        }
         var LF = 10;
         var CR = 13;
         var SPACE = 32;
@@ -106,13 +100,14 @@ MultipartParser.prototype = {
         var Z = 122;
         for (i = 0; i < len; i++) {
             c = buffer[i];
+            /* eslint-disable no-fallthrough, no-bitwise */
             switch (state) {
-                case this.STATE.PARSER_UNINITIALIZED:
+                case this.S.PARSER_UNINITIALIZED:
                     return i;
-                case this.STATE.START:
+                case this.S.START:
                     index = 0;
-                    state = this.STATE.START_BOUNDARY;
-                case this.STATE.START_BOUNDARY:
+                    state = this.S.START_BOUNDARY;
+                case this.S.START_BOUNDARY:
                     if (index == boundary.length - 2) {
                         if (c == HYPHEN) {
                             flags |= this.F.LAST_BOUNDARY;
@@ -126,13 +121,13 @@ MultipartParser.prototype = {
                     else if (index - 1 == boundary.length - 2) {
                         if (flags & this.F.LAST_BOUNDARY && c == HYPHEN) {
                             callback('end');
-                            state = this.STATE.END;
+                            state = this.S.END;
                             flags = 0;
                         }
                         else if (!(flags & this.F.LAST_BOUNDARY) && c == LF) {
                             index = 0;
                             callback('partBegin');
-                            state = this.STATE.HEADER_FIELD_START;
+                            state = this.S.HEADER_FIELD_START;
                         }
                         else {
                             return i;
@@ -146,14 +141,14 @@ MultipartParser.prototype = {
                         index++;
                     }
                     break;
-                case this.STATE.HEADER_FIELD_START:
-                    state = this.STATE.HEADER_FIELD;
+                case this.S.HEADER_FIELD_START:
+                    state = this.S.HEADER_FIELD;
                     mark('headerField');
                     index = 0;
-                case this.STATE.HEADER_FIELD:
+                case this.S.HEADER_FIELD:
                     if (c == CR) {
                         clear('headerField');
-                        state = this.STATE.HEADERS_ALMOST_DONE;
+                        state = this.S.HEADERS_ALMOST_DONE;
                         break;
                     }
                     index++;
@@ -165,44 +160,44 @@ MultipartParser.prototype = {
                             return i; // -------------------------------------> EMPTY HEADER FIELD
                         }
                         dataCallback('headerField', true);
-                        state = this.STATE.HEADER_VALUE_START;
+                        state = this.S.HEADER_VALUE_START;
                         break;
                     }
-                    cl = lower(c);
+                    cl = c | 0x20; // ----------------------------------------> LOWER
                     if (cl < A || cl > Z) {
                         return i;
                     }
                     break;
-                case this.STATE.HEADER_VALUE_START:
+                case this.S.HEADER_VALUE_START:
                     if (c == SPACE) {
                         break;
                     }
                     mark('headerValue');
-                    state = this.STATE.HEADER_VALUE;
-                case this.STATE.HEADER_VALUE:
+                    state = this.S.HEADER_VALUE;
+                case this.S.HEADER_VALUE:
                     if (c == CR) {
                         dataCallback('headerValue', true);
                         callback('headerEnd');
-                        state = this.STATE.HEADER_VALUE_ALMOST_DONE;
+                        state = this.S.HEADER_VALUE_ALMOST_DONE;
                     }
                     break;
-                case this.STATE.HEADER_VALUE_ALMOST_DONE:
+                case this.S.HEADER_VALUE_ALMOST_DONE:
                     if (c != LF) {
                         return i;
                     }
-                    state = this.STATE.HEADER_FIELD_START;
+                    state = this.S.HEADER_FIELD_START;
                     break;
-                case this.STATE.HEADERS_ALMOST_DONE:
+                case this.S.HEADERS_ALMOST_DONE:
                     if (c != LF) {
                         return i;
                     }
                     callback('headersEnd');
-                    state = this.STATE.PART_DATA_START;
+                    state = this.S.PART_DATA_START;
                     break;
-                case this.STATE.PART_DATA_START:
-                    state = this.STATE.PART_DATA;
+                case this.S.PART_DATA_START:
+                    state = this.S.PART_DATA;
                     mark('partData');
-                case this.STATE.PART_DATA:
+                case this.S.PART_DATA:
                     prevIndex = index;
                     if (index === 0) {
                         i += boundaryEnd;
@@ -243,7 +238,7 @@ MultipartParser.prototype = {
                                 flags &= ~this.F.PART_BOUNDARY;
                                 callback('partEnd');
                                 callback('partBegin');
-                                state = this.STATE.HEADER_FIELD_START;
+                                state = this.S.HEADER_FIELD_START;
                                 break;
                             }
                         }
@@ -251,7 +246,7 @@ MultipartParser.prototype = {
                             if (c == HYPHEN) {
                                 callback('partEnd');
                                 callback('end');
-                                state = this.STATE.END;
+                                state = this.S.END;
                                 flags = 0;
                             }
                             else {
@@ -272,11 +267,12 @@ MultipartParser.prototype = {
                         i--; // ----------------------------------------------> RECONSIDER THE CURRENT CHARACTER EVEN SO IT INTERRUPTED THE SEQUENCE IT COULD BE THE BEGINNING OF A NEW SEQUENCE
                     }
                     break;
-                case this.STATE.END:
+                case this.S.END:
                     break;
                 default:
                     return i;
             }
+            /* eslint-enable no-fallthrough, no-bitwise */
         }
         dataCallback('headerField');
         dataCallback('headerValue');
@@ -292,11 +288,11 @@ MultipartParser.prototype = {
             var fn = self[callbackSymbol];
             return fn && fn();
         };
-        if ((this.state == this.STATE.HEADER_FIELD_START && this.index === 0) || (this.state == this.STATE.PART_DATA && this.index == this.boundary.length)) {
+        if ((this.state == this.S.HEADER_FIELD_START && this.index === 0) || (this.state == this.S.PART_DATA && this.index == this.boundary.length)) {
             callback(this, 'partEnd');
             callback(this, 'end');
         }
-        else if (this.state != this.STATE.END) {
+        else if (this.state != this.S.END) {
             return new Error('MultipartParser.end(): stream ended unexpectedly: ' + this.explain());
         }
     },
@@ -304,4 +300,3 @@ MultipartParser.prototype = {
         return 'state = ' + this.stateToString(this.state);
     }
 };
-/* eslint-enable no-fallthrough */
