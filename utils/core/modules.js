@@ -32,7 +32,7 @@ exports.SETMODULE = function(k, fn) {
             }
             var func = self.fns[kk];
             if (!func) {
-                throw new Error("Function: '" + kk + "' in '" + k + "' module was not found.");
+                throw new Error('Function: "' + kk + '" in "' + k + '" module was not found.');
             }
             return func.apply(null, args);
         }

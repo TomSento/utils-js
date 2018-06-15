@@ -174,7 +174,7 @@ exports.SETSCHEMA = function(k, fn) {
     }
     var cache = exports.malloc('__SCHEMA');
     if (cache(k)) {
-        throw new Error("Duplicate schema: '" + k + "'.");
+        throw new Error('Duplicate schema: "' + k + '".');
     }
     cache(k, new Co(fn));
 };

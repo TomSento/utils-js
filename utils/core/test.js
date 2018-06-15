@@ -147,7 +147,7 @@ exports.test = function(k, fn, maxTimeout) {
             self.interval = setInterval(function() {
                 self.execTime += 500;
                 if (self.execTime >= self.maxTimeout) {
-                    var err = new Error("Test '" + self.id + "' exceeded maxTimeout " + self.maxTimeout + 'ms.');
+                    var err = new Error('Test "' + self.id + '" exceeded maxTimeout ' + self.maxTimeout + 'ms.');
                     return self.emitter.trigger('error', [err, 'timingError']);
                 }
             }, 500);
