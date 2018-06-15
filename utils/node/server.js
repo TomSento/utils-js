@@ -1,13 +1,16 @@
-exports.SETROUTE1 = function(route, fn) {
+exports.SETROUTE1 = function(route, fn, flags) {
     if (typeof(route) !== 'string' || (route[0] !== '/' && ['#public', '#error'].indexOf(route) === -1)) {
         throw new Error('api-route');
     }
     if (typeof(fn) !== 'function') {
         throw new Error('api-fn');
     }
+    if (typeof(flags) !== 'string') {
+        throw new Error('api-flags');
+    }
     var cache = exports.malloc('__SERVER');
     var routes = cache('routes') || [];
-    var v = composeRoute(route, fn);
+    var v = parseRoute();
     var replaced = false;
     for (var i = 0, l = routes.length; i < l; i++) {
         if (routes[i].route === v.route) {
@@ -25,12 +28,47 @@ exports.SETROUTE1 = function(route, fn) {
     else if (route === '#public') {
         return cache('publicRoute', v);
     }
-    function composeRoute() {
+    function parseRoute() {
+        var exp = /^-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/4/
+        var m = flags.match(exp);
+        if (!m) {
+            throw new Error('Route "flags" must follow "-s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
+        }
         return {
             route: route,
-            exp: new RegExp('^' + route.replace(/{(\w+)}/g, '(\\w+)') + '$'),
-            fn: fn
+            exp: new RegExp('^' + route.replace(/\[(\w+)\]/g, '(\\w+)') + '$'),
+            fn: fn,
+            maxSize: parseMaxSize(m[1], m[2]),
+            maxTimeout: parseMaxTimeout(m[3]),
+            xhr: !!m[4],
+            mfd: !!m[5]
         };
+    }
+    function parseMaxSize(v, unit) {
+        v = parseInt(v);
+        if (['#public', '#error'].indexOf(route) >= 0) {
+            if (isNaN(v) || v !== 0) {
+                throw new Error('Expected "-s 0' + unit + '".');
+            }
+        }
+        else {
+            if (isNaN(v) || v < 0) {
+                throw new Error('invalidMaxSize');
+            }
+        }
+        var exponents = {
+            'kB': 3,
+            'MB': 6,
+            'GB': 9
+        };
+        return v * Math.pow(10, exponents[unit]);
+    }
+    function parseMaxTimeout(v) {
+        v = parseInt(v);
+        if (isNaN(v) || v <= 0) {
+            throw new Error('invalidMaxTimeout');
+        }
+        return v * 1000;
     }
 };
 function Controller1(req, res) {
@@ -44,7 +82,7 @@ function Controller1(req, res) {
         self.execTime = 0;
         self.interval = setInterval(function() {
             self.execTime += 1000;
-            if (self.execTime >= cache('app').config.maxRouteTimeout) {
+            if (self.route && self.execTime >= self.route.maxTimeout) {
                 clearInterval(self.interval);
                 return self.routeError(408);
             }
@@ -241,7 +279,7 @@ function Controller1(req, res) {
     };
     self.restrictionResponse = function(next) {
         if (!self.responseSended) {
-            if (self.execTime < cache('app').config.maxRouteTimeout) { // ----> ELSE "errorRoute" IS CALLED FROM INSIDE "interval"
+            if (self.route && self.execTime < self.route.maxTimeout) { // ----> ELSE "errorRoute" IS CALLED FROM INSIDE "interval"
                 clearInterval(self.interval);
                 self.responseSended = true;
                 next();
@@ -315,12 +353,7 @@ exports.SERVER = function(env, packageJSON, config) {
             if (!Number.isInteger(config.port) || config.port <= 0) {
                 throw new Error('api-config.port');
             }
-            var tmp = config.maxRouteTimeout === undefined ? 20000 : config.maxRouteTimeout;
-            if (!Number.isInteger(tmp) || tmp < 1000) {
-                throw new Error('api-config.maxRouteTimeout');
-            }
-            config.maxRouteTimeout = tmp;
-            tmp = config.publicDirectory === undefined ? './public' : config.publicDirectory;
+            var tmp = config.publicDirectory === undefined ? './public' : config.publicDirectory;
             if (!tmp || typeof(tmp) !== 'string') {
                 throw new Error('api-config.publicDirectory');
             }
@@ -416,7 +449,7 @@ exports.SERVER = function(env, packageJSON, config) {
         var pathname = this.toPathname(this.req.url);
         var filepath = require('path').resolve(config.publicDirectory, ('.' + pathname));
         this.stream(200, filepath);
-    });
+    }, '-s 0kB -t 20s');
     var app = new App();
     cache('app', app);
     return app;
