@@ -112,12 +112,15 @@ function Controller1(req, res) {
             exports.log(err);
             self.routeError(500);
         });
-        var typ = self.req.headers['content-type'];
-        if (typ === 'application/json') {
+        var contentType = self.req.headers['content-type'];
+        if (contentType === 'application/json') {
             self.prepareRequestJSON(next);
         }
-        else if ([undefined, 'text/html', 'text/plain'].indexOf(typ) >= 0) {
+        else if ([undefined, 'text/html', 'text/plain'].indexOf(contentType) >= 0) {
             next();
+        }
+        else if (contentType.indexOf('multipart/form-data') >= 0) {
+            self.prepareRequestMULTIPART(next);
         }
         else {
             self.routeError(400);
@@ -133,7 +136,7 @@ function Controller1(req, res) {
         });
         self.req.on('end', function() {
             try {
-                var v = JSON.parse(Buffer.concat(b).toString());
+                var v = JSON.parse(Buffer.concat(b).toString('utf8'));
                 if (Object.prototype.toString.call(v) !== '[object Object]') {
                     return self.routeError(400);
                 }
@@ -145,6 +148,82 @@ function Controller1(req, res) {
                 self.routeError(400);
             }
         });
+    };
+    self.prepareRequestMULTIPART = function(next) {
+        self.filepaths = [];
+        var boundary = self.req.headers['content-type'].split(';')[1];
+        if (!boundary || ['POST', 'PUT'].indexOf(self.req.method) === -1) {
+            return self.routeError(400);
+        }
+        boundary = boundary.slice(boundary.indexOf('=', 2) + 1); // –---------> indexOf('=', 2) FOR PERFORMANCE
+        var unlinkOnClose = true;
+        var size = 0;
+        var maxSize = 50000000; // -------------------------------------------> 50MB
+        self.req.once('close', function() {
+            for (var i = 0, l = self.filepaths.length; i < l; i++) {
+                if (unlinkOnClose) {
+                    require('fs').unlink(self.filepaths[i]);
+                }
+            }
+        });
+        // var data;
+        var unclosedStreams = 0;
+        var parser = {};
+        parser.initWithBoundary(boundary);
+        parser.onPartBegin = function() {
+            console.log('PART_BEGIN');
+        };
+        parser.onHeaderValue = function(buffer, start, end) {
+            var header = buffer.slice(start, end).toString('utf8');
+            console.log('HEADER_VALUE: ' + header);
+        };
+        parser.onPartData = function(buffer, start, end) {
+            var data = buffer.slice(start, end);
+            console.log('PART_DATA: ' + data.toString('utf8'));
+        };
+        parser.onPartEnd = function() {
+            console.log('PART_END');
+        };
+        parser.onEnd = function() {
+            if (unclosedStreams > 0) {
+                setImmediate(function() {
+                    parser.onEnd();
+                });
+            }
+            else {
+                if (size >= maxSize) {
+                    return self.routeError(431);
+                }
+                next();
+            }
+        };
+        self.req.once('end', function() {
+            if (size < maxSize) {
+                unlinkOnClose = false;
+            }
+            parser.end();
+        });
+    };
+    self.parseMultipartHeader = function(header) {
+        var tmp = '';
+        var search = ' name="';
+        var len = search.length;
+        var beg = header.indexOf(search);
+        if (beg >= 0) {
+            tmp = header.slice(beg + len, header.indexOf('"', beg + len));
+        }
+        var name = tmp ? tmp : ('undefined_' + Math.floor(Math.random() * 100000)); // HTML INPUT NAME
+        tmp = '';
+        search = ' filename="';
+        len = search.length;
+        beg = header.indexOf(search);
+        if (beg >= 0) {
+            tmp = header.slice(beg + len, header.indexOf('"', beg + len));
+        }
+        return {
+            name: name,
+            filename: tmp || null
+        };
     };
     self.invokeRoute = function() {
         self.restartInterval();
@@ -246,6 +325,7 @@ exports.SERVER = function(env, packageJSON, config) {
                 throw new Error('api-config.publicDirectory');
             }
             config.publicDirectory = tmp;
+            config.tmpDirectory = './tmp';
             tmp = config.staticAccepts === undefined
                 ? ['.jpg', '.png', '.gif', '.ico', '.js', '.coffee', '.css', '.txt', '.xml', '.woff', '.woff2', '.otf', '.ttf', '.eot', '.svg', '.zip', '.rar', '.pdf', '.docx', '.xlsx', '.doc', '.xls', '.html', '.htm', '.appcache', '.map', '.ogg', '.mp4', '.mp3', '.webp', '.webm', '.swf', '.package', '.json', '.md']
                 : config.staticAccepts;
