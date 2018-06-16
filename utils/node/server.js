@@ -76,21 +76,13 @@ function Controller1(req, res) {
     var self = this;
     self.req = req;
     self.res = res;
-    self.responseSended = false;
-    self.execTime = 0;
-    self.restartInterval = function() {
-        self.execTime = 0;
-        self.interval = setInterval(function() {
-            self.execTime += 1000;
-            if (self.route && self.execTime >= self.route.maxTimeout) {
-                clearInterval(self.interval);
-                return self.routeError(408);
-            }
-        }, 1000);
-    };
+    var responded = false;
+    var interval;
+    var execTime = 0;
     self.prepare = function(next) {
         self.status = 200;
         self.error = null;
+        self.handleResponseTransfer();
         self.route = self.findRoute();
         if (self.route) {
             self.prepareRequest(function() {
@@ -123,6 +115,19 @@ function Controller1(req, res) {
                 return next(self);
             }
         }
+    };
+    self.handleResponseTransfer = function() {
+        self.res.on('close', function() {
+            if (!responded) {
+                self.routeError(500);
+            }
+        });
+        self.res.on('finish', function() { // --------------------------------> AFTER "res.end()" IS CALLED
+            if (interval) {
+                clearInterval(interval);
+            }
+            responded = true;
+        });
     };
     self.findRoute = function() {
         var routes = cache('routes');
@@ -267,6 +272,18 @@ function Controller1(req, res) {
         self.restartInterval();
         self.route.fn.apply(self, self.args);
     };
+    self.restartInterval = function() {
+        if (interval) {
+            clearInterval(interval);
+        }
+        execTime = 0;
+        interval = setInterval(function() {
+            execTime += 1000;
+            if (self.route && execTime >= self.route.maxTimeout) {
+                self.routeError(408);
+            }
+        }, 1000);
+    };
     self.stream = function(status, filepath) {
         self.restrictionResponse(function() {
             self.res.statusCode = self.prepareStatus(status);
@@ -278,10 +295,8 @@ function Controller1(req, res) {
         });
     };
     self.restrictionResponse = function(next) {
-        if (!self.responseSended) {
-            if (self.route && self.execTime < self.route.maxTimeout) { // ----> ELSE "errorRoute" IS CALLED FROM INSIDE "interval"
-                clearInterval(self.interval);
-                self.responseSended = true;
+        if (!responded) {
+            if (self.route && execTime < self.route.maxTimeout) { // ---------> ELSE "errorRoute" IS CALLED FROM INSIDE "interval"
                 next();
             }
         }
