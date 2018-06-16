@@ -77,10 +77,8 @@ function Controller1(req, res) {
     self.req = req;
     self.res = res;
     var responded = false;
-    var interval;
-    var execTime = 0;
     self.prepare = function(next) {
-        self.status = 200;
+        self.res.statusCode = 200;
         self.error = null;
         self.handleResponseTransfer();
         self.route = self.findRoute();
@@ -99,7 +97,7 @@ function Controller1(req, res) {
                         if (!cache('errorRoute')) {
                             throw new Error('missingErrorRoute');
                         }
-                        self.status = err.code === 'ENOENT' ? 404 : 500;
+                        self.res.statusCode = err.code === 'ENOENT' ? 404 : 500;
                         self.route = cache('errorRoute');
                         return next(self);
                     }
@@ -110,7 +108,7 @@ function Controller1(req, res) {
                 });
             }
             else {
-                self.status = 404;
+                self.res.statusCode = 404;
                 self.route = cache('errorRoute');
                 return next(self);
             }
@@ -123,9 +121,6 @@ function Controller1(req, res) {
             }
         });
         self.res.on('finish', function() { // --------------------------------> AFTER "res.end()" IS CALLED
-            if (interval) {
-                clearInterval(interval);
-            }
             responded = true;
         });
     };
@@ -269,20 +264,7 @@ function Controller1(req, res) {
         };
     };
     self.invokeRoute = function() {
-        self.restartInterval();
         self.route.fn.apply(self, self.args);
-    };
-    self.restartInterval = function() {
-        if (interval) {
-            clearInterval(interval);
-        }
-        execTime = 0;
-        interval = setInterval(function() {
-            execTime += 1000;
-            if (self.route && execTime >= self.route.maxTimeout) {
-                self.routeError(408);
-            }
-        }, 1000);
     };
     self.stream = function(status, filepath) {
         self.restrictionResponse(function() {
@@ -296,9 +278,7 @@ function Controller1(req, res) {
     };
     self.restrictionResponse = function(next) {
         if (!responded) {
-            if (self.route && execTime < self.route.maxTimeout) { // ---------> ELSE "errorRoute" IS CALLED FROM INSIDE "interval"
-                next();
-            }
+            next();
         }
     };
     self.prepareStatus = function(status) { // -------------------------------> https://httpstatuses.com/
@@ -309,7 +289,7 @@ function Controller1(req, res) {
 Controller1.prototype = {
     routeError: function(status, err) {
         status = parseInt(status);
-        this.status = (isNaN(status) || status < 400 || status >= 600) ? 500 : status;
+        this.res.statusCode = (isNaN(status) || status < 400 || status >= 600) ? 500 : status;
         if (err) {
             this.error = err;
         }
