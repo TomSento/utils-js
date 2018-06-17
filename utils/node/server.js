@@ -76,45 +76,49 @@ function Controller1(req, res) {
     var self = this;
     self.req = req;
     self.res = res;
-    var responded = false;
-    self.prepare = function(next) {
-        self.res.statusCode = 200;
-        self.error = null;
-        self.handleResponseTransfer();
+    self.error = null;
+    self.run = function() {
+        self.prepareRoute(function(status) {
+            self.res.statusCode = status;
+            self.monitorResponseChanges();
+            if (['#public', '#error'].indexOf(self.route.route) >= 0) {
+                return self.invokeRoute();
+            }
+            self.prepareRequest(function() {
+                self.invokeRoute();
+            });
+        });
+    };
+    self.prepareRoute = function(next) {
         self.route = self.findRoute();
         if (self.route) {
-            self.prepareRequest(function() {
-                next(self);
+            return next(200);
+        }
+        var pathname = self.toPathname(self.req.url);
+        var ext = require('path').extname(pathname);
+        if (ext && cache('app').config.staticAccepts.indexOf(ext) >= 0) { // -> PROBABLY PUBLIC FILE
+            var filepath = require('path').resolve(cache('app').config.publicDirectory, ('.' + pathname));
+            require('fs').stat(filepath, function(err) {
+                if (err) {
+                    if (!cache('errorRoute')) {
+                        throw new Error('missingErrorRoute');
+                    }
+                    self.route = cache('errorRoute');
+                    return next(err.code === 'ENOENT' ? 404 : 500);
+                }
+                else { // ----------------------------------------------------> PUBLIC FILE EXISTS IN FS
+                    self.route = cache('publicRoute');
+                    return next(200);
+                }
             });
         }
         else {
-            var pathname = self.toPathname(self.req.url);
-            var ext = require('path').extname(pathname);
-            if (ext && cache('app').config.staticAccepts.indexOf(ext) >= 0) { // PROBABLY PUBLIC FILE
-                var filepath = require('path').resolve(cache('app').config.publicDirectory, ('.' + pathname));
-                require('fs').stat(filepath, function(err) {
-                    if (err) {
-                        if (!cache('errorRoute')) {
-                            throw new Error('missingErrorRoute');
-                        }
-                        self.res.statusCode = err.code === 'ENOENT' ? 404 : 500;
-                        self.route = cache('errorRoute');
-                        return next(self);
-                    }
-                    else { // ------------------------------------------------> PUBLIC FILE EXISTS IN FS
-                        self.route = cache('publicRoute');
-                        return next(self);
-                    }
-                });
-            }
-            else {
-                self.res.statusCode = 404;
-                self.route = cache('errorRoute');
-                return next(self);
-            }
+            self.route = cache('errorRoute');
+            return next(404);
         }
     };
-    self.handleResponseTransfer = function() {
+    self.monitorResponseChanges = function() {
+        var responded = false;
         self.res.on('close', function() {
             if (!responded) {
                 self.routeError(500);
@@ -123,6 +127,63 @@ function Controller1(req, res) {
         self.res.on('finish', function() { // --------------------------------> AFTER "res.end()" IS CALLED
             responded = true;
         });
+        var execTime = 0;
+        (function tick() {
+            execTime += 1000;
+            if (!responded && self.route.route !== '#error' && execTime < self.route.maxTimeout) {
+                setTimeout(function() {
+                    tick();
+                }, 1000);
+            }
+        }());
+        var fnsModifyingResponse = [
+            'addTrailers',
+            'end',
+            'removeHeader',
+            'setHeader',
+            'setTimeout',
+            'write',
+            'writeContinue',
+            'writeHead',
+            'writeProcessing'
+        ];
+        for (var i = 0, l = fnsModifyingResponse.length; i < l; i++) {
+            var fnName = fnsModifyingResponse[i];
+            restrict408(fnName, self.res[fnName]);
+        }
+        function restrict408(fnName, fnNative) {
+            self.res[fnName] = function(/* ...args */) {
+                if (!responded) {
+                    if (self.route.route !== '#error' && execTime >= self.route.maxTimeout) {
+                        return self.routeError(408);
+                    }
+                    fnNative.apply(self.res, arguments);
+                }
+            };
+        }
+        self.res.on('pipe', function(source) {
+            if (self.route.route !== '#error' && execTime >= self.route.maxTimeout) {
+                self.destroyStream(source);
+            }
+        });
+    };
+    self.destroyStream = function(stream) {
+        if (stream instanceof ReadStream) {
+            stream.destroy();
+            if (typeof(stream.close) === 'function') {
+                stream.on('open', function() {
+                    if (typeof(this.fd) === 'number') {
+                        this.close();
+                    }
+                });
+            }
+        }
+        else if (stream instanceof Stream) {
+            if (typeof(stream.destroy) === 'function') {
+                stream.destroy();
+            }
+        }
+        return stream;
     };
     self.findRoute = function() {
         var routes = cache('routes');
@@ -267,19 +328,12 @@ function Controller1(req, res) {
         self.route.fn.apply(self, self.args);
     };
     self.stream = function(status, filepath) {
-        self.restrictionResponse(function() {
-            self.res.statusCode = self.prepareStatus(status);
-            var rs = require('fs').createReadStream(filepath);
-            rs.on('error', function(err) {
-                return self.routeError(404, err);
-            });
-            rs.pipe(self.res);
+        self.res.statusCode = self.prepareStatus(status);
+        var rs = require('fs').createReadStream(filepath);
+        rs.on('error', function(err) {
+            return self.routeError(404, err);
         });
-    };
-    self.restrictionResponse = function(next) {
-        if (!responded) {
-            next();
-        }
+        rs.pipe(self.res);
     };
     self.prepareStatus = function(status) { // -------------------------------> https://httpstatuses.com/
         var v = parseInt(status);
@@ -288,8 +342,10 @@ function Controller1(req, res) {
 }
 Controller1.prototype = {
     routeError: function(status, err) {
-        status = parseInt(status);
-        this.res.statusCode = (isNaN(status) || status < 400 || status >= 600) ? 500 : status;
+        var v = parseInt(status);
+        this.res.statusCode = (isNaN(v) || v < 400 || v >= 600) ? 500 : v;
+        this.res.statusMessage = null;
+        this.res.sendDate = true;
         if (err) {
             this.error = err;
         }
@@ -299,30 +355,24 @@ Controller1.prototype = {
     },
     json: function(status, a) {
         var self = this;
-        self.restrictionResponse(function() {
-            self.res.writeHead(self.prepareStatus(status), {
-                'Content-Type': 'application/json'
-            });
-            self.res.end(JSON.stringify(a, null, '    '));
+        self.res.writeHead(self.prepareStatus(status), {
+            'Content-Type': 'application/json'
         });
+        self.res.end(JSON.stringify(a, null, '    '));
     },
     html: function(status, str) {
         var self = this;
-        self.restrictionResponse(function() {
-            self.res.writeHead(self.prepareStatus(status), {
-                'Content-Type': 'text/html'
-            });
-            self.res.end('' + str);
+        self.res.writeHead(self.prepareStatus(status), {
+            'Content-Type': 'text/html'
         });
+        self.res.end('' + str);
     },
     plain: function(status, str) {
         var self = this;
-        self.restrictionResponse(function() {
-            self.res.writeHead(self.prepareStatus(status), {
-                'Content-Type': 'text/plain'
-            });
-            self.res.end('' + str);
+        self.res.writeHead(self.prepareStatus(status), {
+            'Content-Type': 'text/plain'
         });
+        self.res.end('' + str);
     }
 };
 exports.Controller1 = Controller1;
@@ -366,9 +416,7 @@ exports.SERVER = function(env, packageJSON, config) {
         this.configure();
         this.handleRequest = function(req, res) {
             var controller = new exports.Controller1(req, res);
-            controller.prepare(function(preparedController) {
-                preparedController.invokeRoute();
-            });
+            controller.run();
         };
     }
     App.prototype = {

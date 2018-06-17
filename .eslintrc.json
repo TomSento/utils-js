@@ -1,3 +1,7 @@
 {
-    "extends": ".eslintbase.json"
+    "extends": ".eslintbase.json",
+    "globals": {
+        "Stream": true,
+        "ReadStream": true
+    }
 }
