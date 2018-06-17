@@ -212,14 +212,20 @@ function Controller1(req, res) {
             self.routeError(500);
         });
         var contentType = self.req.headers['content-type'];
-        if (contentType === 'application/json') {
+        var tmp = contentType || '';
+        var i = tmp.lastIndexOf(';');
+        if (i >= 0) {
+            tmp = tmp.slice(0, i);
+        }
+        tmp = tmp.slice(-4);
+        if (tmp === 'json') {
             self.prepareRequestJSON(next);
         }
-        else if ([undefined, 'text/html', 'text/plain'].indexOf(contentType) >= 0) {
-            next();
-        }
-        else if (contentType.indexOf('multipart/form-data') >= 0) {
+        else if (tmp === 'data') {
             self.prepareRequestMULTIPART(next);
+        }
+        else if (contentType === undefined) {
+            next();
         }
         else {
             self.routeError(400);
