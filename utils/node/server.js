@@ -235,11 +235,19 @@ function Controller1(req, res) {
         if (['POST', 'PUT'].indexOf(self.req.method).indexOf === -1) {
             return next();
         }
+        var size = 0;
         var b = [];
-        self.req.on('data', function(chunk) {
-            b.push(chunk);
+        self.req.on('data', function(buffer) {
+            size += buffer.length;
+            if (size < self.route.maxSize) {
+                b.push(buffer);
+            }
         });
-        self.req.on('end', function() {
+        self.req.once('end', function() {
+            if (size >= self.route.maxSize) {
+                b = undefined;
+                return self.routeError(431);
+            }
             try {
                 var v = JSON.parse(Buffer.concat(b).toString('utf8'));
                 if (Object.prototype.toString.call(v) !== '[object Object]') {
