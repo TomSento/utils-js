@@ -1,60 +1,76 @@
-exports.SETROUTE1 = function(route, fn, flags) {
-    if (typeof(route) !== 'string' || (route[0] !== '/' && ['#public', '#error'].indexOf(route) === -1)) {
-        throw new Error('api-route');
+exports.SETROUTE1 = function(matcher, fn, flags) {
+    if (typeof(matcher) !== 'string' || (matcher[0] !== '/' && ['#public', '#error'].indexOf(matcher) === -1)) {
+        throw new Error('api-matcher');
     }
     if (typeof(fn) !== 'function') {
         throw new Error('api-fn');
     }
-    if (typeof(flags) !== 'string') {
-        throw new Error('api-flags');
-    }
-    var cache = exports.malloc('__SERVER');
-    var routes = cache('routes') || [];
-    var v = parseRoute();
-    var replaced = false;
-    for (var i = 0, l = routes.length; i < l; i++) {
-        if (routes[i].route === v.route) {
-            routes[i] = v;
-            replaced = true;
+    if (matcher === '#error') {
+        if (flags !== undefined) {
+            throw new Error('api-flags');
         }
     }
-    if (!replaced) {
-        routes.push(v);
+    else {
+        if (typeof(flags) !== 'string') {
+            throw new Error('api-flags');
+        }
     }
-    cache('routes', routes);
-    if (route === '#error') {
+    var cache = exports.malloc('__SERVER');
+    var v = parseRoute();
+    if (['#public', '#error'].indexOf(matcher) === -1) {
+        var matchers = cache('matchers') || {};
+        var routes = cache('routes') || {};
+        matchers[v.matcher] = v.exp; // --------------------------------------> FOR FINDING ROUTE MATCHER BY URL
+        routes[v.matcher + '?' + v.method + '?' + (v.xhr ? 'xhr?' : 'def?') + (v.mfd ? 'mfd' : 'def')] = v;
+        cache('matchers', matchers);
+        cache('routes', routes);
+    }
+    if (matcher === '#error') {
         return cache('errorRoute', v);
     }
-    else if (route === '#public') {
+    else if (matcher === '#public') {
         return cache('publicRoute', v);
     }
     function parseRoute() {
-        var exp = /^-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/4/
-        var m = flags.match(exp);
-        if (!m) {
-            throw new Error('Route "flags" must follow "-s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
+        var m;
+        if (matcher !== '#error') {
+            var exp = /^-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/6/
+            m = flags.match(exp);
+            if (!m) {
+                throw new Error('Route "flags" must follow "-m <Value> -s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
+            }
         }
-        return {
-            route: route,
-            exp: new RegExp('^' + route.replace(/\[(\w+)\]/g, '(\\w+)') + '$'),
-            fn: fn,
-            maxSize: parseMaxSize(m[1], m[2]),
-            maxTimeout: parseMaxTimeout(m[3]),
-            xhr: !!m[4],
-            mfd: !!m[5]
+        var o = {
+            matcher: matcher
         };
+        if (['#public', '#error'].indexOf(matcher) === -1) {
+            o.exp = new RegExp('^' + matcher.replace(/\[(\w+)\]/g, '(\\w+)') + '$');
+        }
+        else {
+            o.exp = null;
+        }
+        o.fn = fn;
+        if (matcher !== '#error') {
+            o.method = m[1];
+            o.maxSize = parseMaxSize(m[2], m[3]);
+            o.maxTimeout = parseMaxTimeout(m[4]);
+            o.xhr = !!m[5];
+            o.mfd = !!m[6];
+            return o;
+        }
+        else {
+            o.method = null;
+            o.maxSize = 0;
+            o.maxTimeout = 0;
+            o.xhr = false;
+            o.mfd = false;
+            return o;
+        }
     }
     function parseMaxSize(v, unit) {
         v = parseInt(v);
-        if (['#public', '#error'].indexOf(route) >= 0) {
-            if (isNaN(v) || v !== 0) {
-                throw new Error('Expected "-s 0' + unit + '".');
-            }
-        }
-        else {
-            if (isNaN(v) || v < 0) {
-                throw new Error('invalidMaxSize');
-            }
+        if (isNaN(v) || v < 0) {
+            throw new Error('invalidMaxSize');
         }
         var exponents = {
             'kB': 3,
@@ -81,7 +97,7 @@ function Controller1(req, res) {
         self.prepareRoute(function(status) {
             self.res.statusCode = status;
             self.monitorResponseChanges();
-            if (['#public', '#error'].indexOf(self.route.route) >= 0) {
+            if (['#public', '#error'].indexOf(self.route.matcher) >= 0) {
                 return self.invokeRoute();
             }
             self.prepareRequest(function() {
@@ -94,28 +110,30 @@ function Controller1(req, res) {
         if (self.route) {
             return next(200);
         }
-        var pathname = self.toPathname(self.req.url);
-        var ext = require('path').extname(pathname);
-        if (ext && cache('app').config.staticAccepts.indexOf(ext) >= 0) { // -> PROBABLY PUBLIC FILE
-            var filepath = require('path').resolve(cache('app').config.publicDirectory, ('.' + pathname));
-            require('fs').stat(filepath, function(err) {
-                if (err) {
-                    if (!cache('errorRoute')) {
-                        throw new Error('missingErrorRoute');
-                    }
-                    self.route = cache('errorRoute');
-                    return next(err.code === 'ENOENT' ? 404 : 500);
-                }
-                else { // ----------------------------------------------------> PUBLIC FILE EXISTS IN FS
-                    self.route = cache('publicRoute');
-                    return next(200);
-                }
-            });
-        }
-        else {
+        if (self.req.method !== 'GET') {
             self.route = cache('errorRoute');
             return next(404);
         }
+        var pathname = self.toPathname(self.req.url);
+        var ext = require('path').extname(pathname);
+        if (!ext || cache('app').config.staticAccepts.indexOf(ext) === -1) {
+            self.route = cache('errorRoute');
+            return next(404);
+        }
+        var filepath = require('path').resolve(cache('app').config.publicDirectory, ('.' + pathname));
+        require('fs').stat(filepath, function(err) {
+            if (err) {
+                if (!cache('errorRoute')) {
+                    throw new Error('missingErrorRoute');
+                }
+                self.route = cache('errorRoute');
+                return next(err.code === 'ENOENT' ? 404 : 500);
+            }
+            else { // --------------------------------------------------------> PUBLIC FILE EXISTS IN FS
+                self.route = cache('publicRoute');
+                return next(200);
+            }
+        });
     };
     self.monitorResponseChanges = function() {
         var responded = false;
@@ -130,7 +148,7 @@ function Controller1(req, res) {
         var execTime = 0;
         (function tick() {
             execTime += 1000;
-            if (!responded && self.route.route !== '#error' && execTime < self.route.maxTimeout) {
+            if (!responded && self.route.matcher !== '#error' && execTime < self.route.maxTimeout) {
                 setTimeout(function() {
                     tick();
                 }, 1000);
@@ -154,7 +172,7 @@ function Controller1(req, res) {
         function restrict408(fnName, fnNative) {
             self.res[fnName] = function(/* ...args */) {
                 if (!responded) {
-                    if (self.route.route !== '#error' && execTime >= self.route.maxTimeout) {
+                    if (self.route.matcher !== '#error' && execTime >= self.route.maxTimeout) {
                         return self.routeError(408);
                     }
                     fnNative.apply(self.res, arguments);
@@ -162,7 +180,7 @@ function Controller1(req, res) {
             };
         }
         self.res.on('pipe', function(source) {
-            if (self.route.route !== '#error' && execTime >= self.route.maxTimeout) {
+            if (self.route.matcher !== '#error' && execTime >= self.route.maxTimeout) {
                 self.destroyStream(source);
             }
         });
@@ -186,20 +204,38 @@ function Controller1(req, res) {
         return stream;
     };
     self.findRoute = function() {
-        var routes = cache('routes');
-        if ((routes || []).length === 0) {
-            throw new Error('missingRoutes');
-        }
-        for (var i = 0, l = routes.length; i < l; i++) {
-            var v = routes[i];
-            if (v && v.exp.test(self.toPathname(self.req.url))) {
-                return v;
+        var matchers = cache('matchers') || {};
+        var matcher = null;
+        for (var k in matchers) {
+            if (matchers.hasOwnProperty(k)) {
+                var exp = matchers[k];
+                if (exp.test(self.toPathname(self.req.url))) {
+                    matcher = k;
+                }
             }
         }
-        return null;
+        if (!matcher) {
+            return null;
+        }
+        var xhr = self.req.headers['x-requested-with'] === 'XMLHttpRequest';
+        var mfd = self.getContentType4L() === 'data';
+        var routes = cache('routes') || {};
+        var route = routes[matcher + '?' + self.req.method + '?' + (xhr ? 'xhr?' : 'def?') + (mfd ? 'mfd' : 'def')] || null;
+        if (route) {
+            return route;
+        }
+        return routes[matcher + '?' + self.req.method + '?def?' + (mfd ? 'mfd' : 'def')] || null; // XHR INSENSITIVE
     };
     self.toPathname = function(v) {
         return v.split(/\?+/)[0] || '/';
+    };
+    self.getContentType4L = function() {
+        var str = self.req.headers['content-type'] || '';
+        var i = str.lastIndexOf(';');
+        if (i >= 0) {
+            str = str.slice(0, i);
+        }
+        return str.slice(-4);
     };
     self.prepareRequest = function(next) {
         var url = require('url').parse(self.req.url);
@@ -211,20 +247,14 @@ function Controller1(req, res) {
             exports.log(err);
             self.routeError(500);
         });
-        var contentType = self.req.headers['content-type'];
-        var tmp = contentType || '';
-        var i = tmp.lastIndexOf(';');
-        if (i >= 0) {
-            tmp = tmp.slice(0, i);
-        }
-        tmp = tmp.slice(-4);
+        var tmp = self.getContentType4L();
         if (tmp === 'json') {
             self.prepareRequestJSON(next);
         }
         else if (tmp === 'data') {
             self.prepareRequestMULTIPART(next);
         }
-        else if (contentType === undefined) {
+        else if (self.req.headers['content-type'] === undefined) {
             next();
         }
         else {
@@ -506,7 +536,7 @@ exports.SERVER = function(env, packageJSON, config) {
         var pathname = this.toPathname(this.req.url);
         var filepath = require('path').resolve(config.publicDirectory, ('.' + pathname));
         this.stream(200, filepath);
-    }, '-s 0kB -t 20s');
+    }, '-m GET -s 0kB -t 20s'); // -------------------------------------------> ONLY "-t" USED
     var app = new App();
     cache('app', app);
     return app;
