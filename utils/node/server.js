@@ -135,6 +135,40 @@ function Controller1(req, res) {
             }
         });
     };
+    self.findRoute = function() {
+        var matchers = cache('matchers') || {};
+        var matcher = null;
+        for (var k in matchers) {
+            if (matchers.hasOwnProperty(k)) {
+                var exp = matchers[k];
+                if (exp.test(self.toPathname(self.req.url))) {
+                    matcher = k;
+                }
+            }
+        }
+        if (!matcher) {
+            return null;
+        }
+        var xhr = self.req.headers['x-requested-with'] === 'XMLHttpRequest';
+        var mfd = self.getContentType4L() === 'data';
+        var routes = cache('routes') || {};
+        var route = routes[matcher + '?' + self.req.method + '?' + (xhr ? 'xhr?' : 'def?') + (mfd ? 'mfd' : 'def')] || null;
+        if (route) {
+            return route;
+        }
+        return routes[matcher + '?' + self.req.method + '?def?' + (mfd ? 'mfd' : 'def')] || null; // XHR INSENSITIVE
+    };
+    self.toPathname = function(v) {
+        return v.split(/\?+/)[0] || '/';
+    };
+    self.getContentType4L = function() {
+        var str = self.req.headers['content-type'] || '';
+        var i = str.lastIndexOf(';');
+        if (i >= 0) {
+            str = str.slice(0, i);
+        }
+        return str.slice(-4);
+    };
     self.monitorResponseChanges = function() {
         var responded = false;
         self.res.on('close', function() {
@@ -202,40 +236,6 @@ function Controller1(req, res) {
             }
         }
         return stream;
-    };
-    self.findRoute = function() {
-        var matchers = cache('matchers') || {};
-        var matcher = null;
-        for (var k in matchers) {
-            if (matchers.hasOwnProperty(k)) {
-                var exp = matchers[k];
-                if (exp.test(self.toPathname(self.req.url))) {
-                    matcher = k;
-                }
-            }
-        }
-        if (!matcher) {
-            return null;
-        }
-        var xhr = self.req.headers['x-requested-with'] === 'XMLHttpRequest';
-        var mfd = self.getContentType4L() === 'data';
-        var routes = cache('routes') || {};
-        var route = routes[matcher + '?' + self.req.method + '?' + (xhr ? 'xhr?' : 'def?') + (mfd ? 'mfd' : 'def')] || null;
-        if (route) {
-            return route;
-        }
-        return routes[matcher + '?' + self.req.method + '?def?' + (mfd ? 'mfd' : 'def')] || null; // XHR INSENSITIVE
-    };
-    self.toPathname = function(v) {
-        return v.split(/\?+/)[0] || '/';
-    };
-    self.getContentType4L = function() {
-        var str = self.req.headers['content-type'] || '';
-        var i = str.lastIndexOf(';');
-        if (i >= 0) {
-            str = str.slice(0, i);
-        }
-        return str.slice(-4);
     };
     self.prepareRequest = function(next) {
         var url = require('url').parse(self.req.url);
