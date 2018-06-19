@@ -1,4 +1,4 @@
-var U = require('../dist/utils.git');
+var U = require('../../dist/utils.git.js');
 
 U.test('errorBuilder.getData()', function(assert) {
     var done = assert.async(2);

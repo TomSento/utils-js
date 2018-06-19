@@ -1,10 +1,10 @@
-var U = require('../../dist/utils.git');
+var U = require('../../dist/utils.git.js');
 
-var browsers = require('./files/test-useragent_browsers.json'); // -----------> ALL TEST DATA FROM "ua-parser v0.7.17"
-var engines = require('./files/test-useragent_engines.json');
-var os = require('./files/test-useragent_os.json');
-var devices = require('./files/test-useragent_devices.json');
-var cpu = require('./files/test-useragent_cpu.json');
+var browsers = require('../files/userAgent_browsers.json'); // ----------> ALL TEST DATA FROM "ua-parser v0.7.17"
+var engines = require('../files/userAgent_engines.json');
+var os = require('../files/userAgent_os.json');
+var devices = require('../files/userAgent_devices.json');
+var cpu = require('../files/userAgent_cpu.json');
 
 U.arrForEach(browsers, function(test) {
     U.test('(browser) ' + test.desc, function(assert) {

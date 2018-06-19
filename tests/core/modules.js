@@ -1,4 +1,4 @@
-var U = require('../dist/utils.git');
+var U = require('../../dist/utils.git.js');
 
 U.SETMODULE('Wallet', function(func) {
     func('plus', function(p1, p2) {

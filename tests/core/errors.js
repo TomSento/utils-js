@@ -1,4 +1,4 @@
-var U = require('../dist/utils.git');
+var U = require('../../dist/utils.git.js');
 
 var errorBuilder = new U.ErrorBuilder();
 var err = new U.Error('BuggsBunny-name', 'Parameter ...');
