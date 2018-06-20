@@ -252,8 +252,13 @@ exports.domAttr = function(sel, k, v) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
-    if (v && typeof(v) !== 'string' && isNaN(parseInt(v)) && v !== null) {
-        throw new Error('api-v');
+    if (v !== undefined) {
+        try {
+            v = '' + JSON.stringify(v);
+        }
+        catch (err) {
+            throw new Error('api-v');
+        }
     }
     var els = null;
     if (Array.isArray(sel)) {
@@ -292,7 +297,7 @@ exports.domAttr = function(sel, k, v) {
         }
     }
     function setAttr(el, k, v) {
-        el.setAttribute(k, '' + v);
+        el.setAttribute(k, v);
     }
     function selectingOne(sel) {
         if (exports.domIsEl(sel)) {
