@@ -7,15 +7,14 @@
         <script src="../../dist/utils.git.js"></script>
     </head>
     <script>
-        U.log('SID1: ', U.SID(3));
-        U.log('SID2: ', U.SID(3));
-        U.log('SID3: ', U.SID());
-        U.log('UID1:', U.UID());
-        U.log('UID2:', U.UID());
-        U.log('UID3:', U.UID());
-        U.logWarn(U.strFormat('I go to {0} to buy some {1}', ['Tesco', 'Bananas']));
+        U.log('SID1: ', U.genSID(3));
+        U.log('SID2: ', U.genSID(3));
+        U.log('SID3: ', U.genSID());
+        U.log('UID1:', U.genUID());
+        U.log('UID2:', U.genUID());
+        U.log('UID3:', U.genUID());
+        U.logWarn(U.strFormat('I go to {0} to buy some {1}.', ['Tesco', 'Bananas']));
     </script>
     <body>
-
     </body>
 </html>
