@@ -1,4 +1,4 @@
-var U = require('../../dist/utils.git');
+var U = require('../../dist/utils.git.js');
 
 var w = new U.Watcher();
 w.watch('../files/watchme1.md');
