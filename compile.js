@@ -14,7 +14,6 @@ var files = [
     'utils/primitives/number.js',
     'utils/core/errors.js',
     'utils/core/schemas.js',
-    'utils/core/modules.js',
     'utils/core/h.js',
     'utils/browser/browser.js',
     'utils/browser/ajax.js',
