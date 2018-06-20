@@ -20,12 +20,9 @@ U.SETSCHEMA('User', function(attr, attrError, attrPrepare, attrValidate, prefix)
         return typeMatch;
     });
     attr('projects', Array);
-    attrError('Parameter "projects" must be an array with at least one item.'); // WHEN ERROR MESSAGE FOR 'SK' LANGUAGE IS NOT FOUND -> FALLBACK TO DEFAULT attrError() MESSAGE
-    attrValidate(function(arr, typeMatch) {
-        if (!arr) {
-            return false;
-        }
-        return typeMatch && arr.length > 0;
+    attrError('Parameter "projects" must be an array with at least one item.'); // WHEN ERROR MESSAGE FOR "SK" LANGUAGE IS NOT FOUND -> FALLBACK TO DEFAULT "attrError()" MESSAGE
+    attrValidate(function(v, typeMatch) {
+        return typeMatch && v && v.length > 0;
     });
     attr('getName', Function);
     attrError('Function "getName" is missing.');
@@ -47,4 +44,4 @@ if (err.hasError()) {
 }
 U.logDebug(err);
 U.logDebug(obj);
-U.log('Make error on fly: ' + U.SCHEMA('User').makeError('getName', 'SK'));
+U.logDebug('Make error on fly: ', U.SCHEMA('User').makeError('getName', 'SK'));
