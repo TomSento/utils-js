@@ -6,6 +6,7 @@ exports.SETSCHEMA = function(k, fn) {
         throw new Error('api-fn');
     }
     function Schema(fn) {
+        this.name = k;
         this.rule = {};
         this.prefix = '';
         this.currentKey = null;

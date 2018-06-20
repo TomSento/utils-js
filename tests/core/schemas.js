@@ -1,6 +1,6 @@
-var U = require('../dist/utils.git');
+var U = require('../../dist/utils.git.js');
 
-U.SETSCHEMA('User', function(attr, attrError, attrPrepare, attrValidate, func, funcError) {
+U.SETSCHEMA('User', function(attr, attrError, attrPrepare, attrValidate, prefix) {
     attr('name', String);
     attrValidate(function(v, typeMatch) {
         return typeMatch && v.length > 5;
@@ -8,8 +8,8 @@ U.SETSCHEMA('User', function(attr, attrError, attrPrepare, attrValidate, func, f
     attrError('Parameter "name" is missing or has incorrect format.');
     attrError('SK', 'Paremeter "name" chýba alebo má nesprávny formát.');
     attrError('CZ', 'Parametr "name" chybí nebo má špatný formát.');
-    attr('rewards', String);
-    attrError('Parameter "surname" has incorrect format.');
+    attr('description', String);
+    attrError('Parameter "description" has incorrect format.');
     attrPrepare(function(v) {
         return v || null; // PREPARE TO BAD TYPE WILL CAUSE TYPE MISSMATCH IN VALIDATE STEP
     });
@@ -27,18 +27,24 @@ U.SETSCHEMA('User', function(attr, attrError, attrPrepare, attrValidate, func, f
         }
         return typeMatch && arr.length > 0;
     });
-    func('getName');
-    funcError('Function "getName" is missing.');
-    funcError('SK', 'Chýba funkcia "getName".');
+    attr('getName', Function);
+    attrError('Function "getName" is missing.');
+    attrError('SK', 'Chýba funkcia "getName".');
+    attrValidate(function(v, typeMatch) {
+        return typeMatch;
+    });
+    prefix('schemaUser-');
 });
 var obj = {
-    name: 'Tomas',
-    // surname: undefined,
+    name: 'Tomas Sentkeresty',
+    description: '',
     projects: [1]
     // getName: function() {}
 };
-var errors = U.SCHEMA('User').prepareAndValidate(obj, 'SK');
-U.log('errors default sk locale: ', errors);
-if (errors.hasError()) {
-    // errors.throwFirst();
+var err = U.SCHEMA('User').prepareAndValidate(obj, 'SK');
+if (err.hasError()) {
+    U.log('Schema has ' + err.errors.length + ' error(s).');
 }
+U.logDebug(err);
+U.logDebug(obj);
+U.log('Make error on fly: ' + U.SCHEMA('User').makeError('getName', 'SK'));
