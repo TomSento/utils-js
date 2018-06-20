@@ -43,14 +43,13 @@
             U.domStyle(el, 'margin-top', '200px');
             U.domStyle(el, 'margin-left', '100px');
             U.domHTML(el, html);
-            // U.domOff('#products', 'click');
             // BIND EVENT BY VARIABLE WITH ELEMENT(S) OR BY SELECTOR
             el = U.domFind('#products');
             U.domOn(el, 'click', function(e) {
                 U.log('event: ', e);
                 U.log('target: ', e.target);
                 U.log('currentTarget: ', e.currentTarget);
-                U.log('event bindeded to elements variable');
+                U.log('event binded to elements variable');
                 var els = U.domFind('.product-item');
                 U.arrForEach(els, function(el) {
                     U.domStyle(el, 'background', 'blue');
@@ -64,10 +63,11 @@
             });
             U.domAddClass('.product-item', 'product-item-active product-item-readonly');
             // U.domOff(el, 'click');
+            // U.domOff('#products', 'click');
             setTimeout(function() {
                 U.domTriggerNativeEvent(el, 'click');
                 U.domVal('#input-1', 'Buggs Bunny');
-                U.domAttr('#input-1', 'disabled', true);
+                U.domAttr('#input-1', 'disabled', 'disabled');
                 U.log(U.domVal('.input-group'));
                 U.domRemoveClass('.product-item', 'product-item product-item-active');
             }, 3000);
