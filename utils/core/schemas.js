@@ -5,22 +5,19 @@ exports.SETSCHEMA = function(k, fn) {
     if (typeof(fn) !== 'function') {
         throw new Error('api-fn');
     }
-    var Co = function(fn) {
+    function Schema(fn) {
         this.rule = {};
         this.prefix = '';
         this.currentKey = null;
-        var funcError = attrError;
         fn.apply(null, [
             attr.bind(this),
             attrError.bind(this),
             attrPrepare.bind(this),
             attrValidate.bind(this),
-            func.bind(this),
-            funcError.bind(this),
             setPrefix.bind(this)
         ]);
-    };
-    Co.prototype = {
+    }
+    Schema.prototype = {
         prepareAndValidate: function(obj, lan) { // Can be called without normalize.
             if (!obj || typeof(obj) !== 'object') {
                 throw new Error('api-obj');
@@ -69,18 +66,14 @@ exports.SETSCHEMA = function(k, fn) {
             if (lan && typeof(lan) !== 'string') {
                 throw new Error('api-lan');
             }
-            for (var k in this.rule) {
-                if (this.rule.hasOwnProperty(k)) {
-                    if (k === name) {
-                        var rule = this.rule[k];
-                        var mes = lan
-                            ? (rule.message[lan.toUpperCase()] || rule.message['default'])
-                            : rule.message['default'];
-                        return new exports.Error(this.prefix + k, mes);
-                    }
-                }
+            var rule = this.rule[name];
+            if (!rule || !rule.message) {
+                throw new Error('Missing field "' + name + '" in schema definition.');
             }
-            throw new Error('Missing field "' + name + '" in schema definition.');
+            var msg = lan
+                ? (rule.message[lan.toUpperCase()] || rule.message['default'])
+                : rule.message['default'];
+            return new exports.Error(this.prefix + name, msg);
         }
     };
     function attr(name, type) { // Starts attribute definition
@@ -96,18 +89,6 @@ exports.SETSCHEMA = function(k, fn) {
             type: type,
             message: {
                 default: 'Invalid attribute "' + name + '".'
-            }
-        };
-    }
-    function func(name) { // Starts function definition
-        if (!name || typeof(name) !== 'string') {
-            throw new Error('api-name');
-        }
-        this.currentKey = name;
-        this.rule[this.currentKey] = {
-            type: '[object Function]',
-            message: {
-                default: 'Invalid function "' + name + '".'
             }
         };
     }
@@ -165,6 +146,9 @@ exports.SETSCHEMA = function(k, fn) {
         else if (type === Boolean) {
             return '[object Boolean]';
         }
+        else if (type === Function) {
+            return '[object Function]';
+        }
         else {
             return null;
         }
@@ -176,7 +160,7 @@ exports.SETSCHEMA = function(k, fn) {
     if (cache(k)) {
         throw new Error('Duplicate schema: "' + k + '".');
     }
-    cache(k, new Co(fn));
+    cache(k, new Schema(fn));
 };
 exports.SCHEMA = function(k) {
     if (!k || typeof(k) !== 'string') {
