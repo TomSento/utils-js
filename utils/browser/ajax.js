@@ -1,4 +1,4 @@
-exports.ajax = function(obj) {
+exports.$ajax = function(obj) {
     var xhr = new XMLHttpRequest();
     var res = null;
     var json = 'application/json';
@@ -9,7 +9,7 @@ exports.ajax = function(obj) {
                     res = JSON.parse(xhr.responseText);
                 }
                 catch (err) {
-                    exports.logWarn('Unable to parse server response to JSON.');
+                    console.warn('Unable to parse server response to JSON.'); // eslint-disable-line no-console
                     obj.error(null, xhr);
                 }
             }
@@ -32,7 +32,7 @@ exports.ajax = function(obj) {
         }
     };
     xhr.onerror = function() {
-        exports.logWarn('Unexpected AJAX error.');
+        console.warn('Unexpected AJAX error.'); // eslint-disable-line no-console
     };
     xhr.open(obj.method, obj.url, true);
     for (var k in obj.header) {
