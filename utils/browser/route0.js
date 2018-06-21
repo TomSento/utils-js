@@ -11,8 +11,8 @@
 // LOCAL STORAGE VS. COOKIE - https://stackoverflow.com/a/3220802/6135126
 // REGEX TO MATCH ROUTE TAKEN FROM: https://github.com/garygreen/lightrouter
 // DOMContentLoaded VS. load - https://stackoverflow.com/a/36096571/6135126
-exports.SETROUTE0 = function(route, fn) {
-    var cache = exports.malloc('_ROUTE0');
+exports.$SETROUTE0 = function(route, fn) {
+    var cache = exports.$malloc('_ROUTE0');
     if (!route || typeof(route) !== 'string' || route[0] !== '#') {
         throw new Error('api-route');
     }
@@ -23,7 +23,7 @@ exports.SETROUTE0 = function(route, fn) {
     if (!routes) {
         routes = [];
         domReady(function() { // WHEN ALL ROUTES ARE SETTED
-            exports.ROUTE0();
+            exports.$ROUTE0();
         });
     }
     routes.push(composeRoute(route, fn));
@@ -46,8 +46,8 @@ exports.SETROUTE0 = function(route, fn) {
         document.addEventListener('DOMContentLoaded', fn);
     }
 };
-exports.ROUTE0 = function(url, err) {
-    var cache = exports.malloc('_ROUTE0');
+exports.$ROUTE0 = function(url, err) {
+    var cache = exports.$malloc('_ROUTE0');
     var routes = cache('routes');
     if (!Array.isArray(routes) || routes.length === 0) {
         throw new Error('missingRoutes');
@@ -72,7 +72,7 @@ exports.ROUTE0 = function(url, err) {
     if (!url && !err) { // WHEN PAGE IS LOADED - REGISTERED IN SETROUTE0
         err = localStorage['ROUTE0_ERR'];
         err = isErrorRoute(location.hash)
-            ? new exports.ErrorBuilder(err ? JSON.parse(err) : null)
+            ? new exports.$ErrorBuilder(err ? JSON.parse(err) : null)
             : null;
         var search = location.hash.split(/\?+/)[0] || '#';
         var query = getQueryObj(location.hash);
@@ -80,7 +80,7 @@ exports.ROUTE0 = function(url, err) {
     }
     else {
         if (isErrorRoute(url)) {
-            localStorage['ROUTE0_ERR'] = err ? JSON.stringify(new exports.ErrorBuilder(err)) : '';
+            localStorage['ROUTE0_ERR'] = err ? JSON.stringify(new exports.$ErrorBuilder(err)) : '';
             location.replace(url); // FORGET HISTORY
         }
         else {
@@ -95,12 +95,12 @@ exports.ROUTE0 = function(url, err) {
                 is = true;
                 var args = search.match(v.exp).slice(1);
                 var anchor = v.hasAnchor ? (args.pop() || null) : null; // FORCE TO NULL IF URL IS #users~
-                var controller = new exports.Controller0(v.route, args, anchor, query, err);
+                var controller = new exports.$Controller0(v.route, args, anchor, query, err);
                 return invokeRoute(v.fn, controller, args);
             }
         }
         if (!is) {
-            exports.ROUTE0('#404');
+            exports.$ROUTE0('#404');
         }
     }
     function invokeRoute(fn, controller, args) {
@@ -167,7 +167,7 @@ exports.ROUTE0 = function(url, err) {
         return /^#(400|404|408|500)/.test(v);
     }
 };
-function Controller0(route, args, anchor, query, err) {
+function $Controller0(route, args, anchor, query, err) {
     var self = this;
     self.route = route;
     self.args = Array.isArray(args) ? args : [];
@@ -186,7 +186,7 @@ function Controller0(route, args, anchor, query, err) {
         }, 1000);
     };
 }
-Controller0.prototype = {
+$Controller0.prototype = {
     view: function(html) { // SETS PAGE HTML
         var self = this;
         if (self.execTime >= 10000) {
@@ -209,16 +209,16 @@ Controller0.prototype = {
         }
     },
     throw400: function(err) {
-        exports.ROUTE0('#400', err);
+        exports.$ROUTE0('#400', err);
     },
     throw404: function(err) {
-        exports.ROUTE0('#404', err);
+        exports.$ROUTE0('#404', err);
     },
     throw408: function(err) {
-        exports.ROUTE0('#408', err);
+        exports.$ROUTE0('#408', err);
     },
     throw500: function(err) {
-        exports.ROUTE0('#500', err);
+        exports.$ROUTE0('#500', err);
     }
 };
-exports.Controller0 = Controller0;
+exports.$Controller0 = $Controller0;

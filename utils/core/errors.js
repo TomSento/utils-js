@@ -4,7 +4,7 @@
  * Error passed: Set error.id = problem.message.
  * String passed: Set error.id = problem.
  */
-function Error2(problem, message) {
+function $Error(problem, message) {
     if (problem) {
         if (problem instanceof Error) {
             this.id = problem.message;
@@ -22,10 +22,10 @@ function Error2(problem, message) {
         throw new Error('api-problem');
     }
 }
-Error2.prototype = {
+$Error.prototype = {
     log: function() {
         var msg = this.message ? (this.id + ' - ' + this.message) : this.id;
-        exports.logWarn(msg);
+        console.warn(msg); // eslint-disable-line no-console
     },
     throw: function() {
         throw new Error(this.id);
@@ -42,13 +42,13 @@ Error2.prototype = {
         return JSON.stringify(this, null, '    ');
     }
 };
-exports.Error = Error2;
-function ErrorBuilder(err) {
+exports.$Error = $Error;
+function $ErrorBuilder(err) {
     if (err) {
         if (typeof(err) === 'string' || err instanceof Error) {
-            this.errors = [new exports.Error(err)];
+            this.errors = [new exports.$Error(err)];
         }
-        else if (err instanceof exports.Error) {
+        else if (err instanceof exports.$Error) {
             this.errors = [err];
         }
         else if (Array.isArray(err)) {
@@ -58,11 +58,11 @@ function ErrorBuilder(err) {
                 for (var i = 0; i < len; i++) {
                     var v = err[i];
                     if (v) {
-                        if (v instanceof exports.Error) {
+                        if (v instanceof exports.$Error) {
                             arr.push(v);
                         }
                         else if (v instanceof Error) {
-                            arr.push(new exports.Error(v));
+                            arr.push(new exports.$Error(v));
                         }
                         else {
                             throw new Error('api-err');
@@ -86,13 +86,13 @@ function ErrorBuilder(err) {
         this.errors = [];
     }
 }
-ErrorBuilder.prototype = {
+$ErrorBuilder.prototype = {
     push: function(err) {
         if (err instanceof Error) {
-            this.errors.push(new exports.Error(err.message));
+            this.errors.push(new exports.$Error(err.message));
             return this;
         }
-        else if (err instanceof exports.Error) {
+        else if (err instanceof exports.$Error) {
             this.errors.push(err);
             return this;
         }
@@ -158,4 +158,4 @@ ErrorBuilder.prototype = {
         this.errors[0].logAndThrow();
     }
 };
-exports.ErrorBuilder = ErrorBuilder;
+exports.$ErrorBuilder = $ErrorBuilder;
