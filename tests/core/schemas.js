@@ -1,6 +1,6 @@
 var U = require('../../dist/utils.git.js');
 
-U.SCHEMA('User', 'EN', {
+$schema('User', 'EN', {
     'name': [String, {
         validate: function(v, typeMatch) {
             return typeMatch && v.length > 5;
