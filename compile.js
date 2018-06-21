@@ -7,7 +7,7 @@ var files = [
     'utils/core/log.js',
     'utils/core/test.js',
     'utils/core/userAgent.js',
-    'utils/core/generators.js',
+    'utils/core/uid.js',
     'utils/primitives/object.js',
     'utils/primitives/array.js',
     'utils/primitives/string.js',
