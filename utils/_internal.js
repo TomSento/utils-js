@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-exports.noop = function() {
+exports.$noop = function() {
 };
-exports.malloc = function(prefix) {
+exports.$malloc = function(prefix) {
     if (!exports.__cache) {
         exports.__cache = {};
     }
@@ -28,7 +28,7 @@ exports.malloc = function(prefix) {
         }
     };
 };
-exports.toDebugStr = function(/* ...args */) {
+exports.$toDebugStr = function(/* ...args */) {
     var str = '';
     for (var i = 0; i < arguments.length; i++) {
         var arg = arguments[i];
