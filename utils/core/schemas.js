@@ -69,9 +69,6 @@ exports.SCHEMA = function(name, defaultLanguage, obj) {
                 }
                 lan = lan.toUpperCase();
             }
-            else {
-                lan = defaultLanguage;
-            }
             var typeMatch;
             var err = new exports.ErrorBuilder();
             for (var k in this.rule) {
@@ -85,7 +82,7 @@ exports.SCHEMA = function(name, defaultLanguage, obj) {
                     }
                     typeMatch = (Object.prototype.toString.call(v) === rule.type);
                     if (rule.validate && !rule.validate(v, typeMatch, o)) {
-                        err.push(new exports.Error(name + '.' + k, (rule.msg[lan] || rule.msg[defaultLanguage] || ('Invalid "' + k + '".'))));
+                        err.push(new exports.Error(name + '.' + k, (rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".'))));
                     }
                 }
             }
@@ -113,14 +110,11 @@ exports.SCHEMA = function(name, defaultLanguage, obj) {
                 }
                 lan = lan.toUpperCase();
             }
-            else {
-                lan = defaultLanguage;
-            }
             var rule = this.rule[k];
             if (!rule || !rule.msg) {
                 throw new Error('Property "' + k + '" not found.');
             }
-            return new exports.Error(name + '.' + k, (rule.msg[lan] || rule.msg[defaultLanguage] || ('Invalid "' + k + '".')));
+            return new exports.Error(name + '.' + k, (rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".')));
         }
     };
     cache(name, new Schema());
