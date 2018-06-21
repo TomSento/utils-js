@@ -22,5 +22,5 @@ var files = [
     'utils/node/fs.js',
     'utils/node/server.js'
 ];
-atomizerjs.compileUtils(v, files, 'U', keys, './dist/utils.js');
-atomizerjs.compileUtils(v, files, 'U', null, './dist/utils.git.js');
+atomizerjs.compileUtils(v, files, keys, './dist/utils.js');
+atomizerjs.compileUtils(v, files, null, './dist/utils.all.js');
