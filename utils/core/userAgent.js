@@ -7,7 +7,7 @@
  * -- NORMALIZE ALL VALUES TO "SNAKE_CASE"
  * -- RETURN RESULT AS FLAT OBJECT
  */
-exports.userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-parser-js/releases/tag/0.7.17
+exports.$userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-parser-js/releases/tag/0.7.17
     if (str && typeof(str) !== 'string') {
         throw new Error('api-str');
     }
