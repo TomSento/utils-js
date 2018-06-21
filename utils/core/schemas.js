@@ -1,4 +1,4 @@
-exports.SCHEMA2 = function(name, defaultLanguage, obj) {
+exports.SCHEMA = function(name, defaultLanguage, obj) {
     if (typeof(name) !== 'string') {
         throw new Error('api-name');
     }

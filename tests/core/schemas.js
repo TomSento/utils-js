@@ -1,6 +1,6 @@
 var U = require('../../dist/utils.git.js');
 
-U.SCHEMA2('User', 'EN', {
+U.SCHEMA('User', 'EN', {
     'name': [String, {
         validate: function(v, typeMatch) {
             return typeMatch && v.length > 5;
@@ -45,11 +45,11 @@ var obj = {
 };
 
 U.logDebug('obj:', obj);
-var err = U.SCHEMA2('User').prepareAndValidate(obj, 'SK');
+var err = U.SCHEMA('User').prepareAndValidate(obj, 'SK');
 if (err.hasError()) {
     U.log('Schema has ' + err.errors.length + ' error(s).');
 }
 U.logDebug(err);
 U.logDebug('prepare & validate:', obj);
-U.logDebug('cleaned:', U.SCHEMA2('User').clean(obj));
-U.logDebug('Make error on fly: ', U.SCHEMA2('User').makeError('getName', 'SK'));
+U.logDebug('cleaned:', U.SCHEMA('User').clean(obj));
+U.logDebug('Make error on fly: ', U.SCHEMA('User').makeError('getName', 'SK'));
