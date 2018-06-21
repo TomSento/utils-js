@@ -1,4 +1,4 @@
-exports.browserSupportsEvent = function(sel, eventName) { // https://stackoverflow.com/a/26124697/6135126
+exports.$browserSupportsEvent = function(sel, eventName) { // https://stackoverflow.com/a/26124697/6135126
     var el = null;
     if (sel instanceof Node || sel instanceof Element || sel instanceof HTMLDocument) {
         el = sel;
