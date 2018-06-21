@@ -2,9 +2,18 @@ exports.SCHEMA2 = function(name, defaultLanguage, obj) {
     if (typeof(name) !== 'string') {
         throw new Error('api-name');
     }
+    if (defaultLanguage !== undefined && typeof(defaultLanguage) !== 'string') {
+        throw new Error('api-defaultLanguage');
+    }
+    if (obj !== undefined && typeof(obj) !== 'object') {
+        throw new Error('api-obj');
+    }
     var cache = exports.malloc('__SCHEMA');
-    if (obj === undefined) {
+    if (defaultLanguage === undefined && obj === undefined) {
         return cache(name) || null;
+    }
+    else {
+        defaultLanguage = defaultLanguage.toUpperCase();
     }
     function Schema() {
         this.name = name;
@@ -58,6 +67,7 @@ exports.SCHEMA2 = function(name, defaultLanguage, obj) {
                 if (typeof(lan) !== 'string') {
                     throw new Error('api-lan');
                 }
+                lan = lan.toUpperCase();
             }
             else {
                 lan = defaultLanguage;
@@ -75,7 +85,7 @@ exports.SCHEMA2 = function(name, defaultLanguage, obj) {
                     }
                     typeMatch = (Object.prototype.toString.call(v) === rule.type);
                     if (rule.validate && !rule.validate(v, typeMatch, o)) {
-                        err.push(new exports.Error(name + '.' + k, (rule.msg[lan.toUpperCase()] || rule.msg[defaultLanguage.toUpperCase()])));
+                        err.push(new exports.Error(name + '.' + k, (rule.msg[lan] || rule.msg[defaultLanguage] || ('Invalid "' + k + '".'))));
                     }
                 }
             }
@@ -101,6 +111,7 @@ exports.SCHEMA2 = function(name, defaultLanguage, obj) {
                 if (typeof(lan) !== 'string') {
                     throw new Error('api-lan');
                 }
+                lan = lan.toUpperCase();
             }
             else {
                 lan = defaultLanguage;
@@ -109,7 +120,7 @@ exports.SCHEMA2 = function(name, defaultLanguage, obj) {
             if (!rule || !rule.msg) {
                 throw new Error('Property "' + k + '" not found.');
             }
-            return new exports.Error(name + '.' + k, (rule.msg[lan.toUpperCase()] || rule.msg[defaultLanguage.toUpperCase()]));
+            return new exports.Error(name + '.' + k, (rule.msg[lan] || rule.msg[defaultLanguage] || ('Invalid "' + k + '".')));
         }
     };
     cache(name, new Schema());
