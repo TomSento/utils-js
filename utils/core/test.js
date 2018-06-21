@@ -1,4 +1,4 @@
-exports.test = function(k, fn, maxTimeout) {
+exports.$test = function(k, fn, maxTimeout) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
@@ -124,7 +124,7 @@ exports.test = function(k, fn, maxTimeout) {
             self.emitter.on('error', function(err) {
                 self.terminated = true;
                 var msg = err[0] ? (': ' + err[0].stack) : '';
-                exports.logError('TEST ERROR DETECTION [ENV:' + self.env.type + '] (' + err[1] + ')' + msg);
+                console.error('TEST ERROR DETECTION [ENV:' + self.env.type + '] (' + err[1] + ')' + msg); // eslint-disable-line no-console
                 if (self.env.isNode()) {
                     self.env.env.exit(1);
                 }
@@ -430,7 +430,7 @@ exports.test = function(k, fn, maxTimeout) {
         }
     };
     // ------------------------------------------------------------------------> MAIN
-    var cache = exports.malloc('__TEST');
+    var cache = exports.$malloc('__TEST');
     var runner = cache('runner');
     var env = cache('env');
     if (env && runner) {
