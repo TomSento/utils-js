@@ -1,4 +1,4 @@
-exports.strPadStart = function(str, len, fill) {
+exports.$strPadStart = function(str, len, fill) {
     if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
         return padStart('', str, len);
     }
@@ -22,7 +22,7 @@ exports.strPadStart = function(str, len, fill) {
         return s;
     }
 };
-exports.strPadEnd = function(str, len, fill) {
+exports.$strPadEnd = function(str, len, fill) {
     if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
         return padEnd('', str, len);
     }
@@ -46,7 +46,7 @@ exports.strPadEnd = function(str, len, fill) {
         return s;
     }
 };
-exports.strHyphenize = function(str) {
+exports.$strHyphenize = function(str) {
     if (typeof(str) !== 'string') {
         return null;
     }
@@ -54,13 +54,13 @@ exports.strHyphenize = function(str) {
         return ('-' + g[0]);
     }).toLowerCase();
 };
-exports.strFormat = function(str, args) {
+exports.$strFormat = function(str, args) {
     return str.replace(/\{\d+\}/g, function(text) {
         var value = args[+text.substring(1, text.length - 1)];
         return value === null ? '' : value;
     });
 };
-exports.strHTML = function(tag, obj) {
+exports.$strHTML = function(tag, obj) {
     if (!tag || typeof(tag) !== 'string') {
         return '';
     }
@@ -127,13 +127,13 @@ exports.strHTML = function(tag, obj) {
         var str = '';
         for (var k in obj) {
             if (obj.hasOwnProperty(k)) {
-                str += exports.strHyphenize(k) + ':' + obj[k] + ';';
+                str += exports.$strHyphenize(k) + ':' + obj[k] + ';';
             }
         }
         return (str.length > 0) ? (' style="' + str + '"') : '';
     }
 };
-exports.strStripHTML = function(str) {
+exports.$strStripHTML = function(str) {
     str = typeof(str) === 'string' ? str.replace(/<\/?[^>]+(>|$)/g, '') : '';
     var map = {
         'nbsp': ' ',
@@ -146,7 +146,7 @@ exports.strStripHTML = function(str) {
         return map[k] || k;
     });
 };
-exports.strToHTMLText = function(str, leftStartWithNBPS, leftRevResult, rightStartWithNBPS, rightRevResult) {
+exports.$strToHTMLText = function(str, leftStartWithNBPS, leftRevResult, rightStartWithNBPS, rightRevResult) {
     var map = {
         '&': 'amp',
         '"': 'quot',
@@ -191,10 +191,10 @@ exports.strToHTMLText = function(str, leftStartWithNBPS, leftRevResult, rightSta
         return revResult ? arr.reverse().join('') : arr.join('');
     }
 };
-exports.strStripWhitespaces = function(str) {
+exports.$strStripWhitespaces = function(str) {
     return typeof(str) === 'string' ? str.replace(/\s+/, '') : '';
 };
-exports.strRemoveDiacritics = function(str) {
+exports.$strRemoveDiacritics = function(str) {
     var map = {
         '\u00a0': ' ',
         '\u07c0': '0',
@@ -1048,9 +1048,9 @@ exports.strRemoveDiacritics = function(str) {
         return map[ch] || ch;
     });
 };
-exports.strSlug = function(str, max) {
+exports.$strSlug = function(str, max) {
     max = max || 60;
-    var self = exports.strRemoveDiacritics(str.trim().toLowerCase());
+    var self = exports.$strRemoveDiacritics(str.trim().toLowerCase());
     var builder = '';
     var length = self.length;
     for (var i = 0; i < length; i++) {
@@ -1072,35 +1072,35 @@ exports.strSlug = function(str, max) {
     var l = builder.length - 1;
     return builder[l] === '-' ? builder.substring(0, l) : builder;
 };
-exports.strReplaceBetween = function(str, i, j, part) {
+exports.$strReplaceBetween = function(str, i, j, part) {
     return str.substring(0, i) + part + str.substring(j);
 };
-exports.strReplaceCharAt = function(str, i, ch) {
+exports.$strReplaceCharAt = function(str, i, ch) {
     return str.substr(0, i) + ch + str.substr(i + ch.length);
 };
-exports.strTrim = function(str, ch) {
+exports.$strTrim = function(str, ch) {
     ch = ch || '\\s';
     var exp = new RegExp('^' + ch + '+|' + ch + '+$', 'gm');
     return str.replace(exp, '');
 };
-exports.strReverse = function(str) {
+exports.$strReverse = function(str) {
     var rev = '';
     for (var i = str.length - 1; i >= 0; i--) {
         rev += str[i];
     }
     return rev;
 };
-exports.strHas = function(str, v) {
+exports.$strHas = function(str, v) {
     return str.includes(v);
 };
-exports.strUntil = function(str, exp) {
+exports.$strUntil = function(str, exp) {
     var arr = str.split(exp);
     if (Array.isArray(arr)) {
         return arr[0] === str ? null : arr[0];
     }
     return null;
 };
-exports.strFromUntil = function(str, leftIndex, exp) {
+exports.$strFromUntil = function(str, leftIndex, exp) {
     str = str.substring(leftIndex);
     var arr = str.split(exp);
     if (Array.isArray(arr)) {
@@ -1108,7 +1108,7 @@ exports.strFromUntil = function(str, leftIndex, exp) {
     }
     return null;
 };
-exports.strReverseUntil = function(str, exp) {
+exports.$strReverseUntil = function(str, exp) {
     var rev = '';
     for (var i = str.length - 1; i >= 0; i--) {
         rev += str[i];
@@ -1119,7 +1119,7 @@ exports.strReverseUntil = function(str, exp) {
     }
     return null;
 };
-exports.strReverseFromUntil = function(str, leftIndex, exp) {
+exports.$strReverseFromUntil = function(str, leftIndex, exp) {
     str = str.substring(0, leftIndex);
     var rev = '';
     for (var i = str.length - 1; i >= 0; i--) {
@@ -1131,13 +1131,13 @@ exports.strReverseFromUntil = function(str, leftIndex, exp) {
     }
     return null;
 };
-exports.strMatchLen = function(str, regex, i) {
+exports.$strMatchLen = function(str, regex, i) {
     var matches = str.match(regex);
     i = parseInt(i);
     i = isNaN(i) ? 0 : i;
     return (Array.isArray(matches) && matches[i]) ? matches[i].length : 0;
 };
-exports.strToQueryObj = function(url) { // BASED ON: https://stackoverflow.com/a/32354921/6135126
+exports.$strToQueryObj = function(url) { // BASED ON: https://stackoverflow.com/a/32354921/6135126
     url = url.replace(/\+/g, ' ');
     var exp = /[?&]([^=]+)=([^&]*)/g;
     var o = {};

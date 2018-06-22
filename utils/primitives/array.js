@@ -1,10 +1,10 @@
-exports.arrForEach = function(arr, fn) {
+exports.$arrForEach = function(arr, fn) {
     var len = arr.length;
     for (var i = 0; i < len; i++) {
         fn(arr[i], i, arr);
     }
 };
-exports.arrMap = function(arr, fn) {
+exports.$arrMap = function(arr, fn) {
     var acc = [];
     for (var i = 0; i < arr.length; i++) {
         var v = arr[i];
@@ -17,7 +17,7 @@ exports.arrMap = function(arr, fn) {
     }
     return acc;
 };
-exports.arrFilter = function(arr, fn) {
+exports.$arrFilter = function(arr, fn) {
     var acc = [];
     for (var i = 0; i < arr.length; i++) {
         if (fn.call(null, arr[i], i, arr)) {
@@ -26,7 +26,7 @@ exports.arrFilter = function(arr, fn) {
     }
     return acc;
 };
-exports.arrFind = function(arr, fn, v) {
+exports.$arrFind = function(arr, fn, v) {
     var isFN = typeof(fn) === 'function';
     var isV = v !== undefined;
     for (var i = 0, len = arr.length; i < len; i++) {
@@ -48,7 +48,7 @@ exports.arrFind = function(arr, fn, v) {
     }
     return null;
 };
-exports.arrFindIndex = function(arr, fn, v) {
+exports.$arrFindIndex = function(arr, fn, v) {
     var isFN = typeof(fn) === 'function';
     var isV = v !== undefined;
     for (var i = 0, len = arr.length; i < len; i++) {
@@ -70,7 +70,7 @@ exports.arrFindIndex = function(arr, fn, v) {
     }
     return -1;
 };
-exports.arrRemove = function(arr, fn, v) { // FROM TOTAL.JS
+exports.$arrRemove = function(arr, fn, v) { // FROM TOTAL.JS
     var isFN = typeof(fn) === 'function';
     var isV = v !== undefined;
     var tmp = [];
@@ -93,13 +93,13 @@ exports.arrRemove = function(arr, fn, v) { // FROM TOTAL.JS
     }
     return tmp;
 };
-exports.arrFirst = function(arr) {
+exports.$arrFirst = function(arr) {
     return arr[0] || null;
 };
-exports.arrLast = function(arr) {
+exports.$arrLast = function(arr) {
     return arr[arr.length - 1] || null;
 };
-exports.arrOrderBy = function(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
+exports.$arrOrderBy = function(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
     var length = arr.length;
     if (!length || length === 1) {
         return arr;
@@ -162,10 +162,10 @@ exports.arrOrderBy = function(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCE
         if (type === 1) {
             if (va && vb) {
                 if (asc) {
-                    return exports.strRemoveDiacritics(va.substring(0, maxlength)).localeCompare(exports.strRemoveDiacritics(vb.substring(0, maxlength)));
+                    return exports.$strRemoveDiacritics(va.substring(0, maxlength)).localeCompare(exports.$strRemoveDiacritics(vb.substring(0, maxlength)));
                 }
                 else {
-                    return exports.strRemoveDiacritics(vb.substring(0, maxlength)).localeCompare(exports.strRemoveDiacritics(va.substring(0, maxlength)));
+                    return exports.$strRemoveDiacritics(vb.substring(0, maxlength)).localeCompare(exports.$strRemoveDiacritics(va.substring(0, maxlength)));
                 }
             }
             else {
@@ -222,10 +222,10 @@ exports.arrOrderBy = function(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCE
     });
     return arr;
 };
-exports.arrHas = function(arr, v) {
+exports.$arrHas = function(arr, v) {
     return arr.indexOf(v) >= 0;
 };
-exports.arrUnique = function(arr, k) {
+exports.$arrUnique = function(arr, k) {
     var result = [];
     var sublen = 0;
     for (var i = 0, len = arr.length; i < len; i++) {
