@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>core-test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="../../dist/utils.git.js"></script>
+    <script src="../../dist/utils.all.js"></script>
     <script>
-        U.domReady(function() {
-            U.test('errorBuilder.getData()', function(assert) {
+        $domReady(function() {
+            $test('errorBuilder.getData()', function(assert) {
                 var done = assert.async(2);
                 assert.expect(4);
                 setTimeout(function() {
@@ -22,11 +22,11 @@
                     done();
                 }, 4000);
             });
-            U.test('errorBuilder.getData().setName()', function(assert) {
+            $test('errorBuilder.getData().setName()', function(assert) {
                 assert.expect(1);
                 assert.ok(true, 'ACTUAL4', 'EXPECTED4', 'ASSERT4');
             });
-            U.test('errorBuilder.getData().getAge()', function(assert) {
+            $test('errorBuilder.getData().getAge()', function(assert) {
                 assert.ok(true, 'ACTUAL5', 'EXPECTED5', 'ASSERT5');
             });
         });
