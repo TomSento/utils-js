@@ -1,4 +1,4 @@
-exports.objClone = function(obj, skip, skipFunctions) {
+exports.$objClone = function(obj, skip, skipFunctions) {
     if (!obj) {
         return obj;
     }
@@ -20,7 +20,7 @@ exports.objClone = function(obj, skip, skipFunctions) {
                 o[i] = obj[i];
                 continue;
             }
-            o[i] = exports.objClone(obj[i], skip, skipFunctions);
+            o[i] = exports.$objClone(obj[i], skip, skipFunctions);
         }
         return o;
     }
@@ -38,11 +38,11 @@ exports.objClone = function(obj, skip, skipFunctions) {
             o[m] = val;
             continue;
         }
-        o[m] = exports.objClone(obj[m], skip, skipFunctions);
+        o[m] = exports.$objClone(obj[m], skip, skipFunctions);
     }
     return o;
 };
-exports.objExtend = function(base, obj, rewrite) {
+exports.$objExtend = function(base, obj, rewrite) {
     if (!base || !obj) {
         return base;
     }
@@ -57,12 +57,12 @@ exports.objExtend = function(base, obj, rewrite) {
     while (i--) {
         var key = keys[i];
         if (rewrite || base[key] === undefined) {
-            base[key] = exports.objClone(obj[key]);
+            base[key] = exports.$objClone(obj[key]);
         }
     }
     return base;
 };
-exports.objKeys = function(obj) {
+exports.$objKeys = function(obj) {
     var keys = [];
     var k;
     for (k in obj) {
@@ -72,7 +72,7 @@ exports.objKeys = function(obj) {
     }
     return keys;
 };
-exports.objForIn = function(obj, fn) {
+exports.$objForIn = function(obj, fn) {
     var i = 0;
     for (var k in obj) {
         if (obj.hasOwnProperty(k)) {
@@ -81,7 +81,7 @@ exports.objForIn = function(obj, fn) {
         }
     }
 };
-exports.objToQueryStr = function(obj) {
+exports.$objToQueryStr = function(obj) {
     var arr = [];
     for (var k in obj) {
         if (obj.hasOwnProperty(k)) {
