@@ -1,4 +1,4 @@
-exports.SETROUTE1 = function(matcher, fn, flags) {
+exports.$route1 = function(matcher, fn, flags) {
     if (typeof(matcher) !== 'string' || (matcher[0] !== '/' && ['#public', '#error'].indexOf(matcher) === -1)) {
         throw new Error('api-matcher');
     }
@@ -15,7 +15,7 @@ exports.SETROUTE1 = function(matcher, fn, flags) {
             throw new Error('api-flags');
         }
     }
-    var cache = exports.malloc('__SERVER');
+    var cache = exports.$malloc('__SERVER');
     var v = parseRoute();
     if (['#public', '#error'].indexOf(matcher) === -1) {
         var matchers = cache('matchers') || {};
@@ -87,8 +87,8 @@ exports.SETROUTE1 = function(matcher, fn, flags) {
         return v * 1000;
     }
 };
-function Controller1(req, res) {
-    var cache = exports.malloc('__SERVER');
+function $Controller1(req, res) {
+    var cache = exports.$malloc('__SERVER');
     var self = this;
     self.req = req;
     self.res = res;
@@ -244,7 +244,7 @@ function Controller1(req, res) {
         self.query = (url.query && typeof(url.query) === 'string') ? require('querystring').parse(url.query) : null;
         self.body = null;
         self.req.on('error', function(err) {
-            exports.log(err);
+            console.log(err); // eslint-disable-line no-console
             self.routeError(500);
         });
         var tmp = self.getContentType4L();
@@ -287,7 +287,6 @@ function Controller1(req, res) {
                 next();
             }
             catch (err) {
-                exports.log(err);
                 self.routeError(400);
             }
         });
@@ -384,7 +383,7 @@ function Controller1(req, res) {
         return (isNaN(v) || v < 100 || v >= 600) ? 200 : v;
     };
 }
-Controller1.prototype = {
+$Controller1.prototype = {
     routeError: function(status, err) {
         var v = parseInt(status);
         this.res.statusCode = (isNaN(v) || v < 400 || v >= 600) ? 500 : v;
@@ -393,7 +392,7 @@ Controller1.prototype = {
         if (err) {
             this.error = err;
         }
-        var cache = exports.malloc('__SERVER');
+        var cache = exports.$malloc('__SERVER');
         this.route = cache('errorRoute');
         this.invokeRoute();
     },
@@ -419,9 +418,9 @@ Controller1.prototype = {
         self.res.end('' + str);
     }
 };
-exports.Controller1 = Controller1;
-exports.SERVER = function(env, packageJSON, config) {
-    var cache = exports.malloc('__SERVER');
+exports.$Controller1 = $Controller1;
+exports.$server = function(env, packageJSON, config) {
+    var cache = exports.$malloc('__SERVER');
     if (!config) {
         return cache('app') || null;
     }
@@ -459,7 +458,7 @@ exports.SERVER = function(env, packageJSON, config) {
         };
         this.configure();
         this.handleRequest = function(req, res) {
-            var controller = new exports.Controller1(req, res);
+            var controller = new exports.$Controller1(req, res);
             controller.run();
         };
     }
@@ -532,7 +531,7 @@ exports.SERVER = function(env, packageJSON, config) {
             }
         }
     };
-    exports.SETROUTE1('#public', function() { // -----------------------------> LIKE CONTROLLER
+    exports.$route1('#public', function() { // -------------------------------> LIKE CONTROLLER
         var pathname = this.toPathname(this.req.url);
         var filepath = require('path').resolve(config.publicDirectory, ('.' + pathname));
         this.stream(200, filepath);
