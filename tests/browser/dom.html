@@ -4,7 +4,7 @@
         <title></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="../../dist/utils.git.js"></script>
+        <script src="../../dist/utils.all.js"></script>
         <style>
             .box {
                 padding: 20px;
@@ -24,25 +24,25 @@
             }
         </style>
         <script>
-            U.domReady(function() {
-                var els = U.domFind('.js-inner');
-                U.domOn(els, 'click', function() {
-                    U.log('Clicked!');
+            $domReady(function() {
+                var els = $domFind('.js-inner');
+                $domOn(els, 'click', function() {
+                    $log('Clicked!');
                 });
-                U.domOn('.js-inner', 'mouseover', function() {
-                    U.log('Over!');
+                $domOn('.js-inner', 'mouseover', function() {
+                    $log('Over!');
                 });
-                U.domFadeTo('.js-inner', 0.2);
+                $domFadeTo('.js-inner', 0.2);
                 setTimeout(function() {
-                    U.domFadeTo('.js-inner', 0.7, 2000);
+                    $domFadeTo('.js-inner', 0.7, 2000);
                 }, 1000);
                 setTimeout(function() {
-                    U.logWarn('Unbind');
-                    U.domOff('.js-inner', 'click');
-                    U.domRemoveClass('.js-inner', 'hv-pointer');
+                    $logWarn('Unbind');
+                    $domOff('.js-inner', 'click');
+                    $domRemoveClass('.js-inner', 'hv-pointer');
                 }, 3000);
                 setInterval(function() {
-                    U.domFadeToggle('.js-inner');
+                    $domFadeToggle('.js-inner');
                 }, 5000);
             });
         </script>
