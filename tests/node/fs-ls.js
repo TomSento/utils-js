@@ -1,14 +1,14 @@
-var U = require('../../dist/utils.git.js');
+require('../../dist/utils.all.js');
 
-U.ls([
+$ls([
     '../../utils',
     '../../tests/node'
 ], 'R', function(path, stat, next) {
-    U.log('path: ' + path);
+    $log('path: ' + path);
     return next();
 }, function(err) {
     if (err) {
-        return U.log('err:', err);
+        return $log('err:', err);
     }
-    U.log('DONE');
+    $log('DONE');
 });
