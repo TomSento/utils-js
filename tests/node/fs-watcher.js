@@ -1,10 +1,10 @@
-var U = require('../../dist/utils.git.js');
+require('../../dist/utils.all.js');
 
-var w = new U.Watcher();
+var w = new $Watcher();
 w.watch('../files/watchme1.md');
 w.watch('../files/watchme2.md');
 w.on('change', function(filepath, prev, curr) {
-    U.log('filepath: ' + filepath);
-    U.log('prev:', prev);
-    U.log('curr:', curr);
+    $log('filepath: ' + filepath);
+    $log('prev:', prev);
+    $log('curr:', curr);
 });
