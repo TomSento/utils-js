@@ -5,27 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ROUTE0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="../../dist/utils.git.js"></script>
+    <script src="../../dist/utils.all.js"></script>
 </head>
 <body>
     <!-- REQUIRED ELEMENT -->
     <div id="page"></div>
     <script>
-        U.SETROUTE0('#',          page0); // HOMEPAGE
-        U.SETROUTE0('#aaaa',      page1); // ROUTE WITH THROWN ERROR
-        U.SETROUTE0('#bbbb',      page2); // ROUTE THAT TIMED OUT
-        U.SETROUTE0('#cccc/{id}', page3); // ROUTE WITH PARAMETERS
-        U.SETROUTE0('#dddd',      page4); // ANCHOR EXAMPLE: #aaaa~howto2
-        U.SETROUTE0('#400',       err400);
-        U.SETROUTE0('#404',       err404);
-        U.SETROUTE0('#408',       err408);
-        U.SETROUTE0('#500',       err500);
+        $SETROUTE0('#',          page0); // HOMEPAGE
+        $SETROUTE0('#aaaa',      page1); // ROUTE WITH THROWN ERROR
+        $SETROUTE0('#bbbb',      page2); // ROUTE THAT TIMED OUT
+        $SETROUTE0('#cccc/{id}', page3); // ROUTE WITH PARAMETERS
+        $SETROUTE0('#dddd',      page4); // ANCHOR EXAMPLE: #aaaa~howto2
+        $SETROUTE0('#400',       err400);
+        $SETROUTE0('#404',       err404);
+        $SETROUTE0('#408',       err408);
+        $SETROUTE0('#500',       err500);
         function page0() {
             this.view('page0');
         }
         function page1() {
             this.view('page1');
-            var err = new U.ErrorBuilder().push(new U.Error('WTF2'));
+            var err = new $ErrorBuilder().push(new $Error('WTF2'));
             this.throw404(err);
         }
         function page2(id) {
