@@ -1,7 +1,7 @@
 /**
  * @param {String} flag R - recursive
  */
-exports.ls = function(a, flag, fn, next) {
+exports.$ls = function(a, flag, fn, next) {
     var fs = require('fs');
     if (next === undefined) {
         next = fn;
@@ -48,7 +48,7 @@ exports.ls = function(a, flag, fn, next) {
         }(dirPath));
     }());
 };
-function Watcher(t) {
+function $Watcher(t) {
     this.t = t;
     this.fn = {};
     this.trigger = function(k, a1, a2, a3) {
@@ -56,7 +56,7 @@ function Watcher(t) {
         return fn && fn(a1, a2, a3);
     };
 }
-Watcher.prototype = {
+$Watcher.prototype = {
     watch: function(filepath) {
         var self = this;
         require('fs').watchFile(filepath, {
@@ -71,4 +71,4 @@ Watcher.prototype = {
         this.fn[k] = fn;
     }
 };
-exports.Watcher = Watcher;
+exports.$Watcher = $Watcher;
