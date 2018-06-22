@@ -1,4 +1,4 @@
-var U = require('../../dist/utils.git.js');
+require('../../dist/utils.all.js');
 
 $schema('User', 'EN', {
     'name': [String, {
@@ -44,12 +44,12 @@ var obj = {
     junk: 1
 };
 
-U.logDebug('obj:', obj);
-var err = U.SCHEMA('User').prepareAndValidate(obj, 'SK');
+$logDebug('obj:', obj);
+var err = $schema('User').prepareAndValidate(obj, 'SK');
 if (err.hasError()) {
-    U.log('Schema has ' + err.errors.length + ' error(s).');
+    $log('Schema has ' + err.errors.length + ' error(s).');
 }
-U.logDebug(err);
-U.logDebug('prepare & validate:', obj);
-U.logDebug('cleaned:', U.SCHEMA('User').clean(obj));
-U.logDebug('Make error on fly: ', U.SCHEMA('User').makeError('getName', 'SK'));
+$logDebug(err);
+$logDebug('prepare & validate:', obj);
+$logDebug('cleaned:', $schema('User').clean(obj));
+$logDebug('Make error on fly: ', $schema('User').makeError('getName', 'SK'));
