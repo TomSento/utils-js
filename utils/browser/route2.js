@@ -21,6 +21,7 @@ exports.$route2 = function(matcher, fn) {
     var cache = exports.$malloc('__ROUTE');
     var routes = cache('routes') || {};
     var v = parseRoute();
+    var url;
     if (matcher !== '$error') {
         routes[matcher] = v;
         cache('routes', routes);
@@ -28,6 +29,11 @@ exports.$route2 = function(matcher, fn) {
             document.addEventListener('DOMContentLoaded', function() {
                 new exports.$Controller2().run();
             });
+            url = [null, parseURL()];
+            window.onhashchange = function() {
+                url = [url[1], parseURL()];
+                onHashChange();
+            };
         }
     }
     else {
@@ -54,6 +60,34 @@ exports.$route2 = function(matcher, fn) {
             }
         }
         return l;
+    }
+    function parseURL() {
+        var tmp = location.href.split(location.origin + location.pathname)[1] || '#';
+        tmp = tmp === '#' ? '/' : tmp;
+        tmp = tmp.split(/~+/);
+        return {
+            hash: tmp[0],
+            anchor: tmp[1] ? ('#' + tmp[1]) : null
+        };
+    }
+    function onHashChange() {
+        if (url[0].hash === url[1].hash) {
+            if (url[0].anchor && !url[1].anchor) {
+                location.reload();
+            }
+            else if (url[1].anchor && url[0].anchor !== url[1].anchor) {
+                scroll(url[1].anchor);
+            }
+        }
+        else {
+            location.reload();
+        }
+    }
+    function scroll(elementID) {
+        var el = document.getElementById(elementID);
+        if (el) {
+            el.scrollIntoView();
+        }
     }
 };
 function $Controller2() {
