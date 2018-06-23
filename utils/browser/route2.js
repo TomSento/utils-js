@@ -96,7 +96,6 @@ function $Controller2() {
     this.error = null;
     this.args = [];
     this.query = null;
-    this.body = null;
     this.run = function() {
         var v = this.findRoute();
         if (!v) {
