@@ -11,3 +11,50 @@
 // LOCAL STORAGE VS. COOKIE - https://stackoverflow.com/a/3220802/6135126
 // REGEX TO MATCH ROUTE TAKEN FROM: https://github.com/garygreen/lightrouter
 // DOMContentLoaded VS. load - https://stackoverflow.com/a/36096571/6135126
+exports.$route2 = function(matcher, fn) {
+    if (matcher !== undefined || fn !== undefined) {
+        if (typeof(matcher) !== 'string' || (matcher[0] !== '#' && matcher !== '$error')) {
+            throw new Error('api-matcher');
+        }
+        if (typeof(fn) !== 'function') {
+            throw new Error('api-fn');
+        }
+        set();
+    }
+    else {
+        load();
+    }
+    var cache = exports.$malloc('__ROUTE');
+    var routes = cache('routes') || {};
+    function set() {
+        var v = parseRoute();
+        if (matcher !== '$error') {
+            routes[matcher] = v;
+            cache('routes', routes);
+        }
+        else {
+            cache('errorRoute', v);
+        }
+        function parseRoute() {
+            var o = {
+                matcher: matcher
+            };
+            if (matcher !== '$error') {
+                o.exp = new RegExp('^' + matcher.replace(/\[(\w+)\]/g, '(\\w+)') + '$');
+            }
+            else {
+                o.exp = null;
+            }
+            o.fn = fn;
+            return o;
+        }
+    }
+    function load() {
+    }
+};
+function $Controller2() {
+    this.error = null;
+}
+$Controller2.prototype = {
+};
+exports.$Controller2 = $Controller2;
