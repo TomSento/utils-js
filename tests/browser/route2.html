@@ -10,26 +10,26 @@
 <body>
     <div id="page"></div>
     <script>
-        $route2('#',         page0); // HOMEPAGE
+        $route2('#',         homepage); // HOMEPAGE
         $route2('#aaa',      pageAAA); // ROUTE WITH THROWN ERROR
         $route2('#bbb/[id]', pageBBB); // ROUTE WITH PARAMETERS
         $route2('#ccc',      pageCCC); // ANCHOR EXAMPLE: #ccc~howto2
         $route2('$error',    error);
-        function page0() {
-            this.view('page0');
+        function homepage() {
+            $domHTML('#page', 'homepage');
         }
         function pageAAA() {
             var err = new $ErrorBuilder().push(new $Error('Project.name', 'Invalid "name".'));
             this.routeError(400, err);
         }
         function pageBBB(id) {
-            $domHTML('page3 with id: ' + id);
+            $domHTML('#page', 'id: ' + id);
         }
         function pageCCC(params) {
-            $domHTML('<h1 id="howto1">#bbbb/{id}</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br><h1 id="howto2">#bbbb/{id}</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>');
+            $domHTML('#page', '<h1 id="one">1st heading</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br><h1 id="two">2nd heading</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>');
         }
         function error() {
-            $domHTML('#page', this.status + ':' + this.error);
+            $domHTML('#page', this.statusCode + ':' + this.error);
         }
     </script>
 </body>
