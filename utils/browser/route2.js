@@ -103,6 +103,7 @@ function $Controller2() {
             return this.routeError(404);
         }
         this.route = v;
+        this.args = this.parseArgs();
         this.invokeRoute();
     };
     this.findRoute = function() {
@@ -119,6 +120,10 @@ function $Controller2() {
     };
     this.toPathname = function(v) {
         return v.split(/\?+/)[0] || '#';
+    };
+    this.parseArgs = function() {
+        var m = this.toPathname(location.hash).match(this.route.exp);
+        return (m || []).length > 1 ? m.slice(1) : [];
     };
     this.invokeRoute = function() {
         this.route.fn.apply(this, this.args);
