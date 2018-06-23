@@ -62,7 +62,7 @@ exports.$route2 = function(matcher, fn) {
         return l;
     }
     function parseURL() {
-        var tmp = location.href.split(location.origin + location.pathname)[1] || '#';
+        var tmp = location.hash || '#';
         tmp = tmp === '#' ? '/' : tmp;
         tmp = tmp.split(/~+/);
         return {
@@ -92,19 +92,48 @@ exports.$route2 = function(matcher, fn) {
 };
 function $Controller2() {
     var cache = exports.$malloc('__ROUTE');
+    this.statusCode = 200;
     this.error = null;
+    this.args = [];
+    this.query = null;
+    this.body = null;
     this.run = function() {
         var v = this.findRoute();
+        if (!v) {
+            return this.routeError(404);
+        }
         this.route = v;
-        this.status = v ? 200 : 404;
+        this.invokeRoute();
     };
     this.findRoute = function() {
-        return (cache('routes') || {})[this.toPathname(location.hash)] || null;
+        var routes = cache('routes') || {};
+        var matcher = null;
+        for (var k in routes) {
+            if (routes.hasOwnProperty(k)) {
+                if (routes[k].exp.test(this.toPathname(location.hash))) {
+                    matcher = k;
+                }
+            }
+        }
+        return matcher ? (routes[matcher] || null) : null;
     };
     this.toPathname = function(v) {
         return v.split(/\?+/)[0] || '#';
     };
+    this.invokeRoute = function() {
+        this.route.fn.apply(this, this.args);
+    };
 }
 $Controller2.prototype = {
+    routeError: function(status, err) {
+        var v = parseInt(status);
+        this.statusCode = (isNaN(v) || v < 400 || v >= 600) ? 500 : v;
+        if (err) {
+            this.error = err;
+        }
+        var cache = exports.$malloc('__ROUTE');
+        this.route = cache('errorRoute');
+        this.invokeRoute();
+    }
 };
 exports.$Controller2 = $Controller2;
