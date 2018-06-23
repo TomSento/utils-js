@@ -12,48 +12,64 @@
 // REGEX TO MATCH ROUTE TAKEN FROM: https://github.com/garygreen/lightrouter
 // DOMContentLoaded VS. load - https://stackoverflow.com/a/36096571/6135126
 exports.$route2 = function(matcher, fn) {
-    if (matcher !== undefined || fn !== undefined) {
-        if (typeof(matcher) !== 'string' || (matcher[0] !== '#' && matcher !== '$error')) {
-            throw new Error('api-matcher');
-        }
-        if (typeof(fn) !== 'function') {
-            throw new Error('api-fn');
-        }
-        set();
+    if (typeof(matcher) !== 'string' || (matcher[0] !== '#' && matcher !== '$error')) {
+        throw new Error('api-matcher');
     }
-    else {
-        load();
+    if (typeof(fn) !== 'function') {
+        throw new Error('api-fn');
     }
     var cache = exports.$malloc('__ROUTE');
     var routes = cache('routes') || {};
-    function set() {
-        var v = parseRoute();
-        if (matcher !== '$error') {
-            routes[matcher] = v;
-            cache('routes', routes);
-        }
-        else {
-            cache('errorRoute', v);
-        }
-        function parseRoute() {
-            var o = {
-                matcher: matcher
-            };
-            if (matcher !== '$error') {
-                o.exp = new RegExp('^' + matcher.replace(/\[(\w+)\]/g, '(\\w+)') + '$');
-            }
-            else {
-                o.exp = null;
-            }
-            o.fn = fn;
-            return o;
+    var v = parseRoute();
+    if (matcher !== '$error') {
+        routes[matcher] = v;
+        cache('routes', routes);
+        if (routesLength() === 1) {
+            document.addEventListener('DOMContentLoaded', function() {
+                new exports.$Controller2().run();
+            });
         }
     }
-    function load() {
+    else {
+        cache('errorRoute', v);
+    }
+    function parseRoute() {
+        var o = {
+            matcher: matcher
+        };
+        if (matcher !== '$error') {
+            o.exp = new RegExp('^' + matcher.replace(/\[(\w+)\]/g, '(\\w+)') + '$');
+        }
+        else {
+            o.exp = null;
+        }
+        o.fn = fn;
+        return o;
+    }
+    function routesLength() {
+        var l = 0;
+        for (var k in routes) {
+            if (routes.hasOwnProperty(k)) {
+                l++;
+            }
+        }
+        return l;
     }
 };
 function $Controller2() {
+    var cache = exports.$malloc('__ROUTE');
     this.error = null;
+    this.run = function() {
+        var v = this.findRoute();
+        this.route = v;
+        this.status = v ? 200 : 404;
+    };
+    this.findRoute = function() {
+        return (cache('routes') || {})[this.toPathname(location.hash)] || null;
+    };
+    this.toPathname = function(v) {
+        return v.split(/\?+/)[0] || '#';
+    };
 }
 $Controller2.prototype = {
 };
