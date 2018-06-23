@@ -103,6 +103,7 @@ function $Controller2() {
         }
         this.route = v;
         this.args = this.parseArgs();
+        this.query = this.parseQuery();
         this.invokeRoute();
     };
     this.findRoute = function() {
@@ -123,6 +124,21 @@ function $Controller2() {
     this.parseArgs = function() {
         var m = this.toPathname(location.hash).match(this.route.exp);
         return (m || []).length > 1 ? m.slice(1) : [];
+    };
+    this.parseQuery = function() {
+        var str = location.hash;
+        str = str.replace(/\+/g, ' '); // ------------------------------------> "decodeURIComponent()" DOES NOT DECODE SPACES ENCODED AS "+"
+        var exp = /[?&]([^=]+)=([^&]*)/g;
+        var o = {};
+        var m = null;
+        while (m = exp.exec(str)) {
+            var k = m[1] ? decodeURIComponent(m[1]) : '';
+            var v = m[2] ? decodeURIComponent(m[2]) : '';
+            if (k) {
+                o[k] = v;
+            }
+        }
+        return o;
     };
     this.invokeRoute = function() {
         this.route.fn.apply(this, this.args);
