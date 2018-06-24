@@ -18,7 +18,7 @@ var files = [
     'utils/browser/browser.js',
     'utils/browser/ajax.js',
     'utils/browser/dom.js',
-    'utils/browser/route2.js',
+    'utils/browser/route0.js',
     'utils/node/fs.js',
     'utils/node/server.js'
 ];

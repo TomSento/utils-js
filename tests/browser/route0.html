@@ -10,11 +10,11 @@
 <body>
     <div id="page"></div>
     <script>
-        $route2('#',         homepage); // HOMEPAGE
-        $route2('#aaa',      pageAAA); // ROUTE WITH THROWN ERROR
-        $route2('#bbb/[id]', pageBBB); // ROUTE WITH PARAMETERS
-        $route2('#ccc',      pageCCC); // ANCHOR EXAMPLE: #ccc~howto2
-        $route2('$error',    error);
+        $route0('#',         homepage); // HOMEPAGE
+        $route0('#aaa',      pageAAA); // ROUTE WITH THROWN ERROR
+        $route0('#bbb/[id]', pageBBB); // ROUTE WITH PARAMETERS
+        $route0('#ccc',      pageCCC); // ANCHOR EXAMPLE: #ccc~howto2
+        $route0('$error',    error);
         function homepage() {
             $domHTML('#page', 'homepage');
         }
