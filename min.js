@@ -3,31 +3,30 @@ var createBrowserify = require('browserify');
 var Uglify = require('uglify-js');
 var Fs = require('fs');
 
-var keys = process.env.keys ? process.env.keys.split(/\s*,\s*/) : [];
+var keys = process.env.k ? process.env.k.split(/\s*,\s*/) : [];
 var paths = [];
+var out = './dist/utils.js';
+
 $ls('./utils2', 'R', function(filepath, stat, next) {
     if (stat.isFile()) {
         paths.push({ k: pathToKey(filepath), filepath });
     }
     next();
 }, function(err) {
-    if (err) kill(err);
-    bundle(true, function(codeA) {
-        bundle(false, function(codeB) {
-            var minA = minify(codeA);
-            if (minA.error) {
-                kill(minA.error);
+    if (err) {
+        return kill(err);
+    }
+    bundle(function(code) {
+        if (process.argv.indexOf('-m') >= 0) {
+            var min = minify(code);
+            if (min.error) {
+                return kill(min.error);
             }
-            var minB = minify(codeB);
-            if (minB.error) {
-                kill(minB.error);
-            }
-            Fs.writeFileSync(Path.resolve('./dist/utils.js'), minA.code);
-            Fs.writeFileSync(Path.resolve('./dist/utils.all.js'), minB.code);
-            var sizeA = (Buffer.byteLength(minA.code, 'utf8') / 1000).toFixed(1);
-            var sizeB = (Buffer.byteLength(minB.code, 'utf8') / 1000).toFixed(1);
-            log(sizeA, sizeB);
-        });
+            code = min.code;
+        }
+        Fs.writeFileSync(Path.resolve(out), code);
+        var size = (Buffer.byteLength(code, 'utf8') / 1000).toFixed(1);
+        log(size);
     });
 });
 function pathToKey(filepath) {
@@ -42,29 +41,30 @@ function kill(err) {
     console.log(err); // eslint-disable-line no-console
     process.exit(1);
 }
-function bundle(partial, next) {
+function bundle(next) {
     var b = createBrowserify();
     paths.forEach(function(v) {
-        if (partial) {
+        if (keys.length === 0) {
+            b.add(v.filepath);
+        }
+        else {
             if (keys.indexOf(v.k) >= 0) {
                 b.add(v.filepath);
             }
         }
-        else {
-            b.add(v.filepath);
-        }
     });
     b.bundle(function(err, buffer) {
-        if (err) kill(err);
+        if (err) {
+            return kill(err);
+        }
         next(buffer.toString('utf8'));
     });
 }
 function minify(code) {
     return Uglify.minify(code);
 }
-function log(sizeA, sizeB) {
-    console.log('./dist/utils.js \t' + sizeA + ' kB'); // eslint-disable-line no-console
-    console.log('./dist/utils.all.js \t' + sizeB + ' kB'); // eslint-disable-line no-console
+function log(size) {
+    console.log(out + ' \t' + size + ' kB'); // eslint-disable-line no-console
 }
 function $ls(a, flag, fn, next) {
     var fs = require('fs');
