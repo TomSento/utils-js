@@ -8,8 +8,8 @@
 // hash  |   |
 //     query |
 //         anchor
-// DOMContentLoaded VS. load - https://stackoverflow.com/a/36096571/6135126
-// REGEX TO MATCH ROUTE TAKEN FROM: https://github.com/garygreen/lightrouter
+// "DOMContentLoaded" VS. "load" - https://stackoverflow.com/a/36096571/6135126
+// MATCH ROUTE EXP: https://github.com/garygreen/lightrouter
 exports.$route0 = function(matcher, fn) {
     if (typeof(matcher) !== 'string' || (matcher[0] !== '#' && matcher !== '$error')) {
         throw new Error('api-matcher');
