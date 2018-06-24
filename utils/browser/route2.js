@@ -62,20 +62,20 @@ exports.$route2 = function(matcher, fn) {
         return l;
     }
     function parseURL() {
-        var tmp = location.hash || '#';
-        tmp = tmp === '#' ? '/' : tmp;
-        tmp = tmp.split(/~+/);
+        var tmp = location.href.split(location.origin + location.pathname)[1] || '';
+        var exp = /^(#[^?$]*|)(?:(?=\?)(\?[^$]*)|)(?:(?=\$)\$(.*)|)$/; // https://regex101.com/r/w4nq0U/7
+        var m = tmp.match(exp) || [];
         return {
-            hash: tmp[0],
-            anchor: tmp[1] ? ('#' + tmp[1]) : null
+            location: (!m[1] || m[1] === '#') ? '' : m[1],
+            anchor: m[3]
         };
     }
     function onHashChange() {
-        if (url[0].hash === url[1].hash) {
-            if (url[0].anchor && !url[1].anchor) {
+        if (url[0].location === url[1].location) {
+            if (!url[1].anchor) {
                 location.reload();
             }
-            else if (url[1].anchor && url[0].anchor !== url[1].anchor) {
+            else {
                 scroll(url[1].anchor);
             }
         }
@@ -108,25 +108,35 @@ function $Controller2() {
     };
     this.findRoute = function() {
         var routes = cache('routes') || {};
+        var hash = this.parseURL().hash;
         var matcher = null;
         for (var k in routes) {
             if (routes.hasOwnProperty(k)) {
-                if (routes[k].exp.test(this.toPathname(location.hash))) {
+                if (routes[k].exp.test(hash)) {
                     matcher = k;
                 }
             }
         }
         return matcher ? (routes[matcher] || null) : null;
     };
-    this.toPathname = function(v) {
-        return v.split(/\?+/)[0] || '#';
+    this.parseURL = function() {
+        var tmp = location.href.split(location.origin + location.pathname)[1] || '';
+        var exp = /^(#[^?$]*|)(?:(?=\?)(\?[^$]*)|)(?:(?=\$)\$(.*)|)$/; // https://regex101.com/r/w4nq0U/7
+        var m = tmp.match(exp) || [];
+        return {
+            hash: !m[1] ? '#' : m[1],
+            query: m[2] || null
+        };
     };
     this.parseArgs = function() {
-        var m = this.toPathname(location.hash).match(this.route.exp);
+        var m = this.parseURL().hash.match(this.route.exp);
         return (m || []).length > 1 ? m.slice(1) : [];
     };
     this.parseQuery = function() {
-        var str = location.hash;
+        var str = this.parseURL().query;
+        if (!str) {
+            return null;
+        }
         str = str.replace(/\+/g, ' '); // ------------------------------------> "decodeURIComponent()" DOES NOT DECODE SPACES ENCODED AS "+"
         var exp = /[?&]([^=]+)=([^&]*)/g;
         var o = {};
