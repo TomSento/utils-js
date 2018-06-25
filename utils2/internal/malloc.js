@@ -1,6 +1,6 @@
-var $global = require('../global')();
+import $global from '../global';
 
-function $malloc(prefix) {
+export default function $malloc(prefix) {
     if (!$global.$$cache) {
         $global.$$cache = {};
     }
@@ -27,6 +27,4 @@ function $malloc(prefix) {
         }
     };
 }
-
-module.exports = $malloc;
 $global.$malloc = $malloc;

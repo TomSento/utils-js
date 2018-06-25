@@ -1,4 +1,6 @@
-function $toDebugStr(/* ...args */) {
+import $global from '../global';
+
+export default function $toDebugStr(/* ...args */) {
     var str = '';
     for (var i = 0; i < arguments.length; i++) {
         var arg = arguments[i];
@@ -23,3 +25,4 @@ function $toDebugStr(/* ...args */) {
     }
     return str;
 }
+$global.$toDebugStr = $toDebugStr;
