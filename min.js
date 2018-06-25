@@ -1,13 +1,13 @@
 var Path = require('path');
 var Fs = require('fs');
 var Rollup = require('rollup');
-var RollupConfig = require('./.rollupconfig.js');
 var Uglify = require('uglify-js');
 
-dist('./dist/utils.js');
+dist('./src/utils.browser.js', 'iife', './dist/utils.browser.js');
+dist('./src/utils.node.js', 'cjs', './dist/utils.node.js');
 
-async function dist(out) {
-    var result = await bundle();
+async function dist(entry, format, out) {
+    var result = await bundle(entry, format);
     var code = result.code || '';
     if (process.argv.indexOf('-m') >= 0) {
         var min = Uglify.minify(code);
@@ -18,16 +18,19 @@ async function dist(out) {
     }
     Fs.writeFileSync(Path.resolve(out), code);
     var size = (Buffer.byteLength(code, 'utf8') / 1000).toFixed(1);
-    log(out, size);
+    log(entry, out, size);
 }
-async function bundle() {
-    var bundle = await Rollup.rollup(RollupConfig.inputOptions);
-    return bundle.generate(RollupConfig.outputOptions);
+async function bundle(entry, format) {
+    var bundle = await Rollup.rollup({
+        input: entry,
+        external: format === 'cjs' ? ['fs', 'path'] : []
+    });
+    return bundle.generate({ format });
 }
 function kill(err) {
     console.log(err); // eslint-disable-line no-console
     process.exit(1);
 }
-function log(out, size) {
-    console.log(RollupConfig.inputOptions.input + '  ' + out + '  ' + size + ' kB ---> ' + new Date().toUTCString().split(' ')[4]); // eslint-disable-line no-console
+function log(entry, out, size) {
+    console.log(entry + ' \t' + out + '\t ' + size + ' kB'); // eslint-disable-line no-console
 }
