@@ -1,5 +1,3 @@
-var $global = require('../global')();
-
 function $toDebugStr(/* ...args */) {
     var str = '';
     for (var i = 0; i < arguments.length; i++) {
@@ -25,6 +23,3 @@ function $toDebugStr(/* ...args */) {
     }
     return str;
 }
-
-module.exports = $toDebugStr;
-$global.$toDebugStr = $toDebugStr;

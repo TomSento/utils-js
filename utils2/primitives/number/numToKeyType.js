@@ -1,4 +1,4 @@
-exports.$numToKeyType = function(keyCode) {
+function $numToKeyType(keyCode) {
     var map = {
         8: 'BACKSPACE',
         9: 'TAB',
@@ -39,4 +39,4 @@ exports.$numToKeyType = function(keyCode) {
         90: 'Z'
     };
     return map[keyCode] || null;
-};
+}
