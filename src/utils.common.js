@@ -40,3 +40,10 @@ import '../utils2/1_primitives/string/strUntil';
 
 import '../utils2/2_core/errors/Error';
 import '../utils2/2_core/errors/ErrorBuilder';
+
+import '../utils2/2_core/log/log';
+import '../utils2/2_core/log/logClear';
+import '../utils2/2_core/log/logDebug';
+import '../utils2/2_core/log/logError';
+import '../utils2/2_core/log/logPrefix';
+import '../utils2/2_core/log/logWarn';
