@@ -47,3 +47,11 @@ import '../utils2/2_core/log/logDebug';
 import '../utils2/2_core/log/logError';
 import '../utils2/2_core/log/logPrefix';
 import '../utils2/2_core/log/logWarn';
+
+import '../utils2/2_core/uid/uid1';
+import '../utils2/2_core/uid/uid2';
+
+import '../utils2/2_core/h';
+import '../utils2/2_core/schema';
+import '../utils2/2_core/test';
+import '../utils2/2_core/userAgent';

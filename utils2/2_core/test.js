@@ -1,4 +1,7 @@
-exports.$test = function(k, fn, maxTimeout) {
+import $global from '../global';
+import $malloc from '../0_internal/malloc';
+
+export default function $test(k, fn, maxTimeout) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
@@ -430,7 +433,7 @@ exports.$test = function(k, fn, maxTimeout) {
         }
     };
     // ------------------------------------------------------------------------> MAIN
-    var cache = exports.$malloc('__TEST');
+    var cache = $malloc('__TEST');
     var runner = cache('runner');
     var env = cache('env');
     if (env && runner) {
@@ -449,4 +452,5 @@ exports.$test = function(k, fn, maxTimeout) {
             throw new Error('unknownEnvironment');
         }
     }
-};
+}
+$global.$test = $test;

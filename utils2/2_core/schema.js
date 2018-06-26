@@ -1,4 +1,9 @@
-exports.$schema = function(name, defaultLanguage, obj) {
+import $global from '../global';
+import $malloc from '../0_internal/malloc';
+import $Error from '../2_core/errors/Error';
+import $ErrorBuilder from '../2_core/errors/ErrorBuilder';
+
+export default function $schema(name, defaultLanguage, obj) {
     if (typeof(name) !== 'string') {
         throw new Error('api-name');
     }
@@ -8,7 +13,7 @@ exports.$schema = function(name, defaultLanguage, obj) {
     if (obj !== undefined && typeof(obj) !== 'object') {
         throw new Error('api-obj');
     }
-    var cache = exports.$malloc('__SCHEMA');
+    var cache = $malloc('__SCHEMA');
     if (defaultLanguage === undefined && obj === undefined) {
         return cache(name) || null;
     }
@@ -70,7 +75,7 @@ exports.$schema = function(name, defaultLanguage, obj) {
                 lan = lan.toUpperCase();
             }
             var typeMatch;
-            var err = new exports.$ErrorBuilder();
+            var err = new $ErrorBuilder();
             for (var k in this.rule) {
                 if (this.rule.hasOwnProperty(k)) {
                     var rule = this.rule[k];
@@ -82,7 +87,7 @@ exports.$schema = function(name, defaultLanguage, obj) {
                     }
                     typeMatch = (Object.prototype.toString.call(v) === rule.type);
                     if (rule.validate && !rule.validate(v, typeMatch, o)) {
-                        err.push(new exports.$Error(name + '.' + k, (rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".'))));
+                        err.push(new $Error(name + '.' + k, (rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".'))));
                     }
                 }
             }
@@ -114,8 +119,9 @@ exports.$schema = function(name, defaultLanguage, obj) {
             if (!rule || !rule.msg) {
                 throw new Error('Property "' + k + '" not found.');
             }
-            return new exports.$Error(name + '.' + k, (rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".')));
+            return new $Error(name + '.' + k, (rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".')));
         }
     };
     cache(name, new Schema());
-};
+}
+$global.$schema = $schema;

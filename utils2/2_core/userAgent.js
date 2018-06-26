@@ -1,3 +1,5 @@
+import $global from '../global';
+
 /**
  * CHANGES FROM ORIGINAL PARSER:
  * -- PARSE BY CALLING FUNCTION - ORIGINAL LIBRARY CREATES PARSER INSTANCE
@@ -7,7 +9,7 @@
  * -- NORMALIZE ALL VALUES TO "SNAKE_CASE"
  * -- RETURN RESULT AS FLAT OBJECT
  */
-exports.$userAgent = function(str) { // BASED ON https://github.com/faisalman/ua-parser-js/releases/tag/0.7.17
+export default function $userAgent(str) { // BASED ON https://github.com/faisalman/ua-parser-js/releases/tag/0.7.17
     if (str && typeof(str) !== 'string') {
         throw new Error('api-str');
     }
@@ -521,4 +523,5 @@ exports.$userAgent = function(str) { // BASED ON https://github.com/faisalman/ua
         cpu: mapUserAgent(str, regexes.cpu).architecture || null
     };
     return result;
-};
+}
+$global.$userAgent = $userAgent;
