@@ -1,4 +1,4 @@
-exports.$ajax = function(obj) {
+export default function $ajax(obj) {
     var xhr = new XMLHttpRequest();
     var res = null;
     var json = 'application/json';
@@ -42,4 +42,5 @@ exports.$ajax = function(obj) {
         }
     }
     xhr.send(obj.data);
-};
+}
+window.$ajax = $ajax;
