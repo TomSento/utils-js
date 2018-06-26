@@ -37,3 +37,6 @@ import '../utils2/1_primitives/string/strToHTMLText';
 import '../utils2/1_primitives/string/strToQueryObj';
 import '../utils2/1_primitives/string/strTrim';
 import '../utils2/1_primitives/string/strUntil';
+
+import '../utils2/2_core/errors/Error';
+import '../utils2/2_core/errors/ErrorBuilder';

@@ -1,54 +1,12 @@
-/**
- * @param {String|Error} problem
- * @param {String} [message]
- * Error passed: Set error.id = problem.message.
- * String passed: Set error.id = problem.
- */
-function $Error(problem, message) {
-    if (problem) {
-        if (problem instanceof Error) {
-            this.id = problem.message;
-            this.message = message || null;
-        }
-        else if (typeof(problem) === 'string') {
-            this.id = problem;
-            this.message = message || null;
-        }
-        else {
-            throw new Error('api-problem');
-        }
-    }
-    else {
-        throw new Error('api-problem');
-    }
-}
-$Error.prototype = {
-    log: function() {
-        var msg = this.message ? (this.id + ' - ' + this.message) : this.id;
-        console.warn(msg); // eslint-disable-line no-console
-    },
-    throw: function() {
-        throw new Error(this.id);
-    },
-    logAndThrow: function() {
-        this.log();
-        this.throw();
-    },
-    toNative: function() {
-        var msg = this.message ? (this.id + ' - ' + this.message) : this.id;
-        return new Error(msg);
-    },
-    toString: function() {
-        return JSON.stringify(this, null, '    ');
-    }
-};
-exports.$Error = $Error;
-function $ErrorBuilder(err) {
+import $global from '../../global';
+import $Error from './Error';
+
+export default function $ErrorBuilder(err) {
     if (err) {
         if (typeof(err) === 'string' || err instanceof Error) {
-            this.errors = [new exports.$Error(err)];
+            this.errors = [new $Error(err)];
         }
-        else if (err instanceof exports.$Error) {
+        else if (err instanceof $Error) {
             this.errors = [err];
         }
         else if (Array.isArray(err)) {
@@ -58,11 +16,11 @@ function $ErrorBuilder(err) {
                 for (var i = 0; i < len; i++) {
                     var v = err[i];
                     if (v) {
-                        if (v instanceof exports.$Error) {
+                        if (v instanceof $Error) {
                             arr.push(v);
                         }
                         else if (v instanceof Error) {
-                            arr.push(new exports.$Error(v));
+                            arr.push(new $Error(v));
                         }
                         else {
                             throw new Error('api-err');
@@ -89,10 +47,10 @@ function $ErrorBuilder(err) {
 $ErrorBuilder.prototype = {
     push: function(err) {
         if (err instanceof Error) {
-            this.errors.push(new exports.$Error(err.message));
+            this.errors.push(new $Error(err.message));
             return this;
         }
-        else if (err instanceof exports.$Error) {
+        else if (err instanceof $Error) {
             this.errors.push(err);
             return this;
         }
@@ -158,4 +116,4 @@ $ErrorBuilder.prototype = {
         this.errors[0].logAndThrow();
     }
 };
-exports.$ErrorBuilder = $ErrorBuilder;
+$global.$ErrorBuilder = $ErrorBuilder;
