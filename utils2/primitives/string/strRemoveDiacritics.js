@@ -1,4 +1,6 @@
-function $strRemoveDiacritics(str) {
+import $global from '../../global';
+
+export default function $strRemoveDiacritics(str) {
     var map = {
         '\u00a0': ' ',
         '\u07c0': '0',
@@ -852,3 +854,4 @@ function $strRemoveDiacritics(str) {
         return map[ch] || ch;
     });
 }
+$global.$strRemoveDiacritics = $strRemoveDiacritics;

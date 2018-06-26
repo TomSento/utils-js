@@ -1,4 +1,6 @@
-function $arrFilter(arr, fn) {
+import $global from '../../global';
+
+export default function $arrFilter(arr, fn) {
     var acc = [];
     for (var i = 0; i < arr.length; i++) {
         if (fn.call(null, arr[i], i, arr)) {
@@ -7,3 +9,4 @@ function $arrFilter(arr, fn) {
     }
     return acc;
 }
+$global.$arrFilter = $arrFilter;

@@ -1,4 +1,7 @@
-function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
+import $global from '../../global';
+import $strRemoveDiacritics from '../string/strRemoveDiacritics';
+
+export default function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
     var length = arr.length;
     if (!length || length === 1) {
         return arr;
@@ -61,10 +64,10 @@ function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON D
         if (type === 1) {
             if (va && vb) {
                 if (asc) {
-                    return exports.$strRemoveDiacritics(va.substring(0, maxlength)).localeCompare(exports.$strRemoveDiacritics(vb.substring(0, maxlength)));
+                    return $strRemoveDiacritics(va.substring(0, maxlength)).localeCompare($strRemoveDiacritics(vb.substring(0, maxlength)));
                 }
                 else {
-                    return exports.$strRemoveDiacritics(vb.substring(0, maxlength)).localeCompare(exports.$strRemoveDiacritics(va.substring(0, maxlength)));
+                    return $strRemoveDiacritics(vb.substring(0, maxlength)).localeCompare($strRemoveDiacritics(va.substring(0, maxlength)));
                 }
             }
             else {
@@ -121,3 +124,4 @@ function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON D
     });
     return arr;
 }
+$global.$arrOrderBy = $arrOrderBy;

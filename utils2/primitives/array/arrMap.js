@@ -1,4 +1,6 @@
-function $arrMap(arr, fn) {
+import $global from '../../global';
+
+export default function $arrMap(arr, fn) {
     var acc = [];
     for (var i = 0; i < arr.length; i++) {
         var v = arr[i];
@@ -11,3 +13,4 @@ function $arrMap(arr, fn) {
     }
     return acc;
 }
+$global.$arrMap = $arrMap;

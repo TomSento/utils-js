@@ -1,4 +1,6 @@
-function $arrFind(arr, fn, v) {
+import $global from '../../global';
+
+export default function $arrFind(arr, fn, v) {
     var isFN = typeof(fn) === 'function';
     var isV = v !== undefined;
     for (var i = 0, len = arr.length; i < len; i++) {
@@ -20,3 +22,4 @@ function $arrFind(arr, fn, v) {
     }
     return null;
 }
+$global.$arrFind = $arrFind;

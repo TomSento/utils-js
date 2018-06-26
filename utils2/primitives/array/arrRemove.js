@@ -1,4 +1,6 @@
-function $arrRemove(arr, fn, v) { // FROM TOTAL.JS
+import $global from '../../global';
+
+export default function $arrRemove(arr, fn, v) { // FROM TOTAL.JS
     var isFN = typeof(fn) === 'function';
     var isV = v !== undefined;
     var tmp = [];
@@ -21,3 +23,4 @@ function $arrRemove(arr, fn, v) { // FROM TOTAL.JS
     }
     return tmp;
 }
+$global.$arrRemove = $arrRemove;

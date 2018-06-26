@@ -1,4 +1,6 @@
-function $arrUnique(arr, k) {
+import $global from '../../global';
+
+export default function $arrUnique(arr, k) {
     var result = [];
     var sublen = 0;
     for (var i = 0, len = arr.length; i < len; i++) {
@@ -28,3 +30,4 @@ function $arrUnique(arr, k) {
     }
     return result;
 }
+$global.$arrUnique = $arrUnique;
