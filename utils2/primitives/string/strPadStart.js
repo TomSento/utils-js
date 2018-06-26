@@ -1,4 +1,6 @@
-function $strPadStart(str, len, fill) {
+import $global from '../../global';
+
+export default function $strPadStart(str, len, fill) {
     if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
         return padStart('', str, len);
     }
@@ -22,3 +24,4 @@ function $strPadStart(str, len, fill) {
         return s;
     }
 }
+$global.$strPadStart = $strPadStart;

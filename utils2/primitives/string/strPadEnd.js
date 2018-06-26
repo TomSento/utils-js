@@ -1,4 +1,6 @@
-function $strPadEnd(str, len, fill) {
+import $global from '../../global';
+
+export default function $strPadEnd(str, len, fill) {
     if (typeof(str) === 'number' && typeof(len) === 'string' && !fill) {
         return padEnd('', str, len);
     }
@@ -22,3 +24,4 @@ function $strPadEnd(str, len, fill) {
         return s;
     }
 }
+$global.$strPadEnd = $strPadEnd;

@@ -1,4 +1,7 @@
-function $strHTML(tag, obj) {
+import $global from '../../global';
+import $strHyphenize from './strHyphenize';
+
+export default function $strHTML(tag, obj) {
     if (!tag || typeof(tag) !== 'string') {
         return '';
     }
@@ -65,9 +68,10 @@ function $strHTML(tag, obj) {
         var str = '';
         for (var k in obj) {
             if (obj.hasOwnProperty(k)) {
-                str += exports.$strHyphenize(k) + ':' + obj[k] + ';';
+                str += $strHyphenize(k) + ':' + obj[k] + ';';
             }
         }
         return (str.length > 0) ? (' style="' + str + '"') : '';
     }
 }
+$global.$strHTML = $strHTML;

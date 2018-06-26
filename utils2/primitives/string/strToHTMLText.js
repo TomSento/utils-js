@@ -1,4 +1,6 @@
-function $strToHTMLText(str, leftStartWithNBPS, leftRevResult, rightStartWithNBPS, rightRevResult) {
+import $global from '../../global';
+
+export default function $strToHTMLText(str, leftStartWithNBPS, leftRevResult, rightStartWithNBPS, rightRevResult) {
     var map = {
         '&': 'amp',
         '"': 'quot',
@@ -43,3 +45,4 @@ function $strToHTMLText(str, leftStartWithNBPS, leftRevResult, rightStartWithNBP
         return revResult ? arr.reverse().join('') : arr.join('');
     }
 }
+$global.$strToHTMLText = $strToHTMLText;

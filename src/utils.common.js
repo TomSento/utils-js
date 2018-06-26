@@ -13,5 +13,27 @@ import '../utils2/primitives/array/arrMap';
 import '../utils2/primitives/array/arrOrderBy';
 import '../utils2/primitives/array/arrRemove';
 import '../utils2/primitives/array/arrUnique';
+
 import '../utils2/primitives/number/numToKeyType';
+
+import '../utils2/primitives/string/strFormat';
+import '../utils2/primitives/string/strFromUntil';
+import '../utils2/primitives/string/strHas';
+import '../utils2/primitives/string/strHTML';
+import '../utils2/primitives/string/strHyphenize';
+import '../utils2/primitives/string/strMatchLen';
+import '../utils2/primitives/string/strPadEnd';
+import '../utils2/primitives/string/strPadStart';
 import '../utils2/primitives/string/strRemoveDiacritics';
+import '../utils2/primitives/string/strReplaceBetween';
+import '../utils2/primitives/string/strReplaceCharAt';
+import '../utils2/primitives/string/strReverse';
+import '../utils2/primitives/string/strReverseFromUntil';
+import '../utils2/primitives/string/strReverseUntil';
+import '../utils2/primitives/string/strSlug';
+import '../utils2/primitives/string/strStripHTML';
+import '../utils2/primitives/string/strStripWhitespaces';
+import '../utils2/primitives/string/strToHTMLText';
+import '../utils2/primitives/string/strToQueryObj';
+import '../utils2/primitives/string/strTrim';
+import '../utils2/primitives/string/strUntil';

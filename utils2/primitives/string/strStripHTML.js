@@ -1,4 +1,6 @@
-function $strStripHTML(str) {
+import $global from '../../global';
+
+export default function $strStripHTML(str) {
     str = typeof(str) === 'string' ? str.replace(/<\/?[^>]+(>|$)/g, '') : '';
     var map = {
         'nbsp': ' ',
@@ -11,3 +13,4 @@ function $strStripHTML(str) {
         return map[k] || k;
     });
 }
+$global.$strStripHTML = $strStripHTML;

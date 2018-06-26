@@ -1,4 +1,6 @@
-function $strFromUntil(str, leftIndex, exp) {
+import $global from '../../global';
+
+export default function $strFromUntil(str, leftIndex, exp) {
     str = str.substring(leftIndex);
     var arr = str.split(exp);
     if (Array.isArray(arr)) {
@@ -6,3 +8,4 @@ function $strFromUntil(str, leftIndex, exp) {
     }
     return null;
 }
+$global.$strFromUntil = $strFromUntil;

@@ -1,4 +1,6 @@
-function $strToQueryObj(url) { // BASED ON: https://stackoverflow.com/a/32354921/6135126
+import $global from '../../global';
+
+export default function $strToQueryObj(url) { // BASED ON: https://stackoverflow.com/a/32354921/6135126
     url = url.replace(/\+/g, ' ');
     var exp = /[?&]([^=]+)=([^&]*)/g;
     var o = {};
@@ -12,3 +14,4 @@ function $strToQueryObj(url) { // BASED ON: https://stackoverflow.com/a/32354921
     }
     return o;
 }
+$global.$strToQueryObj = $strToQueryObj;

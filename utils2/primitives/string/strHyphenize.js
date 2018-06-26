@@ -1,4 +1,6 @@
-function $strHyphenize(str) {
+import $global from '../../global';
+
+export default function $strHyphenize(str) {
     if (typeof(str) !== 'string') {
         return null;
     }
@@ -6,3 +8,4 @@ function $strHyphenize(str) {
         return ('-' + g[0]);
     }).toLowerCase();
 }
+$global.$strHyphenize = $strHyphenize;

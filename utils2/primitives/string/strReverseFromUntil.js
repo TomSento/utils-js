@@ -1,4 +1,6 @@
-function $strReverseFromUntil(str, leftIndex, exp) {
+import $global from '../../global';
+
+export default function $strReverseFromUntil(str, leftIndex, exp) {
     str = str.substring(0, leftIndex);
     var rev = '';
     for (var i = str.length - 1; i >= 0; i--) {
@@ -10,3 +12,4 @@ function $strReverseFromUntil(str, leftIndex, exp) {
     }
     return null;
 }
+$global.$strReverseFromUntil = $strReverseFromUntil;

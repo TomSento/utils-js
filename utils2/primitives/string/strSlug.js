@@ -1,6 +1,9 @@
-function $strSlug(str, max) {
+import $global from '../../global';
+import $strRemoveDiacritics from './strRemoveDiacritics';
+
+export default function $strSlug(str, max) {
     max = max || 60;
-    var self = exports.$strRemoveDiacritics(str.trim().toLowerCase());
+    var self = $strRemoveDiacritics(str.trim().toLowerCase());
     var builder = '';
     var length = self.length;
     for (var i = 0; i < length; i++) {
@@ -22,3 +25,4 @@ function $strSlug(str, max) {
     var l = builder.length - 1;
     return builder[l] === '-' ? builder.substring(0, l) : builder;
 }
+$global.$strSlug = $strSlug;
