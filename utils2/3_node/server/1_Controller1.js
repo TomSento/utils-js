@@ -1,5 +1,5 @@
 import $global from '../../global';
-import $malloc from '../../internal/malloc';
+import $malloc from '../../0_internal/malloc';
 
 export default function $Controller1(req, res) {
     var cache = $malloc('__SERVER');

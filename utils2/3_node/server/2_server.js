@@ -1,7 +1,7 @@
 import $global from '../../global';
-import $malloc from '../../internal/malloc';
-import $route1 from './route1';
-import $Controller1 from './Controller1';
+import $malloc from '../../0_internal/malloc';
+import $route1 from './0_route1';
+import $Controller1 from './1_Controller1';
 
 export default function $server(env, packageJSON, config) {
     var cache = $malloc('__SERVER');

@@ -1,5 +1,5 @@
 import $global from '../../global';
-import $malloc from '../../internal/malloc';
+import $malloc from '../../0_internal/malloc';
 
 export default function $route1(matcher, fn, flags) {
     if (typeof(matcher) !== 'string' || (matcher[0] !== '/' && ['#public', '#error'].indexOf(matcher) === -1)) {
