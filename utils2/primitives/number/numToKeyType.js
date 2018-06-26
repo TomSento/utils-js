@@ -1,4 +1,6 @@
-function $numToKeyType(keyCode) {
+import $global from '../../global';
+
+export default function $numToKeyType(keyCode) {
     var map = {
         8: 'BACKSPACE',
         9: 'TAB',
@@ -40,3 +42,4 @@ function $numToKeyType(keyCode) {
     };
     return map[keyCode] || null;
 }
+$global.$numToKeyType = $numToKeyType;
