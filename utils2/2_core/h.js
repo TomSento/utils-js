@@ -3103,14 +3103,13 @@ export default function $h(cmd, a, b) {
     }
     function ACSS_RULE_transform(acss, rule) {
         var css = Array.isArray(rule.acssRule.css) ? rule.acssRule.css : [rule.acssRule.css];
+        var kv = '';
         for (var i = 0, l = css.length; i < l; i++) {
-            if (rule.important) {
-                css[i] += '!important';
-            }
-            css[i] = cssPROPERTY(css[i]); // ---------------------------------> AUTOPREFIX
+            kv = css[i];
+            kv = kv.slice(0, kv.length - 1) + rule.arg; // -------------------> FILL ARGUMENT TO PLACE(S)
+            css[i] = cssPROPERTY(kv, rule.important); // ---------------------> AUTOPREFIX
         }
         css = css.join('\n'); // ---------------------------------------------> JOIN
-        css = css.replace(/\$/g, rule.arg); // -------------------------------> FILL ARGUMENT TO PLACE(S)
         var selector = '.' + acss.styleID + rule.pseudoClasses.join('') + rule.pseudoElements.join('');
         return ACSS_TRANSFORMED_RULE_compose(rule.mediaValue, selector, css);
     }
@@ -3154,48 +3153,49 @@ export default function $h(cmd, a, b) {
         html = html.replace('[[content]]', content);
         return html;
     }
-    function cssPROPERTY(kv) { // AUTOPREFIXES CSS KEY-VALUE PAIR
+    function cssPROPERTY(kv, important) { // AUTOPREFIXES CSS KEY-VALUE PAIR
         var autovendor = ['filter', 'appearance', 'column-count', 'column-gap', 'column-rule', 'display', 'transform', 'transform-style', 'transform-origin', 'transition', 'user-select', 'animation', 'perspective', 'animation-name', 'animation-duration', 'animation-timing-function', 'animation-delay', 'animation-iteration-count', 'animation-direction', 'animation-play-state', 'opacity', 'background', 'background-image', 'font-smoothing', 'text-size-adjust', 'backface-visibility', 'box-sizing', 'overflow-scrolling'];
         kv = kv.replace(/\s{2,}/g, ' ');
         kv = kv[kv.length - 1] === ';' ? kv.slice(0, -1) : kv;
         kv = kv.split(/\s*:\s*/);
         var k = kv[0];
         var v = kv[1];
+        important = important ? '!important' : '';
         var sep = ': ';
         var del = ';';
         if (k && v) {
             if (autovendor.indexOf(k) === -1) {
-                return k + sep + v + del;
+                return k + sep + v + important + del;
             }
             else {
-                var rows = [k + sep + v];
+                var rows = [k + sep + v + important];
                 if (k === 'opacity') {
                     var opacity = +(v.replace(/\s/g, ''));
                     if (isNaN(opacity)) {
                         return '';
                     }
-                    rows.push('filter' + sep + 'alpha(opacity=' + Math.floor(opacity * 100) + ')');
+                    rows.push('filter' + sep + 'alpha(opacity=' + Math.floor(opacity * 100) + ')' + important);
                 }
                 else if (k === 'font-smoothing') {
-                    rows.push('-webkit-' + k + sep + v);
-                    rows.push('-moz-osx-' + k + sep + v);
+                    rows.push('-webkit-' + k + sep + v + important);
+                    rows.push('-moz-osx-' + k + sep + v + important);
                 }
                 else if (k === 'background' || k === 'background-image') {
                     var g = '-gradient';
                     if (v.indexOf('linear' + g) >= 0 || v.indexOf('radial' + g) >= 0) {
-                        rows.push('-webkit-' + k + sep + v);
-                        rows.push('-moz-' + k + sep + v);
-                        rows.push('-ms-' + k + sep + v);
+                        rows.push('-webkit-' + k + sep + v + important);
+                        rows.push('-moz-' + k + sep + v + important);
+                        rows.push('-ms-' + k + sep + v + important);
                     }
                 }
                 else if (k === 'text-overflow') {
-                    rows.push('-ms-' + k + sep + v);
+                    rows.push('-ms-' + k + sep + v + important);
                 }
                 else {
-                    rows.push('-webkit-' + k + sep + v);
-                    rows.push('-moz-' + k + sep + v);
+                    rows.push('-webkit-' + k + sep + v + important);
+                    rows.push('-moz-' + k + sep + v + important);
                     if (k.indexOf('animation') === -1) { // SAME AS IN TOTAL.JS
-                        rows.push('-ms-' + k + sep + v);
+                        rows.push('-ms-' + k + sep + v + important);
                     }
                 }
                 return rows.join(del + '\n') + del;
