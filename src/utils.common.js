@@ -16,7 +16,7 @@ import '../utils2/1_primitives/array/arrUnique';
 
 import '../utils2/1_primitives/number/numToKeyType';
 
-import '../utils2/1_primitives/string/strFormat';
+import '../utils2/1_primitives/string/strf';
 import '../utils2/1_primitives/string/strFromUntil';
 import '../utils2/1_primitives/string/strHas';
 import '../utils2/1_primitives/string/strHTML';
