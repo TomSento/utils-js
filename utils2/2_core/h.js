@@ -80,6 +80,7 @@ export default function $h(cmd, a, b) {
         Body: '<body>[[content]]</body>',
         Div: '<div[[modifiers]]>[[content]]</div>',
         Span: '<span[[modifiers]]>[[content]]</span>',
+        A: '<a[[modifiers]]>[[content]]</a>',
         Label: '<label[[modifiers]]>[[content]]</label>',
         Input: '<input[[modifiers]] value=[[value]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
@@ -149,6 +150,13 @@ export default function $h(cmd, a, b) {
         Body: [],
         Div: [],
         Span: [],
+        A: [{
+            name: 'Href',
+            func: 'Href',
+            allowArgument: true,
+            html: 'href=$',
+            noMissingSpaceAfterComma: false
+        }],
         Label: [{
             name: 'For',
             func: 'For',
