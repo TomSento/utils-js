@@ -86,6 +86,7 @@ export default function $h(cmd, a, b) {
         H4: '<h4[[modifiers]]>[[content]]</h4>',
         H5: '<h5[[modifiers]]>[[content]]</h5>',
         A: '<a[[modifiers]]>[[content]]</a>',
+        Img: '<img[[modifiers]]>',
         Label: '<label[[modifiers]]>[[content]]</label>',
         Input: '<input[[modifiers]] value=[[value]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
@@ -166,6 +167,19 @@ export default function $h(cmd, a, b) {
             allowArgument: true,
             html: 'href=$',
             noMissingSpaceAfterComma: false
+        }],
+        Img: [{
+            name: 'Src',
+            func: 'Src',
+            allowArgument: true,
+            html: 'src=$',
+            noMissingSpaceAfterComma: false
+        }, {
+            name: 'Alt',
+            func: 'Alt',
+            allowArgument: true,
+            html: 'alt=$',
+            noMissingSpaceAfterComma: true
         }],
         Label: [{
             name: 'For',
