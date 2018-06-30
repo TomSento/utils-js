@@ -16,7 +16,6 @@ import '../utils2/1_primitives/number/numToKeyType';
 
 import '../utils2/1_primitives/string/strf';
 import '../utils2/1_primitives/string/strFromUntil';
-import '../utils2/1_primitives/string/strHas';
 import '../utils2/1_primitives/string/strHTML';
 import '../utils2/1_primitives/string/strHyphenize';
 import '../utils2/1_primitives/string/strMatchLen';
