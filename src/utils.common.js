@@ -14,6 +14,12 @@ import '../utils2/1_primitives/array/arrUnique';
 
 import '../utils2/1_primitives/number/numToKeyType';
 
+import '../utils2/1_primitives/object/objClone';
+import '../utils2/1_primitives/object/objExtend';
+import '../utils2/1_primitives/object/objForIn';
+import '../utils2/1_primitives/object/objKeys';
+import '../utils2/1_primitives/object/objToQueryStr';
+
 import '../utils2/1_primitives/string/strf';
 import '../utils2/1_primitives/string/strFromUntil';
 import '../utils2/1_primitives/string/strHTML';
