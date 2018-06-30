@@ -1,7 +1,7 @@
 import $global from '../../global';
 
 export default function $strStripHTML(str) {
-    str = typeof(str) === 'string' ? str.replace(/<\/?[^>]+(>|$)/g, '') : '';
+    str = str.replace(/<\/?[^>]+(>|$)/g, '');
     var map = {
         'nbsp': ' ',
         'amp': '&',
