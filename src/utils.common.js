@@ -29,7 +29,6 @@ import '../utils2/1_primitives/string/strReverseFromUntil';
 import '../utils2/1_primitives/string/strReverseUntil';
 import '../utils2/1_primitives/string/strSlug';
 import '../utils2/1_primitives/string/strStripHTML';
-import '../utils2/1_primitives/string/strStripWhitespaces';
 import '../utils2/1_primitives/string/strToHTMLText';
 import '../utils2/1_primitives/string/strToQueryObj';
 import '../utils2/1_primitives/string/strTrim';
