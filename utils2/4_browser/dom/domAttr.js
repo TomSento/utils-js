@@ -46,12 +46,11 @@ export default function $domAttr(sel, k, v) {
         return selectingOne(sel) ? arr[0] : arr;
     }
     function getAttr(el, k) {
-        var v = el.getAttribute(k) || null;
-        if (v) {
-            return v;
+        if (['checked', 'disabled', 'readonly'].indexOf(k) >= 0) {
+            return el.hasAttribute(k);
         }
         else {
-            return el.hasAttribute(k);
+            return el.getAttribute(k);
         }
     }
     function setAttr(el, k, v) {
