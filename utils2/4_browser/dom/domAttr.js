@@ -42,7 +42,9 @@ export default function $domAttr(sel, k, v) {
             }
         }
     }
-    return selectingOne(sel) ? arr[0] : arr;
+    if (v === undefined) {
+        return selectingOne(sel) ? arr[0] : arr;
+    }
     function getAttr(el, k) {
         var v = el.getAttribute(k) || null;
         if (v) {
