@@ -5,6 +5,7 @@ export default function $domFadeOut(sel, t) {
     if (!sel) {
         throw new Error('api-sel');
     }
+    t = parseInt(t);
     var els = null;
     if (Array.isArray(sel)) {
         els = sel;
@@ -25,7 +26,7 @@ export default function $domFadeOut(sel, t) {
         }
     }
     function fadeOut(el, t) {
-        el.style.transition = 'opacity ' + (t && !isNaN(t) && t > 0 ? t : 250) + 'ms';
+        el.style.transition = 'opacity ' + (isNaN(t) || t < 0 ? 250 : t) + 'ms';
         el.style.opacity = '0';
     }
 }
