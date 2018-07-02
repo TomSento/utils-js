@@ -9,12 +9,6 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
-    try {
-        v = normalizeVal(v);
-    }
-    catch (err) {
-        throw err;
-    }
     var els = null;
     if (Array.isArray(sel)) {
         els = sel;
@@ -64,26 +58,6 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
                 }
                 el.__elementData[k] = v;
             }
-        }
-    }
-    function normalizeVal(v) {
-        if (v === undefined) {
-            return undefined;
-        }
-        else if (typeof(v) === 'string') {
-            return v;
-        }
-        else if (typeof(v) === 'object') {
-            if (!v) {
-                return null;
-            }
-            return v;
-        }
-        else if (v && typeof(v.toString) == 'function') {
-            return v.toString();
-        }
-        else {
-            throw new Error('api-v');
         }
     }
     function selectingOne(sel) {
