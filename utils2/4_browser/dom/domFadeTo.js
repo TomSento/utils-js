@@ -5,9 +5,11 @@ export default function $domFadeTo(sel, o, t) {
     if (!sel) {
         throw new Error('api-sel');
     }
-    if (!o || isNaN(o) || o > 100 || o < 0) {
+    o = parseFloat(o);
+    if (isNaN(o) || o < 0 || o > 1) {
         throw new Error('api-o');
     }
+    t = parseInt(t);
     var els = null;
     if (Array.isArray(sel)) {
         els = sel;
@@ -28,7 +30,7 @@ export default function $domFadeTo(sel, o, t) {
         }
     }
     function fadeTo(el, o, t) {
-        el.style.transition = 'opacity ' + (t && !isNaN(t) && t > 0 ? t : 250) + 'ms';
+        el.style.transition = 'opacity ' + (isNaN(t) || t < 0 ? 250 : t) + 'ms';
         el.style.opacity = o.toString();
     }
 }
