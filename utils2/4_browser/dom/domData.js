@@ -41,13 +41,15 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
             }
         }
     }
-    return selectingOne(sel) ? arr[0] : arr;
+    if (v === undefined) {
+        return selectingOne(sel) ? arr[0] : arr;
+    }
     function getData(el, k) {
         if (el.__elementData && el.__elementData[k]) {
             return el.__elementData[k];
         }
         if (el.dataset) {
-            return el.dataset[k] || null;
+            return el.dataset[k];
         }
         return null; // "document" DOES NOT HAVE "dataset"
     }
