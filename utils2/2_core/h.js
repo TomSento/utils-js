@@ -3333,7 +3333,7 @@ export default function $h(cmd, a, b) {
     function genStyleID() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         var b = '';
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 6; i++) {
             b += chars.charAt(Math.floor(Math.random() * chars.length));
         }
         return 'css-' + b;
