@@ -5,6 +5,7 @@ export default function $domFadeToggle(sel, t) {
     if (!sel) {
         throw new Error('api-sel');
     }
+    t = parseInt(t);
     var els = null;
     if (Array.isArray(sel)) {
         els = sel;
@@ -25,17 +26,10 @@ export default function $domFadeToggle(sel, t) {
         }
     }
     function fadeToggle(el) {
-        el.style.transition = 'opacity ' + (t && !isNaN(t) && t > 0 ? t : 250) + 'ms';
         var s = el.ownerDocument.defaultView.getComputedStyle(el, null);
-        var o = (!s) ? null : s.opacity;
-        if (o === null) {
-            return;
-        }
-        if (o === '1') {
-            el.style.opacity = '0';
-        }
-        else {
-            el.style.opacity = '1';
+        if (s) {
+            el.style.transition = 'opacity ' + (isNaN(t) || t < 0 ? 250 : t) + 'ms';
+            el.style.opacity = s.opacity === '1' ? '0' : '1';
         }
     }
 }
