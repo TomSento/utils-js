@@ -24,14 +24,13 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
     if (Array.isArray(els)) {
         for (var i = 0; i < els.length; i++) {
             var el = els[i];
-            if (!el) {
-                continue;
-            }
-            if (v === undefined) {
-                arr.push(getData(el, k));
-            }
-            else {
-                setData(el, k, v);
+            if (el) {
+                if (v === undefined) {
+                    arr.push(getData(el, k));
+                }
+                else {
+                    setData(el, k, v);
+                }
             }
         }
     }
@@ -39,13 +38,10 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
         return selectingOne(sel) ? arr[0] : arr;
     }
     function getData(el, k) {
-        if (el.__elementData && el.__elementData[k] !== undefined) {
-            return el.__elementData[k];
+        if (el.$data && el.$data[k] !== undefined) {
+            return el.$data[k];
         }
-        if (el.dataset) {
-            return el.dataset[k];
-        }
-        return undefined; // "document" DOES NOT HAVE "dataset"
+        return el.dataset ? el.dataset[k] : undefined; // --------------------> "document" DOES NOT HAVE "dataset"
     }
     function setData(el, k, v) {
         if (el.dataset) {
@@ -53,10 +49,10 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
                 el.dataset[k] = v;
             }
             else {
-                if (!el.__elementData) {
-                    el.__elementData = {};
+                if (!el.$data) {
+                    el.$data = {};
                 }
-                el.__elementData[k] = v;
+                el.$data[k] = v;
             }
         }
     }
@@ -65,8 +61,9 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
             return true;
         }
         else if (typeof(sel) === 'string') {
-            var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
+            var arr = sel.split(/\s+/);
+            var last = arr[arr.length - 1];
+            return last && last[0] === '#';
         }
         return false;
     }
