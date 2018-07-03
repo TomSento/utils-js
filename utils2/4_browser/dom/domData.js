@@ -1,6 +1,4 @@
-/* eslint-disable no-underscore-dangle */
-import $domIsEl from './domIsEl';
-import $domFind from './domFind';
+import { $toArrayOfElements, $selectingOne } from './_utils';
 
 export default function $domData(sel, k, v) { // NO ACTION FOR "document"
     if (!sel) {
@@ -9,33 +7,21 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
-    var els = null;
-    if (Array.isArray(sel)) {
-        els = sel;
-    }
-    else if ($domIsEl(sel)) {
-        els = [sel];
-    }
-    else {
-        els = $domFind(sel);
-        els = Array.isArray(els) ? els : [els];
-    }
+    var els = $toArrayOfElements(sel);
     var arr = [];
-    if (Array.isArray(els)) {
-        for (var i = 0; i < els.length; i++) {
-            var el = els[i];
-            if (el) {
-                if (v === undefined) {
-                    arr.push(getData(el, k));
-                }
-                else {
-                    setData(el, k, v);
-                }
+    for (var i = 0, l = els.length; i < l; i++) {
+        var el = els[i];
+        if (el) {
+            if (v === undefined) {
+                arr.push(getData(el, k));
+            }
+            else {
+                setData(el, k, v);
             }
         }
     }
     if (v === undefined) {
-        return selectingOne(sel) ? arr[0] : arr;
+        return $selectingOne(sel) ? arr[0] : arr;
     }
     function getData(el, k) {
         if (el.$data && el.$data[k] !== undefined) {
@@ -55,17 +41,6 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
                 el.$data[k] = v;
             }
         }
-    }
-    function selectingOne(sel) {
-        if ($domIsEl(sel)) {
-            return true;
-        }
-        else if (typeof(sel) === 'string') {
-            var arr = sel.split(/\s+/);
-            var last = arr[arr.length - 1];
-            return last && last[0] === '#';
-        }
-        return false;
     }
 }
 window.$domData = $domData;
