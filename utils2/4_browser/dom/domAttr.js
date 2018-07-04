@@ -21,17 +21,17 @@ export default function $domAttr(sel, k, v) {
         var el = els[i];
         if (el) {
             if (v === undefined) {
-                arr.push(getAttr(el, k));
+                arr.push(getAttr(el));
             }
             else {
-                setAttr(el, k, v);
+                setAttr(el);
             }
         }
     }
     if (v === undefined) {
         return $selectingOne(sel) ? arr[0] : arr;
     }
-    function getAttr(el, k) {
+    function getAttr(el) {
         if (['checked', 'disabled', 'readonly'].indexOf(k) >= 0) {
             return el.hasAttribute(k);
         }
@@ -39,7 +39,7 @@ export default function $domAttr(sel, k, v) {
             return el.getAttribute(k);
         }
     }
-    function setAttr(el, k, v) {
+    function setAttr(el) {
         el.setAttribute(k, v);
     }
 }
