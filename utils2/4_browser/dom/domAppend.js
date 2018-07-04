@@ -11,10 +11,10 @@ export default function $domAppend(sel, v) {
     for (var i = 0, l = els.length; i < l; i++) {
         var el = els[i];
         if (el) {
-            domAppend(el, v);
+            domAppend(el);
         }
     }
-    function domAppend(el, v) {
+    function domAppend(el) {
         el.insertAdjacentHTML('beforeend', v);
     }
 }
