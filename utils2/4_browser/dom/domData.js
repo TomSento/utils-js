@@ -13,23 +13,23 @@ export default function $domData(sel, k, v) { // NO ACTION FOR "document"
         var el = els[i];
         if (el) {
             if (v === undefined) {
-                arr.push(getData(el, k));
+                arr.push(getData(el));
             }
             else {
-                setData(el, k, v);
+                setData(el);
             }
         }
     }
     if (v === undefined) {
         return $selectingOne(sel) ? arr[0] : arr;
     }
-    function getData(el, k) {
+    function getData(el) {
         if (el.$data && el.$data[k] !== undefined) {
             return el.$data[k];
         }
         return el.dataset ? el.dataset[k] : undefined; // --------------------> "document" DOES NOT HAVE "dataset"
     }
-    function setData(el, k, v) {
+    function setData(el) {
         if (el.dataset) {
             if (typeof(v) === 'string') {
                 el.dataset[k] = v;
