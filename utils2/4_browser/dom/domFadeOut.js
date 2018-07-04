@@ -9,10 +9,10 @@ export default function $domFadeOut(sel, t) {
     for (var i = 0, l = els.length; i < l; i++) {
         var el = els[i];
         if (el) {
-            fadeOut(el, t);
+            fadeOut(el);
         }
     }
-    function fadeOut(el, t) {
+    function fadeOut(el) {
         el.style.transition = 'opacity ' + (isNaN(t) || t < 0 ? 250 : t) + 'ms';
         el.style.opacity = '0';
     }
