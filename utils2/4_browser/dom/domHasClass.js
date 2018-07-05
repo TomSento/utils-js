@@ -7,9 +7,12 @@ export default function $domHasClass(el, name) {
     if (el.classList) {
         return el.classList.contains(name);
     }
-    else {
-        var exp = new RegExp('(^| )' + name + '( |$)', 'gi');
+    else if (el.className) {
+        var exp = new RegExp('(^| )' + name + '( |$)', 'gi'); // -------------> IE8+
         return exp.test(el.className);
+    }
+    else {
+        return false;
     }
 }
 window.$domHasClass = $domHasClass;
