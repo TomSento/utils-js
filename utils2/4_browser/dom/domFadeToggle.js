@@ -1,4 +1,4 @@
-import { $toArrayOfElements } from './_utils';
+import $toArrayOfElements from './internal/toArrayOfElements';
 
 export default function $domFadeToggle(sel, t) {
     if (!sel) {

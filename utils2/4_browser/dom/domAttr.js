@@ -1,4 +1,5 @@
-import { $toArrayOfElements, $selectingOne } from './_utils';
+import $toArrayOfElements from './internal/toArrayOfElements';
+import $selectingOne from './internal/selectingOne';
 
 export default function $domAttr(sel, k, v) {
     if (!sel) {
