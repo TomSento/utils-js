@@ -14,7 +14,10 @@ export default function $domNext(sel, nsel) {
     for (var i = 0, l = els.length; i < l; i++) {
         var el = els[i];
         if (el) {
-            arr.push(getNext(el));
+            var nel = getNext(el);
+            if (nel) {
+                arr.push(nel);
+            }
         }
     }
     return $selectingOne(sel) ? (arr[0] || null) : arr;
