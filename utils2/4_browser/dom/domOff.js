@@ -1,42 +1,28 @@
 import $malloc from '../../0_internal/malloc';
-import $domIsEl from './domIsEl';
-import $domFind from './domFind';
+import $toArrayOfElements from './internal/toArrayOfElements';
 
 export default function $domOff(sel, k) { // https://stackoverflow.com/a/4386514
     if (!sel) {
         throw new Error('api-sel');
     }
-    if (k && typeof(k) !== 'string') {
+    if (k !== undefined && typeof(k) !== 'string') {
         throw new Error('api-k');
     }
-    var els = null;
-    if (Array.isArray(sel)) {
-        els = sel;
-    }
-    else if ($domIsEl(sel)) {
-        els = [sel];
-    }
-    else {
-        els = $domFind(sel);
-        els = Array.isArray(els) ? els : [els];
-    }
-    if (Array.isArray(els)) {
-        var len = els.length;
-        for (var i = 0; i < len; i++) {
-            var el = els[i];
-            if (el) {
-                els[i] = removeListener(el, k || null);
-            }
+    var els = $toArrayOfElements(sel);
+    for (var i = 0, l = els.length; i < l; i++) {
+        var el = els[i];
+        if (el) {
+            els[i] = removeListener(el);
         }
     }
-    function removeListener(el, k) {
+    function removeListener(el) {
         var cache = $malloc('__DOM');
         var handler = cache('handler') || {};
         var replacer = el;
         if (k) { // REMOVE BY KEY
             if (handler[el] && handler[el][k]) {
                 var fns = handler[el][k];
-                for (var i = 0; i < fns.length; i++) {
+                for (var i = 0, l = fns.length; i < l; i++) {
                     var fn = fns[i];
                     el.removeEventListener(k, fn, false);
                 }
