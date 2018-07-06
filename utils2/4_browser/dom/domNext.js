@@ -17,7 +17,7 @@ export default function $domNext(sel, nsel) {
             arr.push(getNext(el));
         }
     }
-    return $selectingOne(sel) ? arr[0] : arr;
+    return $selectingOne(sel) ? (arr[0] || null) : arr;
     function getNext(el) {
         var els = (el.parentNode && el.parentNode.children) ? el.parentNode.children : [];
         var brk = false;
