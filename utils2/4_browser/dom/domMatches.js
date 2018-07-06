@@ -1,8 +1,12 @@
 export default function $domMatches(el, sel) { // https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
-    var p = Element.prototype;
-    var fn = p.matches || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || function(s) {
-        return Array.prototype.indexOf.call(document.querySelectorAll(s), this) !== -1;
-    };
-    return fn.call(el, sel);
+    if (typeof(Element.prototype.matches) === 'function') {
+        return el.matches(sel);
+    }
+    else if (typeof(Element.prototype.msMatchesSelector) === 'function') { // IE9+
+        return el.msMatchesSelector(sel);
+    }
+    else {
+        return false;
+    }
 }
 window.$domMatches = $domMatches;
