@@ -1,4 +1,5 @@
 import $toArrayOfElements from './internal/toArrayOfElements';
+import $arrUnique from '../../1_primitives/array/arrUnique';
 
 export default function $domNextAll(sel) {
     if (!sel) {
@@ -15,7 +16,7 @@ export default function $domNextAll(sel) {
             }
         }
     }
-    return arr;
+    return $arrUnique(arr);
     function getNextAll(el) {
         var els = (el.parentNode && el.parentNode.children) ? el.parentNode.children : [];
         var arr = [];
