@@ -15,7 +15,7 @@ export default function $domNext(sel, nsel) {
         var el = els[i];
         if (el) {
             var nel = getNext(el);
-            if (nel) {
+            if (nel && arr.indexOf(nel) === -1) {
                 arr.push(nel);
             }
         }
