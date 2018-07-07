@@ -22,7 +22,7 @@ export default function $domHTML(sel, v) {
         }
     }
     if (v === undefined) {
-        return $selectingOne(sel) ? arr[0] : arr;
+        return $selectingOne(sel) ? (arr[0] || null) : arr;
     }
     function getHtml(el) {
         return el.innerHTML || null;
