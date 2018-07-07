@@ -1,28 +1,17 @@
 import $selectingOne from './internal/selectingOne';
 
-export default function $domFind(sel, el) {
+export default function $domFind(sel, parent) {
     if (!sel || typeof(sel) !== 'string') {
         throw new Error('api-sel');
     }
-    var list = (el ? el : document).querySelectorAll(sel);
-    if (list) {
-        if ($selectingOne(sel)) {
-            return list[0] || null;
-        }
-        else {
-            var arr = [];
-            var l = list.length;
-            arr.length = l;
-            for (var i = 0; i < l; i++) {
-                if (list[i]) {
-                    arr[i] = list[i];
-                }
-            }
-            return arr;
+    var list = (parent ? parent : document).querySelectorAll(sel) || [];
+    var arr = [];
+    for (var i = 0, l = list.length; i < l; i++) {
+        var el = list[i];
+        if (el) {
+            arr[i] = el;
         }
     }
-    else {
-        return $selectingOne(sel) ? null : [];
-    }
+    return $selectingOne(sel) ? (arr[0] || null) : arr;
 }
 window.$domFind = $domFind;
