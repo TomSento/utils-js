@@ -1,5 +1,4 @@
 import $toArrayOfElements from './internal/toArrayOfElements';
-import $selectingOne from './internal/selectingOne';
 
 export default function $domNextAll(sel) {
     if (!sel) {
@@ -10,10 +9,13 @@ export default function $domNextAll(sel) {
     for (var i = 0, l = els.length; i < l; i++) {
         var el = els[i];
         if (el) {
-            arr.push(getNextAll(el));
+            var nels = getNextAll(el);
+            if (Array.isArray(nels) && nels.length > 0) {
+                arr = arr.concat(nels);
+            }
         }
     }
-    return $selectingOne(sel) ? arr[0] : arr;
+    return arr;
     function getNextAll(el) {
         var els = (el.parentNode && el.parentNode.children) ? el.parentNode.children : [];
         var arr = [];
