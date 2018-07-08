@@ -1,5 +1,4 @@
 import $toArrayOfElements from './internal/toArrayOfElements';
-import $selectingOne from './internal/selectingOne';
 
 export default function $domChildren(sel) {
     if (!sel) {
@@ -10,14 +9,17 @@ export default function $domChildren(sel) {
     for (var i = 0, l = els.length; i < l; i++) {
         var el = els[i];
         if (el) {
-            arr.push(getChildren(el));
+            var children = getChildren(el);
+            if (Array.isArray(children) && children.length > 0) {
+                arr = arr.concat(children);
+            }
         }
     }
-    return $selectingOne(sel) ? arr[0] : arr;
+    return arr;
     function getChildren(el) {
         var els = el.children || [];
         var arr = [];
-        for (var i = 0; i < els.length; i++) {
+        for (var i = 0, l = els.length; i < l; i++) {
             arr[i] = els[i];
         }
         return arr;
