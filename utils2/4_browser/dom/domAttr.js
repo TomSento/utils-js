@@ -37,7 +37,8 @@ export default function $domAttr(sel, k, v) {
             return el.hasAttribute(k);
         }
         else {
-            return el.getAttribute(k);
+            var attr = el.getAttribute(k);
+            return attr === null ? undefined : attr;
         }
     }
     function setAttr(el) {
