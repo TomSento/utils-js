@@ -11,7 +11,7 @@ export default function $domParent(sel) {
         var el = els[i];
         if (el) {
             var pel = getParent(el);
-            if (pel) {
+            if (pel && arr.indexOf(pel) === -1) {
                 arr.push(pel);
             }
         }
