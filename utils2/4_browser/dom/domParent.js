@@ -1,43 +1,24 @@
-import $domIsEl from './domIsEl';
-import $domFind from './domFind';
+import $toArrayOfElements from './internal/toArrayOfElements';
+import $selectingOne from './internal/selectingOne';
 
 export default function $domParent(sel) {
     if (!sel) {
         throw new Error('api-sel');
     }
-    var els = null;
-    if (Array.isArray(sel)) {
-        els = sel;
-    }
-    else if ($domIsEl(sel)) {
-        els = [sel];
-    }
-    else {
-        els = $domFind(sel);
-        els = Array.isArray(els) ? els : [els];
-    }
+    var els = $toArrayOfElements(sel);
     var arr = [];
-    if (Array.isArray(els)) {
-        for (var i = 0; i < els.length; i++) {
-            var el = els[i];
-            if (el) {
-                arr.push(getParent(el));
+    for (var i = 0, l = els.length; i < l; i++) {
+        var el = els[i];
+        if (el) {
+            var pel = getParent(el);
+            if (pel) {
+                arr.push(pel);
             }
         }
     }
-    return selectingOne(sel) ? arr[0] : arr;
+    return $selectingOne(sel) ? (arr[0] || null) : arr;
     function getParent(el) {
         return el.parentNode || null;
-    }
-    function selectingOne(sel) {
-        if ($domIsEl(sel)) {
-            return true;
-        }
-        else if (typeof(sel) === 'string') {
-            var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
-        }
-        return false;
     }
 }
 window.$domParent = $domParent;
