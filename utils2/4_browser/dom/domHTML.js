@@ -22,10 +22,10 @@ export default function $domHTML(sel, v) {
         }
     }
     if (v === undefined) {
-        return $selectingOne(sel) ? arr[0] : arr;
+        return $selectingOne(sel) ? (arr[0] || '') : arr;
     }
     function getHtml(el) {
-        return el.innerHTML || null;
+        return el.innerHTML || '';
     }
     function setHtml(el) {
         el.innerHTML = v;
