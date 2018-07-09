@@ -1,5 +1,4 @@
-import $domIsEl from './domIsEl';
-import $domFind from './domFind';
+import $toArrayOfElements from './internal/toArrayOfElements';
 
 export default function $domPrepend(sel, v) {
     if (!sel) {
@@ -8,26 +7,14 @@ export default function $domPrepend(sel, v) {
     if (typeof(v) !== 'string') {
         throw new Error('api-v');
     }
-    var els = null;
-    if (Array.isArray(sel)) {
-        els = sel;
-    }
-    else if ($domIsEl(sel)) {
-        els = [sel];
-    }
-    else {
-        els = $domFind(sel);
-        els = Array.isArray(els) ? els : [els];
-    }
-    if (Array.isArray(els)) {
-        for (var i = 0; i < els.length; i++) {
-            var el = els[i];
-            if (el) {
-                domPrepend(el, v);
-            }
+    var els = $toArrayOfElements(sel);
+    for (var i = 0, l = els.length; i < l; i++) {
+        var el = els[i];
+        if (el) {
+            domPrepend(el);
         }
     }
-    function domPrepend(el, v) {
+    function domPrepend(el) {
         el.insertAdjacentHTML('afterbegin', v);
     }
 }
