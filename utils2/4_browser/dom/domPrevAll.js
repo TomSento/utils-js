@@ -1,52 +1,35 @@
-import $domIsEl from './domIsEl';
-import $domFind from './domFind';
+import $toArrayOfElements from './internal/toArrayOfElements';
+import $arrUnique from '../../1_primitives/array/arrUnique';
 
 export default function $domPrevAll(sel) {
     if (!sel) {
         throw new Error('api-sel');
     }
-    var els = null;
-    if (Array.isArray(sel)) {
-        els = sel;
-    }
-    else if ($domIsEl(sel)) {
-        els = [sel];
-    }
-    else {
-        els = $domFind(sel);
-        els = Array.isArray(els) ? els : [els];
-    }
+    var els = $toArrayOfElements(sel);
     var arr = [];
-    if (Array.isArray(els)) {
-        for (var i = 0; i < els.length; i++) {
-            var el = els[i];
-            if (el) {
-                arr.push(getPrevAll(el));
+    for (var i = 0, l = els.length; i < l; i++) {
+        var el = els[i];
+        if (el) {
+            var pels = getPrevAll(el);
+            if (Array.isArray(pels) && pels.length > 0) {
+                arr = arr.concat(pels);
             }
         }
     }
-    return selectingOne(sel) ? arr[0] : arr;
+    return $arrUnique(arr);
     function getPrevAll(el) {
         var els = (el.parentNode && el.parentNode.children) ? el.parentNode.children : [];
         var arr = [];
-        for (var i = 0; i < els.length; i++) {
-            var ch = els[i];
-            if (ch === el) {
-                return arr;
+        for (var i = 0, l = els.length; i < l; i++) {
+            var sib = els[i];
+            if (sib) {
+                if (sib === el) {
+                    return arr;
+                }
+                arr.push(sib);
             }
-            arr.push(ch);
         }
         return [];
-    }
-    function selectingOne(sel) {
-        if ($domIsEl(sel)) {
-            return true;
-        }
-        else if (typeof(sel) === 'string') {
-            var parts = sel.split(/\s+/);
-            return (parts && parts.length == 1 && parts[0][0] == '#');
-        }
-        return false;
     }
 }
 window.$domPrevAll = $domPrevAll;
