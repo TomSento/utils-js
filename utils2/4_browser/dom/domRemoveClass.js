@@ -37,7 +37,7 @@ export default function $domRemoveClass(sel, rm) {
                         arr.push(cls);
                     }
                 }
-                el.className = arr.join(' ');
+                el.className = arr.length > 0 ? arr.join(' ') : '';
             }
         }
     }
