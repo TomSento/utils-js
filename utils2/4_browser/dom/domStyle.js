@@ -31,7 +31,8 @@ export default function $domStyle(sel, k, v) {
         return $selectingOne(sel) ? arr[0] : arr;
     }
     function getStyle(el) {
-        return el.style[k] || undefined;
+        var style = el.ownerDocument.defaultView.getComputedStyle(el, null) || {};
+        return style[k] || undefined;
     }
     function setStyle(el) {
         el.style[k] = v;
