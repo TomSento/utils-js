@@ -10,7 +10,7 @@ export default function $domText(sel, v) {
     }
     var els = $toArrayOfElements(sel);
     var arr = [];
-    for (var i = 0, l = els; i < l; i++) {
+    for (var i = 0, l = els.length; i < l; i++) {
         var el = els[i];
         if (el) {
             if (v === undefined) {
