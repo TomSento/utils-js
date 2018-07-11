@@ -1,5 +1,6 @@
 import $toArrayOfElements from './internal/toArrayOfElements';
 import $arrUnique from '../../1_primitives/array/arrUnique';
+import $domMatches from './domMatches';
 
 export default function $domPrevAll(sel) {
     if (!sel) {
@@ -26,7 +27,9 @@ export default function $domPrevAll(sel) {
                 if (sib === el) {
                     return arr;
                 }
-                arr.push(sib);
+                if (!$domMatches(sib, sel)) {
+                    arr.push(sib);
+                }
             }
         }
         return [];

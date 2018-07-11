@@ -24,7 +24,9 @@ export default function $domNextAll(sel) {
         for (var i = 0, l = els.length; i < l; i++) {
             var sib = els[i];
             if (sib && brk) {
-                arr.push(sib);
+                if (!$domMatches(sib, sel)) {
+                    arr.push(sib);
+                }
             }
             if (sib === el) {
                 brk = true;
