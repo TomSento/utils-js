@@ -15,7 +15,7 @@ export default function $domTriggerEvent(sel, k, v) {
         }
     }
     function triggerEvent(el) { // -------------------------------------------> http://youmightnotneedjquery.com/#trigger_custom
-        var e = null;
+        var e;
         if (window.CustomEvent) {
             e = new CustomEvent(k, {
                 detail: v
