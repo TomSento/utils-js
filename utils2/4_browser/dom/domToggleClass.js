@@ -1,5 +1,4 @@
-import $domIsEl from './domIsEl';
-import $domFind from './domFind';
+import $toArrayOfElements from './internal/toArrayOfElements';
 
 export default function $domToggleClass(sel, v) {
     if (!sel) {
@@ -8,34 +7,21 @@ export default function $domToggleClass(sel, v) {
     if (!v || typeof(v) !== 'string') {
         throw new Error('api-v');
     }
-    var els = null;
-    if (Array.isArray(sel)) {
-        els = sel;
-    }
-    else if ($domIsEl(sel)) {
-        els = [sel];
-    }
-    else {
-        els = $domFind(sel);
-        els = Array.isArray(els) ? els : [els];
-    }
-    if (Array.isArray(els)) {
-        var len = els.length;
-        for (var i = 0; i < len; i++) {
-            var el = els[i];
-            if (!el) {
-                continue;
-            }
-            var clas = v.split(/\s+/);
-            var lenlen = clas.length;
-            for (var j = 0; j < lenlen; j++) {
-                var cla = clas[j];
-                toggleClass(el, cla);
-            }
+    var els = $toArrayOfElements(sel);
+    for (var i = 0, l = els.length; i < l; i++) {
+        var el = els[i];
+        if (el) {
+            toggleClasses(el);
         }
     }
-    function toggleClass(el, v) {
-        el.classList.toggle(v);
+    function toggleClasses(el) { // ------------------------------------------> TOGGLES 0..N CLASSES
+        var classes = v.split(/\s+/);
+        for (var i = 0, l = classes.length; i < l; i++) {
+            var cls = classes[i];
+            if (cls) {
+                el.classList.toggle(cls);
+            }
+        }
     }
 }
 window.$domToggleClass = $domToggleClass;
