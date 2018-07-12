@@ -14,7 +14,7 @@ export default function $domTriggerNativeEvent(sel, k) {
             triggerEvent(el);
         }
     }
-    function triggerEvent(el) {
+    function triggerEvent(el) { // -------------------------------------------> http://youmightnotneedjquery.com/#trigger_native
         var e = document.createEvent('HTMLEvents');
         e.initEvent(k, true, false);
         el.dispatchEvent(e);
