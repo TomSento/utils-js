@@ -1,5 +1,4 @@
-import $domIsEl from './domIsEl';
-import $domFind from './domFind';
+import $toArrayOfElements from './internal/toArrayOfElements';
 
 export default function $domTriggerNativeEvent(sel, k) {
     if (!sel) {
@@ -8,27 +7,14 @@ export default function $domTriggerNativeEvent(sel, k) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
-    var els = null;
-    if (Array.isArray(sel)) {
-        els = sel;
-    }
-    else if ($domIsEl(sel)) {
-        els = [sel];
-    }
-    else {
-        els = $domFind(sel);
-        els = Array.isArray(els) ? els : [els];
-    }
-    if (Array.isArray(els)) {
-        var len = els.length;
-        for (var i = 0; i < len; i++) {
-            var el = els[i];
-            if (el) {
-                triggerEvent(el, k);
-            }
+    var els = $toArrayOfElements(sel);
+    for (var i = 0, l = els.length; i < l; i++) {
+        var el = els[i];
+        if (el) {
+            triggerEvent(el);
         }
     }
-    function triggerEvent(el, k) {
+    function triggerEvent(el) {
         var e = document.createEvent('HTMLEvents');
         e.initEvent(k, true, false);
         el.dispatchEvent(e);
