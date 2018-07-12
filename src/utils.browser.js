@@ -30,7 +30,6 @@ import '../utils2/4_browser/dom/domStyle';
 import '../utils2/4_browser/dom/domText';
 import '../utils2/4_browser/dom/domToggleClass';
 import '../utils2/4_browser/dom/domTriggerEvent';
-import '../utils2/4_browser/dom/domTriggerNativeEvent';
 import '../utils2/4_browser/dom/domVal';
 
 import '../utils2/4_browser/router/0_route0';
