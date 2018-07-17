@@ -8,6 +8,9 @@ export default function $browserSupportsEvent(sel, eventName) { // https://stack
     else if (typeof(sel) === 'string') {
         el = createElementWithAttributes();
     }
+    if (!eventName || typeof(eventName) !== 'string') {
+        throw new Error('api-eventName');
+    }
     if (el) {
         eventName = 'on' + eventName;
         if (el[eventName] !== undefined) {
