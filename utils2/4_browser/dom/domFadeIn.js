@@ -7,7 +7,6 @@ export default function $domFadeIn(sel, t) {
     if (t !== undefined && (typeof(t) !== 'number' || t < 0)) {
         throw new Error('api-t');
     }
-    t = parseInt(t);
     var els = $toArrayOfElements(sel);
     for (var i = 0, l = els.length; i < l; i++) {
         var el = els[i];
