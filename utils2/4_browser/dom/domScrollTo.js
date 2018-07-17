@@ -1,8 +1,11 @@
 import $domIsEl from './domIsEl';
 
 export default function $domScrollTo(sel) { // -------------------------------> '' || null || undefined - NO ACTION
+    if (sel === '' || sel == null) {
+        return;
+    }
     if (typeof(sel) !== 'string') {
-        if (sel != null && !$domIsEl(sel)) {
+        if (!sel || !$domIsEl(sel)) {
             throw new Error('api-sel');
         }
     }
