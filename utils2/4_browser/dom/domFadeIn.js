@@ -4,6 +4,9 @@ export default function $domFadeIn(sel, t) {
     if (!sel) {
         throw new Error('api-sel');
     }
+    if (t !== undefined && (typeof(t) !== 'number' || t < 0)) {
+        throw new Error('api-t');
+    }
     t = parseInt(t);
     var els = $toArrayOfElements(sel);
     for (var i = 0, l = els.length; i < l; i++) {
@@ -13,7 +16,7 @@ export default function $domFadeIn(sel, t) {
         }
     }
     function fadeIn(el) {
-        el.style.transition = 'opacity ' + (isNaN(t) || t < 0 ? 250 : t) + 'ms';
+        el.style.transition = 'opacity ' + (t === undefined ? 250 : t) + 'ms';
         el.style.opacity = '1';
     }
 }
