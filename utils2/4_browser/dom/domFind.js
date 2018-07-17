@@ -1,8 +1,12 @@
+import $domIsEl from './domIsEl';
 import $selectingOne from './internal/selectingOne';
 
 export default function $domFind(sel, parent) {
     if (!sel || typeof(sel) !== 'string') {
         throw new Error('api-sel');
+    }
+    if (parent !== undefined && (!parent || !$domIsEl(parent))) {
+        throw new Error('api-parent');
     }
     var list = (parent ? parent : document).querySelectorAll(sel) || [];
     var arr = [];
