@@ -8,8 +8,8 @@ export default function $domStyle(sel, k, v) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
-    v = typeof(v) === 'number' ? ('' + v) : v;
     if (v !== undefined) {
+        v = typeof(v) === 'number' ? ('' + v) : v;
         if (typeof(v) !== 'string' || v.length === 0) { // -------------------> REQUIRED ALSO WHEN RESETING STYLE, E.G. "background-color": "transparent"
             throw new Error('api-v');
         }
