@@ -4,7 +4,9 @@ export default function $domFadeOut(sel, t) {
     if (!sel) {
         throw new Error('api-sel');
     }
-    t = parseInt(t);
+    if (t !== undefined && (typeof(t) !== 'number' || t < 0)) {
+        throw new Error('api-t');
+    }
     var els = $toArrayOfElements(sel);
     for (var i = 0, l = els.length; i < l; i++) {
         var el = els[i];
@@ -13,7 +15,7 @@ export default function $domFadeOut(sel, t) {
         }
     }
     function fadeOut(el) {
-        el.style.transition = 'opacity ' + (isNaN(t) || t < 0 ? 250 : t) + 'ms';
+        el.style.transition = 'opacity ' + (t === undefined ? 250 : t) + 'ms';
         el.style.opacity = '0';
     }
 }
