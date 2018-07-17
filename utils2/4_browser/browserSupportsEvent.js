@@ -1,20 +1,19 @@
+import $domIsEl from './dom/domIsEl';
+
 export default function $browserSupportsEvent(sel, eventName) { // https://stackoverflow.com/a/26124697/6135126
     var el = null;
-    if (sel instanceof Node || sel instanceof Element || sel instanceof HTMLDocument) {
+    if (sel && $domIsEl(sel)) {
         el = sel;
     }
     else if (typeof(sel) === 'string') {
         el = createElementWithAttributes();
-    }
-    else {
-        return false;
     }
     if (el) {
         eventName = 'on' + eventName;
         if (el[eventName] !== undefined) {
             return true;
         }
-        else if (el instanceof Element) {
+        else if (el && typeof(el.setAttribute) === 'function') {
             el.setAttribute(eventName, 'return;');
             return (typeof(el[eventName]) === 'function');
         }
