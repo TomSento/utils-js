@@ -4,7 +4,11 @@ export default function $domFadeTo(sel, o, t) {
     if (!sel) {
         throw new Error('api-sel');
     }
-    if (typeof(o) !== 'number' || o < 0 || o > 1) {
+    if (!o || typeof(o) !== 'string') {
+        throw new Error('api-o');
+    }
+    o = parseFloat(o);
+    if (isNaN(o) || o < 0 || o > 1) {
         throw new Error('api-o');
     }
     if (t !== undefined && (typeof(t) !== 'number' || t < 0)) {
