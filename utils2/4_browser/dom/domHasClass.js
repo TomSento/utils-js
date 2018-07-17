@@ -4,6 +4,9 @@ export default function $domHasClass(el, name) {
     if (!el || !$domIsEl(el)) {
         throw new Error('api-el');
     }
+    if (!name || typeof(name) !== 'string') {
+        throw new Error('api-name');
+    }
     if (el.classList) {
         return el.classList.contains(name);
     }
