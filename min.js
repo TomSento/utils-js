@@ -23,7 +23,7 @@ async function dist(entry, format, out) {
 async function bundle(entry, format) {
     var bundle = await Rollup.rollup({
         input: entry,
-        external: format === 'cjs' ? ['fs', 'path', 'url', 'querystring'] : []
+        external: format === 'cjs' ? ['path', 'fs', 'url', 'querystring'] : []
     });
     return bundle.generate({ format });
 }
