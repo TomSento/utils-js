@@ -67,53 +67,52 @@ MultipartParser.prototype.initWithBoundary = function(str) {
 };
 
 MultipartParser.prototype.write = function(buffer) {
-    var self = this,
-        i = 0,
-        len = buffer.length,
-        prevIndex = this.index,
-        index = this.index,
-        state = this.state,
-        flags = this.flags,
-        lookbehind = this.lookbehind,
-        boundary = this.boundary,
-        boundaryChars = this.boundaryChars,
-        boundaryLength = this.boundary.length,
-        boundaryEnd = boundaryLength - 1,
-        bufferLength = buffer.length,
-        c,
-        cl,
+    var self = this;
+    var i = 0;
+    var len = buffer.length;
+    var prevIndex = this.index;
+    var index = this.index;
+    var state = this.state;
+    var flags = this.flags;
+    var lookbehind = this.lookbehind;
+    var boundary = this.boundary;
+    var boundaryChars = this.boundaryChars;
+    var boundaryLength = this.boundary.length;
+    var boundaryEnd = boundaryLength - 1;
+    var bufferLength = buffer.length;
+    var c;
+    var cl;
+    function mark(name) {
+        self[name + 'Mark'] = i;
+    }
+    function clear(name) {
+        delete self[name + 'Mark'];
+    }
+    function callback(name, buffer, start, end) {
+        if (start !== undefined && start === end) {
+            return;
+        }
 
-        mark = function(name) {
-            self[name + 'Mark'] = i;
-        },
-        clear = function(name) {
-            delete self[name + 'Mark'];
-        },
-        callback = function(name, buffer, start, end) {
-            if (start !== undefined && start === end) {
-                return;
-            }
+        var callbackSymbol = 'on' + name.substr(0, 1).toUpperCase() + name.substr(1);
+        if (callbackSymbol in self) {
+            self[callbackSymbol](buffer, start, end);
+        }
+    }
+    function dataCallback(name, clear) {
+        var markSymbol = name + 'Mark';
+        if (!(markSymbol in self)) {
+            return;
+        }
 
-            var callbackSymbol = 'on' + name.substr(0, 1).toUpperCase() + name.substr(1);
-            if (callbackSymbol in self) {
-                self[callbackSymbol](buffer, start, end);
-            }
-        },
-        dataCallback = function(name, clear) {
-            var markSymbol = name + 'Mark';
-            if (!(markSymbol in self)) {
-                return;
-            }
-
-            if (!clear) {
-                callback(name, buffer, self[markSymbol], buffer.length);
-                self[markSymbol] = 0;
-            }
-            else {
-                callback(name, buffer, self[markSymbol], i);
-                delete self[markSymbol];
-            }
-        };
+        if (!clear) {
+            callback(name, buffer, self[markSymbol], buffer.length);
+            self[markSymbol] = 0;
+        }
+        else {
+            callback(name, buffer, self[markSymbol], i);
+            delete self[markSymbol];
+        }
+    }
 
     for (i = 0; i < len; i++) {
         c = buffer[i];
