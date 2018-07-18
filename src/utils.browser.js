@@ -1,5 +1,6 @@
 import './utils.common';
 
+import '../utils2/4_browser/dom/domAddClass';
 import '../utils2/4_browser/dom/domAppend';
 import '../utils2/4_browser/dom/domAttr';
 import '../utils2/4_browser/dom/domChildren';
