@@ -1,10 +1,9 @@
 // https://raw.githubusercontent.com/felixge/node-formidable/v1.2.1/lib/multipart_parser.js
 
 var Buffer = require('buffer').Buffer,
-    f = 1,
     F = {
-        PART_BOUNDARY: f,
-        LAST_BOUNDARY: f *= 2
+        PART_BOUNDARY: 1,
+        LAST_BOUNDARY: 2
     },
 
     LF = 10,
