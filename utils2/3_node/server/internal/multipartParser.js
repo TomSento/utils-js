@@ -1,23 +1,6 @@
 // https://raw.githubusercontent.com/felixge/node-formidable/v1.2.1/lib/multipart_parser.js
 
 var Buffer = require('buffer').Buffer,
-    s = 0,
-    S = {
-        PARSER_UNINITIALIZED: s++,
-        START: s++,
-        START_BOUNDARY: s++,
-        HEADER_FIELD_START: s++,
-        HEADER_FIELD: s++,
-        HEADER_VALUE_START: s++,
-        HEADER_VALUE: s++,
-        HEADER_VALUE_ALMOST_DONE: s++,
-        HEADERS_ALMOST_DONE: s++,
-        PART_DATA_START: s++,
-        PART_DATA: s++,
-        PART_END: s++,
-        END: s++
-    },
-
     f = 1,
     F = {
         PART_BOUNDARY: f,
@@ -36,15 +19,28 @@ var Buffer = require('buffer').Buffer,
         return c | 0x20;
     };
 
-for (s in S) {
-    exports[s] = S[s];
-}
-
 function MultipartParser() {
     this.boundary = null;
     this.boundaryChars = null;
     this.lookbehind = null;
-    this.state = S.PARSER_UNINITIALIZED;
+
+    var s = 0;
+    this.S = {
+        PARSER_UNINITIALIZED: s++,
+        START: s++,
+        START_BOUNDARY: s++,
+        HEADER_FIELD_START: s++,
+        HEADER_FIELD: s++,
+        HEADER_VALUE_START: s++,
+        HEADER_VALUE: s++,
+        HEADER_VALUE_ALMOST_DONE: s++,
+        HEADERS_ALMOST_DONE: s++,
+        PART_DATA_START: s++,
+        PART_DATA: s++,
+        PART_END: s++,
+        END: s++
+    };
+    this.state = this.S.PARSER_UNINITIALIZED;
 
     this.index = null;
     this.flags = 0;
@@ -52,8 +48,8 @@ function MultipartParser() {
 exports.MultipartParser = MultipartParser;
 
 MultipartParser.stateToString = function(stateNumber) {
-    for (var state in S) {
-        var number = S[state];
+    for (var state in this.S) {
+        var number = this.S[state];
         if (number === stateNumber) return state;
     }
 };
@@ -63,7 +59,7 @@ MultipartParser.prototype.initWithBoundary = function(str) {
     this.boundary.write('\r\n--', 0);
     this.boundary.write(str, 4);
     this.lookbehind = new Buffer(this.boundary.length + 8);
-    this.state = S.START;
+    this.state = this.S.START;
 
     this.boundaryChars = {};
     for (var i = 0; i < this.boundary.length; i++) {
@@ -123,12 +119,12 @@ MultipartParser.prototype.write = function(buffer) {
     for (i = 0; i < len; i++) {
         c = buffer[i];
         switch (state) {
-            case S.PARSER_UNINITIALIZED:
+            case this.S.PARSER_UNINITIALIZED:
                 return i;
-            case S.START:
+            case this.S.START:
                 index = 0;
-                state = S.START_BOUNDARY;
-            case S.START_BOUNDARY:
+                state = this.S.START_BOUNDARY;
+            case this.S.START_BOUNDARY:
                 if (index == boundary.length - 2) {
                     if (c == HYPHEN) {
                         flags |= F.LAST_BOUNDARY;
@@ -142,13 +138,13 @@ MultipartParser.prototype.write = function(buffer) {
                 else if (index - 1 == boundary.length - 2) {
                     if (flags & F.LAST_BOUNDARY && c == HYPHEN) {
                         callback('end');
-                        state = S.END;
+                        state = this.S.END;
                         flags = 0;
                     }
                     else if (!(flags & F.LAST_BOUNDARY) && c == LF) {
                         index = 0;
                         callback('partBegin');
-                        state = S.HEADER_FIELD_START;
+                        state = this.S.HEADER_FIELD_START;
                     }
                     else {
                         return i;
@@ -163,14 +159,14 @@ MultipartParser.prototype.write = function(buffer) {
                     index++;
                 }
                 break;
-            case S.HEADER_FIELD_START:
-                state = S.HEADER_FIELD;
+            case this.S.HEADER_FIELD_START:
+                state = this.S.HEADER_FIELD;
                 mark('headerField');
                 index = 0;
-            case S.HEADER_FIELD:
+            case this.S.HEADER_FIELD:
                 if (c == CR) {
                     clear('headerField');
-                    state = S.HEADERS_ALMOST_DONE;
+                    state = this.S.HEADERS_ALMOST_DONE;
                     break;
                 }
 
@@ -185,7 +181,7 @@ MultipartParser.prototype.write = function(buffer) {
                         return i;
                     }
                     dataCallback('headerField', true);
-                    state = S.HEADER_VALUE_START;
+                    state = this.S.HEADER_VALUE_START;
                     break;
                 }
 
@@ -194,38 +190,38 @@ MultipartParser.prototype.write = function(buffer) {
                     return i;
                 }
                 break;
-            case S.HEADER_VALUE_START:
+            case this.S.HEADER_VALUE_START:
                 if (c == SPACE) {
                     break;
                 }
 
                 mark('headerValue');
-                state = S.HEADER_VALUE;
-            case S.HEADER_VALUE:
+                state = this.S.HEADER_VALUE;
+            case this.S.HEADER_VALUE:
                 if (c == CR) {
                     dataCallback('headerValue', true);
                     callback('headerEnd');
-                    state = S.HEADER_VALUE_ALMOST_DONE;
+                    state = this.S.HEADER_VALUE_ALMOST_DONE;
                 }
                 break;
-            case S.HEADER_VALUE_ALMOST_DONE:
+            case this.S.HEADER_VALUE_ALMOST_DONE:
                 if (c != LF) {
                     return i;
                 }
-                state = S.HEADER_FIELD_START;
+                state = this.S.HEADER_FIELD_START;
                 break;
-            case S.HEADERS_ALMOST_DONE:
+            case this.S.HEADERS_ALMOST_DONE:
                 if (c != LF) {
                     return i;
                 }
 
                 callback('headersEnd');
-                state = S.PART_DATA_START;
+                state = this.S.PART_DATA_START;
                 break;
-            case S.PART_DATA_START:
-                state = S.PART_DATA;
+            case this.S.PART_DATA_START:
+                state = this.S.PART_DATA;
                 mark('partData');
-            case S.PART_DATA:
+            case this.S.PART_DATA:
                 prevIndex = index;
 
                 if (index === 0) {
@@ -271,7 +267,7 @@ MultipartParser.prototype.write = function(buffer) {
                             flags &= ~F.PART_BOUNDARY;
                             callback('partEnd');
                             callback('partBegin');
-                            state = S.HEADER_FIELD_START;
+                            state = this.S.HEADER_FIELD_START;
                             break;
                         }
                     }
@@ -279,7 +275,7 @@ MultipartParser.prototype.write = function(buffer) {
                         if (c == HYPHEN) {
                             callback('partEnd');
                             callback('end');
-                            state = S.END;
+                            state = this.S.END;
                             flags = 0;
                         }
                         else {
@@ -309,7 +305,7 @@ MultipartParser.prototype.write = function(buffer) {
                 }
 
                 break;
-            case S.END:
+            case this.S.END:
                 break;
             default:
                 return i;
@@ -334,12 +330,12 @@ MultipartParser.prototype.end = function() {
             self[callbackSymbol]();
         }
     };
-    if ((this.state == S.HEADER_FIELD_START && this.index === 0) ||
-        (this.state == S.PART_DATA && this.index == this.boundary.length)) {
+    if ((this.state == this.S.HEADER_FIELD_START && this.index === 0) ||
+        (this.state == this.S.PART_DATA && this.index == this.boundary.length)) {
         callback(this, 'partEnd');
         callback(this, 'end');
     }
-    else if (this.state != S.END) {
+    else if (this.state != this.S.END) {
         return new Error('MultipartParser.end(): stream ended unexpectedly: ' + this.explain());
     }
 };
