@@ -1,5 +1,6 @@
 import $toArrayOfElements from './internal/toArrayOfElements';
 import $arrUnique from '../../1_primitives/array/arrUnique';
+import $domMatches from './domMatches';
 
 export default function $domNextAll(sel) {
     if (!sel) {
