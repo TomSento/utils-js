@@ -1,10 +1,6 @@
 // https://raw.githubusercontent.com/felixge/node-formidable/v1.2.1/lib/multipart_parser.js
 
 var Buffer = require('buffer').Buffer,
-    F = {
-        PART_BOUNDARY: 1,
-        LAST_BOUNDARY: 2
-    },
 
     LF = 10,
     CR = 13,
@@ -22,27 +18,28 @@ function MultipartParser() {
     this.boundary = null;
     this.boundaryChars = null;
     this.lookbehind = null;
-
-    var s = 0;
-    this.S = {
-        PARSER_UNINITIALIZED: s++,
-        START: s++,
-        START_BOUNDARY: s++,
-        HEADER_FIELD_START: s++,
-        HEADER_FIELD: s++,
-        HEADER_VALUE_START: s++,
-        HEADER_VALUE: s++,
-        HEADER_VALUE_ALMOST_DONE: s++,
-        HEADERS_ALMOST_DONE: s++,
-        PART_DATA_START: s++,
-        PART_DATA: s++,
-        PART_END: s++,
-        END: s++
-    };
-    this.state = this.S.PARSER_UNINITIALIZED;
-
     this.index = null;
     this.flags = 0;
+    this.S = {
+        PARSER_UNINITIALIZED: 0,
+        START: 1,
+        START_BOUNDARY: 2,
+        HEADER_FIELD_START: 3,
+        HEADER_FIELD: 4,
+        HEADER_VALUE_START: 5,
+        HEADER_VALUE: 6,
+        HEADER_VALUE_ALMOST_DONE: 7,
+        HEADERS_ALMOST_DONE: 8,
+        PART_DATA_START: 9,
+        PART_DATA: 10,
+        PART_END: 11,
+        END: 12
+    };
+    this.state = this.S.PARSER_UNINITIALIZED;
+    this.F = {
+        PART_BOUNDARY: 1,
+        LAST_BOUNDARY: 2
+    };
 }
 exports.MultipartParser = MultipartParser;
 
@@ -126,7 +123,7 @@ MultipartParser.prototype.write = function(buffer) {
             case this.S.START_BOUNDARY:
                 if (index == boundary.length - 2) {
                     if (c == HYPHEN) {
-                        flags |= F.LAST_BOUNDARY;
+                        flags |= this.F.LAST_BOUNDARY;
                     }
                     else if (c != CR) {
                         return i;
@@ -135,12 +132,12 @@ MultipartParser.prototype.write = function(buffer) {
                     break;
                 }
                 else if (index - 1 == boundary.length - 2) {
-                    if (flags & F.LAST_BOUNDARY && c == HYPHEN) {
+                    if (flags & this.F.LAST_BOUNDARY && c == HYPHEN) {
                         callback('end');
                         state = this.S.END;
                         flags = 0;
                     }
-                    else if (!(flags & F.LAST_BOUNDARY) && c == LF) {
+                    else if (!(flags & this.F.LAST_BOUNDARY) && c == LF) {
                         index = 0;
                         callback('partBegin');
                         state = this.S.HEADER_FIELD_START;
@@ -248,29 +245,29 @@ MultipartParser.prototype.write = function(buffer) {
                     index++;
                     if (c == CR) {
                         // CR = part boundary
-                        flags |= F.PART_BOUNDARY;
+                        flags |= this.F.PART_BOUNDARY;
                     }
                     else if (c == HYPHEN) {
                         // HYPHEN = end boundary
-                        flags |= F.LAST_BOUNDARY;
+                        flags |= this.F.LAST_BOUNDARY;
                     }
                     else {
                         index = 0;
                     }
                 }
                 else if (index - 1 == boundary.length) {
-                    if (flags & F.PART_BOUNDARY) {
+                    if (flags & this.F.PART_BOUNDARY) {
                         index = 0;
                         if (c == LF) {
                             // unset the PART_BOUNDARY flag
-                            flags &= ~F.PART_BOUNDARY;
+                            flags &= ~this.F.PART_BOUNDARY;
                             callback('partEnd');
                             callback('partBegin');
                             state = this.S.HEADER_FIELD_START;
                             break;
                         }
                     }
-                    else if (flags & F.LAST_BOUNDARY) {
+                    else if (flags & this.F.LAST_BOUNDARY) {
                         if (c == HYPHEN) {
                             callback('partEnd');
                             callback('end');
