@@ -1,6 +1,6 @@
 // https://raw.githubusercontent.com/felixge/node-formidable/v1.2.1/lib/multipart_parser.js
 
-var Buffer = require('buffer').Buffer;
+import { Buffer } from 'buffer';
 
 function MultipartParser() {
     this.boundary = null;
@@ -42,10 +42,10 @@ MultipartParser.stateToString = function(stateNumber) {
 };
 
 MultipartParser.prototype.initWithBoundary = function(str) {
-    this.boundary = new Buffer(str.length + 4);
+    this.boundary = Buffer.alloc(str.length + 4);
     this.boundary.write('\r\n--', 0);
     this.boundary.write(str, 4);
-    this.lookbehind = new Buffer(this.boundary.length + 8);
+    this.lookbehind = Buffer.alloc(this.boundary.length + 8);
     this.state = this.S.START;
 
     this.boundaryChars = {};
