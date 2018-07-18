@@ -1,3 +1,7 @@
+import * as $path from 'path';
+import * as $fs from 'fs';
+import * as $url from 'url';
+import * as $querystring from 'querystring';
 import $global from '../../global';
 import $malloc from '../../0_internal/malloc';
 
@@ -29,13 +33,13 @@ export default function $Controller1(req, res) {
             return next(404);
         }
         var pathname = self.toPathname(self.req.url);
-        var ext = require('path').extname(pathname);
+        var ext = $path.extname(pathname);
         if (!ext || cache('app').config.staticAccepts.indexOf(ext) === -1) {
             self.route = cache('errorRoute');
             return next(404);
         }
-        var filepath = require('path').resolve(cache('app').config.publicDirectory, ('.' + pathname));
-        require('fs').stat(filepath, function(err) {
+        var filepath = $path.resolve(cache('app').config.publicDirectory, ('.' + pathname));
+        $fs.stat(filepath, function(err) {
             if (err) {
                 if (!cache('errorRoute')) {
                     throw new Error('missingErrorRoute');
@@ -152,10 +156,10 @@ export default function $Controller1(req, res) {
         return stream;
     };
     self.prepareRequest = function(next) {
-        var url = require('url').parse(self.req.url);
+        var url = $url.parse(self.req.url);
         var m = (url.pathname || '').match(self.route.exp);
         self.args = (m || []).length > 1 ? m.slice(1) : [];
-        self.query = (url.query && typeof(url.query) === 'string') ? require('querystring').parse(url.query) : null;
+        self.query = (url.query && typeof(url.query) === 'string') ? $querystring.parse(url.query) : null;
         self.body = null;
         self.req.on('error', function(err) {
             console.log(err); // eslint-disable-line no-console
@@ -218,7 +222,7 @@ export default function $Controller1(req, res) {
         self.req.once('close', function() {
             for (var i = 0, l = self.filepaths.length; i < l; i++) {
                 if (unlinkOnClose) {
-                    require('fs').unlink(self.filepaths[i]);
+                    $fs.unlink(self.filepaths[i]);
                 }
             }
         });
@@ -286,7 +290,7 @@ export default function $Controller1(req, res) {
     };
     self.stream = function(status, filepath) {
         self.res.statusCode = self.prepareStatus(status);
-        var rs = require('fs').createReadStream(filepath);
+        var rs = $fs.createReadStream(filepath);
         rs.on('error', function(err) {
             return self.routeError(404, err);
         });
