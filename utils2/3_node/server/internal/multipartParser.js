@@ -92,11 +92,9 @@ MultipartParser.prototype.write = function(buffer) {
         if (start !== undefined && start === end) {
             return;
         }
-
         var callbackSymbol = 'on' + name.substr(0, 1).toUpperCase() + name.substr(1);
-        if (callbackSymbol in self) {
-            self[callbackSymbol](buffer, start, end);
-        }
+        var fn = self[callbackSymbol];
+        return fn && fn(buffer, start, end);
     }
     function dataCallback(name, clear) {
         var markSymbol = name + 'Mark';
