@@ -4,6 +4,7 @@ import * as $url from 'url';
 import * as $querystring from 'querystring';
 import $global from '../../global';
 import $malloc from '../../0_internal/malloc';
+import $MultipartParser from './internal/MultipartParser';
 
 export default function $Controller1(req, res) {
     var cache = $malloc('__SERVER');
@@ -212,23 +213,25 @@ export default function $Controller1(req, res) {
     self.prepareRequestMULTIPART = function(next) {
         self.filepaths = [];
         var boundary = self.req.headers['content-type'].split(';')[1];
-        if (!boundary || ['POST', 'PUT'].indexOf(self.req.method) === -1) {
+        if (!boundary) {
             return self.routeError(400);
         }
         boundary = boundary.slice(boundary.indexOf('=', 2) + 1); // –---------> indexOf('=', 2) FOR PERFORMANCE
+        if (!boundary || ['POST', 'PUT'].indexOf(self.req.method) === -1) {
+            return self.routeError(400);
+        }
         var unlinkOnClose = true;
-        var size = 0;
-        var maxSize = 50000000; // -------------------------------------------> 50MB
         self.req.once('close', function() {
-            for (var i = 0, l = self.filepaths.length; i < l; i++) {
-                if (unlinkOnClose) {
+            if (unlinkOnClose) {
+                for (var i = 0, l = self.filepaths.length; i < l; i++) {
                     $fs.unlink(self.filepaths[i]);
                 }
             }
         });
-        // var data;
+        var parser = new $MultipartParser();
+        var size = 0;
+        var maxSize = self.route.maxSize;
         var unclosedStreams = 0;
-        var parser = {};
         parser.initWithBoundary(boundary);
         parser.onPartBegin = function() {
             console.log('PART_BEGIN');
@@ -238,8 +241,8 @@ export default function $Controller1(req, res) {
             console.log('HEADER_VALUE: ' + header);
         };
         parser.onPartData = function(buffer, start, end) {
-            var data = buffer.slice(start, end);
-            console.log('PART_DATA: ' + data.toString('utf8'));
+            var part = buffer.slice(start, end);
+            console.log('PART_DATA: ' + part.toString('utf8'));
         };
         parser.onPartEnd = function() {
             console.log('PART_END');
