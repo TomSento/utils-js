@@ -2,7 +2,7 @@
 
 import { Buffer } from 'buffer';
 
-function MultipartParser() {
+export default function MultipartParser() {
     this.boundary = null;
     this.boundaryChars = null;
     this.lookbehind = null;
@@ -29,7 +29,6 @@ function MultipartParser() {
         LAST_BOUNDARY: 2
     };
 }
-exports.MultipartParser = MultipartParser;
 
 MultipartParser.stateToString = function(stateNumber) {
     for (var k in this.S) {
