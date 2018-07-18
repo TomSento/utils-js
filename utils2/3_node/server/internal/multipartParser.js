@@ -1,18 +1,6 @@
 // https://raw.githubusercontent.com/felixge/node-formidable/v1.2.1/lib/multipart_parser.js
 
-var Buffer = require('buffer').Buffer,
-
-    LF = 10,
-    CR = 13,
-    SPACE = 32,
-    HYPHEN = 45,
-    COLON = 58,
-    A = 97,
-    Z = 122,
-
-    lower = function(c) {
-        return c | 0x20;
-    };
+var Buffer = require('buffer').Buffer;
 
 function MultipartParser() {
     this.boundary = null;
@@ -110,7 +98,13 @@ MultipartParser.prototype.write = function(buffer) {
             delete self[markSymbol];
         }
     }
-
+    var LF = 10;
+    var CR = 13;
+    var SPACE = 32;
+    var HYPHEN = 45;
+    var COLON = 58;
+    var A = 97;
+    var Z = 122;
     for (i = 0; i < len; i++) {
         c = buffer[i];
         /* eslint-disable no-fallthrough, no-bitwise */
@@ -181,7 +175,7 @@ MultipartParser.prototype.write = function(buffer) {
                     break;
                 }
 
-                cl = lower(c);
+                cl = c | 0x20; // lower
                 if (cl < A || cl > Z) {
                     return i;
                 }
