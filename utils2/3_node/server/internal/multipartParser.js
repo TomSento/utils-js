@@ -317,8 +317,9 @@ MultipartParser.prototype.write = function(buffer) {
 MultipartParser.prototype.end = function() {
     var callback = function(self, name) {
         var callbackSymbol = 'on' + name.substr(0, 1).toUpperCase() + name.substr(1);
-        if (callbackSymbol in self) {
-            self[callbackSymbol]();
+        var fn = self[callbackSymbol];
+        if (fn) {
+            fn();
         }
     };
     if ((this.state == this.S.HEADER_FIELD_START && this.index === 0) ||
