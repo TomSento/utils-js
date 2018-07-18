@@ -98,10 +98,9 @@ MultipartParser.prototype.write = function(buffer) {
     }
     function dataCallback(name, clear) {
         var markSymbol = name + 'Mark';
-        if (!(markSymbol in self)) {
+        if (!self.hasOwnProperty(markSymbol)) {
             return;
         }
-
         if (!clear) {
             callback(name, buffer, self[markSymbol], buffer.length);
             self[markSymbol] = 0;
