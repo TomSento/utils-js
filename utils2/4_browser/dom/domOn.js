@@ -8,7 +8,7 @@ export default function $domOn(sel, k, fn) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
-    if (typeof(fn) !== 'function') {
+    if (!fn || typeof(fn) !== 'function') {
         throw new Error('api-fn');
     }
     var els = $toArrayOfElements(sel);
