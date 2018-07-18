@@ -44,9 +44,12 @@ function MultipartParser() {
 exports.MultipartParser = MultipartParser;
 
 MultipartParser.stateToString = function(stateNumber) {
-    for (var state in this.S) {
-        var number = this.S[state];
-        if (number === stateNumber) return state;
+    for (var k in this.S) {
+        if (this.S.hasOwnProperty(k)) {
+            if (this.S[k] === stateNumber) {
+                return k;
+            }
+        }
     }
 };
 
