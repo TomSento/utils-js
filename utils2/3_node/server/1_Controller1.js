@@ -297,25 +297,22 @@ $Controller1.prototype = {
         this.invokeRoute();
     },
     json: function(status, a) {
-        var self = this;
-        self.res.writeHead(self.prepareStatus(status), {
+        this.res.writeHead(this.prepareStatus(status), {
             'Content-Type': 'application/json'
         });
-        self.res.end(JSON.stringify(a, null, '    '));
+        this.res.end(JSON.stringify(a, null, '    '));
     },
     html: function(status, str) {
-        var self = this;
-        self.res.writeHead(self.prepareStatus(status), {
+        this.res.writeHead(this.prepareStatus(status), {
             'Content-Type': 'text/html'
         });
-        self.res.end('' + str);
+        this.res.end('' + str);
     },
     plain: function(status, str) {
-        var self = this;
-        self.res.writeHead(self.prepareStatus(status), {
+        this.res.writeHead(this.prepareStatus(status), {
             'Content-Type': 'text/plain'
         });
-        self.res.end('' + str);
+        this.res.end('' + str);
     }
 };
 $global.$Controller1 = $Controller1;
