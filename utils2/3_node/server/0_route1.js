@@ -5,7 +5,7 @@ export default function $route1(matcher, fn, flags) {
     if (typeof(matcher) !== 'string' || (matcher[0] !== '/' && ['#public', '#error'].indexOf(matcher) === -1)) {
         throw new Error('api-matcher');
     }
-    if (typeof(fn) !== 'function') {
+    if (!fn || typeof(fn) !== 'function') {
         throw new Error('api-fn');
     }
     if (matcher === '#error') {

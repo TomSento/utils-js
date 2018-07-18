@@ -5,7 +5,7 @@ export default function $test(k, fn, maxTimeout) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
-    if (typeof(fn) !== 'function') {
+    if (!fn || typeof(fn) !== 'function') {
         throw new Error('api-fn');
     }
     // ------------------------------------------------------------------------> LOAD PROTOTYPES

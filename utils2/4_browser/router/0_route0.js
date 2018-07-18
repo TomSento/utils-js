@@ -17,7 +17,7 @@ export default function $route0(matcher, fn) {
     if (typeof(matcher) !== 'string' || (matcher[0] !== '#' && matcher !== '$error')) {
         throw new Error('api-matcher');
     }
-    if (typeof(fn) !== 'function') {
+    if (!fn || typeof(fn) !== 'function') {
         throw new Error('api-fn');
     }
     var cache = $malloc('__ROUTE');
