@@ -113,6 +113,7 @@ MultipartParser.prototype.write = function(buffer) {
 
     for (i = 0; i < len; i++) {
         c = buffer[i];
+        /* eslint-disable no-fallthrough, no-bitwise */
         switch (state) {
             case this.S.PARSER_UNINITIALIZED:
                 return i;
@@ -222,7 +223,7 @@ MultipartParser.prototype.write = function(buffer) {
                 if (index === 0) {
                     // boyer-moore derrived algorithm to safely skip non-boundary data
                     i += boundaryEnd;
-                    while (i < bufferLength && !(buffer[i] in boundaryChars)) {
+                    while (i < bufferLength && !boundaryChars.hasOwnProperty(buffer[i])) {
                         i += boundaryLength;
                     }
                     i -= boundaryEnd;
@@ -305,6 +306,7 @@ MultipartParser.prototype.write = function(buffer) {
             default:
                 return i;
         }
+        /* eslint-enable no-fallthrough, no-bitwise */
     }
 
     dataCallback('headerField');
