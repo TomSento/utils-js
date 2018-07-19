@@ -13,8 +13,7 @@ export default function $Controller1(req, res) {
     self.res = res;
     self.error = null;
     self.run = function() {
-        self.prepareRoute(function(status) {
-            self.res.statusCode = status;
+        self.prepareRoute(function() {
             self.monitorResponseChanges();
             if (['#public', '#error'].indexOf(self.route.matcher) >= 0) {
                 return self.invokeRoute();
@@ -27,31 +26,29 @@ export default function $Controller1(req, res) {
     self.prepareRoute = function(next) {
         self.route = self.findRoute();
         if (self.route) {
-            return next(200);
+            self.res.statusCode = 200;
+            return next();
         }
         if (self.req.method !== 'GET') {
-            self.route = cache('errorRoute');
-            return next(404);
+            self.prepareWithError(404);
+            return next();
         }
         var pathname = self.toPathname(self.req.url);
         var ext = $path.extname(pathname);
         if (!ext || cache('app').config.staticAccepts.indexOf(ext) === -1) {
-            self.route = cache('errorRoute');
-            return next(404);
+            self.prepareWithError(404);
+            return next();
         }
         var filepath = $path.resolve(cache('app').config.publicDirectory, ('.' + pathname));
         $fs.stat(filepath, function(err) {
             if (err) {
-                if (!cache('errorRoute')) {
-                    throw new Error('missingErrorRoute');
-                }
-                self.route = cache('errorRoute');
-                return next(err.code === 'ENOENT' ? 404 : 500);
+                self.prepareWithError(err.code === 'ENOENT' ? 404 : 500);
             }
             else { // --------------------------------------------------------> PUBLIC FILE EXISTS IN FS
                 self.route = cache('publicRoute');
-                return next(200);
+                self.res.statusCode = 200;
             }
+            next();
         });
     };
     self.findRoute = function() {
@@ -88,14 +85,21 @@ export default function $Controller1(req, res) {
         }
         return str.slice(-4);
     };
+    self.prepareWithError = function(status) {
+        if (!cache('errorRoute')) {
+            throw new Error('missingErrorRoute');
+        }
+        self.route = cache('errorRoute');
+        self.res.statusCode = status;
+    };
     self.monitorResponseChanges = function() {
         var responded = false;
-        self.res.on('close', function() {
+        self.res.once('close', function() {
             if (!responded) {
                 self.routeError(500);
             }
         });
-        self.res.on('finish', function() { // --------------------------------> AFTER "res.end()" IS CALLED
+        self.res.once('finish', function() { // ------------------------------> AFTER "res.end()" IS CALLED
             responded = true;
         });
         var execTime = 0;
@@ -162,10 +166,6 @@ export default function $Controller1(req, res) {
         self.args = (m || []).length > 1 ? m.slice(1) : [];
         self.query = (url.query && typeof(url.query) === 'string') ? $querystring.parse(url.query) : null;
         self.body = null;
-        self.req.on('error', function(err) {
-            console.log(err); // eslint-disable-line no-console
-            self.routeError(500);
-        });
         var tmp = self.getContentType4L();
         if (tmp === 'json') {
             self.prepareRequestJSON(next);
@@ -177,7 +177,8 @@ export default function $Controller1(req, res) {
             next();
         }
         else {
-            self.routeError(400);
+            self.prepareWithError(400);
+            next();
         }
     };
     self.prepareRequestJSON = function(next) {
@@ -195,18 +196,21 @@ export default function $Controller1(req, res) {
         self.req.once('end', function() {
             if (size >= self.route.maxSize) {
                 b = undefined;
-                return self.routeError(431);
+                self.prepareWithError(431);
+                return next();
             }
             try {
                 var v = JSON.parse(Buffer.concat(b).toString('utf8'));
                 if (Object.prototype.toString.call(v) !== '[object Object]') {
-                    return self.routeError(400);
+                    self.prepareWithError(400);
+                    return next();
                 }
                 self.body = v;
                 next();
             }
             catch (err) {
-                self.routeError(400);
+                self.prepareWithError(400);
+                next();
             }
         });
     };
@@ -214,11 +218,13 @@ export default function $Controller1(req, res) {
         self.filepaths = [];
         var boundary = self.req.headers['content-type'].split(';')[1];
         if (!boundary) {
-            return self.routeError(400);
+            self.prepareWithError(400);
+            return next();
         }
         boundary = boundary.slice(boundary.indexOf('=', 2) + 1); // –---------> indexOf('=', 2) FOR PERFORMANCE
         if (!boundary || ['POST', 'PUT'].indexOf(self.req.method) === -1) {
-            return self.routeError(400);
+            self.prepareWithError(400);
+            return next();
         }
         var unlinkOnClose = true;
         self.req.once('close', function() {
@@ -255,7 +261,7 @@ export default function $Controller1(req, res) {
             }
             else {
                 if (size >= maxSize) {
-                    return self.routeError(431);
+                    self.prepareWithError(431);
                 }
                 next();
             }
@@ -293,6 +299,9 @@ $Controller1.prototype = {
             this.error = err;
         }
         var cache = $malloc('__SERVER');
+        if (!cache('errorRoute')) {
+            throw new Error('missingErrorRoute');
+        }
         this.route = cache('errorRoute');
         this.invokeRoute();
     },
