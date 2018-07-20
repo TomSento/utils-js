@@ -1,3 +1,8 @@
+import * as $https from 'https';
+import * as $http from 'http';
+import * as $os from 'os';
+import * as $path from 'path';
+
 import $global from '../../global';
 import $malloc from '../../0_internal/malloc';
 import $route1 from './0_route1';
@@ -74,10 +79,10 @@ export default function $server(env, packageJSON, config) {
                     key: self.config.key,
                     cert: self.config.cert
                 };
-                self.server = require('https').createServer(options, self.handleRequest).listen(self.config.port, self.config.host);
+                self.server = $https.createServer(options, self.handleRequest).listen(self.config.port, self.config.host);
             }
             else {
-                self.server = require('http').createServer(self.handleRequest).listen(self.config.port, self.config.host);
+                self.server = $http.createServer(self.handleRequest).listen(self.config.port, self.config.host);
             }
             var socketCounter = 0;
             self.socket = {};
@@ -95,7 +100,7 @@ export default function $server(env, packageJSON, config) {
             console.log('@pid ' + process.pid + ' (' + [
                 new Date().toGMTString(),
                 'Node.js: ' + process.version,
-                'OS: ' + require('os').platform() + ' ' + require('os').release()
+                'OS: ' + $os.platform() + ' ' + $os.release()
             ].join('; ') + ')');
             console.log('');
             console.log('env     : ' + env);
@@ -115,9 +120,9 @@ export default function $server(env, packageJSON, config) {
             }
         }
     };
-    $route1('#public', function() { // -------------------------------> LIKE CONTROLLER
+    $route1('#public', function() { // ---------------------------------------> LIKE CONTROLLER
         var pathname = this.toPathname(this.req.url);
-        var filepath = require('path').resolve(config.publicDirectory, ('.' + pathname));
+        var filepath = $path.resolve(config.publicDirectory, ('.' + pathname));
         this.stream(200, filepath);
     }, '-m GET -s 0kB -t 20s'); // -------------------------------------------> ONLY "-t" USED
     var app = new App();
