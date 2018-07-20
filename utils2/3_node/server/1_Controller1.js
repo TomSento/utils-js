@@ -6,6 +6,17 @@ import $global from '../../global';
 import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
 
+var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
+    'addTrailers',
+    'removeHeader',
+    'setHeader',
+    'setTimeout',
+    'write',
+    'writeContinue',
+    'writeHead',
+    'writeProcessing'
+];
+
 export default function $Controller1(req, res) {
     var cache = $malloc('__SERVER');
     var self = this;
@@ -93,54 +104,33 @@ export default function $Controller1(req, res) {
         self.res.statusCode = status;
     };
     self.monitorResponseChanges = function() {
-        var responded = false;
-        self.res.once('close', function() {
-            if (!responded) {
-                self.routeError(500);
-            }
-        });
-        self.res.once('finish', function() { // ------------------------------> AFTER "res.end()" IS CALLED
-            responded = true;
-        });
-        var execTime = 0;
-        (function tick() {
-            execTime += 1000;
-            if (!responded && self.route.matcher !== '#error' && execTime < self.route.maxTimeout) {
-                setTimeout(function() {
-                    tick();
-                }, 1000);
-            }
-        }());
-        var fnsModifyingResponse = [
-            'addTrailers',
-            'end',
-            'removeHeader',
-            'setHeader',
-            'setTimeout',
-            'write',
-            'writeContinue',
-            'writeHead',
-            'writeProcessing'
-        ];
-        for (var i = 0, l = fnsModifyingResponse.length; i < l; i++) {
-            var fnName = fnsModifyingResponse[i];
-            restrict408(fnName, self.res[fnName]);
+        var resEndCalled = false;
+        for (var i = 0, l = RES_FN_CALLS_BLACKLIST.length; i < l; i++) {
+            var k = RES_FN_CALLS_BLACKLIST[i];
+            ignoreSubsequentCallsAfterEnd(k, self.res[k]);
         }
-        function restrict408(fnName, fnNative) {
-            self.res[fnName] = function(/* ...args */) {
-                if (!responded) {
-                    if (self.route.matcher !== '#error' && execTime >= self.route.maxTimeout) {
-                        return self.routeError(408);
-                    }
-                    fnNative.apply(self.res, arguments);
+        function ignoreSubsequentCallsAfterEnd(fnName, fnNative) {
+            self.res[fnName] = function(/* args */) {
+                if (resEndCalled) { // ---------------------------------------> PREVENT Error [ERR_STREAM_WRITE_AFTER_END]: write after end
+                    return;
                 }
+                fnNative.apply(self.res, arguments);
             };
         }
-        self.res.on('pipe', function(source) {
-            if (self.route.matcher !== '#error' && execTime >= self.route.maxTimeout) {
-                self.destroyStream(source);
-            }
-        });
+        self.res.setTimeout(self.route.maxTimeout, function() {}); // --------> EMPTY FUNCTION SO SOCKET IS NOT DESTROYED BY Node.js
+        var totalRouteTimeout = setTimeout(function() {
+            self.routeError(408);
+        }, self.route.maxTimeout);
+        (function(nativeEnd) {
+            self.res.end = function(/* args */) { // -------------------------> WORKS ALSO WITH readable.pipe(res) - https://github.com/nodejs/node/blob/master/lib/_stream_readable.js#L625
+                if (resEndCalled) { // ---------------------------------------> PREVENT Error [ERR_STREAM_WRITE_AFTER_END]: write after end
+                    return;
+                }
+                resEndCalled = true;
+                clearTimeout(totalRouteTimeout);
+                nativeEnd.apply(self.res, arguments);
+            };
+        }(self.res.end));
     };
     self.destroyStream = function(stream) {
         if (stream instanceof ReadStream) {
