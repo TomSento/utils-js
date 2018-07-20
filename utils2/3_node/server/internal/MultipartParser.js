@@ -1,7 +1,4 @@
 // https://raw.githubusercontent.com/felixge/node-formidable/v1.2.1/lib/multipart_parser.js
-
-import { Buffer } from 'buffer';
-
 export default function MultipartParser() {
     this.boundary = null;
     this.boundaryChars = null;
