@@ -8,6 +8,17 @@ import $malloc from '../../0_internal/malloc';
 import $route1 from './0_route1';
 import $Controller1 from './1_Controller1';
 
+var STATIC_ACCEPTS = [
+    '.txt', '.md',
+    '.html', '.xml', '.json',
+    '.woff', '.woff2', '.otf', '.ttf', '.eot',
+    '.js', '.css',
+    '.jpg', '.png', '.gif', '.svg', '.ico',
+    '.mp4', '.mp3', '.swf',
+    '.pdf', '.docx', '.xlsx', '.doc', '.xls',
+    '.zip', '.rar'
+];
+
 export default function $server(env, packageJSON, config) {
     var cache = $malloc('__SERVER');
     if (!config) {
@@ -36,9 +47,7 @@ export default function $server(env, packageJSON, config) {
             }
             config.publicDirectory = tmp;
             config.tmpDirectory = './tmp';
-            tmp = config.staticAccepts === undefined
-                ? ['.jpg', '.png', '.gif', '.ico', '.js', '.css', '.txt', '.xml', '.woff', '.woff2', '.otf', '.ttf', '.eot', '.svg', '.zip', '.rar', '.pdf', '.docx', '.xlsx', '.doc', '.xls', '.html', '.mp4', '.mp3', '.swf', '.json', '.md']
-                : config.staticAccepts;
+            tmp = config.staticAccepts === undefined ? STATIC_ACCEPTS : config.staticAccepts;
             if (!Array.isArray(tmp)) {
                 throw new Error('api-config.staticAccepts');
             }
