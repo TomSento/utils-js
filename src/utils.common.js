@@ -20,6 +20,7 @@ import '../utils2/1_primitives/object/objForIn';
 import '../utils2/1_primitives/object/objKeys';
 import '../utils2/1_primitives/object/objToQueryStr';
 
+import '../utils2/1_primitives/string/strContentTypeToExt';
 import '../utils2/1_primitives/string/strf';
 import '../utils2/1_primitives/string/strFromUntil';
 import '../utils2/1_primitives/string/strHTML';
