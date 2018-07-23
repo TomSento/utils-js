@@ -46,7 +46,6 @@ export default function $server(env, packageJSON, config) {
                 throw new Error('api-config.publicDirectory');
             }
             config.publicDirectory = tmp;
-            config.tmpDirectory = './tmp';
             tmp = config.staticAccepts === undefined ? STATIC_ACCEPTS : config.staticAccepts;
             if (!Array.isArray(tmp)) {
                 throw new Error('api-config.staticAccepts');
