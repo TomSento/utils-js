@@ -27,7 +27,7 @@ export default function $h(cmd, a, b) {
     var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
     // -----------------------------------------------------------------------> REGEX PARTS ARE SORTED ALPHABETICALLY (IGNORE CASE)
     var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Link|Meta|Title)(?![A-Za-z0-9_-])/;
-    var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Btn|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-Za-z0-9_-])/; // https://www.w3schools.com/tags/default.asp
+    var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Button|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-Za-z0-9_-])/; // https://www.w3schools.com/tags/default.asp
 
     var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
@@ -86,6 +86,7 @@ export default function $h(cmd, a, b) {
         H4: '<h4[[modifiers]]>[[content]]</h4>',
         H5: '<h5[[modifiers]]>[[content]]</h5>',
         A: '<a[[modifiers]]>[[content]]</a>',
+        Button: '<button[[modifiers]]>[[content]]</button>',
         Img: '<img[[modifiers]]>',
         Label: '<label[[modifiers]]>[[content]]</label>',
         Input: '<input[[modifiers]] value=[[value]]>',
@@ -167,6 +168,19 @@ export default function $h(cmd, a, b) {
             allowArgument: true,
             html: 'href=$',
             noMissingSpaceAfterComma: false
+        }],
+        Button: [{
+            name: 'Disabled',
+            func: 'Disabled',
+            allowArgument: false,
+            html: 'disabled',
+            noMissingSpaceAfterComma: false
+        }, {
+            name: 'Type',
+            func: 'Type',
+            allowArgument: true,
+            html: 'type=$',
+            noMissingSpaceAfterComma: true
         }],
         Img: [{
             name: 'Src',
