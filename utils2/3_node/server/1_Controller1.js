@@ -330,7 +330,8 @@ export default function $Controller1(req, res) {
             fileStream.once('close', function() {
                 unclosedFileStreams--;
             });
-            fileStream.once('error', function() {
+            fileStream.once('error', function(err) { // ----------------------> MISSING "tmp" DIRECTORY OR OTHER ERROR
+                console.log(err); // eslint-disable-line no-console
                 unclosedFileStreams--;
             });
             fileStream.write(data);
