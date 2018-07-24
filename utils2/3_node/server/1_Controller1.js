@@ -239,7 +239,7 @@ export default function $Controller1(req, res) {
         var processingFile;
         var firstWrite;
         var fileStream;
-        var path = $path.resolve(process.cwd(), './tmp/uploadedfile-');
+        var path = process.cwd() + $path.sep + 'tmp' + $path.sep + 'uploadedfile-';
         var unclosedFileStreams = 0;
         parser.initWithBoundary(boundary);
         parser.onPartBegin = function() {

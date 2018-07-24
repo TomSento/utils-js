@@ -1,7 +1,8 @@
+import * as $path from 'path';
+import * as $fs from 'fs';
 import * as $https from 'https';
 import * as $http from 'http';
 import * as $os from 'os';
-import * as $path from 'path';
 
 import $global from '../../global';
 import $malloc from '../../0_internal/malloc';
@@ -58,6 +59,14 @@ export default function $server(env, packageJSON, config) {
             var controller = new $Controller1(req, res);
             controller.run();
         };
+        this.removeTmpFiles = function() {
+            var dir = process.cwd() + $path.sep + 'tmp';
+            var filenames = $fs.readdirSync(dir);
+            for (var i = 0, l = filenames.length; i < l; i++) {
+                var path = dir + $path.sep + filenames[i];
+                $fs.unlinkSync(path);
+            }
+        };
     }
     App.prototype = {
         pushJS: function(filepath) {
@@ -82,6 +91,7 @@ export default function $server(env, packageJSON, config) {
         },
         create: function() {
             var self = this;
+            self.removeTmpFiles();
             if (self.config.https) {
                 var options = {
                     key: self.config.key,
