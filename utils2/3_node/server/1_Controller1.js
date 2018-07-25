@@ -350,7 +350,7 @@ export default function $Controller1(req, res) {
         function onceEnd() { // ----------------------------------------------> HANDLER "parser.onEnd()" IS CALLED BY "MultipartParser" - DO NOT USE - FOR FULL CONTROL OVER INVOCATION TIME USE "onceEnd()" INSTEAD
             if (unclosedFileStreams > 0) {
                 setImmediate(function() {
-                    parser.onEnd();
+                    onceEnd();
                 });
             }
             else {
