@@ -758,6 +758,19 @@ export default function $h(cmd, a, b) {
         ],
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Block-formatting context',
+        func: 'BfcHack',
+        css: [
+            '.[[el]] {',
+            '    display: table-cell;',
+            '    width: 1600px;',
+            '    *width: auto;',
+            '    zoom: 1;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
         name: 'Backface visibility',
         func: 'Bfv',
         css: 'backface-visibility: $',
