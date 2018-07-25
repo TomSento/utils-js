@@ -926,6 +926,20 @@ export default function $h(cmd, a, b) {
         expanders: ACSS_COLOR_ARGUMENTS,
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Clearfix',
+        func: 'Cf',
+        css: [
+            '.[[el]]:before, .[[el]]:after {',
+            '    content: " ";',
+            '    display: table;',
+            '}',
+            '.[[el]]:after {',
+            '    clear: both;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
         name: 'Clear',
         func: 'Cl',
         css: 'clear: $',
