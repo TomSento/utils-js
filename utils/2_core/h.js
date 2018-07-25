@@ -1038,6 +1038,29 @@ export default function $h(cmd, a, b) {
         css: 'filter: drop-shadow($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Ellipsis',
+        func: 'Ell',
+        css: [
+            '.[[el]] {',
+            '    max-width: 100%;',
+            '    white-space: nowrap;',
+            '    overflow: hidden;',
+            '    text-overflow: ellipsis;',
+            '    hyphens: none;',
+            '}',
+            '.[[el]]:after {',
+            '    content: ".";',
+            '    font-size: 0;',
+            '    visibility: hidden;',
+            '    display: inline-block;',
+            '    overflow: hidden;',
+            '    height: 0;',
+            '    width: 0;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
         name: 'Font family',
         func: 'Ff',
         css: 'font-family: $',
