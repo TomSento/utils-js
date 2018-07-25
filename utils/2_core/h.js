@@ -1212,6 +1212,23 @@ export default function $h(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Hiding content from sighted users',
+        func: 'Hidden',
+        css: [
+            '.[[el]] {',
+            '    position: absolute !important;',
+            '    *clip: rect(1px 1px 1px 1px);',
+            '    clip: rect(1px, 1px, 1px, 1px);',
+            '    padding: 0 !important;',
+            '    border: 0 !important;',
+            '    height: 1px !important;',
+            '    width: 1px !important;',
+            '    overflow: hidden;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
         name: 'Hue Rotate (filter)',
         func: 'HueRotate',
         css: 'filter: hue-rotate($)',
@@ -3245,7 +3262,7 @@ export default function $h(cmd, a, b) {
         kv = kv.split(/\s*:\s*/);
         var k = kv[0];
         var v = kv[1];
-        important = important ? '!important' : '';
+        important = important ? ' !important' : '';
         var sep = ': ';
         var del = ';';
         if (k && v) {
