@@ -347,10 +347,7 @@ export default function $Controller1(req, res) {
             entry.value = processingFile ? undefined : entry.value.toString('utf8');
             self.mfd.push(entry);
         };
-        parser.onEnd = function() {
-            if (!requestEnded) { // ------------------------------------------> BLOCK NODE-FORMIDABLE onEnd() CALLS
-                return;
-            }
+        function onceEnd() { // ----------------------------------------------> HANDLER "parser.onEnd()" IS CALLED BY "MultipartParser" - DO NOT USE - FOR FULL CONTROL OVER INVOCATION TIME USE "onceEnd()" INSTEAD
             if (unclosedFileStreams > 0) {
                 setImmediate(function() {
                     parser.onEnd();
@@ -366,13 +363,13 @@ export default function $Controller1(req, res) {
                 }
                 next();
             }
-        };
+        }
         self.req.on('data', function(buffer) {
             parser.write(buffer);
         });
         self.req.once('end', function() {
             requestEnded = true;
-            parser.end();
+            onceEnd();
         });
     };
     self.invokeRoute = function() {
