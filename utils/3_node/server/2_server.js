@@ -140,7 +140,7 @@ export default function $server(env, packageJSON, config) {
     };
     $route1('#public', function() { // ---------------------------------------> LIKE CONTROLLER
         var pathname = this.toPathname(this.req.url);
-        var filepath = $path.resolve(config.publicDirectory, ('.' + pathname));
+        var filepath = $path.resolve(config.publicDirectory + pathname);
         this.stream(200, filepath);
     }, '-m GET -s 0kB -t 20s'); // -------------------------------------------> ONLY "-t" USED
     var app = new App();
