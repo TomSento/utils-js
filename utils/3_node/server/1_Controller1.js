@@ -178,6 +178,13 @@ export default function $Controller1(req, res) {
         if (['POST', 'PUT'].indexOf(self.req.method).indexOf === -1) {
             return next();
         }
+        var requestEnded = false;
+        self.req.once('close', function() {
+            if (!requestEnded) { // ------------------------------------------> UNEXPECTED CLOSING
+                self.prepareWithError(500);
+                next();
+            }
+        });
         var size = 0;
         var b = [];
         self.req.on('data', function(buffer) {
@@ -187,6 +194,7 @@ export default function $Controller1(req, res) {
             }
         });
         self.req.once('end', function() {
+            requestEnded = true;
             if (size >= self.route.maxSize) {
                 b = undefined;
                 self.prepareWithError(431);
