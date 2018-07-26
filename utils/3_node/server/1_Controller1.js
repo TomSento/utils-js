@@ -378,7 +378,7 @@ export default function $Controller1(req, res) {
     self.stream = function(status, filepath) {
         self.res.statusCode = self.prepareStatus(status);
         var rs = $fs.createReadStream(filepath);
-        rs.on('error', function(err) {
+        rs.once('error', function(err) {
             return self.routeError(404, err);
         });
         rs.pipe(self.res);
