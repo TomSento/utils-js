@@ -1244,6 +1244,19 @@ export default function $h(cmd, a, b) {
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Inline-block box',
+        func: 'IbBox',
+        css: [
+            '.[[el]] {',
+            '    display: inline-block;',
+            '    *display: inline;',
+            '    zoom: 1;',
+            '    vertical-align: top;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
         name: 'Invert (filter)',
         func: 'Invert',
         css: 'filter: invert($)',
