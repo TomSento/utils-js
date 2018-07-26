@@ -1779,6 +1779,20 @@ export default function $h(cmd, a, b) {
         css: 'stroke-width: $',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Stretched box',
+        func: 'StretchedBox',
+        css: [
+            '.[[el]] {',
+            '    position: absolute;',
+            '    top: 0;',
+            '    right: 0;',
+            '    bottom: 0;',
+            '    left: 0;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
         name: 'Top',
         func: 'T',
         css: 'top: $',
