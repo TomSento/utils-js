@@ -53,7 +53,7 @@ export default function $Controller1(req, res) {
             self.prepareWithError(404);
             return next();
         }
-        var filepath = $path.resolve(cache('app').config.publicDirectory, ('.' + pathname));
+        var filepath = $path.resolve(cache('app').config.publicDirectory + pathname);
         $fs.stat(filepath, function(err) {
             if (err) {
                 self.prepareWithError(err.code === 'ENOENT' ? 404 : 500);
