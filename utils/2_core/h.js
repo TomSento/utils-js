@@ -2087,6 +2087,16 @@ export default function $h(cmd, a, b) {
             a: 'auto'
         },
         type: ACSS_INSTRUCTION_TYPE_rule()
+    }, {
+        name: 'Zoom',
+        func: 'Zoom',
+        css: [
+            '.[[el]] {',
+            '    zoom: 1;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
     }];
     function ACSS_INSTRUCTION_TYPE_rule() {
         return 'RULE';
