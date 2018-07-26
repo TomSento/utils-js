@@ -1675,6 +1675,23 @@ export default function $h(cmd, a, b) {
         css: 'transform: rotateZ($)',
         type: ACSS_INSTRUCTION_TYPE_rule()
     }, {
+        name: 'Row',
+        func: 'Row',
+        css: [
+            '.[[el]] {',
+            '    clear: both;',
+            '    display: inline-block;',
+            '    vertical-align: top;',
+            '    width: 100%;',
+            '    box-sizing: border-box;',
+            '    *display: block;',
+            '    *width: auto;',
+            '    zoom: 1;',
+            '}'
+        ],
+        allowArgument: false,
+        type: ACSS_INSTRUCTION_TYPE_helper()
+    }, {
         name: 'Resize',
         func: 'Rsz',
         css: 'resize: $',
