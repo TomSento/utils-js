@@ -43,13 +43,13 @@ export default function $route1(matcher, fn, flags) {
                 throw new Error('Route "flags" must follow "-m <Value> -s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
             }
         }
-        var o = {
-            matcher: matcher
-        };
+        var o = {};
         if (['#public', '#error'].indexOf(matcher) === -1) {
-            o.exp = new RegExp('^' + matcher.replace(/\[(\w+)\]/g, '(\\w+)') + '$');
+            o.matcher = (matcher !== '/' && matcher[matcher.length - 1] === '/') ? matcher.slice(0, -1) : matcher;
+            o.exp = new RegExp('^' + o.matcher.replace(/\[(\w+)\]/g, '(\\w+)') + '$');
         }
         else {
+            o.matcher = matcher;
             o.exp = null;
         }
         o.fn = fn;
