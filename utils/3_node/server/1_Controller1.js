@@ -7,6 +7,7 @@ import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
 import $parseMultipartHeader from './internal/parseMultipartHeader';
 
+var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
     'addTrailers',
     'removeHeader',
@@ -48,6 +49,10 @@ export default function $Controller1(req, res) {
             return next();
         }
         var pathname = self.toPathname(self.req.url);
+        if (pathname[pathname.length - 1] === '/') { // ----------------------> "/uploads/img.jpg/" OR "/" - 404
+            self.prepareWithError(404);
+            return next();
+        }
         var ext = $path.extname(pathname);
         if (!ext || cache('app').config.staticAccepts.indexOf(ext) === -1) {
             self.prepareWithError(404);
@@ -66,12 +71,17 @@ export default function $Controller1(req, res) {
         });
     };
     self.findRoute = function() {
+        var tmp = self.toPathname(self.req.url);
+        if (EXP_ONLY_SLASHES.test(tmp)) {
+            return null;
+        }
+        var pathname = (tmp !== '/' && tmp[tmp.length - 1] === '/') ? tmp.slice(0, -1) : tmp;
         var matchers = cache('matchers') || {};
         var matcher = null;
         for (var k in matchers) {
             if (matchers.hasOwnProperty(k)) {
                 var exp = matchers[k];
-                if (exp.test(self.toPathname(self.req.url))) {
+                if (exp.test(pathname)) {
                     matcher = k;
                 }
             }
