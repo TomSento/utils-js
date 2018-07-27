@@ -165,11 +165,18 @@ export default function $Controller1(req, res) {
     };
     self.prepareRequest = function(next) {
         var url = $url.parse(self.req.url);
-        var m = (url.pathname || '').match(self.route.exp);
-        self.args = (m || []).length > 1 ? m.slice(1) : [];
+        var tmp = url.pathname || '/';
+        if (tmp === '/') {
+            self.args = [];
+        }
+        else {
+            tmp = tmp[tmp.length - 1] === '/' ? tmp.slice(0, -1) : tmp;
+            var m = tmp.match(self.route.exp);
+            self.args = (m || []).length > 1 ? m.slice(1) : [];
+        }
         self.query = (url.query && typeof(url.query) === 'string') ? $querystring.parse(url.query) : null;
         self.body = null;
-        var tmp = self.getContentType4L();
+        tmp = self.getContentType4L();
         if (tmp === 'json') {
             self.prepareRequestJSON(next);
         }
