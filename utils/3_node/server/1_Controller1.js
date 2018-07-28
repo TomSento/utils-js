@@ -5,7 +5,6 @@ import * as $querystring from 'querystring';
 import $global from '../../global';
 import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
-import $parseMultipartHeader from './internal/parseMultipartHeader';
 
 var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
@@ -313,7 +312,7 @@ export default function $Controller1(req, res) {
                 }
                 return;
             }
-            header = $parseMultipartHeader(header);
+            header = self.parseMultipartHeader(header);
             step = 1;
             entry.name = header.name;
             processingFile = !!header.filename;
@@ -403,6 +402,27 @@ export default function $Controller1(req, res) {
             requestEnded = true;
             onceEnd();
         });
+    };
+    self.parseMultipartHeader = function(header) {
+        var tmp = '';
+        var search = ' name="';
+        var len = search.length;
+        var beg = header.indexOf(search);
+        if (beg >= 0) {
+            tmp = header.slice(beg + len, header.indexOf('"', beg + len));
+        }
+        var name = tmp ? tmp : ('undefined_' + Math.floor(Math.random() * 100000)); // HTML INPUT NAME
+        tmp = '';
+        search = ' filename="';
+        len = search.length;
+        beg = header.indexOf(search);
+        if (beg >= 0) {
+            tmp = header.slice(beg + len, header.indexOf('"', beg + len));
+        }
+        return {
+            name: name,
+            filename: tmp || null
+        };
     };
     self.invokeRoute = function() {
         self.route.fn.apply(self, self.args);
