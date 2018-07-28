@@ -28,6 +28,10 @@ export default function $Controller1(req, res) {
     var self = this;
     self.req = req;
     self.res = res;
+    self.args = [];
+    self.query = {};
+    self.body = {};
+    self.mfd = [];
     self.error = null;
     self.run = function() {
         self.prepareRoute(function() {
@@ -172,16 +176,16 @@ export default function $Controller1(req, res) {
             return next();
         }
         var tmp = url.pathname || '/';
-        if (tmp === '/') {
-            self.args = [];
-        }
-        else {
+        if (tmp !== '/') {
             tmp = tmp[tmp.length - 1] === '/' ? tmp.slice(0, -1) : tmp;
             var m = tmp.match(self.route.exp);
-            self.args = (m || []).length > 1 ? m.slice(1) : [];
+            if (m && m.length > 1) {
+                self.args = m.slice(1);
+            }
         }
-        self.query = (url.query && typeof(url.query) === 'string') ? $querystring.parse(url.query) : null;
-        self.body = null;
+        if (url.query && typeof(url.query) === 'string') {
+            self.query = $querystring.parse(url.query) || {};
+        }
         tmp = self.getContentType4L();
         if (tmp === 'json') {
             self.prepareRequestJSON(next);
@@ -239,7 +243,6 @@ export default function $Controller1(req, res) {
         });
     };
     self.prepareRequestMULTIPART = function(next) {
-        self.mfd = [];
         var boundary = self.req.headers['content-type'].split(';')[1];
         if (!boundary) {
             self.prepareWithError(400);
