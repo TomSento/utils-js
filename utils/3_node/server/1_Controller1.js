@@ -258,7 +258,7 @@ export default function $Controller1(req, res) {
         self.req.once('close', function() {
             if (!requestEnded) { // ------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
                 for (var i = 0, l = rm.length; i < l; i++) {
-                    $fs.unlink(rm[i]);
+                    $fs.unlink(rm[i], function() {});
                 }
                 self.mfd = [];
                 self.prepareWithError(500);
@@ -338,9 +338,6 @@ export default function $Controller1(req, res) {
             var data = buffer.slice(start, end);
             size += data.length;
             if (size >= maxSize) {
-                if (entry.path) {
-                    rm.push(entry.path);
-                }
                 return;
             }
             if (!processingFile) { // ----------------------------------------> VALUE PART
@@ -361,6 +358,7 @@ export default function $Controller1(req, res) {
             }
             unclosedFileStreams++;
             fileStream = $fs.createWriteStream(entry.path);
+            rm.push(entry.path);
             fileStream.once('close', function() {
                 unclosedFileStreams--;
             });
@@ -390,7 +388,7 @@ export default function $Controller1(req, res) {
             else {
                 if (size >= maxSize) {
                     for (var i = 0, l = rm.length; i < l; i++) {
-                        $fs.unlink(rm[i]);
+                        $fs.unlink(rm[i], function() {});
                     }
                     self.mfd = [];
                     self.prepareWithError(431);
