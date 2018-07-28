@@ -18,6 +18,8 @@ var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> 
     'writeHead',
     'writeProcessing'
 ];
+var MAX_URL_LEN = 2000;
+var MAX_URL_QUERY_LEN = 1000;
 var FILE_INDEX = 0;
 var CONCAT = [null, null];
 
@@ -165,6 +167,10 @@ export default function $Controller1(req, res) {
     };
     self.prepareRequest = function(next) {
         var url = $url.parse(self.req.url);
+        if (self.req.url.length >= MAX_URL_LEN || (url.query || '').length >= MAX_URL_QUERY_LEN) {
+            self.prepareWithError(414);
+            return next();
+        }
         var tmp = url.pathname || '/';
         if (tmp === '/') {
             self.args = [];
@@ -214,7 +220,7 @@ export default function $Controller1(req, res) {
             requestEnded = true;
             if (size >= self.route.maxSize) {
                 b = undefined;
-                self.prepareWithError(431);
+                self.prepareWithError(413);
                 return next();
             }
             try {
