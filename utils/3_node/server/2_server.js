@@ -140,10 +140,16 @@ export default function $server(env, packageJSON, config, routeError) {
             }
         }
     };
-    $route1('#public', function() { // ---------------------------------------> LIKE CONTROLLER
-        var pathname = this.toPathname(this.req.url);
+    $route1('#public', function(req, res) { // -------------------------------> LIKE CONTROLLER
+        res.statusCode = 200;
+        var pathname = req.url.split(/\?+/)[0]; // ---------------------------> ENSURED BY "Controller1"
         var filepath = $path.resolve(config.publicDirectory + pathname);
-        this.stream(200, filepath);
+        var fileStream = $fs.createReadStream(filepath);
+        fileStream.once('error', function(err) {
+            console.log(err); // eslint-disable-line no-console
+            routeError(req, res, 500, null);
+        });
+        fileStream.pipe(res);
     }, '-m GET -s 0kB -t 20s'); // -------------------------------------------> ONLY "-t" USED
     var app = new App();
     cache('app', app);
