@@ -65,8 +65,8 @@ export default function $Controller0() {
     };
 }
 $Controller0.prototype = {
-    routeError: function(status, err) {
-        var v = parseInt(status);
+    routeError: function(statusCode, err) {
+        var v = parseInt(statusCode);
         this.statusCode = (isNaN(v) || v < 400 || v >= 600) ? 500 : v;
         if (err) {
             this.error = err;
