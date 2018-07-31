@@ -402,14 +402,6 @@ export default function $Controller1(req, res, routeError) {
     self.invokeRoute = function() {
         self.route.fn(req, res, self.args, self.query, self.body, self.mfd);
     };
-    self.stream = function(statusCode, filepath) {
-        res.statusCode = self.prepareStatus(statusCode);
-        var rs = $fs.createReadStream(filepath);
-        rs.once('error', function(err) {
-            routeError(req, res, 404, err);
-        });
-        rs.pipe(res);
-    };
     self.prepareStatus = function(statusCode) { // ---------------------------> https://httpstatuses.com/
         var v = parseInt(statusCode);
         return (isNaN(v) || v < 100 || v >= 600) ? 200 : v;
