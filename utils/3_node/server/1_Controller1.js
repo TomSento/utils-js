@@ -2,7 +2,6 @@ import * as $path from 'path';
 import * as $fs from 'fs';
 import * as $url from 'url';
 import * as $querystring from 'querystring';
-import $global from '../../global';
 import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
 
@@ -22,20 +21,17 @@ var MAX_URL_QUERY_LEN = 1000;
 var FILE_INDEX = 0;
 var CONCAT = [null, null];
 
-export default function $Controller1(req, res) {
+export default function $Controller1(req, res, routeError) {
     var cache = $malloc('__SERVER');
     var self = this;
-    self.req = req;
-    self.res = res;
     self.args = [];
     self.query = {};
     self.body = {};
     self.mfd = [];
-    self.error = null;
     self.run = function() {
         self.prepareRoute(function() {
             self.monitorResponseChanges();
-            if (['#public', '#error'].indexOf(self.route.matcher) >= 0) {
+            if (self.route.matcher === '#public') {
                 return self.invokeRoute();
             }
             self.prepareRequest(function() {
@@ -46,37 +42,32 @@ export default function $Controller1(req, res) {
     self.prepareRoute = function(next) {
         self.route = self.findRoute();
         if (self.route) {
-            self.res.statusCode = 200;
+            res.statusCode = 200;
             return next();
         }
-        if (self.req.method !== 'GET') {
-            self.prepareWithError(404);
-            return next();
+        if (req.method !== 'GET') {
+            return routeError(req, res, 404, null);
         }
-        var pathname = self.toPathname(self.req.url);
+        var pathname = self.toPathname(req.url);
         if (pathname[pathname.length - 1] === '/') { // ----------------------> "/uploads/img.jpg/" OR "/" - 404
-            self.prepareWithError(404);
-            return next();
+            return routeError(req, res, 404, null);
         }
         var ext = $path.extname(pathname);
         if (!ext || cache('app').config.staticAccepts.indexOf(ext) === -1) {
-            self.prepareWithError(404);
-            return next();
+            return routeError(req, res, 404, null);
         }
         var filepath = $path.resolve(cache('app').config.publicDirectory + pathname);
         $fs.stat(filepath, function(err) {
             if (err) {
-                self.prepareWithError(err.code === 'ENOENT' ? 404 : 500);
+                return routeError(req, res, err.code === 'ENOENT' ? 404 : 500, null);
             }
-            else { // --------------------------------------------------------> PUBLIC FILE EXISTS IN FS
-                self.route = cache('publicRoute');
-                self.res.statusCode = 200;
-            }
+            self.route = cache('publicRoute'); // ----------------------------> PUBLIC FILE EXISTS IN FS
+            res.statusCode = 200;
             next();
         });
     };
     self.findRoute = function() {
-        var tmp = self.toPathname(self.req.url);
+        var tmp = self.toPathname(req.url);
         if (EXP_ONLY_SLASHES.test(tmp)) {
             return null;
         }
@@ -94,61 +85,54 @@ export default function $Controller1(req, res) {
         if (!matcher) {
             return null;
         }
-        var xhr = self.req.headers['x-requested-with'] === 'XMLHttpRequest';
+        var xhr = req.headers['x-requested-with'] === 'XMLHttpRequest';
         var mfd = self.getContentType4L() === 'data';
         var routes = cache('routes') || {};
-        var route = routes[matcher + '?' + self.req.method + '?' + (xhr ? 'xhr?' : 'def?') + (mfd ? 'mfd' : 'def')] || null;
+        var route = routes[matcher + '?' + req.method + '?' + (xhr ? 'xhr?' : 'def?') + (mfd ? 'mfd' : 'def')] || null;
         if (route) {
             return route;
         }
-        return routes[matcher + '?' + self.req.method + '?def?' + (mfd ? 'mfd' : 'def')] || null; // XHR INSENSITIVE
+        return routes[matcher + '?' + req.method + '?def?' + (mfd ? 'mfd' : 'def')] || null; // XHR INSENSITIVE
     };
     self.toPathname = function(v) {
         return v.split(/\?+/)[0] || '/';
     };
     self.getContentType4L = function() {
-        var str = self.req.headers['content-type'] || '';
+        var str = req.headers['content-type'] || '';
         var i = str.lastIndexOf(';');
         if (i >= 0) {
             str = str.slice(0, i);
         }
         return str.slice(-4);
     };
-    self.prepareWithError = function(status) {
-        if (!cache('errorRoute')) {
-            throw new Error('missingErrorRoute');
-        }
-        self.route = cache('errorRoute');
-        self.res.statusCode = status;
-    };
     self.monitorResponseChanges = function() {
         var resEndCalled = false;
         for (var i = 0, l = RES_FN_CALLS_BLACKLIST.length; i < l; i++) {
             var k = RES_FN_CALLS_BLACKLIST[i];
-            ignoreSubsequentCallsAfterEnd(k, self.res[k]);
+            ignoreSubsequentCallsAfterEnd(k, res[k]);
         }
         function ignoreSubsequentCallsAfterEnd(fnName, fnNative) {
-            self.res[fnName] = function(/* args */) {
+            res[fnName] = function(/* args */) {
                 if (resEndCalled) { // ---------------------------------------> PREVENT Error [ERR_STREAM_WRITE_AFTER_END]: write after end
                     return;
                 }
-                fnNative.apply(self.res, arguments);
+                fnNative.apply(res, arguments);
             };
         }
-        self.res.setTimeout(self.route.maxTimeout, function() {}); // --------> EMPTY FUNCTION SO SOCKET IS NOT DESTROYED BY Node.js
+        res.setTimeout(self.route.maxTimeout, function() {}); // -------------> EMPTY FUNCTION SO SOCKET IS NOT DESTROYED BY Node.js
         var totalRouteTimeout = setTimeout(function() {
-            self.routeError(408);
+            routeError(req, res, 408, null);
         }, self.route.maxTimeout);
         (function(nativeEnd) {
-            self.res.end = function(/* args */) { // -------------------------> WORKS ALSO WITH readable.pipe(res) - https://github.com/nodejs/node/blob/master/lib/_stream_readable.js#L625
+            res.end = function(/* args */) { // ------------------------------> WORKS ALSO WITH readable.pipe(res) - https://github.com/nodejs/node/blob/master/lib/_stream_readable.js#L625
                 if (resEndCalled) { // ---------------------------------------> PREVENT Error [ERR_STREAM_WRITE_AFTER_END]: write after end
                     return;
                 }
                 resEndCalled = true;
                 clearTimeout(totalRouteTimeout);
-                nativeEnd.apply(self.res, arguments);
+                nativeEnd.apply(res, arguments);
             };
-        }(self.res.end));
+        }(res.end));
     };
     self.destroyStream = function(stream) {
         if (stream instanceof ReadStream) {
@@ -169,10 +153,9 @@ export default function $Controller1(req, res) {
         return stream;
     };
     self.prepareRequest = function(next) {
-        var url = $url.parse(self.req.url);
-        if (self.req.url.length >= MAX_URL_LEN || (url.query || '').length >= MAX_URL_QUERY_LEN) {
-            self.prepareWithError(414);
-            return next();
+        var url = $url.parse(req.url);
+        if (req.url.length >= MAX_URL_LEN || (url.query || '').length >= MAX_URL_QUERY_LEN) {
+            return routeError(req, res, 414, null);
         }
         var tmp = url.pathname || '/';
         if (tmp !== '/') {
@@ -192,76 +175,68 @@ export default function $Controller1(req, res) {
         else if (tmp === 'data') {
             self.prepareRequestMULTIPART(next);
         }
-        else if (self.req.headers['content-type'] === undefined) {
+        else if (req.headers['content-type'] === undefined) {
             next();
         }
         else {
-            self.prepareWithError(400);
-            next();
+            routeError(req, res, 400, null);
         }
     };
     self.prepareRequestJSON = function(next) {
-        if (['POST', 'PUT'].indexOf(self.req.method).indexOf === -1) {
-            return next();
+        if (['POST', 'PUT'].indexOf(req.method) === -1) {
+            return routeError(req, res, 400, null);
         }
         var requestEnded = false;
-        self.req.once('close', function() {
+        req.once('close', function() {
             if (!requestEnded) { // ------------------------------------------> UNEXPECTED CLOSING
-                self.prepareWithError(500);
-                next();
+                routeError(req, res, 500, null);
             }
         });
         var size = 0;
         var b = [];
-        self.req.on('data', function(buffer) {
+        req.on('data', function(buffer) {
             size += buffer.length;
             if (size < self.route.maxSize) {
                 b.push(buffer);
             }
         });
-        self.req.once('end', function() {
+        req.once('end', function() {
             requestEnded = true;
             if (size >= self.route.maxSize) {
                 b = undefined;
-                self.prepareWithError(413);
-                return next();
+                return routeError(req, res, 413, null);
             }
             try {
                 var v = JSON.parse(Buffer.concat(b).toString('utf8'));
                 if (Object.prototype.toString.call(v) !== '[object Object]') {
-                    self.prepareWithError(400);
-                    return next();
+                    return routeError(req, res, 400, null);
                 }
                 self.body = v;
                 next();
             }
             catch (err) {
-                self.prepareWithError(400);
-                next();
+                routeError(req, res, 400, null);
             }
         });
     };
     self.prepareRequestMULTIPART = function(next) {
-        var boundary = self.req.headers['content-type'].split(';')[1];
+        var boundary = req.headers['content-type'].split(';')[1];
         if (!boundary) {
-            self.prepareWithError(400);
-            return next();
+            return routeError(req, res, 400, null);
         }
         boundary = boundary.slice(boundary.indexOf('=', 2) + 1); // –---------> indexOf('=', 2) FOR PERFORMANCE
-        if (!boundary || ['POST', 'PUT'].indexOf(self.req.method) === -1) {
-            self.prepareWithError(400);
-            return next();
+        if (!boundary || ['POST', 'PUT'].indexOf(req.method) === -1) {
+            return routeError(req, res, 400, null);
         }
         var requestEnded = false;
         var rm = [];
-        self.req.once('close', function() {
+        req.once('close', function() {
             if (!requestEnded) { // ------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
                 for (var i = 0, l = rm.length; i < l; i++) {
                     $fs.unlink(rm[i], function() {});
                 }
                 self.mfd = [];
-                self.prepareWithError(500);
-                next();
+                routeError(req, res, 500, null);
             }
         });
         var parser = new $MultipartParser();
@@ -390,15 +365,15 @@ export default function $Controller1(req, res) {
                         $fs.unlink(rm[i], function() {});
                     }
                     self.mfd = [];
-                    self.prepareWithError(431);
+                    return routeError(req, res, 431, null);
                 }
                 next();
             }
         }
-        self.req.on('data', function(buffer) {
+        req.on('data', function(buffer) {
             parser.write(buffer);
         });
-        self.req.once('end', function() {
+        req.once('end', function() {
             requestEnded = true;
             onceEnd();
         });
@@ -425,57 +400,21 @@ export default function $Controller1(req, res) {
         };
     };
     self.invokeRoute = function() {
-        self.route.fn.apply(self, self.args);
+        self.route.fn(req, res, self.args, self.query, self.body, self.mfd);
     };
-    self.stream = function(status, filepath) {
-        self.res.statusCode = self.prepareStatus(status);
+    self.stream = function(statusCode, filepath) {
+        res.statusCode = self.prepareStatus(statusCode);
         var rs = $fs.createReadStream(filepath);
         rs.once('error', function(err) {
-            return self.routeError(404, err);
+            routeError(req, res, 404, err);
         });
-        rs.pipe(self.res);
+        rs.pipe(res);
     };
-    self.prepareStatus = function(status) { // -------------------------------> https://httpstatuses.com/
-        var v = parseInt(status);
+    self.prepareStatus = function(statusCode) { // ---------------------------> https://httpstatuses.com/
+        var v = parseInt(statusCode);
         return (isNaN(v) || v < 100 || v >= 600) ? 200 : v;
     };
 }
-$Controller1.prototype = {
-    routeError: function(status, err) {
-        var v = parseInt(status);
-        this.res.statusCode = (isNaN(v) || v < 400 || v >= 600) ? 500 : v;
-        this.res.statusMessage = null;
-        this.res.sendDate = true;
-        if (err) {
-            this.error = err;
-        }
-        var cache = $malloc('__SERVER');
-        if (!cache('errorRoute')) {
-            throw new Error('missingErrorRoute');
-        }
-        this.route = cache('errorRoute');
-        this.invokeRoute();
-    },
-    json: function(status, a) {
-        this.res.writeHead(this.prepareStatus(status), {
-            'Content-Type': 'application/json'
-        });
-        this.res.end(JSON.stringify(a, null, '    '));
-    },
-    html: function(status, str) {
-        this.res.writeHead(this.prepareStatus(status), {
-            'Content-Type': 'text/html'
-        });
-        this.res.end('' + str);
-    },
-    plain: function(status, str) {
-        this.res.writeHead(this.prepareStatus(status), {
-            'Content-Type': 'text/plain'
-        });
-        this.res.end('' + str);
-    }
-};
-$global.$Controller1 = $Controller1;
 
 function FormDataEntry() { // ------------------------------------------------> ONE FILE OR VALUE PART
     this.name = undefined; // ------------------------------------------------> INPUT NAME - GROUP KEY
