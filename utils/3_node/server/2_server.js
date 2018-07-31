@@ -4,7 +4,6 @@ import * as $https from 'https';
 import * as $http from 'http';
 import * as $os from 'os';
 
-import $global from '../../global';
 import $malloc from '../../0_internal/malloc';
 import $route1 from './0_route1';
 import $Controller1 from './1_Controller1';
@@ -20,43 +19,46 @@ var STATIC_ACCEPTS = [
     '.zip', '.rar'
 ];
 
-export default function $server(env, packageJSON, config) {
+export default function $server(env, packageJSON, config, routeError) {
     var cache = $malloc('__SERVER');
-    if (!config) {
+    if (routeError === undefined) {
         return cache('app') || null;
+    }
+    if (['DEBUG', 'TEST', 'RELEASE'].indexOf(env) === -1) {
+        throw new Error('api-env');
+    }
+    if (Object.prototype.toString.call(packageJSON) !== '[object Object]') {
+        throw new Error('api-packageJSON');
+    }
+    if (typeof(config.https) !== 'boolean') {
+        throw new Error('api-config.https');
+    }
+    if (!config.host || typeof(config.host) !== 'string') {
+        throw new Error('api-config.host');
+    }
+    if (!Number.isInteger(config.port) || config.port <= 0) {
+        throw new Error('api-config.port');
+    }
+    var tmp = config.publicDirectory === undefined ? './public' : config.publicDirectory;
+    if (!tmp || typeof(tmp) !== 'string') {
+        throw new Error('api-config.publicDirectory');
+    }
+    config.publicDirectory = tmp;
+    tmp = config.staticAccepts === undefined ? STATIC_ACCEPTS : config.staticAccepts;
+    if (!Array.isArray(tmp)) {
+        throw new Error('api-config.staticAccepts');
+    }
+    config.staticAccepts = tmp;
+    if (!routeError || typeof(routeError) !== 'function') {
+        throw new Error('api-routeError');
     }
     function App() {
         this.js = [];
-        this.configure = function() {
-            if (['DEBUG', 'TEST', 'RELEASE'].indexOf(env) === -1) {
-                throw new Error('api-env');
-            }
-            this.env = env;
-            this[env] = true;
-            if (typeof(config.https) !== 'boolean') {
-                throw new Error('api-config.https');
-            }
-            if (!config.host || typeof(config.host) !== 'string') {
-                throw new Error('api-config.host');
-            }
-            if (!Number.isInteger(config.port) || config.port <= 0) {
-                throw new Error('api-config.port');
-            }
-            var tmp = config.publicDirectory === undefined ? './public' : config.publicDirectory;
-            if (!tmp || typeof(tmp) !== 'string') {
-                throw new Error('api-config.publicDirectory');
-            }
-            config.publicDirectory = tmp;
-            tmp = config.staticAccepts === undefined ? STATIC_ACCEPTS : config.staticAccepts;
-            if (!Array.isArray(tmp)) {
-                throw new Error('api-config.staticAccepts');
-            }
-            config.staticAccepts = tmp;
-            this.config = config;
-        };
-        this.configure();
+        this.env = env;
+        this[env] = true;
+        this.config = config;
         this.handleRequest = function(req, res) {
-            var controller = new $Controller1(req, res);
+            var controller = new $Controller1(req, res, routeError);
             controller.run();
         };
         this.removeTmpFiles = function() {
@@ -147,4 +149,4 @@ export default function $server(env, packageJSON, config) {
     cache('app', app);
     return app;
 }
-$global.$server = $server;
+global.$server = $server;
