@@ -19,13 +19,13 @@ var STATIC_ACCEPTS = [
     '.zip', '.rar'
 ];
 
-export default function $server(env, packageJSON, config, routeError) {
+export default function $server(mode, packageJSON, config, routeError) {
     var cache = $malloc('__SERVER');
     if (routeError === undefined) {
         return cache('app') || null;
     }
-    if (['DEBUG', 'TEST', 'RELEASE'].indexOf(env) === -1) {
-        throw new Error('api-env');
+    if (['DEBUG', 'TEST', 'RELEASE'].indexOf(mode) === -1) {
+        throw new Error('api-mode');
     }
     if (Object.prototype.toString.call(packageJSON) !== '[object Object]') {
         throw new Error('api-packageJSON');
@@ -54,8 +54,6 @@ export default function $server(env, packageJSON, config, routeError) {
     }
     function App() {
         this.js = [];
-        this.env = env;
-        this[env] = true;
         this.config = config;
         this.handleRequest = function(req, res) {
             var controller = new $Controller1(req, res, routeError);
@@ -123,7 +121,7 @@ export default function $server(env, packageJSON, config, routeError) {
                 'OS: ' + $os.platform() + ' ' + $os.release()
             ].join('; ') + ')');
             console.log('');
-            console.log('env     : ' + env);
+            console.log('mode    : ' + mode);
             console.log('name    : ' + packageJSON.name || '-');
             console.log('version : ' + packageJSON.version || '-');
             console.log('author  : ' + packageJSON.author || '-');
