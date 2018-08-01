@@ -1,4 +1,4 @@
-var HTML_CHARACTERS = {
+var DECODE_HTML_CHARACTERS = {
     'nbsp': ' ',
     'amp': '&',
     'quot': '"',
@@ -9,6 +9,6 @@ var HTML_CHARACTERS = {
 String.prototype.$stripHTML = function() {
     var self = this.replace(/<\/?[^>]+(>|$)/g, '');
     return self.replace(/&(nbsp|amp|quot|lt|gt);/g, function(match, k) {
-        return HTML_CHARACTERS[k] || k;
+        return DECODE_HTML_CHARACTERS[k] || k;
     });
 };
