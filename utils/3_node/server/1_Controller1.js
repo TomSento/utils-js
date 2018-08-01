@@ -4,6 +4,7 @@ import * as $url from 'url';
 import * as $querystring from 'querystring';
 import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
+import $destroyStream from '../destroyStream';
 
 var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
@@ -133,24 +134,6 @@ export default function $Controller1(req, res, routeError) {
                 nativeEnd.apply(res, arguments);
             };
         }(res.end));
-    };
-    self.destroyStream = function(stream) {
-        if (stream instanceof ReadStream) {
-            stream.destroy();
-            if (typeof(stream.close) === 'function') {
-                stream.on('open', function() {
-                    if (typeof(this.fd) === 'number') {
-                        this.close();
-                    }
-                });
-            }
-        }
-        else if (stream instanceof Stream) {
-            if (typeof(stream.destroy) === 'function') {
-                stream.destroy();
-            }
-        }
-        return stream;
     };
     self.prepareRequest = function(next) {
         var url = $url.parse(req.url);
@@ -283,7 +266,7 @@ export default function $Controller1(req, res, routeError) {
             if (header.indexOf('form-data; ') === -1) { // -------------------> UNKNOWN ERROR, MAYBE ATTACK
                 maxSize = -1;
                 if (!processingFile) {
-                    self.destroyStream(fileStream);
+                    $destroyStream(fileStream);
                 }
                 return;
             }
@@ -292,7 +275,7 @@ export default function $Controller1(req, res, routeError) {
             entry.name = header.name;
             processingFile = !!header.filename;
             if (!processingFile) {
-                self.destroyStream(fileStream);
+                $destroyStream(fileStream);
                 return;
             }
             entry.filename = header.filename;
