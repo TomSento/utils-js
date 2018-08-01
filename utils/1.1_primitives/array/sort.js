@@ -1,10 +1,10 @@
 import $global from '../../global';
 import $strRemoveDiacritics from '../../1_primitives/string/strRemoveDiacritics';
 
-export default function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
-    var length = arr.length;
+export default function $arrOrderBy(name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
+    var length = this.length;
     if (!length || length === 1) {
-        return arr;
+        return this;
     }
     if (typeof(name) === 'boolean') {
         asc = name;
@@ -17,7 +17,7 @@ export default function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.J
         asc = true;
     }
     var type = 0;
-    var field = name ? arr[0][name] : arr[0];
+    var field = name ? this[0][name] : this[0];
     switch (typeof(field)) {
         case 'string':
             type = 1;
@@ -30,7 +30,7 @@ export default function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.J
             break;
         default:
             if (!(field instanceof Date) && !isNaN(field.getTime())) {
-                return arr;
+                return this;
             }
             type = 4;
             break;
@@ -99,7 +99,7 @@ export default function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.J
             return 0;
         }
     });
-    return arr;
+    return this;
     function shellsort(fn) {
         var gapSize = Math.floor(length / 2);
         while (gapSize > 0) {
