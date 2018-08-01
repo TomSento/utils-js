@@ -41,10 +41,10 @@ export default function $arrOrderBy(name, asc, maxlength) { // FROM TOTAL.JS EXC
         if (type === 1) {
             if (va && vb) {
                 if (asc) {
-                    return $strRemoveDiacritics(va.substring(0, maxlength)).localeCompare($strRemoveDiacritics(vb.substring(0, maxlength)));
+                    return va.slice(0, maxlength).$removeDiacritics().localeCompare(vb.slice(0, maxlength).$removeDiacritics());
                 }
                 else {
-                    return $strRemoveDiacritics(vb.substring(0, maxlength)).localeCompare($strRemoveDiacritics(va.substring(0, maxlength)));
+                    return vb.slice(0, maxlength).$removeDiacritics().localeCompare(va.slice(0, maxlength).$removeDiacritics());
                 }
             }
             else {
