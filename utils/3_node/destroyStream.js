@@ -14,6 +14,5 @@ export default function $destroyStream(stream) {
             stream.destroy();
         }
     }
-    return stream;
 }
 global.$destroyStream = $destroyStream;
