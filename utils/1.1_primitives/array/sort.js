@@ -35,29 +35,6 @@ export default function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.J
             type = 4;
             break;
     }
-    function shellInsertionSort(list, length, gapSize, fn) {
-        var i = 0;
-        var j = 0;
-        var temp = null;
-        for (i = gapSize; i < length; i += gapSize) {
-            j = i;
-            while (j > 0 && fn(list[j - gapSize], list[j]) === 1) {
-                temp = list[j];
-                list[j] = list[j - gapSize];
-                list[j - gapSize] = temp;
-                j -= gapSize;
-            }
-        }
-    }
-    function shellsort(arr, fn) {
-        var length = arr.length;
-        var gapSize = Math.floor(length / 2);
-        while (gapSize) {
-            shellInsertionSort(arr, length, gapSize, fn);
-            gapSize = Math.floor(gapSize / 2);
-        }
-        return arr;
-    }
     shellsort(arr, function(a, b) {
         var va = name ? a[name] : a;
         var vb = name ? b[name] : b;
@@ -122,6 +99,29 @@ export default function $arrOrderBy(arr, name, asc, maxlength) { // FROM TOTAL.J
             return 0;
         }
     });
+    function shellsort(arr, fn) {
+        var length = arr.length;
+        var gapSize = Math.floor(length / 2);
+        while (gapSize) {
+            shellInsertionSort(arr, length, gapSize, fn);
+            gapSize = Math.floor(gapSize / 2);
+        }
+        return arr;
+    }
+    function shellInsertionSort(list, length, gapSize, fn) {
+        var i = 0;
+        var j = 0;
+        var temp = null;
+        for (i = gapSize; i < length; i += gapSize) {
+            j = i;
+            while (j > 0 && fn(list[j - gapSize], list[j]) === 1) {
+                temp = list[j];
+                list[j] = list[j - gapSize];
+                list[j - gapSize] = temp;
+                j -= gapSize;
+            }
+        }
+    }
     return arr;
 }
 $global.$arrOrderBy = $arrOrderBy;
