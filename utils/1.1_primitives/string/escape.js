@@ -5,7 +5,7 @@ var ENCODE_HTML_CHARACTERS = {
     '>': 'gt'
 };
 
-String.prototype.$toHTMLText = function(leftStartWithNBPS, leftRevResult, rightStartWithNBPS, rightRevResult) {
+String.prototype.$escape = function(leftStartWithNBPS, leftRevResult, rightStartWithNBPS, rightRevResult) {
     var str = this.replace(/(&|"|<|>)/g, function(match, k) {
         return ('&' + ENCODE_HTML_CHARACTERS[k] + ';') || k;
     });
