@@ -13,8 +13,9 @@ Array.prototype.$sort = function(name, asc, maxlength) { // ------------------> 
     if (asc === undefined) {
         asc = true;
     }
+    var self = this;
     var type = 0;
-    var field = name ? this[0][name] : this[0];
+    var field = name ? self[0][name] : self[0];
     switch (typeof(field)) {
         case 'string':
             type = 1;
@@ -27,7 +28,7 @@ Array.prototype.$sort = function(name, asc, maxlength) { // ------------------> 
             break;
         default:
             if (!(field instanceof Date) && !isNaN(field.getTime())) {
-                return this;
+                return self;
             }
             type = 4;
             break;
@@ -96,7 +97,7 @@ Array.prototype.$sort = function(name, asc, maxlength) { // ------------------> 
             return 0;
         }
     });
-    return this;
+    return self;
     function shellsort(fn) {
         var gapSize = Math.floor(length / 2);
         while (gapSize > 0) {
@@ -110,10 +111,10 @@ Array.prototype.$sort = function(name, asc, maxlength) { // ------------------> 
         var tmp = null;
         for (i = gapSize; i < length; i += gapSize) {
             j = i;
-            while (j > 0 && fn(this[j - gapSize], this[j]) === 1) {
-                tmp = this[j];
-                this[j] = this[j - gapSize];
-                this[j - gapSize] = tmp;
+            while (j > 0 && fn(self[j - gapSize], self[j]) === 1) {
+                tmp = self[j];
+                self[j] = self[j - gapSize];
+                self[j - gapSize] = tmp;
                 j -= gapSize;
             }
         }
