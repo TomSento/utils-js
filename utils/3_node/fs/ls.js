@@ -1,6 +1,5 @@
 import * as $fs from 'fs';
 import * as $path from 'path';
-import $global from '../../global';
 
 /**
  * @param {String} flag R - recursive
@@ -51,4 +50,4 @@ export default function $ls(a, flag, fn, next) {
         }(dirPath));
     }());
 }
-$global.$ls = $ls;
+global.$ls = $ls;

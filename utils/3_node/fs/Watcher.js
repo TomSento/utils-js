@@ -1,5 +1,4 @@
 import * as $fs from 'fs';
-import $global from '../../global';
 
 export default function $Watcher(t) {
     this.t = t;
@@ -24,4 +23,4 @@ $Watcher.prototype = {
         this.fn[k] = fn;
     }
 };
-$global.$Watcher = $Watcher;
+global.$Watcher = $Watcher;
