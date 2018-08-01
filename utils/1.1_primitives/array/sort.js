@@ -1,7 +1,4 @@
-import $global from '../../global';
-import $strRemoveDiacritics from '../../1_primitives/string/strRemoveDiacritics';
-
-export default function $arrOrderBy(name, asc, maxlength) { // FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
+Array.prototype.$sort = function(name, asc, maxlength) { // ------------------> FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
     var length = this.length;
     if (!length || length === 1) {
         return this;
@@ -121,5 +118,4 @@ export default function $arrOrderBy(name, asc, maxlength) { // FROM TOTAL.JS EXC
             }
         }
     }
-}
-$global.$arrOrderBy = $arrOrderBy;
+};
