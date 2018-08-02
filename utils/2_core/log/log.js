@@ -1,12 +1,27 @@
 import $global from '../../global';
-import $malloc from '../../0_internal/malloc';
 
-export default function $log(/* ...args */) {
-    var cache = $malloc('__LOG');
-    var args = [].slice.call(arguments);
-    if (cache('prefix')) {
-        args.unshift(cache('prefix') + ':');
+$global.$log = function(/* ...args */) {
+    var b = '';
+    for (var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i];
+        if (arg) {
+            if (typeof(arg) === 'object' || Array.isArray(arg)) {
+                if (Array.isArray(arg)) {
+                    b += 'Array(' + arg.length + '): \n';
+                }
+                else if (typeof(arg) === 'object') {
+                    b += 'Object: \n';
+                }
+                b += JSON.stringify(arg, null, '    ');
+                b += '\n';
+            }
+            else {
+                b += (i > 0 ? ' ' : '') + arg;
+            }
+        }
+        else {
+            b += (i > 0 ? ' ' : '') + arg;
+        }
     }
-    console.log.apply(null, args); // eslint-disable-line no-console
-}
-$global.$log = $log;
+    console.log(b); // eslint-disable-line no-console
+};
