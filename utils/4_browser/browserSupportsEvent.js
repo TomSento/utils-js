@@ -1,8 +1,6 @@
-import $domIsEl from './dom/domIsEl';
-
-export default function $browserSupportsEvent(sel, eventName) { // https://stackoverflow.com/a/26124697/6135126
+window.$browserSupportsEvent = function(sel, eventName) { // -----------------> https://stackoverflow.com/a/26124697/6135126
     var el = null;
-    if (sel && $domIsEl(sel)) {
+    if (sel instanceof Window || sel instanceof Document || sel instanceof Element) {
         el = sel;
     }
     else if (typeof(sel) === 'string') {
@@ -41,5 +39,4 @@ export default function $browserSupportsEvent(sel, eventName) { // https://stack
         }
         return el;
     }
-}
-window.$browserSupportsEvent = $browserSupportsEvent;
+};
