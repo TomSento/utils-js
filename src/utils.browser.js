@@ -1,38 +1,5 @@
 import './utils.common';
 
-import '../utils/4_browser/dom/domAddClass';
-import '../utils/4_browser/dom/domAppend';
-import '../utils/4_browser/dom/domAttr';
-import '../utils/4_browser/dom/domChildren';
-import '../utils/4_browser/dom/domData';
-import '../utils/4_browser/dom/domFadeIn';
-import '../utils/4_browser/dom/domFadeOut';
-import '../utils/4_browser/dom/domFadeTo';
-import '../utils/4_browser/dom/domFadeToggle';
-import '../utils/4_browser/dom/domFind';
-import '../utils/4_browser/dom/domHasClass';
-import '../utils/4_browser/dom/domHTML';
-import '../utils/4_browser/dom/domIsEl';
-import '../utils/4_browser/dom/domMatches';
-import '../utils/4_browser/dom/domNext';
-import '../utils/4_browser/dom/domNextAll';
-import '../utils/4_browser/dom/domOff';
-import '../utils/4_browser/dom/domOn';
-import '../utils/4_browser/dom/domParent';
-import '../utils/4_browser/dom/domPrepend';
-import '../utils/4_browser/dom/domPrev';
-import '../utils/4_browser/dom/domPrevAll';
-import '../utils/4_browser/dom/domReady';
-import '../utils/4_browser/dom/domRemove';
-import '../utils/4_browser/dom/domRemoveClass';
-import '../utils/4_browser/dom/domScrollTo';
-import '../utils/4_browser/dom/domSiblings';
-import '../utils/4_browser/dom/domStyle';
-import '../utils/4_browser/dom/domText';
-import '../utils/4_browser/dom/domToggleClass';
-import '../utils/4_browser/dom/domTriggerEvent';
-import '../utils/4_browser/dom/domVal';
-
 import '../utils/4_browser/router/0_route0';
 import '../utils/4_browser/router/1_Controller0';
 
