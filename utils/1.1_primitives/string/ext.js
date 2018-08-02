@@ -37,7 +37,7 @@ var CONTENT_TYPE_TO_EXT = {
     'application/zip': '.zip',
     'application/x-rar-compressed': '.rar'
 };
-export default function $contentTypeToExt(k) {
+export default function $ext(k) {
     return CONTENT_TYPE_TO_EXT[k] || null;
 }
-$global.$contentTypeToExt = $contentTypeToExt;
+$global.$ext = $ext;
