@@ -32,9 +32,6 @@ export default function $Controller1(req, res, routeError) {
     self.run = function() {
         self.prepareRoute(function() {
             self.monitorResponseChanges();
-            if (self.route.matcher === '#public') {
-                return self.invokeRoute();
-            }
             self.prepareRequest(function() {
                 self.invokeRoute();
             });
