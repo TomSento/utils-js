@@ -62,9 +62,7 @@ export default function $Controller1(req, res, routeError) {
             if (err) {
                 return routeError(req, res, err.code === 'ENOENT' ? 404 : 500, null);
             }
-            self.route = cache('publicRoute'); // ----------------------------> PUBLIC FILE EXISTS IN FS
-            res.statusCode = 200;
-            next();
+            self.serveStaticFile(filepath);
         });
     };
     self.findRoute = function() {
@@ -105,6 +103,14 @@ export default function $Controller1(req, res, routeError) {
             str = str.slice(0, i);
         }
         return str.slice(-4);
+    };
+    self.serveStaticFile = function(filepath) {
+        var stream = $fs.createReadStream(filepath);
+        stream.once('error', function(err) {
+            console.log(err); // eslint-disable-line no-console
+            routeError(req, res, 500, null);
+        });
+        stream.pipe(res);
     };
     self.monitorResponseChanges = function() {
         var resEndCalled = false;
