@@ -5,7 +5,6 @@ import * as $http from 'http';
 import * as $os from 'os';
 
 import $malloc from '../../0_internal/malloc';
-import $route1 from './0_route1';
 import $Controller1 from './1_Controller1';
 
 var STATIC_ACCEPTS = [
