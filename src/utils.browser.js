@@ -1,6 +1,6 @@
 import './utils.common';
 
-import '../utils/4_browser/createEvent';
+import '../utils/4_browser/CustomEvent';
 
 import '../utils/4_browser/router/0_route0';
 import '../utils/4_browser/router/1_Controller0';
