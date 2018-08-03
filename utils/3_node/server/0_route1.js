@@ -14,7 +14,7 @@ export default function $route1(matcher, fn, flags) {
     var v = parseRoute();
     var matchers = cache('matchers') || {};
     var routes = cache('routes') || {};
-    matchers[v.matcher] = v.exp; // --------------------------------------> FOR FINDING ROUTE MATCHER BY URL
+    matchers[v.matcher] = v.exp; // ------------------------------------------> FOR FINDING ROUTE MATCHER BY URL
     routes[v.matcher + '?' + v.method + '?' + (v.xhr ? 'xhr?' : 'def?') + (v.mfd ? 'mfd' : 'def')] = v;
     cache('matchers', matchers);
     cache('routes', routes);
