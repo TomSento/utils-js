@@ -1,7 +1,7 @@
 import $malloc from '../../0_internal/malloc';
 
 export default function $route1(matcher, fn, flags) {
-    if (typeof(matcher) !== 'string' || (matcher[0] !== '/' && matcher !== '#public')) {
+    if (typeof(matcher) !== 'string' || matcher[0] !== '/') {
         throw new Error('api-matcher');
     }
     if (!fn || typeof(fn) !== 'function') {
@@ -12,17 +12,12 @@ export default function $route1(matcher, fn, flags) {
     }
     var cache = $malloc('__SERVER');
     var v = parseRoute();
-    if (matcher !== '#public') {
-        var matchers = cache('matchers') || {};
-        var routes = cache('routes') || {};
-        matchers[v.matcher] = v.exp; // --------------------------------------> FOR FINDING ROUTE MATCHER BY URL
-        routes[v.matcher + '?' + v.method + '?' + (v.xhr ? 'xhr?' : 'def?') + (v.mfd ? 'mfd' : 'def')] = v;
-        cache('matchers', matchers);
-        cache('routes', routes);
-    }
-    else {
-        return cache('publicRoute', v);
-    }
+    var matchers = cache('matchers') || {};
+    var routes = cache('routes') || {};
+    matchers[v.matcher] = v.exp; // --------------------------------------> FOR FINDING ROUTE MATCHER BY URL
+    routes[v.matcher + '?' + v.method + '?' + (v.xhr ? 'xhr?' : 'def?') + (v.mfd ? 'mfd' : 'def')] = v;
+    cache('matchers', matchers);
+    cache('routes', routes);
     function parseRoute() {
         var m;
         var exp = /^-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/6/
@@ -30,18 +25,10 @@ export default function $route1(matcher, fn, flags) {
         if (!m) {
             throw new Error('Route "flags" must follow "-m <Value> -s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
         }
-        var tmp;
-        if (matcher !== '#public') {
-            tmp = (matcher !== '/' && matcher[matcher.length - 1] === '/') ? matcher.slice(0, -1) : matcher;
-            exp = new RegExp('^' + tmp.replace(/\[(\w+)\]/g, '(\\w+)') + '$');
-        }
-        else {
-            tmp = matcher;
-            exp = null;
-        }
+        var tmp = (matcher !== '/' && matcher[matcher.length - 1] === '/') ? matcher.slice(0, -1) : matcher;
         return {
             matcher: tmp,
-            exp: exp,
+            exp: new RegExp('^' + tmp.replace(/\[(\w+)\]/g, '(\\w+)') + '$'),
             fn: fn,
             method: m[1],
             maxSize: parseMaxSize(m[2], m[3]),
