@@ -1,7 +1,5 @@
-import $global from '../global';
-import $malloc from '../0_internal/malloc';
-import $Error from '../2_core/errors/Error';
-import $ErrorBuilder from '../2_core/errors/ErrorBuilder';
+import $global from '../../global';
+import $malloc from '../../0_internal/malloc';
 
 export default function $schema(name, defaultLanguage, obj) {
     if (typeof(name) !== 'string') {
@@ -75,7 +73,7 @@ export default function $schema(name, defaultLanguage, obj) {
                 lan = lan.toUpperCase();
             }
             var typeMatch;
-            var err = new $ErrorBuilder();
+            var err = {};
             for (var k in this.rule) {
                 if (this.rule.hasOwnProperty(k)) {
                     var rule = this.rule[k];
@@ -87,7 +85,7 @@ export default function $schema(name, defaultLanguage, obj) {
                     }
                     typeMatch = (Object.prototype.toString.call(v) === rule.type);
                     if (rule.validate && !rule.validate(v, typeMatch, o)) {
-                        err.push(new $Error(name + '.' + k, (rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".'))));
+                        err[k] = rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".');
                     }
                 }
             }
@@ -105,7 +103,7 @@ export default function $schema(name, defaultLanguage, obj) {
             }
             return tmp;
         },
-        makeError: function(k, lan) {
+        error: function(k, lan) {
             if (!k || typeof(k) !== 'string') {
                 throw new Error('api-name');
             }
@@ -119,7 +117,7 @@ export default function $schema(name, defaultLanguage, obj) {
             if (!rule || !rule.msg) {
                 throw new Error('Property "' + k + '" not found.');
             }
-            return new $Error(name + '.' + k, (rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".')));
+            return rule.msg[lan || defaultLanguage] || ('Invalid "' + k + '".');
         }
     };
     cache(name, new Schema());
