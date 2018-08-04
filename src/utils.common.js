@@ -29,6 +29,7 @@ import '../utils/1_primitives/string/strip';
 
 import '../utils/2_core/log/log';
 
+import '../utils/2_core/schema/schema';
 import '../utils/2_core/schema/SchemaError';
 
 import '../utils/2_core/uid/uid1';
