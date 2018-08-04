@@ -1,4 +1,5 @@
-require('../../dist/utils.all.js');
+/* eslint-disable no-console */
+require('../../dist/utils.node.js');
 
 $schema('User', 'EN', {
     'name': [String, {
@@ -36,20 +37,38 @@ $schema('User', 'EN', {
     }]
 });
 
-var obj = {
+$schema('Project', 'EN', {
+    'name': [String, {
+        validate: function(v, typeMatch) {
+            return typeMatch && v && v.length < 20;
+        },
+        'EN': 'Parameter "name" is missing or has incorrect format.'
+    }]
+});
+
+var user = {
     name: 'Tomas Sentkeresty',
     description: '',
-    projects: {},
+    projects: ['project-1'],
     // getName: function() {},
     junk: 1
 };
 
-$logDebug('obj:', obj);
-var err = $schema('User').prepareAndValidate(obj, 'SK');
-if (err.hasError()) {
-    $log('Schema has ' + err.errors.length + ' error(s).');
+console.log('user:', user);
+var err = $schema('User').prepareAndValidate(user, 'SK');
+console.log('top-level errors', err);
+
+var has;
+if (!err.projects) {
+    has = user.projects.find(function(v) {
+        return $type(v) !== 'object' || Object.keys($schema('Project').prepareAndValidate(v)).length > 0;
+    });
+    if (has) {
+        err.projects = $schema('User').error('projects', 'EN');
+    }
 }
-$logDebug(err);
-$logDebug('prepare & validate:', obj);
-$logDebug('cleaned:', $schema('User').clean(obj));
-$logDebug('Make error on fly: ', $schema('User').makeError('getName', 'SK'));
+
+console.log('final errors', err);
+
+console.log('after prepare & validate:', user);
+console.log('after clean:', $schema('User').clean(user));
