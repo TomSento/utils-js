@@ -1,10 +1,9 @@
-export default function $ajax(obj) {
+export default function $xhr(obj) {
     var xhr = new XMLHttpRequest();
     var res = null;
-    var json = 'application/json';
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
-            if (obj.header['Accept'] === json) { // eslint-disable-line dot-notation
+            if (obj.header['Accept'] === 'application/json') { // eslint-disable-line dot-notation
                 try {
                     res = JSON.parse(xhr.responseText);
                 }
@@ -43,4 +42,4 @@ export default function $ajax(obj) {
     }
     xhr.send(obj.data);
 }
-window.$ajax = $ajax;
+window.$xhr = $xhr;
