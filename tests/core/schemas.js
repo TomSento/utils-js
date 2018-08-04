@@ -7,7 +7,7 @@ $schema('User', 'EN', {
             return typeMatch && v.length > 5;
         },
         'EN': 'Parameter "name" is missing or has incorrect format.',
-        'SK': 'Paremeter "name" chýba alebo má nesprávny formát.',
+        'SK': 'Parameter "name" chýba alebo má nesprávny formát.',
         'CZ': 'Parametr "name" chybí nebo má špatný formát.'
     }],
     'description': [String, {
@@ -41,8 +41,7 @@ $schema('Project', 'EN', {
     'name': [String, {
         validate: function(v, typeMatch) {
             return typeMatch && v && v.length < 20;
-        },
-        'EN': 'Parameter "name" is missing or has incorrect format.'
+        }
     }]
 });
 
@@ -53,22 +52,24 @@ var user = {
     // getName: function() {},
     junk: 1
 };
-
 console.log('user:', user);
-var err = $schema('User').prepareAndValidate(user, 'SK');
-console.log('top-level errors', err);
 
-var has;
+var lan = 'SK';
+var err = $schema('User').prepareValidate(user, lan);
+
+console.log('\nafter prepare & validate:', user);
+var cleaned = $schema('User').clean(user);
+console.log('\ncleaned:', cleaned);
+console.log('\ncleaned & stringified:', JSON.stringify(cleaned));
+
+console.log('\ntop-level errors', err);
 if (!err.projects) {
+    var has;
     has = user.projects.find(function(v) {
-        return $type(v) !== 'object' || Object.keys($schema('Project').prepareAndValidate(v)).length > 0;
+        return $type(v) !== 'object' || Object.keys($schema('Project').prepareValidate(v)).length > 0;
     });
     if (has) {
-        err.projects = $schema('User').error('projects', 'EN');
+        err.projects = $schema('User').error('projects', lan);
     }
 }
-
-console.log('final errors', err);
-
-console.log('after prepare & validate:', user);
-console.log('after clean:', $schema('User').clean(user));
+console.log('\nfinal errors', err);
