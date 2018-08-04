@@ -1,14 +1,18 @@
-require('../../dist/utils.all.js');
+/* eslint-disable no-console */
+require('../../dist/utils.node.js');
 
-var errorBuilder = new $ErrorBuilder();
-var err = new $Error('BuggsBunny-name', 'Parameter ...');
+var errors = new $ErrorBuilder();
+var err = new $Error('User-name', 'Parameter ...');
 // err.throw();
-$log(err.toString());
-// new $Error('invalidParameter').logAndThrow();
-errorBuilder.push(new $Error('BuggsBunny-name', 'Parameter "name" is missing or has incorrect format.'));
-errorBuilder.push(new $Error(new Error('BuggsBunny-carrots'), 'Parameter "carrots" is missing or has incorrect format.'));
-$log('Builder0: ', errorBuilder.toString());
-errorBuilder.remove('BuggsBunny-carrots');
-$log('Builder1: ', errorBuilder.toString());
-errorBuilder.clear();
-$log('Builder2: ', errorBuilder.toString());
+// err.logAndThrow();
+console.log(err.toString());
+
+errors.push(new $Error('User-name', 'Parameter "name" is missing or has incorrect format.'));
+errors.push(new $Error(new Error('User-phone'), 'Parameter "phone" is missing or has incorrect format.'));
+console.log('Builder0: ', errors.toString());
+
+errors.remove('User-phone');
+console.log('Builder1: ', errors.toString());
+
+errors.clear();
+console.log('Builder2: ', errors.toString());
