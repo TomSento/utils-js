@@ -27,7 +27,7 @@ import '../utils/1_primitives/string/reverse';
 import '../utils/1_primitives/string/slug';
 import '../utils/1_primitives/string/strip';
 
-import '../utils/2_core/errors/Error.$create';
+import '../utils/2_core/error/Error.$create';
 
 import '../utils/2_core/log/log';
 
