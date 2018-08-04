@@ -62,7 +62,7 @@ export default function $schema(name, defaultLanguage, obj) {
         }
     }
     Schema.prototype = {
-        prepareAndValidate: function(o, lan) {
+        prepareValidate: function(o, lan) {
             if (!o || typeof(o) !== 'object') {
                 throw new Error('api-o');
             }
