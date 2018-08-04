@@ -1,14 +1,15 @@
-require('../../dist/utils.all.js');
+/* eslint-disable no-console */
+require('../../dist/utils.node.js');
 
 $ls([
     '../../utils',
     '../../tests/node'
 ], 'R', function(path, stat, next) {
-    $log('path: ' + path);
-    return next();
+    console.log('path: ' + path);
+    next();
 }, function(err) {
     if (err) {
-        return $log('err:', err);
+        throw err;
     }
-    $log('DONE');
+    console.log('DONE');
 });
