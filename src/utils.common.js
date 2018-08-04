@@ -29,12 +29,10 @@ import '../utils/1_primitives/string/strip';
 
 import '../utils/2_core/log/log';
 
-import '../utils/2_core/schema/schema';
-import '../utils/2_core/schema/SchemaError';
-
 import '../utils/2_core/uid/uid1';
 import '../utils/2_core/uid/uid2';
 
 import '../utils/2_core/h';
+import '../utils/2_core/schema';
 import '../utils/2_core/test';
 import '../utils/2_core/userAgent';
