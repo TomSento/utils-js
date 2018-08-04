@@ -1,4 +1,4 @@
-require('../../dist/utils.all.js');
+require('../../dist/utils.node.js');
 
 $test('errorBuilder.getData()', function(assert) {
     var done = assert.async(2);
