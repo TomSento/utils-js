@@ -1,4 +1,5 @@
-require('../../dist/utils.all.js');
+/* eslint-disable no-console */
+require('../../dist/utils.node.js');
 
-$log($uid1());
-$log($uid2());
+console.log($uid1());
+console.log($uid2());
