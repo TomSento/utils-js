@@ -15,7 +15,7 @@ import '../utils/1_primitives/number/toKey';
 
 import '../utils/1_primitives/object/clone';
 import '../utils/1_primitives/object/extend';
-import '../utils/1_primitives/object/keys';
+import '../utils/1_primitives/object/Object.keys';
 import '../utils/1_primitives/object/q';
 
 import '../utils/1_primitives/string/escape';
