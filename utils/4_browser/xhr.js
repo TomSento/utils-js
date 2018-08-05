@@ -1,45 +1,72 @@
-export default function $xhr(obj) {
+var type = Object.prototype.toString;
+
+window.$xhr = function(url, method, a, b, c, d) {
+    var body;
+    var headers;
+    var progressFN;
+    var next;
+    if (a instanceof FormData && type.call(b) === '[object Object]' && typeof(c) === 'function' && typeof(d) === 'function') {
+        body = a;
+        headers = b;
+        progressFN = c;
+        next = d;
+    }
+    else if (a instanceof FormData && typeof(b) === 'function' && typeof(c) === 'function') {
+        body = a;
+        progressFN = b;
+        next = c;
+    }
+    else if (a instanceof FormData && typeof(b) === 'function') {
+        body = a;
+        next = b;
+    }
+    else if (a && typeof(a) === 'object' && type.call(b) === '[object Object]' && typeof(c) === 'function') {
+        body = a; // ---------------------------------------------------------> Object || FormData - ALSO Array BUT SERVER INTENTIONALLY DOES NOT SUPPORT Array BODY
+        headers = b;
+        next = c;
+    }
+    else if (type.call(a) === '[object Object]' && typeof(b) === 'function') {
+        headers = a; // ------------------------------------------------------> E.G. { 'Accept': ... }
+        next = b;
+    }
+    else if (typeof(a) === 'function') {
+        next = a;
+    }
+    else {
+        throw new Error('Invalid arguments at tail.');
+    }
     var xhr = new XMLHttpRequest();
-    var res = null;
+    var res;
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
-            if (obj.header['Accept'] === 'application/json') { // eslint-disable-line dot-notation
-                try {
-                    res = JSON.parse(xhr.responseText);
-                }
-                catch (err) {
-                    console.warn('Unable to parse server response to JSON.'); // eslint-disable-line no-console
-                    obj.error(null, xhr);
-                }
+            try {
+                res = (headers && headers['Accept'] === 'application/json') ? JSON.parse(xhr.responseText) : xhr.responseText; // eslint-disable-line dot-notation
+                next(xhr.status, res);
             }
-            else {
-                res = xhr.responseText;
+            catch (e) {
+                console.error('Unable to parse server response to JSON.'); // eslint-disable-line no-console
             }
-            if (xhr.status === 200) {
-                obj.success(res, xhr);
-            }
-            else {
-                obj.error(res, xhr);
-            }
-            obj.always(res, xhr);
         }
     };
-    xhr.upload.onprogress = function(state) {
-        if (state.lengthComputable) {
-            var percentage = (state.loaded / state.total) * 100;
-            obj.progress(percentage.toFixed(0));
-        }
-    };
+    if (progressFN) {
+        xhr.upload.onprogress = function(state) {
+            if (state.lengthComputable) {
+                var progress = (state.loaded / state.total) * 100;
+                progressFN(progress.toFixed(0));
+            }
+        };
+    }
     xhr.onerror = function() {
-        console.warn('Unexpected AJAX error.'); // eslint-disable-line no-console
+        console.error('Unexpected XHR error.'); // eslint-disable-line no-console
     };
-    xhr.open(obj.method, obj.url, true);
-    for (var k in obj.header) {
-        if (obj.hasOwnProperty(k)) {
-            var v = obj.header[k];
-            xhr.setRequestHeader(k, v);
+    xhr.open(method, url, true);
+    if (headers) {
+        for (var k in headers) {
+            if (headers.hasOwnProperty(k)) {
+                var v = headers[k];
+                xhr.setRequestHeader(k, v);
+            }
         }
     }
-    xhr.send(obj.data);
-}
-window.$xhr = $xhr;
+    xhr.send(body); // -------------------------------------------------------> Object || FormData - ALSO Array BUT SERVER INTENTIONALLY DOES NOT SUPPORT Array BODY
+};
