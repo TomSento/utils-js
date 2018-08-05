@@ -4,7 +4,7 @@ import * as $url from 'url';
 import * as $querystring from 'querystring';
 import $malloc from '../../0_internal/$malloc';
 import $MultipartParser from './internal/MultipartParser';
-import $destroyStream from '../destroyStream';
+import $destroyStream from '../$destroyStream';
 
 var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
@@ -22,7 +22,7 @@ var MAX_URL_QUERY_LEN = 1000;
 var FILE_INDEX = 0;
 var CONCAT = [null, null];
 
-export default function $Controller1(req, res, routeError) {
+export default function Controller(req, res, routeError) {
     var cache = $malloc('__SERVER');
     var self = this;
     self.args = [];

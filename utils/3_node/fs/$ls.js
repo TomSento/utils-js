@@ -4,7 +4,7 @@ import * as $path from 'path';
 /**
  * @param {String} flag R - recursive
  */
-export default function $ls(a, flag, fn, next) {
+global.$ls = function(a, flag, fn, next) {
     if (next === undefined) {
         next = fn;
         fn = flag;
@@ -49,5 +49,4 @@ export default function $ls(a, flag, fn, next) {
             });
         }(dirPath));
     }());
-}
-global.$ls = $ls;
+};

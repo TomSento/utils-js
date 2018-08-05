@@ -1,13 +1,13 @@
 import * as $fs from 'fs';
 
-export default function $Watcher(t) {
+global.$Watcher = function(t) {
     this.t = t;
     this.fn = {};
     this.trigger = function(k, a1, a2, a3) {
         var fn = this.fn[k];
         return fn && fn(a1, a2, a3);
     };
-}
+};
 $Watcher.prototype = {
     watch: function(filepath) {
         var self = this;
@@ -23,4 +23,3 @@ $Watcher.prototype = {
         this.fn[k] = fn;
     }
 };
-global.$Watcher = $Watcher;

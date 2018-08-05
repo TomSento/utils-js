@@ -5,7 +5,7 @@ import * as $http from 'http';
 import * as $os from 'os';
 
 import $malloc from '../../0_internal/$malloc';
-import $Controller1 from './1_Controller1';
+import $Controller from './Controller';
 
 var STATIC_ACCEPTS = [
     '.txt', '.md',
@@ -18,7 +18,7 @@ var STATIC_ACCEPTS = [
     '.zip', '.rar'
 ];
 
-export default function $server(mode, packageJSON, config, routeError) {
+global.$server = function(mode, packageJSON, config, routeError) {
     var cache = $malloc('__SERVER');
     if (routeError === undefined) {
         return cache('app') || null;
@@ -55,7 +55,7 @@ export default function $server(mode, packageJSON, config, routeError) {
         this.js = [];
         this.config = config;
         this.handleRequest = function(req, res) {
-            var controller = new $Controller1(req, res, routeError);
+            var controller = new $Controller(req, res, routeError);
             controller.run();
         };
         this.removeTmpFiles = function() {
@@ -140,5 +140,4 @@ export default function $server(mode, packageJSON, config, routeError) {
     var app = new App();
     cache('app', app);
     return app;
-}
-global.$server = $server;
+};

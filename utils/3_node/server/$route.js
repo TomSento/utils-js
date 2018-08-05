@@ -1,6 +1,6 @@
 import $malloc from '../../0_internal/$malloc';
 
-export default function $route1(matcher, fn, flags) {
+global.$route = function(matcher, fn, flags) {
     if (typeof(matcher) !== 'string' || matcher[0] !== '/') {
         throw new Error('api-matcher');
     }
@@ -56,5 +56,4 @@ export default function $route1(matcher, fn, flags) {
         }
         return v * 1000;
     }
-}
-global.$route1 = $route1;
+};
