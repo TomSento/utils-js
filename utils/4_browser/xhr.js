@@ -36,6 +36,17 @@ window.$xhr = function(url, method, a, b, c, d) {
         throw new Error('Invalid arguments at tail.');
     }
     var xhr = new XMLHttpRequest();
+    xhr.onerror = function() {
+        console.error('Unexpected XHR error.'); // eslint-disable-line no-console
+    };
+    if (progressFN) {
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                var progress = (e.loaded / e.total) * 100;
+                progressFN(progress.toFixed(0));
+            }
+        };
+    }
     var res;
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
@@ -47,17 +58,6 @@ window.$xhr = function(url, method, a, b, c, d) {
                 console.error('Unable to parse server response to JSON.'); // eslint-disable-line no-console
             }
         }
-    };
-    if (progressFN) {
-        xhr.upload.onprogress = function(state) {
-            if (state.lengthComputable) {
-                var progress = (state.loaded / state.total) * 100;
-                progressFN(progress.toFixed(0));
-            }
-        };
-    }
-    xhr.onerror = function() {
-        console.error('Unexpected XHR error.'); // eslint-disable-line no-console
     };
     xhr.open(method, url, true);
     if (headers) {
