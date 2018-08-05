@@ -1,5 +1,5 @@
 import $global from '../../global';
-import $clone from './clone';
+import $clone from './$clone';
 
 export default function $extend(objA, objB, rewrite) {
     if (!objA || typeof(objA) !== 'object') {
