@@ -847,7 +847,7 @@ var DIACRITICS = {
     '\ua763': 'z'
 };
 
-String.prototype.$removeDiacritics = function() {
+String.prototype.removeDiacritics = function() {
     var exp = /[^\u0000-\u007e]/g;
     return this.replace(exp, function(ch) {
         return DIACRITICS[ch] || ch;

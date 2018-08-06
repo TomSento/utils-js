@@ -1,5 +1,3 @@
-import $global from '../../global';
-
 var CONTENT_TYPE_TO_EXT = {
     'text/plain': '.txt',
     'text/markdown': '.md',
@@ -37,7 +35,8 @@ var CONTENT_TYPE_TO_EXT = {
     'application/zip': '.zip',
     'application/x-rar-compressed': '.rar'
 };
-export default function $ext(k) {
+
+function extension(k) {
     return CONTENT_TYPE_TO_EXT[k] || null;
 }
-$global.$ext = $ext;
+$export('<extension>', extension);

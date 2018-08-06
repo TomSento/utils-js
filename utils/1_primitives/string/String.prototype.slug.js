@@ -1,8 +1,8 @@
 var EXP_HYPHENIZE = /\B[A-Z]+[a-z]/g;
 
-String.prototype.$slug = function(max) {
+String.prototype.slug = function(max) {
     max = max || 60;
-    var self = hyphenize(this.trim().$removeDiacritics());
+    var self = hyphenize(this.trim().removeDiacritics());
     var builder = '';
     var length = self.length;
     for (var i = 0; i < length; i++) {

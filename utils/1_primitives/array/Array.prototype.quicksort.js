@@ -39,10 +39,10 @@ Array.prototype.quicksort = function(name, asc, maxlength) { // --------------> 
         if (type === 1) {
             if (va && vb) {
                 if (asc) {
-                    return va.slice(0, maxlength).$removeDiacritics().localeCompare(vb.slice(0, maxlength).$removeDiacritics());
+                    return va.slice(0, maxlength).removeDiacritics().localeCompare(vb.slice(0, maxlength).removeDiacritics());
                 }
                 else {
-                    return vb.slice(0, maxlength).$removeDiacritics().localeCompare(va.slice(0, maxlength).$removeDiacritics());
+                    return vb.slice(0, maxlength).removeDiacritics().localeCompare(va.slice(0, maxlength).removeDiacritics());
                 }
             }
             else {
