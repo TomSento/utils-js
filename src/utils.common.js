@@ -18,15 +18,15 @@ import '../utils/1_primitives/object/extend';
 import '../utils/1_primitives/object/Object.keys';
 import '../utils/1_primitives/object/query';
 
-import '../utils/1_primitives/string/$ext';
-import '../utils/1_primitives/string/String.prototype.$escape';
-import '../utils/1_primitives/string/String.prototype.$format';
-import '../utils/1_primitives/string/String.prototype.$removeDiacritics';
-import '../utils/1_primitives/string/String.prototype.$reverse';
-import '../utils/1_primitives/string/String.prototype.$slug';
-import '../utils/1_primitives/string/String.prototype.$strip';
+import '../utils/1_primitives/string/extension';
+import '../utils/1_primitives/string/String.prototype.escape';
+import '../utils/1_primitives/string/String.prototype.format';
 import '../utils/1_primitives/string/String.prototype.padEnd';
 import '../utils/1_primitives/string/String.prototype.padStart';
+import '../utils/1_primitives/string/String.prototype.removeDiacritics';
+import '../utils/1_primitives/string/String.prototype.reverse';
+import '../utils/1_primitives/string/String.prototype.slug';
+import '../utils/1_primitives/string/String.prototype.strip';
 
 import '../utils/2_core/$h';
 import '../utils/2_core/$log';
