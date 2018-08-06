@@ -1,6 +1,4 @@
-import $global from '../../global';
-
-export default function $clone(obj, skip, skipFunctions) {
+export default function clone(obj, skip, skipFunctions) {
     if (!obj) {
         return obj;
     }
@@ -22,7 +20,7 @@ export default function $clone(obj, skip, skipFunctions) {
                 o[i] = obj[i];
                 continue;
             }
-            o[i] = $clone(obj[i], skip, skipFunctions);
+            o[i] = clone(obj[i], skip, skipFunctions);
         }
         return o;
     }
@@ -40,8 +38,8 @@ export default function $clone(obj, skip, skipFunctions) {
             o[m] = val;
             continue;
         }
-        o[m] = $clone(obj[m], skip, skipFunctions);
+        o[m] = clone(obj[m], skip, skipFunctions);
     }
     return o;
 }
-$global.$clone = $clone;
+$export('<clone>', clone);

@@ -1,7 +1,6 @@
-import $global from '../../global';
-import $clone from './$clone';
+import $clone from './clone';
 
-export default function $extend(objA, objB, rewrite) {
+export default function extend(objA, objB, rewrite) {
     if (!objA || typeof(objA) !== 'object') {
         throw new Error('api-objA');
     }
@@ -21,4 +20,4 @@ export default function $extend(objA, objB, rewrite) {
     }
     return objA;
 }
-$global.$extend = $extend;
+$export('<extend>', extend);

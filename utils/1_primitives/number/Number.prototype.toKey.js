@@ -37,6 +37,6 @@ var NUMBER_TO_KEY = {
     89: 'Y',
     90: 'Z'
 };
-Number.prototype.$toKey = function() {
+Number.prototype.toKey = function() {
     return NUMBER_TO_KEY[this] || null;
 };

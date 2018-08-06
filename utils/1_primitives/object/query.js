@@ -1,6 +1,4 @@
-import $global from '../../global';
-
-export default function $q(obj) { // -----------------------------------------> STRINGIFY OBJECT TO QUERY STRING
+export default function query(obj) { // --------------------------------------> STRINGIFY OBJECT TO QUERY STRING
     var arr = [];
     for (var k in obj) {
         if (obj.hasOwnProperty(k)) {
@@ -56,4 +54,4 @@ export default function $q(obj) { // -----------------------------------------> 
         return len > 0 ? acc.join(',') : null;
     }
 }
-$global.$q = $q;
+$export('<query>', query);
