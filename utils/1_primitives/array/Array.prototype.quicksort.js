@@ -1,4 +1,4 @@
-Array.prototype.$sort = function(name, asc, maxlength) { // ------------------> FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
+Array.prototype.quicksort = function(name, asc, maxlength) { // --------------> FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
     var length = this.length;
     if (!length || length === 1) {
         return this;

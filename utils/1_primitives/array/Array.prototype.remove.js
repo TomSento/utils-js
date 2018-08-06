@@ -1,4 +1,4 @@
-Array.prototype.$remove = function(fn, v) { // -------------------------------> FROM TOTAL.JS
+Array.prototype.remove = function(fn, v) { // --------------------------------> FROM TOTAL.JS
     var self = this;
     var isFN = typeof(fn) === 'function';
     var isV = v !== undefined;

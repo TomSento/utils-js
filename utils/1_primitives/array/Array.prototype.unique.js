@@ -1,4 +1,4 @@
-Array.prototype.$unique = function(k) {
+Array.prototype.unique = function(k) {
     var self = this;
     var result = [];
     var sublen = 0;

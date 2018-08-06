@@ -4,12 +4,12 @@ import '../utils/0_internal/malloc';
 import '../utils/0_internal/noop';
 import '../utils/0_internal/typ';
 
-import '../utils/1_primitives/array/Array.prototype.$find';
-import '../utils/1_primitives/array/Array.prototype.$findIndex';
-import '../utils/1_primitives/array/Array.prototype.$last';
-import '../utils/1_primitives/array/Array.prototype.$remove';
-import '../utils/1_primitives/array/Array.prototype.$sort';
-import '../utils/1_primitives/array/Array.prototype.$unique';
+import '../utils/1_primitives/array/Array.prototype.find';
+import '../utils/1_primitives/array/Array.prototype.findIndex';
+import '../utils/1_primitives/array/Array.prototype.last';
+import '../utils/1_primitives/array/Array.prototype.quicksort';
+import '../utils/1_primitives/array/Array.prototype.remove';
+import '../utils/1_primitives/array/Array.prototype.unique';
 
 import '../utils/1_primitives/number/Number.prototype.$toKey';
 
