@@ -4,7 +4,7 @@ import * as $https from 'https';
 import * as $http from 'http';
 import * as $os from 'os';
 
-import $malloc from '../../0_internal/$malloc';
+import $malloc from '../../0_internal/malloc';
 import $Controller from './Controller';
 
 var STATIC_ACCEPTS = [

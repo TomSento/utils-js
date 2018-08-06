@@ -1,4 +1,4 @@
-import $malloc from '../../0_internal/$malloc';
+import $malloc from '../../0_internal/malloc';
 
 global.$route = function(matcher, fn, flags) {
     if (typeof(matcher) !== 'string' || matcher[0] !== '/') {

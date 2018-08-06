@@ -1,5 +1,5 @@
 import $global from '../global';
-import $malloc from '../0_internal/$malloc';
+import $malloc from '../0_internal/malloc';
 
 export default function $schema(name, defaultLanguage, obj) {
     if (typeof(name) !== 'string') {

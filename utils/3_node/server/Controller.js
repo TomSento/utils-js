@@ -2,7 +2,7 @@ import * as $path from 'path';
 import * as $fs from 'fs';
 import * as $url from 'url';
 import * as $querystring from 'querystring';
-import $malloc from '../../0_internal/$malloc';
+import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
 import $destroyStream from '../$destroyStream';
 
