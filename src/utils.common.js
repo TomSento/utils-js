@@ -11,12 +11,12 @@ import '../utils/1_primitives/array/Array.prototype.quicksort';
 import '../utils/1_primitives/array/Array.prototype.remove';
 import '../utils/1_primitives/array/Array.prototype.unique';
 
-import '../utils/1_primitives/number/Number.prototype.$toKey';
+import '../utils/1_primitives/number/Number.prototype.toKey';
 
-import '../utils/1_primitives/object/$clone';
-import '../utils/1_primitives/object/$extend';
-import '../utils/1_primitives/object/$q';
+import '../utils/1_primitives/object/clone';
+import '../utils/1_primitives/object/extend';
 import '../utils/1_primitives/object/Object.keys';
+import '../utils/1_primitives/object/query';
 
 import '../utils/1_primitives/string/$ext';
 import '../utils/1_primitives/string/String.prototype.$escape';
