@@ -1,7 +1,7 @@
 import '../utils/0_internal/$export';
 import '../utils/0_internal/$import';
-import '../utils/0_internal/$malloc';
-import '../utils/0_internal/$noop';
+import '../utils/0_internal/malloc';
+import '../utils/0_internal/noop';
 import '../utils/0_internal/typ';
 
 import '../utils/1_primitives/array/Array.prototype.$find';

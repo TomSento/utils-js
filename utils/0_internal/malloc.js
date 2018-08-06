@@ -1,13 +1,13 @@
 import $global from '../global';
 
-export default function $malloc(prefix) {
-    if (!$global.$$cache) {
-        $global.$$cache = {};
+export default function malloc(prefix) {
+    if (!$global.$cache) {
+        $global.$cache = {};
     }
-    if (!$global.$$cache[prefix]) {
-        $global.$$cache[prefix] = {};
+    if (!$global.$cache[prefix]) {
+        $global.$cache[prefix] = {};
     }
-    var obj = $global.$$cache[prefix];
+    var obj = $global.$cache[prefix];
     return function(k, v) {
         if (typeof(k) === 'object' && v === undefined) {
             obj = k;
@@ -27,4 +27,4 @@ export default function $malloc(prefix) {
         }
     };
 }
-$global.$malloc = $malloc;
+$global.malloc = malloc;
