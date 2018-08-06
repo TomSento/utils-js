@@ -4,7 +4,7 @@ import * as $url from 'url';
 import * as $querystring from 'querystring';
 import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
-import $destroyStream from '../$destroyStream';
+import $destroyStream from '../destroyStream';
 
 var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()

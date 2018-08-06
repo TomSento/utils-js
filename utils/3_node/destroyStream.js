@@ -1,4 +1,4 @@
-export default function $destroyStream(stream) {
+export default function destroyStream(stream) {
     if (stream instanceof ReadStream) {
         stream.destroy();
         if (typeof(stream.close) === 'function') {
@@ -15,4 +15,4 @@ export default function $destroyStream(stream) {
         }
     }
 }
-global.$destroyStream = $destroyStream;
+$export('<destroyStream>', destroyStream);

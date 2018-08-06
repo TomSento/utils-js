@@ -18,7 +18,7 @@ var STATIC_ACCEPTS = [
     '.zip', '.rar'
 ];
 
-global.$server = function(mode, packageJSON, config, routeError) {
+function server(mode, packageJSON, config, routeError) {
     var cache = $malloc('__SERVER');
     if (routeError === undefined) {
         return cache('app') || null;
@@ -140,4 +140,5 @@ global.$server = function(mode, packageJSON, config, routeError) {
     var app = new App();
     cache('app', app);
     return app;
-};
+}
+$export('<server>', server);

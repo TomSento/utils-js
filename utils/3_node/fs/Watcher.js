@@ -1,14 +1,14 @@
 import * as $fs from 'fs';
 
-global.$Watcher = function(t) {
+function Watcher(t) {
     this.t = t;
     this.fn = {};
     this.trigger = function(k, a1, a2, a3) {
         var fn = this.fn[k];
         return fn && fn(a1, a2, a3);
     };
-};
-$Watcher.prototype = {
+}
+Watcher.prototype = {
     watch: function(filepath) {
         var self = this;
         $fs.watchFile(filepath, {
@@ -23,3 +23,4 @@ $Watcher.prototype = {
         this.fn[k] = fn;
     }
 };
+$export('<Watcher>', Watcher);
