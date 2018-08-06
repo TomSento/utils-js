@@ -1,6 +1,6 @@
 var type = Object.prototype.toString;
 
-window.$xhr = function(url, method, a, b, c, d) {
+function xhr(url, method, a, b, c, d) {
     var body;
     var headers;
     var progressFN;
@@ -69,4 +69,5 @@ window.$xhr = function(url, method, a, b, c, d) {
         }
     }
     xhr.send(body); // -------------------------------------------------------> Object || FormData - ALSO Array BUT SERVER INTENTIONALLY DOES NOT SUPPORT Array BODY
-};
+}
+$export('<xhr>', xhr);

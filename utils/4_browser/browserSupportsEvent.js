@@ -1,4 +1,4 @@
-window.$browserSupportsEvent = function(sel, eventName) { // -----------------> https://stackoverflow.com/a/26124697/6135126
+function browserSupportsEvent(sel, eventName) { // ---------------------------> https://stackoverflow.com/a/26124697/6135126
     var el = null;
     if (sel instanceof Window || sel instanceof Document || sel instanceof Element) {
         el = sel;
@@ -39,4 +39,5 @@ window.$browserSupportsEvent = function(sel, eventName) { // -----------------> 
         }
         return el;
     }
-};
+}
+$export('<browserSupportsEvent>', browserSupportsEvent);
