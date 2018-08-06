@@ -1,5 +1,3 @@
-import $global from '../global';
-
 // COMMAND FORMAT:
 // HTML_SELECTOR_INSTRUCTION_STRING|HTML_ATTRIBUTES_INSTRUCTIONS_STRING|ACSS_INSTRUCTIONS_STRING
 // ACSS IS ALLOWED ONLY FOR BODYTAG ELEMENTS
@@ -11,7 +9,7 @@ import $global from '../global';
 // OUR ACSS USES "left" and "right" instead of "start" and "end" - OUR ACSS HAS NO RTL FUNCTIONALITY SUPPORT
 // OUR ACSS RULES MUST HAVE ALWAYS 1 ARGUMENT -> LEADS TO BETTER IDEA WHAT CSS WILL BE ACTUALLY GENERATED AS RESULT. STANDARD ACSS SUPPORTS MULTIPLE ARGUMENTS SEPARATED BY COMMAS
 // SET HTML5 DATA BY PASSING OBJECT TO "a" ARGUMENT
-export default function $h(cmd, a, b) {
+function h(cmd, a, b) {
     /**
      * CONSTANTS
      */
@@ -3497,4 +3495,4 @@ export default function $h(cmd, a, b) {
         return 'css-' + b;
     }
 }
-$global.$h = $h;
+$export('<h>', h);

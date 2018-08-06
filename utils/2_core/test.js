@@ -1,7 +1,6 @@
-import $global from '../global';
 import $malloc from '../0_internal/malloc';
 
-export default function $test(k, fn, maxTimeout) {
+function test(k, fn, maxTimeout) {
     if (!k || typeof(k) !== 'string') {
         throw new Error('api-k');
     }
@@ -453,4 +452,4 @@ export default function $test(k, fn, maxTimeout) {
         }
     }
 }
-$global.$test = $test;
+$export('<test>', test);
