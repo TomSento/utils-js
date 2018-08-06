@@ -28,10 +28,10 @@ import '../utils/1_primitives/string/String.prototype.reverse';
 import '../utils/1_primitives/string/String.prototype.slug';
 import '../utils/1_primitives/string/String.prototype.strip';
 
-import '../utils/2_core/$h';
-import '../utils/2_core/$log';
-import '../utils/2_core/$schema';
-import '../utils/2_core/$test';
-import '../utils/2_core/$uid1';
-import '../utils/2_core/$uid2';
-import '../utils/2_core/$userAgent';
+import '../utils/2_core/h';
+import '../utils/2_core/log';
+import '../utils/2_core/schema';
+import '../utils/2_core/test';
+import '../utils/2_core/uid1';
+import '../utils/2_core/uid2';
+import '../utils/2_core/userAgent';
