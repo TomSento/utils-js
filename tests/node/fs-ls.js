@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
 require('../../dist/utils.node.js');
 
-$ls([
+var ls = $import('<ls>');
+
+ls([
     '../../utils',
     '../../tests/node'
 ], 'R', function(path, stat, next) {
