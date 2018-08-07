@@ -9,7 +9,9 @@
 <body>
     <script src="../../dist/utils.browser.js"></script>
     <script>
-        $test('errorBuilder.getData()', function(assert) {
+        var test = $import('<test>');
+
+        test('errorBuilder.getData()', function(assert) {
             var done = assert.async(2);
             assert.expect(4);
             setTimeout(function() {
@@ -23,11 +25,11 @@
                 done();
             }, 4000);
         });
-        $test('errorBuilder.getData().setName()', function(assert) {
+        test('errorBuilder.getData().setName()', function(assert) {
             assert.expect(1);
             assert.ok(true, 'ACTUAL4', 'EXPECTED4', 'ASSERT4');
         });
-        $test('errorBuilder.getData().getAge()', function(assert) {
+        test('errorBuilder.getData().getAge()', function(assert) {
             assert.ok(true, 'ACTUAL5', 'EXPECTED5', 'ASSERT5');
         });
     </script>
