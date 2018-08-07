@@ -5,7 +5,7 @@ var ENCODE_HTML_CHARACTERS = {
     '>': 'gt'
 };
 
-String.prototype.escape = function(leftStartWithNBPS, leftRevResult, rightStartWithNBPS, rightRevResult) {
+String.prototype.escape = function(leftStartWithNBPS, leftRevResult, rightStartWithNBPS) {
     var str = this.replace(/(&|"|<|>)/g, function(match, k) {
         return ('&' + ENCODE_HTML_CHARACTERS[k] + ';') || k;
     });
@@ -14,7 +14,7 @@ String.prototype.escape = function(leftStartWithNBPS, leftRevResult, rightStartW
         return generateSpaces(spaces.length, leftStartWithNBPS, leftRevResult);
     });
     str = str.replace(/\s+$/, function(spaces) {
-        return generateSpaces(spaces.length, rightStartWithNBPS, rightRevResult);
+        return generateSpaces(spaces.length, rightStartWithNBPS, true);
     });
     return str;
     function replaceMultipleWhitespacesBetweenChars(str) {
