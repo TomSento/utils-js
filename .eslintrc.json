@@ -9,30 +9,11 @@
 
         "$export": true,
         "$import": true,
-        "$malloc": true,
-        "$noop": true,
-        "$type": true,
+        "malloc": true,
+        "typ": true,
 
-        "$clone": true,
-        "$extend": true,
-        "$q": true,
-        "$ext": true,
+        "log": true,
 
-        "$log": true,
-        "$uid1": true,
-        "$uid2": true,
-        "$h": true,
-        "$schema": true,
-        "$test": true,
-        "$userAgent": true,
-
-        "$ls": true,
-        "$Watcher": true,
-        "$route1": true,
-        "$server": true,
-        "$destroyStream": true,
-
-        "$ajax": true,
-        "$browserSupportsEvent": true
+        "d": true
     }
 }
