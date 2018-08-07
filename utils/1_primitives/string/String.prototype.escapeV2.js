@@ -6,6 +6,8 @@ var ENCODE_HTML_CHARACTERS = {
 };
 
 String.prototype.escapeV2 = function(lspace, lrev, rspace) {
+    lspace = lspace || '&nbsp;';
+    rspace = rspace || '&nbsp;';
     var str = this.replace(/(&|"|<|>)/g, function(match, k) {
         return ('&' + ENCODE_HTML_CHARACTERS[k] + ';') || k;
     });
