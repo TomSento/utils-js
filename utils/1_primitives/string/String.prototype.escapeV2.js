@@ -5,16 +5,16 @@ var ENCODE_HTML_CHARACTERS = {
     '>': 'gt'
 };
 
-String.prototype.escape = function(leftStartWithNBPS, leftRevResult, rightStartWithNBPS) {
+String.prototype.escapeV2 = function(lspace, lrev, rspace) {
     var str = this.replace(/(&|"|<|>)/g, function(match, k) {
         return ('&' + ENCODE_HTML_CHARACTERS[k] + ';') || k;
     });
     str = replaceMultipleWhitespacesBetweenChars(str);
-    str = str.replace(/^\s+/, function(spaces) {
-        return generateSpaces(spaces.length, leftStartWithNBPS, leftRevResult);
+    str = str.replace(/^\s+/, function(m) {
+        return spaces(m.length, lspace, lrev);
     });
-    str = str.replace(/\s+$/, function(spaces) {
-        return generateSpaces(spaces.length, rightStartWithNBPS, true);
+    str = str.replace(/\s+$/, function(m) {
+        return spaces(m.length, rspace, true);
     });
     return str;
     function replaceMultipleWhitespacesBetweenChars(str) {
@@ -22,25 +22,21 @@ String.prototype.escape = function(leftStartWithNBPS, leftRevResult, rightStartW
         var match = null;
         while (match = exp.exec(str)) {
             if (Array.isArray(match)) {
-                exp.lastIndex -= 1; // MATCH OVERLAPS
+                exp.lastIndex -= 1;
                 var i = match.index + 1;
                 var len = match[1].length;
-                var part = generateSpaces(len, false, true); // PRESERVE BS ON CHAR LEFT BOUNDARY
+                var part = spaces(len, ' ', true); // ------------------------> PRESERVE BS ON LEFT BOUNDARY
                 str = str.substring(0, i) + part + str.substring(i + len);
             }
         }
         return str;
     }
-    function generateSpaces(len, startWithNBPS, revResult) {
+    function spaces(len, space1st, reverse) {
+        var space2nd = space1st === ' ' ? '&nbsp;' : ' ';
         var arr = [];
-        for (var i = 0; i < len; i++) {
-            if (i % 2 === 0) {
-                arr[i] = startWithNBPS ? '&nbsp;' : ' ';
-            }
-            else {
-                arr[i] = startWithNBPS ? ' ' : '&nbsp;';
-            }
+        while (len--) {
+            arr[len] = (len % 2 === 0) ? space1st : space2nd;
         }
-        return revResult ? arr.reverse().join('') : arr.join('');
+        return reverse ? arr.reverse().join('') : arr.join('');
     }
 };
