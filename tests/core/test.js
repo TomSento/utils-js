@@ -1,6 +1,8 @@
 require('../../dist/utils.node.js');
 
-$test('errorBuilder.getData()', function(assert) {
+var test = $import('<test>');
+
+test('errorBuilder.getData()', function(assert) {
     var done = assert.async(2);
     assert.expect(4);
     // throw new Error('aaaa');
@@ -15,11 +17,11 @@ $test('errorBuilder.getData()', function(assert) {
         done();
     }, 17000);
 }, 17000);
-$test('errorBuilder.getData().setName()', function(assert) {
+test('errorBuilder.getData().setName()', function(assert) {
     assert.expect(1);
     assert.ok(true, 'ACTUAL4', 'EXPECTED4', 'ASSERT4');
     // throw new Error('terminateTesting');
 });
-$test('errorBuilder.getData().getAge()', function(assert) {
+test('errorBuilder.getData().getAge()', function(assert) {
     assert.ok(true, 'ACTUAL5', 'EXPECTED5', 'ASSERT5');
 });
