@@ -1,18 +1,18 @@
 // https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 if (!String.prototype.padStart) {
-    String.prototype.padStart = function(targetLength, padString) {
-        targetLength >>= 0; // eslint-disable-line no-bitwise
-        padString = String((typeof padString !== 'undefined' ? padString : ' '));
-        if (this.length > targetLength) {
+    String.prototype.padStart = function(len, str) {
+        len >>= 0; // eslint-disable-line no-bitwise
+        str = String((typeof str !== 'undefined' ? str : ' '));
+        if (this.length > len) {
             return String(this);
         }
         else {
-            targetLength -= this.length;
-            if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength / padString.length);
+            len -= this.length;
+            if (len > str.length) {
+                str += str.repeat(len / str.length);
             }
-            return padString.slice(0, targetLength) + String(this);
+            return str.slice(0, len) + String(this);
         }
     };
 }
