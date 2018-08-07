@@ -5,7 +5,7 @@ var ENCODE_HTML_CHARACTERS = {
     '>': 'gt'
 };
 
-String.prototype.escapeV2 = function(lspace, lrev, rspace) {
+String.prototype.escape = function(lspace, lrev, rspace) {
     lspace = lspace || '&nbsp;';
     rspace = rspace || '&nbsp;';
     var str = this.replace(/(&|"|<|>)/g, function(match, k) {
