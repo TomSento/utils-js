@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
 require('../../dist/utils.node.js');
 
-var w = new $Watcher();
+var Watcher = $import('<Watcher>');
+
+var w = new Watcher();
 w.watch('../files/watchme1.md');
 w.watch('../files/watchme2.md');
 
