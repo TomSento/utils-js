@@ -3,6 +3,6 @@
         if (el.previousElementSibling instanceof HTMLStyleElement) { // ------> REMOVE ACSS STYLES
             nativeRemoveChild.call(this, el.previousElementSibling);
         }
-        nativeRemoveChild.call(this, el);
+        return nativeRemoveChild.call(this, el);
     };
 }(Element.prototype.removeChild));
