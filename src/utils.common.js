@@ -27,6 +27,7 @@ import '../utils/1_primitives/string/String.prototype.reverse';
 import '../utils/1_primitives/string/String.prototype.slug';
 import '../utils/1_primitives/string/String.prototype.strip';
 
+import '../utils/2_core/all';
 import '../utils/2_core/h';
 import '../utils/2_core/log';
 import '../utils/2_core/schema';
