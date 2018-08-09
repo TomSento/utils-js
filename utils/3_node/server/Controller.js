@@ -28,7 +28,6 @@ export default function Controller(req, res, routeError) {
     self.args = [];
     self.query = {};
     self.body = {};
-    self.mfd = [];
     self.run = function() {
         self.prepareRoute(function() {
             self.monitorResponseChanges();
@@ -216,12 +215,13 @@ export default function Controller(req, res, routeError) {
         }
         var requestEnded = false;
         var rm = [];
+        self.body = [];
         req.once('close', function() {
             if (!requestEnded) { // ------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
                 for (var i = 0, l = rm.length; i < l; i++) {
                     $fs.unlink(rm[i], function() {});
                 }
-                self.mfd = [];
+                self.body = {};
                 routeError(req, res, 500, null);
             }
         });
@@ -337,7 +337,7 @@ export default function Controller(req, res, routeError) {
                 return;
             }
             entry.value = processingFile ? undefined : entry.value.toString('utf8');
-            self.mfd.push(entry);
+            self.body.push(entry);
         };
         function onceEnd() { // ----------------------------------------------> HANDLER "parser.onEnd()" IS CALLED BY "MultipartParser" - DO NOT USE - FOR FULL CONTROL OVER INVOCATION TIME USE "onceEnd()" INSTEAD
             if (unclosedFileStreams > 0) {
@@ -350,7 +350,7 @@ export default function Controller(req, res, routeError) {
                     for (var i = 0, l = rm.length; i < l; i++) {
                         $fs.unlink(rm[i], function() {});
                     }
-                    self.mfd = [];
+                    self.body = {};
                     return routeError(req, res, 431, null);
                 }
                 next();
@@ -386,7 +386,7 @@ export default function Controller(req, res, routeError) {
         };
     };
     self.invokeRoute = function() {
-        self.route.fn(req, res, self.args, self.query, self.body, self.mfd);
+        self.route.fn(req, res, self.args, self.query, self.body);
     };
     self.prepareStatus = function(statusCode) { // ---------------------------> https://httpstatuses.com/
         var v = parseInt(statusCode);
