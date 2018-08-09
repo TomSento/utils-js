@@ -1,51 +1,52 @@
 /* eslint-disable no-console */
 require('../../dist/utils.node.js');
 
-var schema = $import('<schema>');
+var Schema = $import('<Schema>');
+var schema = malloc('schemas');
 
-schema('User', 'EN', {
-    'name': [String, {
-        validate: function(v, typeMatch) {
-            return typeMatch && v.length > 5;
+schema('User', new Schema('EN', {
+    'name': {
+        validate: function(v) {
+            return typ.call(v) === '[object String]' && v.length > 5;
         },
         'EN': 'Parameter "name" is missing or has incorrect format.',
         'SK': 'Parameter "name" chýba alebo má nesprávny formát.',
         'CZ': 'Parametr "name" chybí nebo má špatný formát.'
-    }],
-    'description': [String, {
+    },
+    'description': {
         prepare: function(v) {
             return v || null;
         },
-        validate: function(v, typeMatch) {
+        validate: function(v) {
             if (v === null) {
                 return true;
             }
-            return typeMatch;
+            return typ.call(v) === '[object String]';
         },
         'EN': 'Parameter "description" has incorrect format.'
-    }],
-    'projects': [Array, {
-        validate: function(v, typeMatch) {
-            return typeMatch && v && v.length > 0;
+    },
+    'projects': {
+        validate: function(v) {
+            return typ.call(v) === '[object Array]' && v && v.length > 0;
         },
         'EN': 'Parameter "projects" must be an array with at least one item.'
-    }],
-    'getName': [Function, {
-        validate: function(v, typeMatch) {
-            return typeMatch;
+    },
+    'getName': {
+        validate: function(v) {
+            return typ.call(v) === '[object Function]';
         },
         'EN': 'Function "getName" is missing.',
         'SK': 'Chýba funkcia "getName".'
-    }]
-});
+    }
+}));
 
-schema('Project', 'EN', {
+schema('Project', new Schema('EN', {
     'name': [String, {
-        validate: function(v, typeMatch) {
-            return typeMatch && v && v.length < 20;
+        validate: function(v) {
+            return typ.call(v) === '[object String]' && v && v.length < 20;
         }
     }]
-});
+}));
 
 var user = {
     name: 'Tomas Sentkeresty',
