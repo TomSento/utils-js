@@ -6,6 +6,16 @@ import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
 import $destroyStream from '../destroyStream';
 
+var STATIC_ACCEPTS = [
+    '.txt', '.md',
+    '.html', '.xml', '.json',
+    '.woff', '.woff2', '.otf', '.ttf', '.eot',
+    '.js', '.css',
+    '.jpg', '.png', '.gif', '.svg', '.ico',
+    '.mp4', '.mp3', '.swf',
+    '.pdf', '.docx', '.xlsx', '.doc', '.xls',
+    '.zip', '.rar'
+];
 var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
     'addTrailers',
@@ -50,10 +60,10 @@ export default function Controller(req, res, routeError) {
             return routeError(req, res, 404, null);
         }
         var ext = $path.extname(pathname);
-        if (!ext || cache('app').config.staticAccepts.indexOf(ext) === -1) {
+        if (!ext || STATIC_ACCEPTS.indexOf(ext) === -1) {
             return routeError(req, res, 404, null);
         }
-        var filepath = $path.resolve(cache('app').config.publicDirectory + pathname);
+        var filepath = $path.resolve('./public' + pathname);
         $fs.stat(filepath, function(err) {
             if (err) {
                 return routeError(req, res, err.code === 'ENOENT' ? 404 : 500, null);
