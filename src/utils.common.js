@@ -30,7 +30,7 @@ import '../utils/1_primitives/string/String.prototype.strip';
 import '../utils/2_core/all';
 import '../utils/2_core/h';
 import '../utils/2_core/log';
-import '../utils/2_core/Schema2';
+import '../utils/2_core/Schema';
 import '../utils/2_core/test';
 import '../utils/2_core/uid1';
 import '../utils/2_core/uid2';
