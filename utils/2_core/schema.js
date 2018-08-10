@@ -1,42 +1,23 @@
-function Schema(defaultLanguage, obj) {
-    if (!defaultLanguage || typeof(defaultLanguage) !== 'string') {
-        throw new Error('api-defaultLanguage');
-    }
+function Schema(obj) {
     if (Object.prototype.toString.call(obj) !== '[object Object]') {
         throw new Error('api-obj');
     }
-    this.defaultLanguage = defaultLanguage.toUpperCase();
     this.rule = {};
     for (var k in obj) {
         if (obj.hasOwnProperty(k)) {
-            var tmp = {
-                msg: {}
+            var tmp = obj[k][1];
+            this.rule[k] = {
+                msg: obj[k][0],
+                prepare: tmp.prepare,
+                validate: tmp.validate
             };
-            var rule = obj[k];
-            for (var kk in rule) {
-                if (rule.hasOwnProperty(kk)) {
-                    if (['prepare', 'validate'].indexOf(kk) >= 0) {
-                        tmp[kk] = rule[kk];
-                    }
-                    else {
-                        tmp.msg[kk] = rule[kk];
-                    }
-                }
-            }
-            this.rule[k] = tmp;
         }
     }
 }
 Schema.prototype = {
-    prepareValidate: function(o, lan) {
-        if (!o || typeof(o) !== 'object') {
+    prepareValidate: function(o) {
+        if (Object.prototype.toString.call(o) !== '[object Object]') {
             throw new Error('api-o');
-        }
-        if (lan) {
-            if (typeof(lan) !== 'string') {
-                throw new Error('api-lan');
-            }
-            lan = lan.toUpperCase();
         }
         var err = {};
         for (var k in this.rule) {
@@ -48,14 +29,14 @@ Schema.prototype = {
                     o[k] = v;
                 }
                 if (rule.validate && !rule.validate(v, o)) {
-                    err[k] = rule.msg[lan || this.defaultLanguage] || ('Invalid "' + k + '".');
+                    err[k] = rule.msg;
                 }
             }
         }
         return err;
     },
     clean: function(o) {
-        if (!o || typeof(o) !== 'object') {
+        if (Object.prototype.toString.call(o) !== '[object Object]') {
             throw new Error('api-o');
         }
         var tmp = {};
@@ -66,21 +47,15 @@ Schema.prototype = {
         }
         return tmp;
     },
-    error: function(k, lan) {
+    error: function(k) {
         if (!k || typeof(k) !== 'string') {
             throw new Error('api-k');
         }
-        if (lan) {
-            if (typeof(lan) !== 'string') {
-                throw new Error('api-lan');
-            }
-            lan = lan.toUpperCase();
-        }
         var rule = this.rule[k];
-        if (!rule || !rule.msg) {
+        if (!rule) {
             throw new Error('Property "' + k + '" not found.');
         }
-        return rule.msg[lan || this.defaultLanguage] || ('Invalid "' + k + '".');
+        return rule.msg;
     }
 };
 $export('<Schema>', Schema);
