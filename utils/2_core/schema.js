@@ -10,10 +10,9 @@ function Schema(defaultLanguage, obj) {
     for (var k in obj) {
         if (obj.hasOwnProperty(k)) {
             var tmp = {
-                type: strType(obj[k][0]),
                 msg: {}
             };
-            var rule = obj[k][1];
+            var rule = obj[k];
             for (var kk in rule) {
                 if (rule.hasOwnProperty(kk)) {
                     if (['prepare', 'validate'].indexOf(kk) >= 0) {
@@ -27,25 +26,6 @@ function Schema(defaultLanguage, obj) {
             this.rule[k] = tmp;
         }
     }
-    function strType(type) {
-        switch (type) {
-            case Number:
-                return '[object Number]';
-            case String:
-                return '[object String]';
-            case Array:
-                return '[object Array]';
-            case Date:
-                return '[object Date]';
-            case Object:
-                return '[object Object]';
-            case Boolean:
-                return '[object Boolean]';
-            case Function:
-                return '[object Function]';
-        }
-        return null;
-    }
 }
 Schema.prototype = {
     prepareValidate: function(o, lan) {
@@ -58,19 +38,16 @@ Schema.prototype = {
             }
             lan = lan.toUpperCase();
         }
-        var typeMatch;
         var err = {};
         for (var k in this.rule) {
             if (this.rule.hasOwnProperty(k)) {
                 var rule = this.rule[k];
                 var v = o[k];
                 if (typeof(rule.prepare) === 'function') {
-                    typeMatch = (Object.prototype.toString.call(v) === rule.type);
-                    v = rule.prepare(v, typeMatch, o);
+                    v = rule.prepare(v, o);
                     o[k] = v;
                 }
-                typeMatch = (Object.prototype.toString.call(v) === rule.type);
-                if (rule.validate && !rule.validate(v, typeMatch, o)) {
+                if (rule.validate && !rule.validate(v, o)) {
                     err[k] = rule.msg[lan || this.defaultLanguage] || ('Invalid "' + k + '".');
                 }
             }
