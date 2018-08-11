@@ -1,7 +1,7 @@
+import * as $querystring from 'querystring';
 import * as $url from 'url';
 import * as $https from 'https';
 import * as $http from 'http';
-import * as $querystring from 'querystring';
 
 var CONCAT = [null, null];
 var EXP_PARSE_FLAGS = /^-m\s(GET|PUT|POST|DELETE)(?:(?=\s-flw)(?:\s-(flw))|)$/; // https://regex101.com/r/JEx8MB/2/
