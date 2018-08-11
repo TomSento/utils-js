@@ -4,7 +4,7 @@ import * as $https from 'https';
 import * as $http from 'http';
 
 var CONCAT = [null, null];
-var EXP_PARSE_FLAGS = /^-m\s(GET|PUT|POST|DELETE)(?:(?=\s-flw)(?:\s-(flw))|)$/; // https://regex101.com/r/JEx8MB/2/
+var EXP_FLAGS = /^-m\s(GET|PUT|POST|DELETE)(?:(?=\s-flw)(?:\s-(flw))|)$/; // https://regex101.com/r/JEx8MB/2/
 
 function request(url, flags, a, b, c) {
     var body;
@@ -14,10 +14,6 @@ function request(url, flags, a, b, c) {
         body = a;
         headers = b;
         next = c;
-    }
-    else if (a instanceof Buffer && typeof(b) === 'function') {
-        body = a;
-        next = b;
     }
     else if (typeof(a) === 'function') {
         next = a;
@@ -33,15 +29,21 @@ function request(url, flags, a, b, c) {
             }
         }
     }
-    if (Object.prototype.toString.call(body) === '[object Object]' || Array.isArray(body)) {
-        if (headers['content-type'] === 'application/json') {
-            body = JSON.stringify(body);
+    if (body !== undefined) {
+        var tmp = headers['content-type'];
+        if (!tmp) {
+            throw new Error('Missing content type.');
         }
-        else if (headers['content-type'] === 'application/x-www-form-urlencoded') {
-            body = $querystring.stringify(body);
-        }
-        else {
-            throw new Error('Invalid content type.');
+        if (Object.prototype.toString.call(body) === '[object Object]' || Array.isArray(body)) {
+            if (tmp === 'application/json') {
+                body = JSON.stringify(body);
+            }
+            else if (tmp === 'application/x-www-form-urlencoded') {
+                body = $querystring.stringify(body);
+            }
+            else {
+                throw new Error('Invalid content type.');
+            }
         }
     }
     (function loop(lastURL) {
@@ -74,9 +76,6 @@ function request(url, flags, a, b, c) {
         req.once('error', function(err) {
             next(err);
         });
-        if (Buffer.isBuffer(body)) { // eslint-disable-line dot-notation
-            req.setHeader('application/octet-stream');
-        }
         if (body) {
             req.setHeader('content-length', body.length);
             req.write(body);
@@ -84,10 +83,10 @@ function request(url, flags, a, b, c) {
         req.end();
     }(url));
     function canBeBody(v) {
-        return Object.prototype.toString.call(v) === '[object Object]' || Array.isArray(v) || typeof(v) === 'string' || v instanceof Buffer;
+        return Object.prototype.toString.call(v) === '[object Object]' || Array.isArray(v) || typeof(v) === 'string' || Buffer.isBuffer(v);
     }
     function parseFlags() {
-        var m = flags.match(EXP_PARSE_FLAGS);
+        var m = flags.match(EXP_FLAGS);
         if (!m) {
             throw new Error('Request "flags" must follow "-m <Value> -flw?"');
         }
