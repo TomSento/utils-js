@@ -80,7 +80,7 @@ function request(url, flags, a, b, c) {
         req.once('error', function(err) {
             next(err);
         });
-        if (body) {
+        if (body) { // -------------------------------------------------------> Buffer || String
             req.setHeader('content-length', body.length);
             req.write(body);
         }
