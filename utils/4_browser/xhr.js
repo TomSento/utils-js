@@ -1,6 +1,7 @@
 var type = Object.prototype.toString;
+var EXP_FLAGS = /^-m\s(GET|PUT|POST|DELETE)$/; // ----------------------------> https://regex101.com/r/Gn3KrT/1/
 
-function xhr(url, method, a, b, c, d) {
+function xhr(url, flags, a, b, c, d) {
     var body;
     var headers;
     var progressFN;
@@ -59,6 +60,11 @@ function xhr(url, method, a, b, c, d) {
             }
         }
     };
+    var m = flags.match(EXP_FLAGS);
+    if (!m) {
+        throw new Error('Request "flags" must follow "-m <Value>" syntax.');
+    }
+    var method = m[1];
     xhr.open(method, url, true);
     if (headers) {
         for (var k in headers) {
