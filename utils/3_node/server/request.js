@@ -15,6 +15,10 @@ function request(url, flags, a, b, c) {
         headers = b;
         next = c;
     }
+    else if (Object.prototype.toString.call(a) === '[object Object]' && typeof(b) === 'function') {
+        headers = a;
+        next = b;
+    }
     else if (typeof(a) === 'function') {
         next = a;
     }
