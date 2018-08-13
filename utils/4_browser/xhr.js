@@ -2,6 +2,7 @@ var type = Object.prototype.toString;
 var EXP_FLAGS = /^-m\s(GET|PUT|POST|DELETE)$/; // ----------------------------> https://regex101.com/r/Gn3KrT/1/
 
 function xhr(url, flags, a, b, c, d) {
+    flags = parseFlags();
     var body;
     var headers;
     var progressFN;
@@ -21,8 +22,8 @@ function xhr(url, flags, a, b, c, d) {
         body = a;
         next = b;
     }
-    else if (a && typeof(a) === 'object' && type.call(b) === '[object Object]' && typeof(c) === 'function') {
-        body = a; // ---------------------------------------------------------> Object || FormData - ALSO Array BUT SERVER INTENTIONALLY DOES NOT SUPPORT Array BODY
+    else if (canBeBody(a) && type.call(b) === '[object Object]' && typeof(c) === 'function') {
+        body = a;
         headers = b;
         next = c;
     }
@@ -35,6 +36,26 @@ function xhr(url, flags, a, b, c, d) {
     }
     else {
         throw new Error('Invalid arguments at tail.');
+    }
+    var k;
+    if (headers) {
+        for (k in headers) {
+            if (headers.hasOwnProperty(k)) {
+                headers[k.toLowerCase()] = headers[k];
+            }
+        }
+    }
+    if (type.call(body) === '[object Object]' || Array.isArray(body) || typeof(body) === 'string') {
+        var tmp = headers['content-type'];
+        if (!tmp) {
+            throw new Error('Missing content type.');
+        }
+        if (typeof(body) !== 'string') {
+            if (tmp !== 'application/json') {
+                throw new Error('Invalid content type.');
+            }
+            body = JSON.stringify(body);
+        }
     }
     var xhr = new XMLHttpRequest();
     xhr.onerror = function() {
@@ -60,20 +81,26 @@ function xhr(url, flags, a, b, c, d) {
             }
         }
     };
-    var m = flags.match(EXP_FLAGS);
-    if (!m) {
-        throw new Error('Request "flags" must follow "-m <Value>" syntax.');
-    }
-    var method = m[1];
-    xhr.open(method, url, true);
+    xhr.open(flags.method, url, true);
     if (headers) {
-        for (var k in headers) {
+        for (k in headers) {
             if (headers.hasOwnProperty(k)) {
-                var v = headers[k];
-                xhr.setRequestHeader(k, v);
+                xhr.setRequestHeader(k, headers[k]);
             }
         }
     }
-    xhr.send(body); // -------------------------------------------------------> Object || FormData - ALSO Array BUT SERVER INTENTIONALLY DOES NOT SUPPORT Array BODY
+    xhr.send(body); // -------------------------------------------------------> String || FormData
+    function parseFlags() {
+        var m = flags.match(EXP_FLAGS);
+        if (!m) {
+            throw new Error('Request "flags" must follow "-m <Value>" syntax.');
+        }
+        return {
+            method: m[1]
+        };
+    }
+    function canBeBody(v) {
+        return type.call(v) === '[object Object]' || Array.isArray(v) || typeof(v) === 'string' || v instanceof FormData;
+    }
 }
 $export('<xhr>', xhr);
