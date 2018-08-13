@@ -38,12 +38,10 @@ function request(url, flags, a, b, c) {
             throw new Error('Missing content type.');
         }
         if (Object.prototype.toString.call(body) === '[object Object]' || Array.isArray(body)) {
-            if (tmp === 'application/json') {
-                body = JSON.stringify(body);
-            }
-            else {
+            if (tmp !== 'application/json') {
                 throw new Error('Invalid content type.');
             }
+            body = JSON.stringify(body);
         }
     }
     (function loop(lastURL) {
