@@ -80,9 +80,6 @@ function request(url, flags, a, b, c) {
         }
         req.end();
     }(url));
-    function canBeBody(v) {
-        return Object.prototype.toString.call(v) === '[object Object]' || Array.isArray(v) || typeof(v) === 'string' || Buffer.isBuffer(v);
-    }
     function parseFlags() {
         var m = flags.match(EXP_FLAGS);
         if (!m) {
@@ -92,6 +89,9 @@ function request(url, flags, a, b, c) {
             method: m[1],
             follow: !!m[2]
         };
+    }
+    function canBeBody(v) {
+        return Object.prototype.toString.call(v) === '[object Object]' || Array.isArray(v) || typeof(v) === 'string' || Buffer.isBuffer(v);
     }
     function prepareResponse(str) {
         try {
