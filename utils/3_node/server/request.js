@@ -6,6 +6,7 @@ var CONCAT = [null, null];
 var EXP_FLAGS = /^-m\s(GET|PUT|POST|DELETE)(?:(?=\s-flw)(?:\s-(flw))|)$/; // https://regex101.com/r/JEx8MB/2/
 
 function request(url, flags, a, b, c) {
+    flags = parseFlags();
     var body;
     var headers;
     var next;
@@ -24,7 +25,6 @@ function request(url, flags, a, b, c) {
     else {
         throw new Error('Invalid arguments at tail.');
     }
-    flags = parseFlags();
     if (headers) {
         for (var k in headers) {
             if (headers.hasOwnProperty(k)) {
