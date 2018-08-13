@@ -1,4 +1,3 @@
-import * as $querystring from 'querystring';
 import * as $url from 'url';
 import * as $https from 'https';
 import * as $http from 'http';
@@ -41,9 +40,6 @@ function request(url, flags, a, b, c) {
         if (Object.prototype.toString.call(body) === '[object Object]' || Array.isArray(body)) {
             if (tmp === 'application/json') {
                 body = JSON.stringify(body);
-            }
-            else if (tmp === 'application/x-www-form-urlencoded') {
-                body = $querystring.stringify(body);
             }
             else {
                 throw new Error('Invalid content type.');
