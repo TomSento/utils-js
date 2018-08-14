@@ -67,7 +67,7 @@ function request(url, flags, a, b, c) {
                 });
                 res.once('end', function() {
                     result = prepareResponse(result.toString('utf8'));
-                    next(null, result, res.statusCode);
+                    next(null, res.statusCode, result);
                 });
             }
         });
