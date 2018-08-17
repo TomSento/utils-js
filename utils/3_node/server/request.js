@@ -67,7 +67,11 @@ function request(url, flags, a, b, c) {
                 });
                 res.once('end', function() {
                     result = prepareResponse(result.toString('utf8'));
-                    next(null, res.statusCode, result);
+                    var statusCode = res.statusCode;
+                    if (statusCode !== 200) {
+                        return next(new Error('' + statusCode), result);
+                    }
+                    next(null, result);
                 });
             }
         });
