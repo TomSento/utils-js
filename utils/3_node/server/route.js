@@ -1,14 +1,14 @@
 import $malloc from '../../0_internal/malloc';
 
-function route(matcher, fn, flags) {
+function route(matcher, flags, fn) {
     if (typeof(matcher) !== 'string' || matcher[0] !== '/') {
         throw new Error('api-matcher');
     }
-    if (!fn || typeof(fn) !== 'function') {
-        throw new Error('api-fn');
-    }
     if (!flags || typeof(flags) !== 'string') {
         throw new Error('api-flags');
+    }
+    if (!fn || typeof(fn) !== 'function') {
+        throw new Error('api-fn');
     }
     var cache = $malloc('__SERVER');
     var v = parseRoute();
