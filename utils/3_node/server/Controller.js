@@ -163,6 +163,7 @@ export default function Controller(req, res, routeError) {
         if (url.query && typeof(url.query) === 'string') {
             self.query = $querystring.parse(url.query) || {};
         }
+        req.headers.cookie = req.headers.cookie ? self.prepareRequestCookies() : {};
         tmp = self.getContentType4L();
         if (tmp === 'json') {
             self.prepareRequestJSON(next);
@@ -176,6 +177,27 @@ export default function Controller(req, res, routeError) {
         else {
             routeError(req, res, 400, null);
         }
+    };
+    self.prepareRequestCookies = function() {
+        var obj = {};
+        var str = req.headers.cookie;
+        (function nextKV(i) {
+            var j = str.indexOf('=', i + 1);
+            if (j === -1) {
+                return obj;
+            }
+            var k = str.indexOf(';', j + 1);
+            if (k === -1) {
+                k = str.length;
+            }
+            var key = str.slice(i, j).trim();
+            var val = str.slice(j + 1, k);
+            if (key && val) {
+                obj[key] = decodeURI(val);
+            }
+            nextKV(++k);
+        }(0));
+        return obj;
     };
     self.prepareRequestJSON = function(next) {
         if (['POST', 'PUT'].indexOf(req.method) === -1) {
