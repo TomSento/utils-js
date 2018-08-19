@@ -418,7 +418,7 @@ export default function Controller(req, res, routeError) {
         };
     };
     self.invokeRoute = function() {
-        self.route.fn(req, res, self.args, self.query, self.body);
+        self.route.fn.call({}, req, res, self.args, self.query, self.body);
     };
     self.prepareStatus = function(statusCode) { // ---------------------------> https://httpstatuses.com/
         var v = parseInt(statusCode);
