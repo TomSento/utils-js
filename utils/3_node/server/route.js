@@ -17,7 +17,7 @@ function route(matcher, fn) {
     cache('routes', routes);
     function parseRoute() {
         var m;
-        var exp = /^([\w-/@]+)\s+-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/12
+        var exp = /^([\w-/[\]@]+)\s+-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/15
         m = matcher.match(exp);
         if (!m) {
             throw new Error('Route "matcher" must follow "<Url> -m <Value> -s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
