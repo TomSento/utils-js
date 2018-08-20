@@ -1,11 +1,8 @@
 import $malloc from '../../0_internal/malloc';
 
-function route(matcher, flags, fn) {
-    if (typeof(matcher) !== 'string' || matcher[0] !== '/') {
+function route(matcher, fn) {
+    if (!matcher || typeof(matcher) !== 'string') {
         throw new Error('api-matcher');
-    }
-    if (!flags || typeof(flags) !== 'string') {
-        throw new Error('api-flags');
     }
     if (!fn || typeof(fn) !== 'function') {
         throw new Error('api-fn');
@@ -20,21 +17,22 @@ function route(matcher, flags, fn) {
     cache('routes', routes);
     function parseRoute() {
         var m;
-        var exp = /^-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/6/
-        m = flags.match(exp);
+        var exp = /^([\w-/@]+)\s-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/11
+        m = matcher.match(exp);
         if (!m) {
-            throw new Error('Route "flags" must follow "-m <Value> -s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
+            throw new Error('Route "matcher" must follow "<Url> -m <Value> -s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
         }
-        var tmp = (matcher !== '/' && matcher[matcher.length - 1] === '/') ? matcher.slice(0, -1) : matcher;
+        var tmp = m[1];
+        tmp = (tmp !== '/' && tmp[tmp.length - 1] === '/') ? tmp.slice(0, -1) : tmp;
         return {
             matcher: tmp,
             exp: new RegExp('^' + tmp.replace(/\[(\w+)\]/g, '(\\w+)') + '$'),
             fn: fn,
-            method: m[1],
-            maxSize: parseMaxSize(m[2], m[3]),
-            maxTimeout: parseMaxTimeout(m[4]),
-            xhr: !!m[5],
-            mfd: !!m[6]
+            method: m[2],
+            maxSize: parseMaxSize(m[3], m[4]),
+            maxTimeout: parseMaxTimeout(m[5]),
+            xhr: !!m[6],
+            mfd: !!m[7]
         };
     }
     function parseMaxSize(v, unit) {
