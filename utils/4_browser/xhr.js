@@ -60,6 +60,7 @@ function xhr(url, flags, a, b, c, d) {
     var xhr = new XMLHttpRequest();
     xhr.onerror = function() {
         console.error('Unexpected XHR error.'); // eslint-disable-line no-console
+        next(new Error('xhr'));
     };
     if (progressFN) {
         xhr.upload.onprogress = function(e) {
@@ -74,10 +75,15 @@ function xhr(url, flags, a, b, c, d) {
         if (xhr.readyState === 4) {
             try {
                 res = (headers && headers['Accept'] === 'application/json') ? JSON.parse(xhr.responseText) : xhr.responseText; // eslint-disable-line dot-notation
-                next(xhr.status, res);
+                var statusCode = xhr.status;
+                if (statusCode !== 200) {
+                    return next(new Error('' + statusCode), res);
+                }
+                next(null, res);
             }
-            catch (e) {
+            catch (err) {
                 console.error('Unable to parse server response to JSON.'); // eslint-disable-line no-console
+                next(err);
             }
         }
     };
