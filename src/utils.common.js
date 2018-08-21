@@ -19,7 +19,7 @@ import '../utils/1_primitives/object/query';
 
 import '../utils/1_primitives/string/extension';
 import '../utils/1_primitives/string/String.prototype.escape';
-import '../utils/1_primitives/string/String.prototype.format';
+import '../utils/1_primitives/string/String.prototype.fmt';
 import '../utils/1_primitives/string/String.prototype.padEnd';
 import '../utils/1_primitives/string/String.prototype.padStart';
 import '../utils/1_primitives/string/String.prototype.removeDiacritics';
