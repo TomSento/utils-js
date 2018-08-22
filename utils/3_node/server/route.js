@@ -20,7 +20,7 @@ function route(matcher, fn) {
         var exp = /^([\w-/[\]@]+)\s+-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/17
         m = matcher.match(exp);
         if (!m) {
-            throw new Error('Route "matcher" must follow "<Url> -m <Value> -s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
+            throw new Error('Route "matcher" must follow "<Url> -m <Value> -s <Value><Unit> -t <Value><Unit> -mfd?" syntax.');
         }
         var tmp = m[1];
         tmp = (tmp !== '/' && tmp[tmp.length - 1] === '/') ? tmp.slice(0, -1) : tmp;
