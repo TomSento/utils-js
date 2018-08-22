@@ -74,7 +74,7 @@ function xhr(url, flags, a, b, c, d) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
             try {
-                res = (headers && headers['Accept'] === 'application/json') ? JSON.parse(xhr.responseText) : xhr.responseText; // eslint-disable-line dot-notation
+                res = prepareResponse(xhr.responseText || '');
                 var statusCode = xhr.status;
                 if (statusCode !== 200) {
                     return next(new Error('' + statusCode), res);
@@ -107,6 +107,14 @@ function xhr(url, flags, a, b, c, d) {
     }
     function canBeBody(v) {
         return type.call(v) === '[object Object]' || Array.isArray(v) || typeof(v) === 'string' || v instanceof FormData;
+    }
+    function prepareResponse(str) {
+        try {
+            return JSON.parse(str);
+        }
+        catch (e) {
+            return str;
+        }
     }
 }
 $export('<xhr>', xhr);
