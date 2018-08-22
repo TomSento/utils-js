@@ -90,14 +90,9 @@ export default function Controller(req, res, routeError) {
         if (!matcher) {
             return null;
         }
-        var xhr = req.headers['x-requested-with'] === 'XMLHttpRequest';
         var mfd = self.getContentType4L() === 'data';
         var routes = cache('routes') || {};
-        var route = routes[matcher + '?' + req.method + '?' + (xhr ? 'xhr?' : 'def?') + (mfd ? 'mfd' : 'def')] || null;
-        if (route) {
-            return route;
-        }
-        return routes[matcher + '?' + req.method + '?def?' + (mfd ? 'mfd' : 'def')] || null; // XHR INSENSITIVE
+        return routes[matcher + '?' + req.method + '?' + (mfd ? 'mfd' : 'def')] || null;
     };
     self.toPathname = function(v) {
         return v.split(/\?+/)[0] || '/';
