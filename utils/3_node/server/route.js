@@ -12,12 +12,12 @@ function route(matcher, fn) {
     var matchers = cache('matchers') || {};
     var routes = cache('routes') || {};
     matchers[v.matcher] = v.exp; // ------------------------------------------> FOR FINDING ROUTE MATCHER BY URL
-    routes[v.matcher + '?' + v.method + '?' + (v.xhr ? 'xhr?' : 'def?') + (v.mfd ? 'mfd' : 'def')] = v;
+    routes[v.matcher + '?' + v.method + '?' + (v.mfd ? 'mfd' : 'def')] = v;
     cache('matchers', matchers);
     cache('routes', routes);
     function parseRoute() {
         var m;
-        var exp = /^([\w-/[\]@]+)\s+-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-xhr)(?:\s+-(xhr))|)(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/15
+        var exp = /^([\w-/[\]@]+)\s+-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/17
         m = matcher.match(exp);
         if (!m) {
             throw new Error('Route "matcher" must follow "<Url> -m <Value> -s <Value><Unit> -t <Value><Unit> -xhr? -mfd?" syntax.');
@@ -31,8 +31,7 @@ function route(matcher, fn) {
             method: m[2],
             maxSize: parseMaxSize(m[3], m[4]),
             maxTimeout: parseMaxTimeout(m[5]),
-            xhr: !!m[6],
-            mfd: !!m[7]
+            mfd: !!m[6]
         };
     }
     function parseMaxSize(v, unit) {
