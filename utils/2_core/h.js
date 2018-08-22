@@ -87,6 +87,7 @@ function h(cmd, a, b) {
         A: '<a[[modifiers]]>[[content]]</a>',
         Button: '<button[[modifiers]]>[[content]]</button>',
         Img: '<img[[modifiers]]>',
+        Hr: '<hr[[modifiers]]>',
         Label: '<label[[modifiers]]>[[content]]</label>',
         Input: '<input[[modifiers]] value=[[value]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
@@ -195,6 +196,7 @@ function h(cmd, a, b) {
             html: 'alt=$',
             noMissingSpaceAfterComma: true
         }],
+        Hr: [],
         Label: [{
             name: 'For',
             func: 'For',
