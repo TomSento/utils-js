@@ -1,4 +1,4 @@
-require('../../dist/utils.node.js');
+require('../../dist/out.node.js');
 
 var browsers = require('../files/userAgent_browsers.json'); // ----------> ALL TEST DATA FROM "ua-parser v0.7.17"
 var engines = require('../files/userAgent_engines.json');

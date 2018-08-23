@@ -1,4 +1,4 @@
-require('../../dist/utils.node.js');
+require('../../dist/out.node.js');
 
 var test = $import('<test>');
 
