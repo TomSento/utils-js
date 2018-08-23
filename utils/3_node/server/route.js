@@ -26,7 +26,7 @@ function route(matcher, fn) {
         tmp = (tmp !== '/' && tmp[tmp.length - 1] === '/') ? tmp.slice(0, -1) : tmp;
         return {
             matcher: tmp,
-            exp: new RegExp('^' + tmp.replace(/\[(\w+)\]/g, '([\\w\\.-@]+)') + '$'),
+            exp: new RegExp('^' + tmp.replace(/\[(\w+)\]/g, '([\\w.-@]+)') + '$'),
             fn: fn,
             method: m[2],
             maxSize: parseMaxSize(m[3], m[4]),
