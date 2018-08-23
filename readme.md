@@ -1,8 +1,8 @@
-# Utilities.js
+# Cor.js
 
 > :small_orange_diamond: *experimental & unstable*
 
-[Documentation](https://github.com/tomassentkeresty/utilitiesjs-docs)
+[Documentation](https://github.com/tomassentkeresty/corjs-docs)
 
 ## Build
 
