@@ -73,18 +73,12 @@ function xhr(url, flags, a, b, c, d) {
     var res;
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
-            try {
-                res = prepareResponse(xhr.responseText || '');
-                var statusCode = xhr.status;
-                if (statusCode !== 200) {
-                    return next(new Error('' + statusCode), res);
-                }
-                next(null, res);
+            res = prepareResponse(xhr.responseText || '');
+            var statusCode = xhr.status;
+            if (statusCode !== 200) {
+                return next(new Error('' + statusCode), res);
             }
-            catch (err) {
-                console.error('Unable to parse server response to JSON.'); // eslint-disable-line no-console
-                next(err);
-            }
+            next(null, res);
         }
     };
     xhr.open(flags.method, url, true);
