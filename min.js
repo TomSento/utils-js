@@ -3,8 +3,8 @@ var $fs = require('fs');
 var $rollup = require('rollup');
 var $uglify = require('uglify-js');
 
-dist('./src/utils.browser.js', 'iife', './dist/utils.browser.js');
-dist('./src/utils.node.js', 'cjs', './dist/utils.node.js');
+dist('./src/utils.browser.js', 'iife', './dist/out.browser.js');
+dist('./src/utils.node.js', 'cjs', './dist/out.node.js');
 
 async function dist(entry, format, out) {
     var result = await bundle(entry, format);
