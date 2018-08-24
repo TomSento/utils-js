@@ -4,12 +4,24 @@ var Cookie = {
         if (!k || typeof(k) !== 'string') {
             throw new Error('api-k');
         }
-        var i = document.cookie.lastIndexOf('; ' + k + '=');
-        if (i === -1 && !document.cookie.startsWith(k + '=')) {
-            return undefined;
+        var str = document.cookie;
+        var i = 0;
+        while (i < str.length) {
+            var j = str.indexOf('=', i + 1);
+            if (j === -1) {
+                return undefined;
+            }
+            var end = str.indexOf(';', j + 1);
+            if (end === -1) {
+                end = str.length;
+            }
+            var key = str.slice(i, j).trim();
+            if (key === k) {
+                return str.slice(j + 1, end);
+            }
+            i = end + 1;
         }
-        var exp = new RegExp('(?:(?:^|.*;\\s*)' + k + '\\s*=\\s*([^;]*).*$)|^.*$');
-        return document.cookie.replace(exp, '$1');
+        return undefined;
     }
 };
 $export('<Cookie>', Cookie);
