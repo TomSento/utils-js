@@ -1,6 +1,9 @@
 import $global from '../global';
 
 export default function malloc(scope) {
+    if (!scope || typeof(scope) !== 'string') {
+        throw new Error('api-scope');
+    }
     if (!$global.$cache) {
         $global.$cache = {};
     }
