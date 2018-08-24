@@ -1,13 +1,13 @@
 import $global from '../global';
 
-export default function malloc(prefix) {
+export default function malloc(scope) {
     if (!$global.$cache) {
         $global.$cache = {};
     }
-    if (!$global.$cache[prefix]) {
-        $global.$cache[prefix] = {};
+    if (!$global.$cache[scope]) {
+        $global.$cache[scope] = {};
     }
-    var obj = $global.$cache[prefix];
+    var obj = $global.$cache[scope];
     return function(k, v) {
         if (typeof(k) !== 'string') {
             throw new Error('api-k');
