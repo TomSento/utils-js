@@ -89,7 +89,7 @@ function h(cmd, a, b) {
         Img: '<img[[modifiers]]>',
         Hr: '<hr[[modifiers]]>',
         Label: '<label[[modifiers]]>[[content]]</label>',
-        Input: '<input[[modifiers]] value=[[value]]>',
+        Input: '<input[[modifiers]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
         Option: '<option[[modifiers]]>[[content]]</option>',
         Script: '<script[[modifiers]]></script>'
@@ -2580,13 +2580,7 @@ function h(cmd, a, b) {
                             else { // ----------------------------------------> Meta, Link, Input, Script,...
                                 data = {};
                                 content = '';
-                                if (HTML_TEMPLATES[tag].indexOf('[[value]]') >= 0) { // Input
-                                    if (b !== undefined) {
-                                        throw new Error("Expected types fn('', any, undefined).");
-                                    }
-                                    HTML_TEMPLATES[tag] = HTML_TEMPLATES[tag].replace('[[value]]', JSON.stringify(a));
-                                }
-                                else if (a !== undefined || b !== undefined) {
+                                if (a !== undefined || b !== undefined) {
                                     throw new Error("Expected types fn('', undefined, undefined).");
                                 }
                             }
