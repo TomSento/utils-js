@@ -40,7 +40,7 @@ export default function handleRequest(req, res, routeError) {
 }
 
 function prepareRoute(req, res, routeError, next) {
-    var route = findRoute();
+    var route = findRoute(req);
     if (route) {
         res.statusCode = 200;
         return next(route);
