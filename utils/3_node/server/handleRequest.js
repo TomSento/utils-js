@@ -33,5 +33,31 @@ var FILE_INDEX = 0;
 var CONCAT = [null, null];
 
 export default function handleRequest(req, res, routeError) {
+    prepareRoute(req, res, routeError, function(route) {
 
+    });
+}
+
+function prepareRoute(req, res, routeError, next) {
+    var route = findRoute();
+    if (route) {
+        res.statusCode = 200;
+        return next();
+    }
+    if (req.method !== 'GET') {
+        return routeError(req, res, 404, null);
+    }
+    var pathname = toPathname(req.url);
+    if (pathname[pathname.length - 1] === '/') { // --------------------------> "/uploads/img.jpg/" OR "/" - 404
+        return routeError(req, res, 404, null);
+    }
+    // CONTINUE
+}
+
+function findRoute() {
+
+}
+
+function toPathname(v) {
+    return v.split(/\?+/)[0] || '/';
 }
