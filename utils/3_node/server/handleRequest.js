@@ -42,7 +42,7 @@ function prepareRoute(req, res, routeError, next) {
     var route = findRoute();
     if (route) {
         res.statusCode = 200;
-        return next();
+        return next(route);
     }
     if (req.method !== 'GET') {
         return routeError(req, res, 404, null);
