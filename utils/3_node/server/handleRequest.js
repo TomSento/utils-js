@@ -51,7 +51,17 @@ function prepareRoute(req, res, routeError, next) {
     if (pathname[pathname.length - 1] === '/') { // --------------------------> "/uploads/img.jpg/" OR "/" - 404
         return routeError(req, res, 404, null);
     }
-    // CONTINUE
+    var ext = $path.extname(pathname);
+    if (!ext || STATIC_ACCEPTS.indexOf(ext) === -1) {
+        return routeError(req, res, 404, null);
+    }
+    var filepath = $path.resolve('./public' + pathname);
+    $fs.stat(filepath, function(err) {
+        if (err) {
+            return routeError(req, res, err.code === 'ENOENT' ? 404 : 500, null);
+        }
+        serveStaticFile();
+    });
 }
 
 function findRoute() {
@@ -60,4 +70,8 @@ function findRoute() {
 
 function toPathname(v) {
     return v.split(/\?+/)[0] || '/';
+}
+
+function serveStaticFile() {
+
 }
