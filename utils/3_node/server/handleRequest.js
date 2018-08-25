@@ -89,6 +89,10 @@ function findRoute(req) {
     return routes[matcher + '?' + req.method + '?' + (mfd ? 'mfd' : 'def')] || null;
 }
 
+function toPathname(v) {
+    return v.split(/\?+/)[0] || '/';
+}
+
 function getContentType4L(req) {
     var str = req.headers['content-type'] || '';
     var i = str.lastIndexOf(';');
@@ -96,10 +100,6 @@ function getContentType4L(req) {
         str = str.slice(0, i);
     }
     return str.slice(-4);
-}
-
-function toPathname(v) {
-    return v.split(/\?+/)[0] || '/';
 }
 
 function serveStaticFile() {
