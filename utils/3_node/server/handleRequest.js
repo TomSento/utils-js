@@ -6,6 +6,7 @@ import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
 import $destroyStream from '../destroyStream';
 
+var cache = $malloc('__SERVER');
 var STATIC_ACCEPTS = [
     '.txt', '.md',
     '.html', '.xml', '.json',
@@ -64,8 +65,37 @@ function prepareRoute(req, res, routeError, next) {
     });
 }
 
-function findRoute() {
+function findRoute(req) {
+    var tmp = toPathname(req.url);
+    if (EXP_ONLY_SLASHES.test(tmp)) {
+        return null;
+    }
+    var pathname = (tmp !== '/' && tmp[tmp.length - 1] === '/') ? tmp.slice(0, -1) : tmp;
+    var matchers = cache('matchers') || {};
+    var matcher = null;
+    for (var k in matchers) {
+        if (matchers.hasOwnProperty(k)) {
+            var exp = matchers[k];
+            if (exp.test(pathname)) {
+                matcher = k;
+            }
+        }
+    }
+    if (!matcher) {
+        return null;
+    }
+    var mfd = getContentType4L(req) === 'data';
+    var routes = cache('routes') || {};
+    return routes[matcher + '?' + req.method + '?' + (mfd ? 'mfd' : 'def')] || null;
+}
 
+function getContentType4L(req) {
+    var str = req.headers['content-type'] || '';
+    var i = str.lastIndexOf(';');
+    if (i >= 0) {
+        str = str.slice(0, i);
+    }
+    return str.slice(-4);
 }
 
 function toPathname(v) {
