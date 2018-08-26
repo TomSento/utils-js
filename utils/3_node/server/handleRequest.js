@@ -36,6 +36,9 @@ var CONCAT = [null, null];
 export default function handleRequest(req, res, routeError) {
     prepareRoute(req, res, routeError, function(route) {
         monitorResponseChanges(req, res, routeError, route);
+        prepareRequest(req, res, routeError, route, function() {
+
+        });
     });
 }
 
@@ -139,4 +142,8 @@ function monitorResponseChanges(req, res, routeError, route) {
             nativeEnd.apply(res, arguments);
         };
     }(res.end));
+}
+
+function prepareRequest(req, res, routeError, route, next) {
+
 }
