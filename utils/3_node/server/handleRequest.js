@@ -112,5 +112,17 @@ function serveStaticFile(req, res, routeError, filepath) {
 }
 
 function monitorResponseChanges(req, res, routeError, route) {
-
+    var resEndCalled = false;
+    for (var i = 0, l = RES_FN_CALLS_BLACKLIST.length; i < l; i++) {
+        var k = RES_FN_CALLS_BLACKLIST[i];
+        ignoreSubsequentCallsAfterEnd(k, res[k]);
+    }
+    function ignoreSubsequentCallsAfterEnd(fnName, fnNative) {
+        res[fnName] = function(/* args */) {
+            if (resEndCalled) { // -------------------------------------------> PREVENT Error [ERR_STREAM_WRITE_AFTER_END]: write after end
+                return;
+            }
+            fnNative.apply(res, arguments);
+        };
+    }
 }
