@@ -35,7 +35,7 @@ var CONCAT = [null, null];
 
 export default function handleRequest(req, res, routeError) {
     prepareRoute(req, res, routeError, function(route) {
-
+        monitorResponseChanges(req, res, routeError, route);
     });
 }
 
@@ -109,4 +109,8 @@ function serveStaticFile(req, res, routeError, filepath) {
         routeError(req, res, 500, null);
     });
     stream.pipe(res);
+}
+
+function monitorResponseChanges(req, res, routeError, route) {
+
 }
