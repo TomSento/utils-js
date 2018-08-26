@@ -125,4 +125,8 @@ function monitorResponseChanges(req, res, routeError, route) {
             fnNative.apply(res, arguments);
         };
     }
+    res.setTimeout(route.maxTimeout, function() {}); // ----------------------> EMPTY FUNCTION SO SOCKET IS NOT DESTROYED BY Node.js
+    var totalRouteTimeout = setTimeout(function() {
+        routeError(req, res, 408, null);
+    }, route.maxTimeout);
 }
