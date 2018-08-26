@@ -145,5 +145,8 @@ function monitorResponseChanges(req, res, routeError, route) {
 }
 
 function prepareRequest(req, res, routeError, route, next) {
-
+    var url = $url.parse(req.url);
+    if (req.url.length >= MAX_URL_LEN || (url.query || '').length >= MAX_URL_QUERY_LEN) {
+        return routeError(req, res, 414, null);
+    }
 }
