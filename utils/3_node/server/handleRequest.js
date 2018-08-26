@@ -149,4 +149,13 @@ function prepareRequest(req, res, routeError, route, next) {
     if (req.url.length >= MAX_URL_LEN || (url.query || '').length >= MAX_URL_QUERY_LEN) {
         return routeError(req, res, 414, null);
     }
+    var args = [];
+    var tmp = url.pathname || '/';
+    if (tmp !== '/') {
+        tmp = tmp[tmp.length - 1] === '/' ? tmp.slice(0, -1) : tmp;
+        var m = tmp.match(route.exp);
+        if (m && m.length > 1) {
+            args = m.slice(1);
+        }
+    }
 }
