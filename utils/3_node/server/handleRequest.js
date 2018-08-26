@@ -61,7 +61,7 @@ function prepareRoute(req, res, routeError, next) {
         if (err) {
             return routeError(req, res, err.code === 'ENOENT' ? 404 : 500, null);
         }
-        serveStaticFile();
+        serveStaticFile(req, res, routeError, filepath);
     });
 }
 
@@ -102,6 +102,11 @@ function getContentType4L(req) {
     return str.slice(-4);
 }
 
-function serveStaticFile() {
-
+function serveStaticFile(req, res, routeError, filepath) {
+    var stream = $fs.createReadStream(filepath);
+    stream.once('error', function(err) {
+        console.log(err); // eslint-disable-line no-console
+        routeError(req, res, 500, null);
+    });
+    stream.pipe(res);
 }
