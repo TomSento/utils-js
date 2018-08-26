@@ -158,4 +158,13 @@ function prepareRequest(req, res, routeError, route, next) {
             args = m.slice(1);
         }
     }
+    var query = {};
+    if (url.query && typeof(url.query) === 'string') {
+        query = $querystring.parse(url.query) || {};
+    }
+    req.headers.cookie = req.headers.cookie ? prepareRequestCookies(req) : {};
+}
+
+function prepareRequestCookies(req) {
+
 }
