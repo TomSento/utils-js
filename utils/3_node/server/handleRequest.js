@@ -129,4 +129,14 @@ function monitorResponseChanges(req, res, routeError, route) {
     var totalRouteTimeout = setTimeout(function() {
         routeError(req, res, 408, null);
     }, route.maxTimeout);
+    (function(nativeEnd) {
+        res.end = function(/* args */) { // ----------------------------------> WORKS ALSO WITH readable.pipe(res) - https://github.com/nodejs/node/blob/master/lib/_stream_readable.js#L625
+            if (resEndCalled) { // -------------------------------------------> PREVENT Error [ERR_STREAM_WRITE_AFTER_END]: write after end
+                return;
+            }
+            resEndCalled = true;
+            clearTimeout(totalRouteTimeout);
+            nativeEnd.apply(res, arguments);
+        };
+    }(res.end));
 }
