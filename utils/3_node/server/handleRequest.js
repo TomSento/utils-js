@@ -166,5 +166,23 @@ function prepareRequest(req, res, routeError, route, next) {
 }
 
 function prepareRequestCookies(req) {
-
+    var obj = {};
+    var str = req.headers.cookie;
+    (function nextKV(i) {
+        var j = str.indexOf('=', i + 1);
+        if (j === -1) {
+            return obj;
+        }
+        var k = str.indexOf(';', j + 1);
+        if (k === -1) {
+            k = str.length;
+        }
+        var key = str.slice(i, j).trim();
+        var val = str.slice(j + 1, k);
+        if (key && val) {
+            obj[key] = decodeURI(val);
+        }
+        nextKV(++k);
+    }(0));
+    return obj;
 }
