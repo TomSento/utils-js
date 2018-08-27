@@ -163,6 +163,21 @@ function prepareRequest(req, res, routeError, route, next) {
         query = $querystring.parse(url.query) || {};
     }
     req.headers.cookie = req.headers.cookie ? prepareRequestCookies(req) : {};
+    tmp = getContentType4L(req);
+    if (tmp === 'json') {
+        prepareRequestJSON(req, res, routeError, route, function(body) {
+            next(args, query, body);
+        });
+    }
+    else if (tmp === 'data') {
+        // prepareRequestMULTIPART
+    }
+    else if (req.headers['content-type'] === undefined) {
+        next(args, query, {});
+    }
+    else {
+        routeError(req, res, 400, null);
+    }
 }
 
 function prepareRequestCookies(req) {
@@ -185,4 +200,8 @@ function prepareRequestCookies(req) {
         nextKV(++k);
     }(0));
     return obj;
+}
+
+function prepareRequestJSON(req, res, routeError, route, next) {
+
 }
