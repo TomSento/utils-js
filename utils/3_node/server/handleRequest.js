@@ -203,5 +203,38 @@ function prepareRequestCookies(req) {
 }
 
 function prepareRequestJSON(req, res, routeError, route, next) {
-
+    if (['POST', 'PUT'].indexOf(req.method) === -1) {
+        return routeError(req, res, 400, null);
+    }
+    var requestEnded = false;
+    req.once('close', function() {
+        if (!requestEnded) { // ----------------------------------------------> UNEXPECTED CLOSING
+            routeError(req, res, 500, null);
+        }
+    });
+    var size = 0;
+    var b = [];
+    req.on('data', function(buffer) {
+        size += buffer.length;
+        if (size < route.maxSize) {
+            b.push(buffer);
+        }
+    });
+    req.once('end', function() {
+        requestEnded = true;
+        if (size >= route.maxSize) {
+            b = undefined;
+            return routeError(req, res, 413, null);
+        }
+        try {
+            var body = JSON.parse(Buffer.concat(b).toString('utf8'));
+            if (Object.prototype.toString.call(body) !== '[object Object]') {
+                return routeError(req, res, 400, null);
+            }
+            next(body);
+        }
+        catch (err) {
+            routeError(req, res, 400, null);
+        }
+    });
 }
