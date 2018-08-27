@@ -260,3 +260,11 @@ function parseMultipartHeader(header) {
         filename: tmp || null
     };
 }
+
+function FormDataEntry() { // ------------------------------------------------> ONE FILE OR VALUE PART
+    this.name = undefined; // ------------------------------------------------> INPUT NAME - GROUP KEY
+    this.filename = undefined;
+    this.contentType = undefined;
+    this.path = undefined;
+    this.value = undefined;
+}
