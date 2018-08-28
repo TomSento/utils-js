@@ -246,7 +246,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
     if (!boundary) {
         return routeError(req, res, 400, null);
     }
-    boundary = boundary.slice(boundary.indexOf('=', 2) + 1); // –---------> indexOf('=', 2) FOR PERFORMANCE
+    boundary = boundary.slice(boundary.indexOf('=', 2) + 1); // –-------------> indexOf('=', 2) FOR PERFORMANCE
     if (!boundary || ['POST', 'PUT'].indexOf(req.method) === -1) {
         return routeError(req, res, 400, null);
     }
@@ -254,7 +254,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
     var rm = [];
     self.body = [];
     req.once('close', function() {
-        if (!requestEnded) { // ------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
+        if (!requestEnded) { // ----------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
             for (var i = 0, l = rm.length; i < l; i++) {
                 $fs.unlink(rm[i], function() {});
             }
@@ -303,7 +303,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
         if (step > 0) {
             return;
         }
-        if (header.indexOf('form-data; ') === -1) { // -------------------> UNKNOWN ERROR, MAYBE ATTACK
+        if (header.indexOf('form-data; ') === -1) { // -----------------------> UNKNOWN ERROR, MAYBE ATTACK
             maxSize = -1;
             if (!processingFile) {
                 $destroyStream(fileStream);
@@ -319,8 +319,8 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
             return;
         }
         entry.filename = header.filename;
-        i = entry.filename.lastIndexOf('\\'); // -------------------------> IE9 SENDS ABSOLUTE FILENAME
-        if (i === -1) { // -----------------------------------------------> FOR UNIX LIKE SENDERS
+        i = entry.filename.lastIndexOf('\\'); // -----------------------------> IE9 SENDS ABSOLUTE FILENAME
+        if (i === -1) { // ---------------------------------------------------> FOR UNIX LIKE SENDERS
             i = entry.filename.lastIndexOf('/');
         }
         if (i >= 0) {
@@ -337,7 +337,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
         if (size >= maxSize) {
             return;
         }
-        if (!processingFile) { // ----------------------------------------> VALUE PART
+        if (!processingFile) { // --------------------------------------------> VALUE PART
             if (firstWrite) {
                 firstWrite = false;
             }
@@ -346,7 +346,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
             entry.value = Buffer.concat(CONCAT);
             return;
         }
-        if (!firstWrite) { // --------------------------------------------> FILE PART
+        if (!firstWrite) { // ------------------------------------------------> FILE PART
             fileStream.write(data);
             return;
         }
@@ -359,7 +359,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
         fileStream.once('close', function() {
             unclosedFileStreams--;
         });
-        fileStream.once('error', function(err) { // ----------------------> MISSING "tmp" DIRECTORY OR OTHER ERROR
+        fileStream.once('error', function(err) { // --------------------------> MISSING "tmp" DIRECTORY OR OTHER ERROR
             console.log(err); // eslint-disable-line no-console
             unclosedFileStreams--;
         });
@@ -376,7 +376,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
         entry.value = processingFile ? undefined : entry.value.toString('utf8');
         self.body.push(entry);
     };
-    function onceEnd() { // ----------------------------------------------> HANDLER "parser.onEnd()" IS CALLED BY "MultipartParser" - DO NOT USE - FOR FULL CONTROL OVER INVOCATION TIME USE "onceEnd()" INSTEAD
+    function onceEnd() { // --------------------------------------------------> HANDLER "parser.onEnd()" IS CALLED BY "MultipartParser" - DO NOT USE - FOR FULL CONTROL OVER INVOCATION TIME USE "onceEnd()" INSTEAD
         if (unclosedFileStreams > 0) {
             setImmediate(function() {
                 onceEnd();
