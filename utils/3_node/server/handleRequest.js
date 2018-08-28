@@ -242,7 +242,164 @@ function prepareRequestJSON(req, res, routeError, route, next) {
 }
 
 function prepareRequestMULTIPART(req, res, routeError, route, next) {
-
+    var boundary = req.headers['content-type'].split(';')[1];
+    if (!boundary) {
+        return routeError(req, res, 400, null);
+    }
+    boundary = boundary.slice(boundary.indexOf('=', 2) + 1); // –---------> indexOf('=', 2) FOR PERFORMANCE
+    if (!boundary || ['POST', 'PUT'].indexOf(req.method) === -1) {
+        return routeError(req, res, 400, null);
+    }
+    var requestEnded = false;
+    var rm = [];
+    self.body = [];
+    req.once('close', function() {
+        if (!requestEnded) { // ------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
+            for (var i = 0, l = rm.length; i < l; i++) {
+                $fs.unlink(rm[i], function() {});
+            }
+            self.body = {};
+            routeError(req, res, 500, null);
+        }
+    });
+    var parser = new $MultipartParser();
+    var size = 0;
+    var maxSize = self.route.maxSize;
+    var entry;
+    var step;
+    var processingFile;
+    var firstWrite;
+    var fileStream;
+    var path = process.cwd() + $path.sep + 'tmp' + $path.sep + 'uploadedfile-';
+    var unclosedFileStreams = 0;
+    parser.initWithBoundary(boundary);
+    parser.onPartBegin = function() {
+        if (size >= maxSize) {
+            return;
+        }
+        entry = new FormDataEntry();
+        entry.value = Buffer.alloc(0);
+        step = 0;
+        processingFile = false;
+        firstWrite = true;
+    };
+    parser.onHeaderValue = function(buffer, start, end) {
+        if (size >= maxSize) {
+            return;
+        }
+        var i;
+        var header = buffer.slice(start, end).toString('utf8');
+        if (step === 1) {
+            i = header.indexOf(';');
+            if (i === -1) {
+                entry.contentType = header.trim();
+            }
+            else {
+                entry.contentType = header.slice(0, i).trim();
+            }
+            step = 2;
+            return;
+        }
+        if (step > 0) {
+            return;
+        }
+        if (header.indexOf('form-data; ') === -1) { // -------------------> UNKNOWN ERROR, MAYBE ATTACK
+            maxSize = -1;
+            if (!processingFile) {
+                $destroyStream(fileStream);
+            }
+            return;
+        }
+        header = self.parseMultipartHeader(header);
+        step = 1;
+        entry.name = header.name;
+        processingFile = !!header.filename;
+        if (!processingFile) {
+            $destroyStream(fileStream);
+            return;
+        }
+        entry.filename = header.filename;
+        i = entry.filename.lastIndexOf('\\'); // -------------------------> IE9 SENDS ABSOLUTE FILENAME
+        if (i === -1) { // -----------------------------------------------> FOR UNIX LIKE SENDERS
+            i = entry.filename.lastIndexOf('/');
+        }
+        if (i >= 0) {
+            entry.filename = entry.filename.slice(i + 1);
+        }
+        entry.path = path + (FILE_INDEX++) + '.bin';
+    };
+    parser.onPartData = function(buffer, start, end) {
+        if (size >= maxSize) {
+            return;
+        }
+        var data = buffer.slice(start, end);
+        size += data.length;
+        if (size >= maxSize) {
+            return;
+        }
+        if (!processingFile) { // ----------------------------------------> VALUE PART
+            if (firstWrite) {
+                firstWrite = false;
+            }
+            CONCAT[0] = entry.value;
+            CONCAT[1] = data;
+            entry.value = Buffer.concat(CONCAT);
+            return;
+        }
+        if (!firstWrite) { // --------------------------------------------> FILE PART
+            fileStream.write(data);
+            return;
+        }
+        if (firstWrite) {
+            firstWrite = false;
+        }
+        unclosedFileStreams++;
+        fileStream = $fs.createWriteStream(entry.path);
+        rm.push(entry.path);
+        fileStream.once('close', function() {
+            unclosedFileStreams--;
+        });
+        fileStream.once('error', function(err) { // ----------------------> MISSING "tmp" DIRECTORY OR OTHER ERROR
+            console.log(err); // eslint-disable-line no-console
+            unclosedFileStreams--;
+        });
+        fileStream.write(data);
+    };
+    parser.onPartEnd = function() {
+        if (fileStream) {
+            fileStream.end();
+            fileStream = null;
+        }
+        if (size >= maxSize) {
+            return;
+        }
+        entry.value = processingFile ? undefined : entry.value.toString('utf8');
+        self.body.push(entry);
+    };
+    function onceEnd() { // ----------------------------------------------> HANDLER "parser.onEnd()" IS CALLED BY "MultipartParser" - DO NOT USE - FOR FULL CONTROL OVER INVOCATION TIME USE "onceEnd()" INSTEAD
+        if (unclosedFileStreams > 0) {
+            setImmediate(function() {
+                onceEnd();
+            });
+        }
+        else {
+            if (size >= maxSize) {
+                for (var i = 0, l = rm.length; i < l; i++) {
+                    $fs.unlink(rm[i], function() {});
+                }
+                self.body = {};
+                return routeError(req, res, 431, null);
+            }
+            next();
+        }
+    }
+    req.on('data', function(buffer) {
+        parser.write(buffer);
+    });
+    req.once('end', function() {
+        requestEnded = true;
+        onceEnd();
+    });
 }
 
 function parseMultipartHeader(header) {
