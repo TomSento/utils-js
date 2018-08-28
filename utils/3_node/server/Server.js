@@ -4,7 +4,7 @@ import * as $https from 'https';
 import * as $http from 'http';
 import * as $os from 'os';
 
-import $Controller from './Controller';
+import $handleRequest from './handleRequest';
 
 function Server(mode, packageJSON, config, routeError) {
     if (['DEBUG', 'TEST', 'RELEASE'].indexOf(mode) === -1) {
@@ -33,8 +33,7 @@ function Server(mode, packageJSON, config, routeError) {
     this.config = config;
     this.js = [];
     this.handleRequest = function(req, res) {
-        var controller = new $Controller(req, res, routeError);
-        controller.run();
+        $handleRequest(req, res, routeError);
     };
     this.removeTmpFiles = function() {
         var dir = process.cwd() + $path.sep + 'tmp';
