@@ -252,19 +252,19 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
     }
     var requestEnded = false;
     var rm = [];
-    self.body = [];
+    var body = [];
     req.once('close', function() {
         if (!requestEnded) { // ----------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
             for (var i = 0, l = rm.length; i < l; i++) {
                 $fs.unlink(rm[i], function() {});
             }
-            self.body = {};
+            body = undefined;
             routeError(req, res, 500, null);
         }
     });
     var parser = new $MultipartParser();
     var size = 0;
-    var maxSize = self.route.maxSize;
+    var maxSize = route.maxSize;
     var entry;
     var step;
     var processingFile;
@@ -310,7 +310,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
             }
             return;
         }
-        header = self.parseMultipartHeader(header);
+        header = parseMultipartHeader(header);
         step = 1;
         entry.name = header.name;
         processingFile = !!header.filename;
@@ -374,7 +374,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
             return;
         }
         entry.value = processingFile ? undefined : entry.value.toString('utf8');
-        self.body.push(entry);
+        body.push(entry);
     };
     function onceEnd() { // --------------------------------------------------> HANDLER "parser.onEnd()" IS CALLED BY "MultipartParser" - DO NOT USE - FOR FULL CONTROL OVER INVOCATION TIME USE "onceEnd()" INSTEAD
         if (unclosedFileStreams > 0) {
@@ -387,10 +387,10 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
                 for (var i = 0, l = rm.length; i < l; i++) {
                     $fs.unlink(rm[i], function() {});
                 }
-                self.body = {};
+                body = undefined;
                 return routeError(req, res, 431, null);
             }
-            next();
+            next(body);
         }
     }
     req.on('data', function(buffer) {
