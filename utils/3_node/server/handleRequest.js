@@ -37,7 +37,7 @@ export default function handleRequest(req, res, routeError) {
     prepareRoute(req, res, routeError, function(route) {
         monitorResponseChanges(req, res, routeError, route);
         prepareRequest(req, res, routeError, route, function(args, query, body) {
-            route.fn(req, res, args, query, body);
+            route.fn.call({}, req, res, args, query, body);
         });
     });
 }
