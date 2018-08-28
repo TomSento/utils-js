@@ -170,7 +170,9 @@ function prepareRequest(req, res, routeError, route, next) {
         });
     }
     else if (tmp === 'data') {
-        // prepareRequestMULTIPART
+        prepareRequestMULTIPART(req, res, routeError, route, function(body) {
+            next(args, query, body);
+        });
     }
     else if (req.headers['content-type'] === undefined) {
         next(args, query, {});
@@ -237,6 +239,10 @@ function prepareRequestJSON(req, res, routeError, route, next) {
             routeError(req, res, 400, null);
         }
     });
+}
+
+function prepareRequestMULTIPART(req, res, routeError, route, next) {
+
 }
 
 function parseMultipartHeader(header) {
