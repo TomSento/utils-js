@@ -1,8 +1,8 @@
-import { ReadStream } from 'fs';
+import * as $fs from 'fs';
 import * as $Stream from 'stream';
 
 export default function destroyStream(stream) {
-    if (stream instanceof ReadStream) {
+    if (stream instanceof $fs.ReadStream) {
         stream.destroy();
         if (typeof(stream.close) === 'function') {
             stream.on('open', function() {
