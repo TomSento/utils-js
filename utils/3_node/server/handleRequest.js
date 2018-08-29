@@ -1,5 +1,6 @@
 import * as $path from 'path';
 import * as $fs from 'fs';
+import * as $Stream from 'stream';
 import * as $url from 'url';
 import * as $querystring from 'querystring';
 import $malloc from '../../0_internal/malloc';
@@ -64,7 +65,7 @@ function prepareRoute(req, res, routeError, next) {
         if (err) {
             return routeError(req, res, err.code === 'ENOENT' ? 404 : 500, null);
         }
-        serveStaticFile(req, res, routeError, filepath);
+        serveStaticFile(res, filepath);
     });
 }
 
@@ -105,11 +106,10 @@ function getContentType4L(req) {
     return str.slice(-4);
 }
 
-function serveStaticFile(req, res, routeError, filepath) {
+function serveStaticFile(res, filepath) {
     var stream = $fs.createReadStream(filepath);
-    stream.once('error', function(err) {
-        console.log(err); // eslint-disable-line no-console
-        routeError(req, res, 500, null);
+    $Stream.finished(res, function() {
+        $destroyStream(stream);
     });
     stream.pipe(res);
 }
