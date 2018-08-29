@@ -1,3 +1,6 @@
+import { ReadStream } from 'fs';
+import * as $Stream from 'stream';
+
 export default function destroyStream(stream) {
     if (stream instanceof ReadStream) {
         stream.destroy();
@@ -9,7 +12,7 @@ export default function destroyStream(stream) {
             });
         }
     }
-    else if (stream instanceof Stream) {
+    else if (stream instanceof $Stream) {
         if (typeof(stream.destroy) === 'function') {
             stream.destroy();
         }
