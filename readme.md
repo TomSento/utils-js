@@ -4,6 +4,10 @@
 
 [Documentation](https://github.com/tomassentkeresty/corjs-docs)
 
+## Requirements
+
+- Node.js +v10.0.0
+
 ## Build
 
 ```bash
