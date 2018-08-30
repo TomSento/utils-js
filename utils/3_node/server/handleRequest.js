@@ -4,6 +4,7 @@ import * as $Stream from 'stream';
 import * as $url from 'url';
 import * as $querystring from 'querystring';
 import $malloc from '../../0_internal/malloc';
+import $ext2ct from '../../ext2ct';
 import $MultipartParser from './internal/MultipartParser';
 
 var cache = $malloc('__SERVER');
@@ -64,7 +65,7 @@ function prepareRoute(req, res, routeError, next) {
         if (err) {
             return routeError(req, res, err.code === 'ENOENT' ? 404 : 500, null);
         }
-        serveStaticFile(res, filepath);
+        serveStaticFile(res, filepath, ext);
     });
 }
 
@@ -105,10 +106,13 @@ function getContentType4L(req) {
     return str.slice(-4);
 }
 
-function serveStaticFile(res, filepath) {
+function serveStaticFile(res, filepath, ext) {
     var stream = $fs.createReadStream(filepath);
     $Stream.finished(res, function() {
         stream.destroy();
+    });
+    res.writeHead(200, {
+        'Content-Type': $ext2ct[ext]
     });
     stream.pipe(res);
 }
