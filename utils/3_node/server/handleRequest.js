@@ -5,7 +5,6 @@ import * as $url from 'url';
 import * as $querystring from 'querystring';
 import $malloc from '../../0_internal/malloc';
 import $MultipartParser from './internal/MultipartParser';
-import $destroyStream from '../destroyStream';
 
 var cache = $malloc('__SERVER');
 var STATIC_ACCEPTS = [
@@ -109,7 +108,7 @@ function getContentType4L(req) {
 function serveStaticFile(res, filepath) {
     var stream = $fs.createReadStream(filepath);
     $Stream.finished(res, function() {
-        $destroyStream(stream);
+        stream.destroy();
     });
     stream.pipe(res);
 }
@@ -305,8 +304,8 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
         }
         if (header.indexOf('form-data; ') === -1) { // -----------------------> UNKNOWN ERROR, MAYBE ATTACK
             maxSize = -1;
-            if (!processingFile) {
-                $destroyStream(fileStream);
+            if (!processingFile && fileStream) {
+                fileStream.destroy();
             }
             return;
         }
@@ -315,7 +314,9 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
         entry.name = header.name;
         processingFile = !!header.filename;
         if (!processingFile) {
-            $destroyStream(fileStream);
+            if (fileStream) {
+                fileStream.destroy();
+            }
             return;
         }
         entry.filename = header.filename;
