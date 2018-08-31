@@ -8,16 +8,6 @@ import $ext2ct from '../../ext2ct';
 import $MultipartParser from './internal/MultipartParser';
 
 var cache = $malloc('__SERVER');
-var STATIC_ACCEPTS = [
-    '.txt', '.md',
-    '.html', '.xml', '.json',
-    '.woff', '.woff2', '.otf', '.ttf', '.eot',
-    '.js', '.css',
-    '.jpg', '.png', '.gif', '.svg', '.ico',
-    '.mp4', '.mp3', '.swf',
-    '.pdf', '.docx', '.xlsx', '.doc', '.xls',
-    '.zip', '.rar'
-];
 var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
     'addTrailers',
@@ -57,7 +47,7 @@ function prepareRoute(req, res, routeError, next) {
         return routeError(req, res, 404, null);
     }
     var ext = $path.extname(pathname);
-    if (!ext || STATIC_ACCEPTS.indexOf(ext) === -1) {
+    if (!ext || !$ext2ct.hasOwnProperty(ext)) {
         return routeError(req, res, 404, null);
     }
     var filepath = $path.resolve('./public' + pathname);
