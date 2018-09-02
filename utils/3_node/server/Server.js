@@ -88,9 +88,14 @@ Server.prototype = {
             });
         });
     },
-    log: function() {
+    log: function(filepath) {
         /* eslint-disable no-console */
         console.clear();
+        if (filepath) {
+            var d = new Date();
+            var uid = [('' + d.getDate()).padStart(3, '0'), ('' + d.getHours()).padStart(2, '0'), ('' + d.getMinutes()).padStart(2, '0'), ('' + d.getSeconds()).padStart(2, '0')].join('-');
+            return console.log('@' + uid + ' ' + filepath);
+        }
         console.log('@pid ' + process.pid + ' (' + [
             new Date().toGMTString(),
             'Node.js: ' + process.version,
