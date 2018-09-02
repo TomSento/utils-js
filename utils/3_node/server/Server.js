@@ -57,10 +57,10 @@ Server.prototype = {
             }
             require.cache[filepath] = undefined;
             var file = require(filepath);
-            if (typeof(file.init) !== 'function') {
-                throw new Error('Missing "init()" in "' + filepath + '".');
+            if (typeof(file.load) !== 'function') {
+                throw new Error('Missing "load()" in "' + filepath + '".');
             }
-            file.init(function() {
+            file.load(function() {
                 loop(++i);
             });
         }(0));
