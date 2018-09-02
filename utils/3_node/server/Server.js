@@ -88,7 +88,7 @@ Server.prototype = {
             });
         });
     },
-    createLog: function() {
+    log: function() {
         /* eslint-disable no-console */
         console.clear();
         console.log('@pid ' + process.pid + ' (' + [
