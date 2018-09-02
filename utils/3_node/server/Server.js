@@ -45,7 +45,7 @@ function Server(mode, packageJSON, config, routeError) {
     };
 }
 Server.prototype = {
-    pushJS: function(filepath) {
+    link: function(filepath) {
         this.js.push(filepath);
     },
     load: function(next) {
