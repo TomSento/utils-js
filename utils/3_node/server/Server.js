@@ -111,10 +111,14 @@ Server.prototype = {
         /* eslint-enable no-console */
     },
     destroy: function() {
-        this.server.close();
-        for (var k in this.socket) {
-            if (this.socket.hasOwnProperty(k)) {
-                this.socket[k].destroy();
+        if (this.server) {
+            this.server.close();
+        }
+        if (this.socket) {
+            for (var k in this.socket) {
+                if (this.socket.hasOwnProperty(k)) {
+                    this.socket[k].destroy();
+                }
             }
         }
     }
