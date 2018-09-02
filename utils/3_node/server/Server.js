@@ -87,6 +87,7 @@ Server.prototype = {
                 delete self.socket[k];
             });
         });
+        return self.server;
     },
     log: function(filepath) {
         /* eslint-disable no-console */
