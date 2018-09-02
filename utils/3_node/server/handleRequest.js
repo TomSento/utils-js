@@ -252,10 +252,8 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
     var body = [];
     req.once('close', function() {
         if (!requestEnded) { // ----------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
-            for (var i = 0, l = rm.length; i < l; i++) {
-                $fs.unlink(rm[i], function() {});
-            }
             body = undefined;
+            unlinkAll(rm);
             routeError(req, res, 500, null);
         }
     });
@@ -383,10 +381,8 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
         }
         else {
             if (size >= maxSize) {
-                for (var i = 0, l = rm.length; i < l; i++) {
-                    $fs.unlink(rm[i], function() {});
-                }
                 body = undefined;
+                unlinkAll(rm);
                 return routeError(req, res, 431, null);
             }
             next(body);
