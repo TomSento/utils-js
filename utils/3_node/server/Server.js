@@ -48,7 +48,7 @@ Server.prototype = {
     pushJS: function(filepath) {
         this.js.push(filepath);
     },
-    loadJS: function(next) {
+    load: function(next) {
         var self = this;
         (function loop(i) {
             var filepath = self.js[i];
