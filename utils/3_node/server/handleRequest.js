@@ -401,6 +401,20 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
     });
 }
 
+function unlinkAll(paths) {
+    (function loop(i) {
+        var p = paths[i];
+        if (!p) {
+            return;
+        }
+        $fs.unlink(p, function() {
+            setImmediate(function() {
+                loop(++i);
+            });
+        });
+    }(0));
+}
+
 function parseMultipartHeader(header) {
     var tmp = '';
     var search = ' name="';
