@@ -3264,7 +3264,8 @@ function h(cmd, a, b) {
         var kv = '';
         for (var i = 0, l = css.length; i < l; i++) {
             kv = css[i];
-            kv = kv.slice(0, kv.length - 1) + rule.arg; // -------------------> FILL ARGUMENT TO PLACE(S)
+            var j = kv.lastIndexOf('$');
+            kv = kv.slice(0, j) + rule.arg + kv.slice(j + 1); // -------------> FILL ARGUMENT TO PLACE(S)
             css[i] = cssPROPERTY(kv, rule.important); // ---------------------> AUTOPREFIX
         }
         css = css.join('\n'); // ---------------------------------------------> JOIN
