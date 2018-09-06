@@ -2145,11 +2145,11 @@ function h(cmd, a, b) {
         acssValue: ':en',
         cssValue: ':enabled'
     }, {
-        acssValue: ':fi',
-        cssValue: ':first'
-    }, {
         acssValue: ':fc',
         cssValue: ':first-child'
+    }, {
+        acssValue: ':fi',
+        cssValue: ':first'
     }, {
         acssValue: ':fot',
         cssValue: ':first-of-type'
@@ -2160,11 +2160,14 @@ function h(cmd, a, b) {
         acssValue: ':ind',
         cssValue: ':indeterminate'
     }, {
+        acssValue: ':inv',
+        cssValue: ':invalid'
+    }, {
         acssValue: ':ir',
         cssValue: ':in-range'
     }, {
-        acssValue: ':inv',
-        cssValue: ':invalid'
+        acssValue: ':l',
+        cssValue: ':left'
     }, {
         acssValue: ':lc',
         cssValue: ':last-child'
@@ -2172,35 +2175,32 @@ function h(cmd, a, b) {
         acssValue: ':lot',
         cssValue: ':last-of-type'
     }, {
-        acssValue: ':l',
-        cssValue: ':left'
+        acssValue: ':o',
+        cssValue: ':optional'
     }, {
         acssValue: ':oc',
         cssValue: ':only-child'
     }, {
-        acssValue: ':oot',
-        cssValue: ':only-of-type'
-    }, {
-        acssValue: ':o',
-        cssValue: ':optional'
-    }, {
         acssValue: ':oor',
         cssValue: ':out-of-range'
     }, {
-        acssValue: ':ro',
-        cssValue: ':read-only'
-    }, {
-        acssValue: ':rw',
-        cssValue: ':read-write'
-    }, {
-        acssValue: ':req',
-        cssValue: ':required'
+        acssValue: ':oot',
+        cssValue: ':only-of-type'
     }, {
         acssValue: ':r',
         cssValue: ':right'
     }, {
+        acssValue: ':req',
+        cssValue: ':required'
+    }, {
+        acssValue: ':ro',
+        cssValue: ':read-only'
+    }, {
         acssValue: ':rt',
         cssValue: ':root'
+    }, {
+        acssValue: ':rw',
+        cssValue: ':read-write'
     }, {
         acssValue: ':s',
         cssValue: ':scope'
