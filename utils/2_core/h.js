@@ -2212,13 +2212,13 @@ function h(cmd, a, b) {
         cssValue: ':valid'
     }];
 
-    var PSEUDO_ELEMENTS = [{
+    var PSEUDO_ELEMENTS = [{ // ----------------------------------------------> BEFORE, AFTER
         acssValue: '::b',
         cssValue: '::before'
     }, {
         acssValue: '::a',
         cssValue: '::after'
-    }, {
+    }, { // ------------------------------------------------------------------> OTHERS A-Z
         acssValue: '::fl',
         cssValue: '::first-letter'
     }, {
