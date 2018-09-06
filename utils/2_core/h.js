@@ -2114,10 +2114,22 @@ function h(cmd, a, b) {
     function ACSS_INSTRUCTION_TYPE_helper() {
         return 'HELPER';
     }
-    var PSEUDO_CLASSES = [{
+    var PSEUDO_CLASSES = [{ // -----------------------------------------------> LINK / BUTTON STATES
+        acssValue: ':li',
+        cssValue: ':link'
+    }, {
+        acssValue: ':vi',
+        cssValue: ':visited'
+    }, {
+        acssValue: ':f',
+        cssValue: ':focus'
+    }, {
+        acssValue: ':h',
+        cssValue: ':hover'
+    }, {
         acssValue: ':a',
         cssValue: ':active'
-    }, {
+    }, { // ------------------------------------------------------------------> OTHERS A-Z
         acssValue: ':c',
         cssValue: ':checked'
     }, {
@@ -2145,12 +2157,6 @@ function h(cmd, a, b) {
         acssValue: ':fs',
         cssValue: ':fullscreen'
     }, {
-        acssValue: ':f',
-        cssValue: ':focus'
-    }, {
-        acssValue: ':h',
-        cssValue: ':hover'
-    }, {
         acssValue: ':ind',
         cssValue: ':indeterminate'
     }, {
@@ -2168,9 +2174,6 @@ function h(cmd, a, b) {
     }, {
         acssValue: ':l',
         cssValue: ':left'
-    }, {
-        acssValue: ':li',
-        cssValue: ':link'
     }, {
         acssValue: ':oc',
         cssValue: ':only-child'
@@ -2207,9 +2210,6 @@ function h(cmd, a, b) {
     }, {
         acssValue: ':va',
         cssValue: ':valid'
-    }, {
-        acssValue: ':vi',
-        cssValue: ':visited'
     }];
 
     var PSEUDO_ELEMENTS = [{
