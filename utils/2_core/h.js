@@ -3205,16 +3205,10 @@ function h(cmd, a, b) {
             var l;
             var rules = media.shift();
             var rule = null;
-            var uniqueSelectors = [];
-            for (i = 0, l = rules.length; i < l; i++) {
-                rule = rules[i];
-                if (uniqueSelectors.indexOf(rule.selector) === -1) {
-                    uniqueSelectors.push(rule.selector);
-                }
-            }
+            var selectors = ACSS_RULES_getUniqueOrderedSelectors(rules);
             var group = [];
-            for (i = 0, l = uniqueSelectors.length; i < l; i++) {
-                var merged = ACSS_TRANSFORMED_RULE_compose(rules[0].mediaValue, uniqueSelectors[i], []);
+            for (i = 0, l = selectors.length; i < l; i++) {
+                var merged = ACSS_MERGED_RULE_compose(rules[0].mediaValue, selectors[i], []);
                 for (var j = 0, lenlen = rules.length; j < lenlen; j++) {
                     rule = rules[j];
                     if (rule && rule.selector === merged.selector) {
@@ -3231,6 +3225,27 @@ function h(cmd, a, b) {
             }
         }
         return newMedia;
+    }
+    function ACSS_RULES_getUniqueOrderedSelectors(rules) {
+        var skip = {};
+        var arr = rules.filter(function(rule) {
+            if (skip[rule.selector]) {
+                return false;
+            }
+            skip[rule.selector] = true;
+            return true;
+        });
+        arr = arrSortByNumberASC(arr, 'pseudoScore');
+        return arr.map(function(rule) {
+            return rule.selector;
+        });
+    }
+    function ACSS_MERGED_RULE_compose(mediaValue, selector, css) {
+        return {
+            mediaValue: mediaValue,
+            selector: selector,
+            css: css
+        };
     }
     function ACSS_RULES_groupByMedia(rules) {
         var media = [];
@@ -3272,11 +3287,12 @@ function h(cmd, a, b) {
         }
         css = css.join('\n'); // ---------------------------------------------> JOIN
         var selector = '.' + acss.styleID + rule.pseudoClasses.join('') + rule.pseudoElements.join('');
-        return ACSS_TRANSFORMED_RULE_compose(rule.mediaValue, selector, css);
+        return ACSS_TRANSFORMED_RULE_compose(rule.mediaValue, rule.pseudoScore, selector, css);
     }
-    function ACSS_TRANSFORMED_RULE_compose(mediaValue, selector, css) {
+    function ACSS_TRANSFORMED_RULE_compose(mediaValue, pseudoScore, selector, css) {
         return {
             mediaValue: mediaValue,
+            pseudoScore: pseudoScore, // -------------------------------------> USED TO ORDER SELECTORS
             selector: selector,
             css: css
         };
