@@ -12,7 +12,7 @@ String.prototype.slug = function(max) {
             break;
         }
         if (code > 31 && code < 48) {
-            if (builder[builder.length - 1] !== '-') {
+            if (builder.length > 0 && builder[builder.length - 1] !== '-') {
                 builder += '-';
             }
             continue;
