@@ -22,7 +22,6 @@ import '../utils/1_primitives/string/String.prototype.escape';
 import '../utils/1_primitives/string/String.prototype.fmt';
 import '../utils/1_primitives/string/String.prototype.padEnd';
 import '../utils/1_primitives/string/String.prototype.padStart';
-import '../utils/1_primitives/string/String.prototype.removeDiacritics';
 import '../utils/1_primitives/string/String.prototype.reverse';
 import '../utils/1_primitives/string/String.prototype.slug';
 import '../utils/1_primitives/string/String.prototype.strip';
