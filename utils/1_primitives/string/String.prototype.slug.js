@@ -1,24 +1,24 @@
 String.prototype.slug = function(max) {
     max = max || 60;
     var self = this.trim().toLowerCase().removeDiacritics();
-    var builder = '';
+    var b = '';
     var length = self.length;
     for (var i = 0; i < length; i++) {
         var c = self[i];
         var code = self.charCodeAt(i);
-        if (builder.length >= max) {
+        if (b.length >= max) {
             break;
         }
         if (code > 31 && code < 48) {
-            if (builder.length > 0 && builder[builder.length - 1] !== '-') {
-                builder += '-';
+            if (b.length > 0 && b[b.length - 1] !== '-') {
+                b += '-';
             }
             continue;
         }
         if ((code > 47 && code < 58) || (code > 94 && code < 123)) {
-            builder += c;
+            b += c;
         }
     }
-    var l = builder.length - 1;
-    return builder[l] === '-' ? builder.substring(0, l) : builder;
+    var l = b.length - 1;
+    return b[l] === '-' ? b.substring(0, l) : b;
 };
