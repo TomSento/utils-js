@@ -1,6 +1,6 @@
 String.prototype.slug = function(max) {
     max = max || 60;
-    var self = this.trim().removeDiacritics();
+    var self = this.trim().toLowerCase().removeDiacritics();
     var builder = '';
     var length = self.length;
     for (var i = 0; i < length; i++) {
