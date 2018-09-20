@@ -1,3 +1,5 @@
+import $removeDiacritics from '../string/internal/removeDiacritics';
+
 Array.prototype.quicksort = function(name, asc, maxlength) { // --------------> FROM TOTAL.JS EXCEPT JSON DATE COMPARISION
     var length = this.length;
     if (!length || length === 1) {
@@ -39,10 +41,10 @@ Array.prototype.quicksort = function(name, asc, maxlength) { // --------------> 
         if (type === 1) {
             if (va && vb) {
                 if (asc) {
-                    return va.slice(0, maxlength).removeDiacritics().localeCompare(vb.slice(0, maxlength).removeDiacritics());
+                    return $removeDiacritics(va.slice(0, maxlength)).localeCompare($removeDiacritics(vb.slice(0, maxlength)));
                 }
                 else {
-                    return vb.slice(0, maxlength).removeDiacritics().localeCompare(va.slice(0, maxlength).removeDiacritics());
+                    return $removeDiacritics(vb.slice(0, maxlength)).localeCompare($removeDiacritics(va.slice(0, maxlength)));
                 }
             }
             else {
