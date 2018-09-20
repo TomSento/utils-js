@@ -1,6 +1,8 @@
+import $removeDiacritics from './internal/removeDiacritics';
+
 String.prototype.slug = function(max) {
     max = max || 60;
-    var self = this.trim().toLowerCase().removeDiacritics();
+    var self = $removeDiacritics(this.trim().toLowerCase());
     var b = '';
     var length = self.length;
     for (var i = 0; i < length; i++) {
