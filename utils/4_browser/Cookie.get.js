@@ -6,11 +6,10 @@ var Cookie = {
         if (i === -1) {
             return undefined;
         }
-        var j;
         if (i > 0 && str[i - 1] !== ' ') {
             return undefined;
         }
-        j = i + k.length + 1;
+        var j = i + k.length + 1;
         var end = str.indexOf(';', j);
         return str.slice(j, end === -1 ? undefined : end);
     }
