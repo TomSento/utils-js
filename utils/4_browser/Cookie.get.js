@@ -11,7 +11,7 @@ var Cookie = {
         }
         var j = i + k.length + 1;
         var end = str.indexOf(';', j);
-        return str.slice(j, end === -1 ? undefined : end);
+        return decodeURIComponent(str.slice(j, end === -1 ? undefined : end));
     }
 };
 $export('<Cookie>', Cookie);
