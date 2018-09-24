@@ -12,8 +12,6 @@
         "malloc": true,
         "typ": true,
 
-        "log": true,
-
-        "d": true
+        "log": true
     }
 }
