@@ -2587,7 +2587,7 @@ function h(cmd, a, b) {
                                     throw new Error("Expected types fn('', [] || '' || undefined, undefined) or fn('', {}, [] || '' || undefined).");
                                 }
                             }
-                            else { // ----------------------------------------> Meta, Link, Input, Script,...
+                            else { // ----------------------------------------> Meta, Link, Input,...
                                 data = {};
                                 content = '';
                                 if (a !== undefined || b !== undefined) {
