@@ -94,7 +94,7 @@ function h(cmd, a, b) {
         Input: '<input[[modifiers]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
         Option: '<option[[modifiers]]>[[content]]</option>',
-        Script: '<script[[modifiers]]></script>'
+        Script: '<script[[modifiers]]>[[content]]</script>'
     };
     var HTML_ATTRIBUTES = {
         Doc: [{
