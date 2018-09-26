@@ -94,6 +94,8 @@ function h(cmd, a, b) {
         Input: '<input[[modifiers]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
         Option: '<option[[modifiers]]>[[content]]</option>',
+        Ul: '<ul[[modifiers]]>[[content]]</ul>',
+        Li: '<li[[modifiers]]>[[content]]</li>',
         Script: '<script[[modifiers]]>[[content]]</script>'
     };
     var HTML_ATTRIBUTES = {
@@ -283,6 +285,8 @@ function h(cmd, a, b) {
             html: 'selected',
             noMissingSpaceAfterComma: false
         }],
+        Ul: [],
+        Li: [],
         Script: [{
             name: 'Src',
             func: 'Src',
