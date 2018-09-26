@@ -269,6 +269,12 @@ function h(cmd, a, b) {
             allowArgument: false,
             html: 'disabled',
             noMissingSpaceAfterComma: false
+        }, {
+            name: 'Multiple',
+            func: 'Multiple',
+            allowArgument: false,
+            html: 'multiple',
+            noMissingSpaceAfterComma: false
         }],
         Option: [{
             name: 'Selected',
