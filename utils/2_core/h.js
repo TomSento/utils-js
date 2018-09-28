@@ -3333,7 +3333,7 @@ function h(cmd, a, b) {
         if (data && typeof(data) === 'object') {
             for (var k in data) {
                 if (data.hasOwnProperty(k)) {
-                    modifiers = modifiers.concat(['data-' + k + "='" + JSON.stringify(data[k]) + "'"]);
+                    modifiers = modifiers.concat(['data-' + k + "='" + data[k] + "'"]);
                 }
             }
         }
