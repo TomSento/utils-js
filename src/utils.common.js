@@ -10,7 +10,6 @@ import '../utils/1_primitives/array/Array.prototype.unique';
 
 import '../utils/1_primitives/object/clone';
 import '../utils/1_primitives/object/extend';
-import '../utils/1_primitives/object/query';
 
 import '../utils/1_primitives/string/extension';
 import '../utils/1_primitives/string/String.prototype.escape';
