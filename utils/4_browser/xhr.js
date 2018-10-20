@@ -1,8 +1,8 @@
 var type = Object.prototype.toString;
-var EXP_FLAGS = /^-m\s(GET|PUT|POST|DELETE)$/; // ----------------------------> https://regex101.com/r/Gn3KrT/1/
+var EXP_CMD = /^-m\s(GET|PUT|POST|DELETE)$/; // ----------------------------> https://regex101.com/r/Gn3KrT/1/
 
-function xhr(url, flags, a, b, c, d) {
-    flags = parseFlags();
+function xhr(cmd, a, b, c, d) {
+    cmd = parseCMD();
     var body;
     var headers;
     var progressFN;
@@ -81,7 +81,7 @@ function xhr(url, flags, a, b, c, d) {
             next(null, res);
         }
     };
-    xhr.open(flags.method, url, true);
+    xhr.open(cmd.method, cmd.url, true);
     if (headers) {
         for (k in headers) {
             if (headers.hasOwnProperty(k)) {
@@ -90,13 +90,14 @@ function xhr(url, flags, a, b, c, d) {
         }
     }
     xhr.send(body); // -------------------------------------------------------> String || FormData
-    function parseFlags() {
-        var m = flags.match(EXP_FLAGS);
+    function parseCMD() {
+        var m = cmd.match(EXP_CMD);
         if (!m) {
-            throw new Error('Request "flags" must follow "-m <Value>" syntax.');
+            throw new Error('Request must follow "<Method> <Url>" syntax.');
         }
         return {
-            method: m[1]
+            method: m[1],
+            url: m[2]
         };
     }
     function canBeBody(v) {
