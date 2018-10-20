@@ -1,5 +1,5 @@
 var type = Object.prototype.toString;
-var EXP_CMD = /^-m\s(GET|PUT|POST|DELETE)$/; // ----------------------------> https://regex101.com/r/Gn3KrT/1/
+var EXP_CMD = /^(GET|PUT|POST|DELETE)\s(\S+)$/; // ———————————————————————————— https://regex101.com/r/Gn3KrT/2/
 
 function xhr(cmd, a, b, c, d) {
     cmd = parseCMD();
