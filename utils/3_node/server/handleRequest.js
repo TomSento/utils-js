@@ -130,7 +130,7 @@ function monitorResponseChanges(req, res, routeError, route) {
     }
     res.setTimeout(route.maxTimeout, function() {}); // ----------------------> EMPTY FUNCTION SO SOCKET IS NOT DESTROYED BY Node.js
     var totalRouteTimeout = setTimeout(function() {
-        routeError(req, res, 408, null);
+        routeError(req, res, 408, '{}');
     }, route.maxTimeout);
     (function(nativeEnd) {
         res.end = function(/* args */) { // ----------------------------------> WORKS ALSO WITH readable.pipe(res) - https://github.com/nodejs/node/blob/master/lib/_stream_readable.js#L625
@@ -147,7 +147,7 @@ function monitorResponseChanges(req, res, routeError, route) {
 function prepareRequest(req, res, routeError, route, next) {
     var url = $url.parse(req.url);
     if (req.url.length >= MAX_URL_LEN || (url.query || '').length >= MAX_URL_QUERY_LEN) {
-        return routeError(req, res, 414, null);
+        return routeError(req, res, 414, '{}');
     }
     var args = [];
     var tmp = url.pathname || '/';
@@ -178,7 +178,7 @@ function prepareRequest(req, res, routeError, route, next) {
         next(args, query, {});
     }
     else {
-        routeError(req, res, 400, null);
+        routeError(req, res, 400, '{}');
     }
 }
 
