@@ -244,11 +244,11 @@ function prepareRequestJSON(req, res, routeError, route, next) {
 function prepareRequestMULTIPART(req, res, routeError, route, next) {
     var boundary = req.headers['content-type'].split(';')[1];
     if (!boundary) {
-        return routeError(req, res, 400, null);
+        return routeError(req, res, 400, '{}');
     }
     boundary = boundary.slice(boundary.indexOf('=', 2) + 1); // –-------------> indexOf('=', 2) FOR PERFORMANCE
     if (!boundary || ['POST', 'PUT'].indexOf(req.method) === -1) {
-        return routeError(req, res, 400, null);
+        return routeError(req, res, 400, '{}');
     }
     var requestEnded = false;
     var rm = [];
@@ -257,7 +257,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
         if (!requestEnded) { // ----------------------------------------------> UNEXPECTED CLOSING - parser.onEnd() - NO ACTION
             body = undefined;
             unlinkAll(rm);
-            routeError(req, res, 500, null);
+            routeError(req, res, 500, '{}', new Error('unexpectedClosing'));
         }
     });
     var parser = new $MultipartParser();
@@ -386,7 +386,7 @@ function prepareRequestMULTIPART(req, res, routeError, route, next) {
             if (size >= maxSize) {
                 body = undefined;
                 unlinkAll(rm);
-                return routeError(req, res, 431, null);
+                return routeError(req, res, 431, '{}');
             }
             next(body);
         }
