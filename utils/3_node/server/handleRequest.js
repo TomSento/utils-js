@@ -206,12 +206,12 @@ function prepareRequestCookies(req) {
 
 function prepareRequestJSON(req, res, routeError, route, next) {
     if (['POST', 'PUT'].indexOf(req.method) === -1) {
-        return routeError(req, res, 400, null);
+        return routeError(req, res, 400, '{}');
     }
     var requestEnded = false;
     req.once('close', function() {
         if (!requestEnded) { // ----------------------------------------------> UNEXPECTED CLOSING
-            routeError(req, res, 500, null);
+            routeError(req, res, 500, '{}', new Error('unexpectedClosing'));
         }
     });
     var size = 0;
@@ -226,17 +226,17 @@ function prepareRequestJSON(req, res, routeError, route, next) {
         requestEnded = true;
         if (size >= route.maxSize) {
             b = undefined;
-            return routeError(req, res, 413, null);
+            return routeError(req, res, 413, '{}');
         }
         try {
             var body = JSON.parse(Buffer.concat(b).toString('utf8'));
             if (Object.prototype.toString.call(body) !== '[object Object]') {
-                return routeError(req, res, 400, null);
+                return routeError(req, res, 400, '{}');
             }
             next(body);
         }
         catch (err) {
-            routeError(req, res, 400, null);
+            routeError(req, res, 400, '{}');
         }
     });
 }
