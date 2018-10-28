@@ -57,7 +57,10 @@ function prepareRoute(req, res, routeError, next) {
     }
     $fs.stat(filepath, function(err) {
         if (err) {
-            return routeError(req, res, err.code === 'ENOENT' ? 404 : 500, null);
+            if (err.code === 'ENOENT') {
+                return routeError(req, res, 404, '{}');
+            }
+            return routeError(req, res, 500, '{}', err);
         }
         serveStaticFile(res, filepath, ext);
     });
