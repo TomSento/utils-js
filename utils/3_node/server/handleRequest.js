@@ -40,20 +40,20 @@ function prepareRoute(req, res, routeError, next) {
         return next(route);
     }
     if (req.method !== 'GET') {
-        return routeError(req, res, 404, null);
+        return routeError(req, res, 404, '{}');
     }
     var pathname = toPathname(req.url);
     if (pathname[pathname.length - 1] === '/') { // --------------------------> "/uploads/img.jpg/" OR "/" - 404
-        return routeError(req, res, 404, null);
+        return routeError(req, res, 404, '{}');
     }
     var ext = $path.extname(pathname);
     if (!ext || !$ext2ct.hasOwnProperty(ext)) {
-        return routeError(req, res, 404, null);
+        return routeError(req, res, 404, '{}');
     }
     var basepath = process.cwd() + $path.sep + 'public';
     var filepath = $path.normalize(basepath + pathname);
     if (filepath.indexOf(basepath + $path.sep) !== 0) { // -------------------> PATH TRAVERSAL VULNERABILITY CHECK
-        return routeError(req, res, 404, null);
+        return routeError(req, res, 404, '{}');
     }
     $fs.stat(filepath, function(err) {
         if (err) {
