@@ -34,11 +34,11 @@ schema('User', new Schema({
 }));
 
 schema('Project', new Schema({
-    'name': ['Parameter "name" is missing or has incorrect format.', {
+    'name': {
         validate: function(v) {
             return typ.call(v) === '[object String]' && v && v.length < 20;
         }
-    }]
+    }
 }));
 
 var user = {
