@@ -5,12 +5,12 @@ var Schema = $import('<Schema>');
 var schema = malloc('schemas');
 
 schema('User', new Schema({
-    'name': ['Parameter "name" is missing or has incorrect format.', {
+    'name': {
         validate: function(v) {
             return typ.call(v) === '[object String]' && v.length > 5;
         }
-    }],
-    'description': ['Parameter "description" has incorrect format.', {
+    },
+    'description': {
         prepare: function(v) {
             return v || null;
         },
@@ -20,17 +20,17 @@ schema('User', new Schema({
             }
             return typ.call(v) === '[object String]';
         }
-    }],
-    'projects': ['Parameter "projects" must be an array with at least one item.', {
+    },
+    'projects': {
         validate: function(v) {
             return typ.call(v) === '[object Array]' && v && v.length > 0;
         }
-    }],
-    'getName': ['Function "getName" is missing.', {
+    },
+    'getName': {
         validate: function(v) {
             return typ.call(v) === '[object Function]';
         }
-    }]
+    }
 }));
 
 schema('Project', new Schema({
