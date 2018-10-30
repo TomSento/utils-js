@@ -64,7 +64,7 @@ if (!err.projects) {
         return typ.call(v) !== '[object Object]' || Object.keys(schema('Project').prepareValidate(v)).length > 0;
     });
     if (has) {
-        err.projects = schema('User').error('projects');
+        err.projects = true;
     }
 }
 console.log('\nfinal errors', err);
