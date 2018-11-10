@@ -1,4 +1,4 @@
-import world from '../global';
+import world from '../world';
 
 export default function malloc(scope) {
     if (!scope || typeof(scope) !== 'string') {

@@ -1,3 +1,3 @@
-import world from '../global';
+import world from '../world';
 
 world.typ = Object.prototype.toString;

@@ -1,4 +1,4 @@
-import world from '../global';
+import world from '../world';
 
 world.log = function(/* ...args */) {
     var b = '';
