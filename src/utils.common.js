@@ -7,7 +7,7 @@ import '../utils/1_primitives/array/Array.prototype.remove';
 import '../utils/1_primitives/array/Array.prototype.unique';
 
 export { default as clone } from '../utils/1_primitives/object/clone';
-import '../utils/1_primitives/object/extend';
+export { default as extend } from '../utils/1_primitives/object/extend';
 
 import '../utils/1_primitives/string/extension';
 import '../utils/1_primitives/string/String.prototype.escape';
