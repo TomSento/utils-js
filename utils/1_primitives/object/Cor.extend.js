@@ -1,5 +1,5 @@
 import world from '../../world';
-import clone from './clone';
+import clone from './Cor.clone';
 
 export default function extend(objA, objB, rewrite) {
     if (!objA || typeof(objA) !== 'object') {
