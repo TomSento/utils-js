@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
-require('../../dist/out.node.js');
-
-var uid1 = $import('<uid1>');
-var uid2 = $import('<uid2>');
+var uid1 = require('../../dist/out.node.js').uid1;
+var uid2 = require('../../dist/out.node.js').uid2;
 
 console.log(uid1());
 console.log(uid2());
