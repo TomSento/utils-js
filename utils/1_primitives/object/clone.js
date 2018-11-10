@@ -1,3 +1,5 @@
+import world from '../../world';
+
 export default function clone(obj, skip, skipFunctions) {
     if (!obj) {
         return obj;
@@ -42,7 +44,5 @@ export default function clone(obj, skip, skipFunctions) {
     }
     return o;
 }
-if (typeof(window) === 'object') {
-    if (!window.Cor) window.Cor = {};
-    window.Cor.clone = clone;
-}
+if (!world.Cor) world.Cor = {};
+world.Cor.clone = clone;
