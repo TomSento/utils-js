@@ -1,4 +1,4 @@
-import './utils.common';
+export * from './utils.common';
 
 export { default as ls } from '../utils/3_node/fs/ls';
 export { default as Watcher } from '../utils/3_node/fs/Watcher';
