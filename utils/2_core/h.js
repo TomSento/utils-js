@@ -1,3 +1,5 @@
+import world from '../world';
+
 // COMMAND FORMAT:
 // HTML_SELECTOR_INSTRUCTION_STRING|HTML_ATTRIBUTES_INSTRUCTIONS_STRING|ACSS_INSTRUCTIONS_STRING
 // ACSS IS ALLOWED ONLY FOR BODYTAG ELEMENTS
@@ -3528,7 +3530,5 @@ export default function h(cmd, a, b) {
         return 'css-' + b;
     }
 }
-if (typeof(window) === 'object') {
-    if (!window.Cor) window.Cor = {};
-    window.Cor.h = h;
-}
+if (!world.Cor) world.Cor = {};
+world.Cor.h = h;
