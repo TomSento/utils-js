@@ -50,3 +50,5 @@ export default function ls(a, flag, fn, next) {
         }(dirPath));
     }());
 }
+if (!global.Cor) global.Cor = {};
+global.Cor.ls = ls;
