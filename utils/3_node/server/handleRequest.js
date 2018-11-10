@@ -443,5 +443,3 @@ function FormDataEntry() { // ------------------------------------------------> 
     this.path = undefined;
     this.value = undefined;
 }
-
-$export('<handleRequest>', handleRequest);
