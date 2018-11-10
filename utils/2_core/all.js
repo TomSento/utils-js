@@ -35,4 +35,7 @@ function all(arr, fn, next) { // ---------------------------------------------> 
         });
     });
 }
-$export('<all>', all);
+if (window) {
+    if (!window.Cor) window.Cor = {};
+    window.Cor.all = all;
+}
