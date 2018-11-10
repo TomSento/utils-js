@@ -1,3 +1,5 @@
+import world from '../world';
+
 export default function Schema(rules) {
     if (Object.prototype.toString.call(rules) !== '[object Object]') {
         throw new Error('api-rules');
@@ -38,7 +40,5 @@ Schema.prototype = {
         return tmp;
     }
 };
-if (typeof(window) === 'object') {
-    if (!window.Cor) window.Cor = {};
-    window.Cor.Schema = Schema;
-}
+if (!world.Cor) world.Cor = {};
+world.Cor.Schema = Schema;
