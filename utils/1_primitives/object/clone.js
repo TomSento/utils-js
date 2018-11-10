@@ -42,4 +42,7 @@ export default function clone(obj, skip, skipFunctions) {
     }
     return o;
 }
-$export('<clone>', clone);
+if (window) {
+    if (!window.Cor) window.Cor = {};
+    window.Cor.clone = clone;
+}
