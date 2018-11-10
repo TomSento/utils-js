@@ -1,6 +1,6 @@
 import $ct2ext from '../../ct2ext';
 
-function extension(k) {
+export default function extension(k) {
     return $ct2ext[k] || null;
 }
 if (window) {

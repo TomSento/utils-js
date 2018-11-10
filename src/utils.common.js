@@ -9,7 +9,7 @@ import '../utils/1_primitives/array/Array.prototype.unique';
 export { default as clone } from '../utils/1_primitives/object/clone';
 export { default as extend } from '../utils/1_primitives/object/extend';
 
-import '../utils/1_primitives/string/extension';
+export { default as extension } from '../utils/1_primitives/string/extension';
 import '../utils/1_primitives/string/String.prototype.escape';
 import '../utils/1_primitives/string/String.prototype.fmt';
 import '../utils/1_primitives/string/String.prototype.padEnd';
