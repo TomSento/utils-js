@@ -1,6 +1,4 @@
-require('../../dist/out.node.js');
-
-var h = $import('<h>');
+var h = require('../../dist/out.node.js').h;
 
 var i = 50000;
 var t = Date.now();
