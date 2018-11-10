@@ -23,3 +23,5 @@ Watcher.prototype = {
         this.fn[k] = fn;
     }
 };
+if (!global.Cor) global.Cor = {};
+global.Cor.Watcher = Watcher;
