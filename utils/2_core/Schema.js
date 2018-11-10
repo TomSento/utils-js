@@ -38,4 +38,7 @@ Schema.prototype = {
         return tmp;
     }
 };
-$export('<Schema>', Schema);
+if (window) {
+    if (!window.Cor) window.Cor = {};
+    window.Cor.Schema = Schema;
+}
