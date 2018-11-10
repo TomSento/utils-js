@@ -1,6 +1,6 @@
 import $malloc from '../../0_internal/malloc';
 
-function route(matcher, fn) {
+export default function route(matcher, fn) {
     if (!matcher || typeof(matcher) !== 'string') {
         throw new Error('api-matcher');
     }
@@ -54,4 +54,3 @@ function route(matcher, fn) {
         return v * 1000;
     }
 }
-$export('<route>', route);
