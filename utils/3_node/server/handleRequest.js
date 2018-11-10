@@ -443,3 +443,6 @@ function FormDataEntry() { // ------------------------------------------------> 
     this.path = undefined;
     this.value = undefined;
 }
+
+if (!global.Cor) global.Cor = {};
+global.Cor.handleRequest = handleRequest;
