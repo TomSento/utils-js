@@ -6,7 +6,7 @@ import '../utils/1_primitives/array/Array.prototype.findIndex';
 import '../utils/1_primitives/array/Array.prototype.remove';
 import '../utils/1_primitives/array/Array.prototype.unique';
 
-import '../utils/1_primitives/object/clone';
+export { default as clone } from '../utils/1_primitives/object/clone';
 import '../utils/1_primitives/object/extend';
 
 import '../utils/1_primitives/string/extension';
