@@ -452,4 +452,7 @@ function test(k, fn, maxTimeout) {
         }
     }
 }
-$export('<test>', test);
+if (window) {
+    if (!window.Cor) window.Cor = {};
+    window.Cor.test = test;
+}
