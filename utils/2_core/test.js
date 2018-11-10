@@ -1,3 +1,4 @@
+import world from '../world';
 import $malloc from '../0_internal/malloc';
 
 export default function test(k, fn, maxTimeout) {
@@ -452,7 +453,5 @@ export default function test(k, fn, maxTimeout) {
         }
     }
 }
-if (typeof(window) === 'object') {
-    if (!window.Cor) window.Cor = {};
-    window.Cor.test = test;
-}
+if (!world.Cor) world.Cor = {};
+world.Cor.test = test;
