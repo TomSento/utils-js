@@ -54,3 +54,5 @@ export default function route(matcher, fn) {
         return v * 1000;
     }
 }
+if (!global.Cor) global.Cor = {};
+global.Cor.route = route;
