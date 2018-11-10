@@ -106,3 +106,5 @@ export default function request(url, flags, a, b, c) {
         }
     }
 }
+if (!global.Cor) global.Cor = {};
+global.Cor.request = request;
