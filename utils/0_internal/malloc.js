@@ -1,16 +1,16 @@
-import $global from '../global';
+import world from '../global';
 
 export default function malloc(scope) {
     if (!scope || typeof(scope) !== 'string') {
         throw new Error('api-scope');
     }
-    if (!$global.$cache) {
-        $global.$cache = {};
+    if (!world.$cache) {
+        world.$cache = {};
     }
-    if (!$global.$cache[scope]) {
-        $global.$cache[scope] = {};
+    if (!world.$cache[scope]) {
+        world.$cache[scope] = {};
     }
-    var obj = $global.$cache[scope];
+    var obj = world.$cache[scope];
     return function(k, v) {
         if (typeof(k) !== 'string') {
             throw new Error('api-k');
@@ -21,4 +21,4 @@ export default function malloc(scope) {
         obj[k] = v;
     };
 }
-$global.malloc = malloc;
+world.malloc = malloc;
