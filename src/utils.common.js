@@ -18,7 +18,7 @@ import '../utils/1_primitives/string/String.prototype.slug';
 import '../utils/1_primitives/string/String.prototype.strip';
 
 export { default as all } from '../utils/2_core/all';
-import '../utils/2_core/h';
+export { default as h } from '../utils/2_core/h';
 import '../utils/2_core/log';
 import '../utils/2_core/Schema';
 import '../utils/2_core/test';
