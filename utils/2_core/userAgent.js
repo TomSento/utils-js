@@ -1,3 +1,4 @@
+import world from '../world';
 /**
  * CHANGES FROM ORIGINAL PARSER:
  * -- PARSE BY CALLING FUNCTION - ORIGINAL LIBRARY CREATES PARSER INSTANCE
@@ -522,7 +523,5 @@ export default function userAgent(str) { // BASED ON https://github.com/faisalma
     };
     return result;
 }
-if (typeof(window) === 'object') {
-    if (!window.Cor) window.Cor = {};
-    window.Cor.userAgent = userAgent;
-}
+if (!world.Cor) world.Cor = {};
+world.Cor.userAgent = userAgent;
