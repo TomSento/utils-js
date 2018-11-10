@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
-require('../../dist/out.node.js');
-
-var ls = $import('<ls>');
+var ls = require('../../dist/out.node.js').ls;
 
 ls([
     '../../utils',
