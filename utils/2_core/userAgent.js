@@ -522,4 +522,7 @@ function userAgent(str) { // BASED ON https://github.com/faisalman/ua-parser-js/
     };
     return result;
 }
-$export('<userAgent>', userAgent);
+if (window) {
+    if (!window.Cor) window.Cor = {};
+    window.Cor.userAgent = userAgent;
+}
