@@ -1,7 +1,9 @@
 var type = Object.prototype.toString;
 var EXP_CMD = /^(GET|PUT|POST|DELETE)\s(\S+)$/; // ———————————————————————————— https://regex101.com/r/Gn3KrT/2/
 
-XMLHttpRequest.send = function(cmd, a, b, c, d) {
+if (!window.Cor) window.Cor = {};
+
+window.Cor.xhr = function(cmd, a, b, c, d) {
     cmd = parseCMD();
     var body;
     var headers;
