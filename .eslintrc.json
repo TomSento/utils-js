@@ -7,8 +7,6 @@
         "Stream": true,
         "ReadStream": true,
 
-        "$export": true,
-        "$import": true,
         "malloc": true,
         "typ": true,
 
