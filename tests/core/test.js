@@ -1,6 +1,4 @@
-require('../../dist/out.node.js');
-
-var test = $import('<test>');
+var test = require('../../dist/out.node.js').test;
 
 test('errorBuilder.getData()', function(assert) {
     var done = assert.async(2);
