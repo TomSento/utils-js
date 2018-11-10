@@ -20,11 +20,11 @@ import '../utils/1_primitives/string/String.prototype.padStart';
 import '../utils/1_primitives/string/String.prototype.slug';
 import '../utils/1_primitives/string/String.prototype.strip';
 
-export { default as all } from '../utils/2_core/all';
-export { default as h } from '../utils/2_core/h';
+export { default as all } from '../utils/2_core/Cor.all';
+export { default as h } from '../utils/2_core/Cor.h';
+export { default as Schema } from '../utils/2_core/Cor.Schema';
+export { default as test } from '../utils/2_core/Cor.test';
+export { default as uid1 } from '../utils/2_core/Cor.uid1';
+export { default as uid2 } from '../utils/2_core/Cor.uid2';
+export { default as userAgent } from '../utils/2_core/Cor.userAgent';
 import '../utils/2_core/log';
-export { default as Schema } from '../utils/2_core/Schema';
-export { default as test } from '../utils/2_core/test';
-export { default as uid1 } from '../utils/2_core/uid1';
-export { default as uid2 } from '../utils/2_core/uid2';
-export { default as userAgent } from '../utils/2_core/userAgent';
