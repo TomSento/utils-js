@@ -1,4 +1,4 @@
-function Schema(rules) {
+export default function Schema(rules) {
     if (Object.prototype.toString.call(rules) !== '[object Object]') {
         throw new Error('api-rules');
     }
