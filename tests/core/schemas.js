@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-require('../../dist/out.node.js');
+var Schema = require('../../dist/out.node.js').Schema;
 
-var Schema = $import('<Schema>');
 var schema = malloc('schemas');
 
 schema('User', new Schema({
