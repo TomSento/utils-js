@@ -1,4 +1,4 @@
-function all(arr, fn, next) { // ---------------------------------------------> BASED ON: https://github.com/paulmillr/async-each
+export default function all(arr, fn, next) { // ------------------------------> BASED ON: https://github.com/paulmillr/async-each
     if (!Array.isArray(arr)) {
         throw new Error('api-arr');
     }
