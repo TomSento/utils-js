@@ -1,3 +1,6 @@
+/* eslint-disable import/first */
+/* eslint import/newline-after-import: "off" */
+
 import '../utils/0_internal/malloc';
 import '../utils/0_internal/typ';
 
