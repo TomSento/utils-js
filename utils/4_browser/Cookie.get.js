@@ -1,5 +1,7 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie#Example_2_Get_a_sample_cookie_named_test2
-window.Cookie = {
+if (!window.Cor) window.Cor = {};
+
+window.Cor.Cookie = {
     get: function(k) {
         var str = document.cookie;
         var i = str.indexOf(k + '=');
