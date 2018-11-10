@@ -3528,4 +3528,7 @@ function h(cmd, a, b) {
         return 'css-' + b;
     }
 }
-$export('<h>', h);
+if (window) {
+    if (!window.Cor) window.Cor = {};
+    window.Cor.h = h;
+}
