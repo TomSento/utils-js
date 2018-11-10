@@ -38,7 +38,7 @@ Schema.prototype = {
         return tmp;
     }
 };
-if (window) {
+if (typeof(window) === 'object') {
     if (!window.Cor) window.Cor = {};
     window.Cor.Schema = Schema;
 }

@@ -35,7 +35,7 @@ export default function all(arr, fn, next) { // ------------------------------> 
         });
     });
 }
-if (window) {
+if (typeof(window) === 'object') {
     if (!window.Cor) window.Cor = {};
     window.Cor.all = all;
 }

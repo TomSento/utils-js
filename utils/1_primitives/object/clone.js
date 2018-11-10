@@ -42,7 +42,7 @@ export default function clone(obj, skip, skipFunctions) {
     }
     return o;
 }
-if (window) {
+if (typeof(window) === 'object') {
     if (!window.Cor) window.Cor = {};
     window.Cor.clone = clone;
 }

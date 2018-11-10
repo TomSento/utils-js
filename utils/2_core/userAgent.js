@@ -522,7 +522,7 @@ export default function userAgent(str) { // BASED ON https://github.com/faisalma
     };
     return result;
 }
-if (window) {
+if (typeof(window) === 'object') {
     if (!window.Cor) window.Cor = {};
     window.Cor.userAgent = userAgent;
 }

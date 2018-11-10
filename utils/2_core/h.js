@@ -3528,7 +3528,7 @@ export default function h(cmd, a, b) {
         return 'css-' + b;
     }
 }
-if (window) {
+if (typeof(window) === 'object') {
     if (!window.Cor) window.Cor = {};
     window.Cor.h = h;
 }

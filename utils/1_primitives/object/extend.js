@@ -20,7 +20,7 @@ export default function extend(objA, objB, rewrite) {
     }
     return objA;
 }
-if (window) {
+if (typeof(window) === 'object') {
     if (!window.Cor) window.Cor = {};
     window.Cor.extend = extend;
 }
