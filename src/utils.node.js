@@ -1,6 +1,6 @@
 import './utils.common';
 
-import '../utils/3_node/fs/ls';
+export { default as ls } from '../utils/3_node/fs/ls';
 import '../utils/3_node/fs/Watcher';
 
 export { default as handleRequest } from '../utils/3_node/server/handleRequest';
