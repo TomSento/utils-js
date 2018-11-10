@@ -1,13 +1,11 @@
-require('../../dist/out.node.js');
-
 var browsers = require('../files/userAgent_browsers.json'); // ----------> ALL TEST DATA FROM "ua-parser v0.7.17"
 var engines = require('../files/userAgent_engines.json');
 var os = require('../files/userAgent_os.json');
 var devices = require('../files/userAgent_devices.json');
 var cpu = require('../files/userAgent_cpu.json');
 
-var test = $import('<test>');
-var userAgent = $import('<userAgent>');
+var test = require('../../dist/out.node.js').test;
+var userAgent = require('../../dist/out.node.js').userAgent;
 
 browsers.forEach(function(data) {
     test('(browser) ' + data.desc, function(assert) {
