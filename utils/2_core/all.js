@@ -1,3 +1,5 @@
+import world from '../world';
+
 export default function all(arr, fn, next) { // ------------------------------> BASED ON: https://github.com/paulmillr/async-each
     if (!Array.isArray(arr)) {
         throw new Error('api-arr');
@@ -35,7 +37,5 @@ export default function all(arr, fn, next) { // ------------------------------> 
         });
     });
 }
-if (typeof(window) === 'object') {
-    if (!window.Cor) window.Cor = {};
-    window.Cor.all = all;
-}
+if (!world.Cor) world.Cor = {};
+world.Cor.all = all;
