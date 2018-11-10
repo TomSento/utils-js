@@ -1,6 +1,6 @@
 import * as $fs from 'fs';
 
-function Watcher(t) {
+export default function Watcher(t) {
     this.t = t;
     this.fn = {};
     this.trigger = function(k, a1, a2, a3) {
@@ -23,4 +23,3 @@ Watcher.prototype = {
         this.fn[k] = fn;
     }
 };
-$export('<Watcher>', Watcher);
