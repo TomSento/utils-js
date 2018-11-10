@@ -24,4 +24,4 @@ export { default as Schema } from '../utils/2_core/Schema';
 export { default as test } from '../utils/2_core/test';
 export { default as uid1 } from '../utils/2_core/uid1';
 export { default as uid2 } from '../utils/2_core/uid2';
-import '../utils/2_core/userAgent';
+export { default as userAgent } from '../utils/2_core/userAgent';
