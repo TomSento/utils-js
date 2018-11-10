@@ -20,4 +20,7 @@ export default function extend(objA, objB, rewrite) {
     }
     return objA;
 }
-$export('<extend>', extend);
+if (window) {
+    if (!window.Cor) window.Cor = {};
+    window.Cor.extend = extend;
+}
