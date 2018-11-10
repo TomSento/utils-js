@@ -1,4 +1,5 @@
-import $clone from './clone';
+import world from '../../world';
+import clone from './clone';
 
 export default function extend(objA, objB, rewrite) {
     if (!objA || typeof(objA) !== 'object') {
@@ -15,12 +16,10 @@ export default function extend(objA, objB, rewrite) {
     while (i--) {
         var key = keys[i];
         if (rewrite || objA[key] === undefined) {
-            objA[key] = $clone(objB[key]);
+            objA[key] = clone(objB[key]);
         }
     }
     return objA;
 }
-if (typeof(window) === 'object') {
-    if (!window.Cor) window.Cor = {};
-    window.Cor.extend = extend;
-}
+if (!world.Cor) world.Cor = {};
+world.Cor.extend = extend;
