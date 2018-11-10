@@ -1,3 +1,3 @@
-import $global from '../global';
+import world from '../global';
 
-$global.typ = Object.prototype.toString;
+world.typ = Object.prototype.toString;

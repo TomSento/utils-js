@@ -1,6 +1,6 @@
-import $global from '../global';
+import world from '../global';
 
-$global.log = function(/* ...args */) {
+world.log = function(/* ...args */) {
     var b = '';
     for (var i = 0; i < arguments.length; i++) {
         var arg = arguments[i];
