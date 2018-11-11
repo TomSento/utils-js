@@ -1,10 +1,10 @@
 import world from '../world';
 
-export default function Schema(rules) {
-    if (Object.prototype.toString.call(rules) !== '[object Object]') {
-        throw new Error('api-rules');
+export default function Schema(obj) {
+    if (Object.prototype.toString.call(obj) !== '[object Object]') {
+        throw new Error('api-obj');
     }
-    this.rules = rules;
+    this.rules = obj;
 }
 Schema.prototype = {
     prepareValidate: function(o) {
