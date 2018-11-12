@@ -50,7 +50,7 @@ function prepareRoute(req, res, routeError, next) {
     if (!ext || !$ext2ct.hasOwnProperty(ext)) {
         return routeError(req, res, 404, '{}');
     }
-    var basepath = process.cwd() + $path.sep + 'public';
+    var basepath = process.cwd() + $path.sep + 'tmp' + $path.sep + 'public';
     var filepath = $path.normalize(basepath + pathname);
     if (filepath.indexOf(basepath + $path.sep) !== 0) { // -------------------> PATH TRAVERSAL VULNERABILITY CHECK
         return routeError(req, res, 404, '{}');
