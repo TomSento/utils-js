@@ -448,7 +448,17 @@ function FormDataEntry() { // ------------------------------------------------> 
 
 function processMiddlewares(route, req, res, args, query, body, next) {
     var context = {};
-    next(context);
+    (function nextMiddleware(i) {
+        var fn = route.middlewares[i];
+        if (!fn) {
+            return next(context);
+        }
+        fn.call(context, req, res, args, query, body, function() {
+            setImmediate(function() {
+                nextMiddleware(++i);
+            });
+        });
+    }(0));
 }
 
 if (!global.Cor) global.Cor = {};
