@@ -1,6 +1,20 @@
 import $malloc from '../../0_internal/malloc';
 
-export default function route(matcher, fn) {
+export default function route(/* ...args */) {
+    var matcher;
+    var fn;
+    var middlewares = [];
+    for (var i = 0, l = arguments.length; i < l; i++) {
+        if (i === 0) {
+            matcher = arguments[0];
+        }
+        else if (i === l - 1) {
+            fn = arguments[l - 1];
+        }
+        else {
+            middlewares.push(arguments[i]);
+        }
+    }
     if (!matcher || typeof(matcher) !== 'string') {
         throw new Error('api-matcher');
     }
