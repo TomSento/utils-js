@@ -41,6 +41,7 @@ export default function route(/* ...args */) {
         return {
             matcher: tmp,
             exp: new RegExp('^' + tmp.replace(/\[(\w+)\]/g, '([-\\w.@]+)') + '$'),
+            middlewares: middlewares,
             fn: fn,
             method: m[2],
             maxSize: parseMaxSize(m[3], m[4]),
