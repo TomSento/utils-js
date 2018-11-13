@@ -28,7 +28,9 @@ export default function handleRequest(req, res, routeError) {
     prepareRoute(req, res, routeError, function(route) {
         monitorResponseChanges(req, res, routeError, route);
         prepareRequest(req, res, routeError, route, function(args, query, body) {
-            route.fn.call({}, req, res, args, query, body);
+            processMiddlewares(route, req, res, args, query, body, function(context) {
+                route.fn.call(context, req, res, args, query, body);
+            });
         });
     });
 }
@@ -442,6 +444,11 @@ function FormDataEntry() { // ------------------------------------------------> 
     this.contentType = undefined;
     this.path = undefined;
     this.value = undefined;
+}
+
+function processMiddlewares(route, req, res, args, query, body, next) {
+    var context = {};
+    next(context);
 }
 
 if (!global.Cor) global.Cor = {};
