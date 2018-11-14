@@ -23,7 +23,7 @@ function removeBlockComments(str) {
             continue;
         }
         b += str.slice(j, i);
-        j = str.indexOf(searchEnd, j + 2); // ————————————————————————————————— + 2 BECAUSE /**/ IS ALLOWED
+        j = str.indexOf(searchEnd, i + 2); // ————————————————————————————————— + 2 BECAUSE /**/ IS ALLOWED
         if (j === -1) {
             i = -1;
             continue;
