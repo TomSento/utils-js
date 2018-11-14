@@ -56,7 +56,7 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
         }
         var range = findSkipRange(i);
         if (range) {
-            i = range.toIndex;
+            i = range.fromIndex;
             continue;
         }
         brk = true;
