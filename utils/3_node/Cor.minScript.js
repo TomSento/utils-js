@@ -9,6 +9,21 @@ export default function minScript(str) {
     return str;
 }
 
+function removeBlockComments(str) {
+    var searchStart = '/**';
+    var searchEnd = '*/';
+    var i;
+    var j;
+    while (i !== -1) {
+        i = str.indexOf(searchStart, j);
+        if (i === -1) {
+            continue;
+        }
+        j = str.indexOf(searchEnd, j + 2); // ————————————————————————————————— + 2 BECAUSE /**/ IS ALLOWED
+        j += 2;
+    }
+}
+
 function getBlindRanges() {
 
 }
