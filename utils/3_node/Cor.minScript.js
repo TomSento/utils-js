@@ -8,17 +8,25 @@ var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
 var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/5/
 
 var SKIP;
-var OPEN_BRACKET_INDEXES = [];
-var LAST_CLOSE_BRACKET_INDEX = 0;
 
 export default function minScript(str) {
     str = removeBlockComments(str);
     str = removeSingleLineComments(str);
     SKIP = getSkipRanges(str);
+    var i = 0;
+    var brk = false;
+    while (!brk) {
+        i = findSafeIndexOf(str, '}', i);
+        if (i === -1) {
+            brk = true;
+            continue;
+        }
+        i++;
+    }
     return str;
 }
 
-function findSafeIndex(str, ch, fromIndex) {
+function findSafeIndexOf(str, ch, fromIndex) {
     var i = fromIndex;
     var brk = false;
     while (!brk) {
