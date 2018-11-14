@@ -8,22 +8,48 @@ var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
 var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/5/
 
 var SKIP;
+var PROCESSED_BLOCKS = {};
 
 export default function minScript(str) {
     str = removeBlockComments(str);
     str = removeSingleLineComments(str);
     SKIP = getSkipRanges(str);
-    var i = 0;
+
     var brk = false;
+    var i = 0;
+    var j;
+
     while (!brk) {
         i = findSafeIndexOf(str, '}', i);
         if (i === -1) {
             brk = true;
             continue;
         }
+        j = findClosestUnprocessedOpenBracketIndex(str, i);
+        if (j >= 0) {
+            console.log('block:\n\n' + str.slice(j, i + 1) + '\n\n====\n\n');
+        }
         i++;
     }
     return str;
+}
+
+function findClosestUnprocessedOpenBracketIndex(str, fromIndex) { // —————————— DO NOT DUPLICATE BLOCKS OF NESTED FUNCTIONS
+    var i = fromIndex;
+    var brk = false;
+    while (!brk) {
+        i = findSafeLastIndexOf(str, '{', i - 1);
+        if (i === -1) {
+            brk = true;
+            continue;
+        }
+        if (!PROCESSED_BLOCKS[i]) {
+            PROCESSED_BLOCKS[i] = true;
+            brk = true;
+            continue;
+        }
+    }
+    return i;
 }
 
 function findSafeIndexOf(str, ch, fromIndex) {
