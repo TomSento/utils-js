@@ -12,7 +12,7 @@ export default function minScript(str) {
 
 function removeBlockComments(str) {
     var i;
-    var searchStart = '/**';
+    var searchStart = '/*';
     var j = 0;
     var b = '';
     var searchEnd = '*/';
