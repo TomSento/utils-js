@@ -7,14 +7,40 @@ var EXP_NOTOK_SINGLE_QUOTE_STRING = /"\s*\+/; // https://regex101.com/r/I4u1hw/1
 var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
 var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/5/
 
-var OPEN_BRACKET_INDEXES = 0;
-var LAST_CLOSE_BRACKET_IDX = 0;
+var SKIP;
+var OPEN_BRACKET_INDEXES = [];
+var LAST_CLOSE_BRACKET_INDEX = 0;
 
 export default function minScript(str) {
     str = removeBlockComments(str);
     str = removeSingleLineComments(str);
-    var skip = getSkipRanges(str);
+    SKIP = getSkipRanges(str);
     return str;
+}
+
+function findSafeIndex(str, ch, fromIndex) {
+    var i = fromIndex;
+    var brk = false;
+    while (!brk) {
+        i = str.indexOf(ch, i);
+        if (i === -1) {
+            brk = true;
+            continue;
+        }
+        var range = findSkipRange(i);
+        if (range) {
+            i = range.toIndex;
+            continue;
+        }
+        brk = true;
+    }
+    return i;
+}
+
+function findSkipRange(i) {
+    return SKIP.find(function(range) {
+        return (range.fromIndex <= i && i < range.toIndex);
+    });
 }
 
 function removeBlockComments(str) {
