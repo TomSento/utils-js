@@ -4,7 +4,7 @@
 var openBracketIndexes = [];
 var blindRanges = []; // strings, regular expressions
 var EXP_MATCH_REGEX = /(\/.+\/)[gi\n;,) ]/g; // https://regex101.com/r/vCs702/6/
-var EXP_MATCH_STRINGS = /('.*?')[\n;,) ]/g; // https://regex101.com/r/KjEh0t/2/
+var EXP_MATCH_SINGLE_QUOTE_STRING = /('.*?')[\n;,) ]/g; // https://regex101.com/r/KjEh0t/2/
 
 export default function minScript(str) {
     str = removeBlockComments(str);
@@ -60,7 +60,7 @@ function removeSingleLineComments(str) {
 
 function getBlindRanges(str) {
     var ranges = getRegexRanges(str);
-    ranges = ranges.concat(getStringRanges(str));
+    ranges = ranges.concat(getSingleQuoteStringRanges(str));
     return ranges;
 }
 
@@ -79,7 +79,13 @@ function composeRange(fromIndex, toIndex) {
     return { fromIndex: fromIndex, toIndex: toIndex };
 }
 
-function getStringRanges() {
+function getSingleQuoteStringRanges(str) {
     var m;
     var ranges = [];
+    while (m = EXP_MATCH_SINGLE_QUOTE_STRING.exec(str)) {
+        if (Array.isArray(m) && m.length > 0) {
+            ranges.push(composeRange(m.index, m.index + m[1].length));
+        }
+    }
+    return ranges;
 }
