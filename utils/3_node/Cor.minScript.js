@@ -45,6 +45,25 @@ function findSafeIndexOf(str, ch, fromIndex) {
     return i;
 }
 
+function findSafeLastIndexOf(str, ch, fromIndex) {
+    var i = fromIndex;
+    var brk = false;
+    while (!brk) {
+        i = str.lastIndexOf(ch, i);
+        if (i === -1) {
+            brk = true;
+            continue;
+        }
+        var range = findSkipRange(i);
+        if (range) {
+            i = range.toIndex;
+            continue;
+        }
+        brk = true;
+    }
+    return i;
+}
+
 function findSkipRange(i) {
     return SKIP.find(function(range) {
         return (range.fromIndex <= i && i < range.toIndex);
