@@ -6,6 +6,7 @@ var blindRanges = []; // strings, regular expressions
 var EXP_MATCH_REGEX = /(\/.+\/)[gi\n;,)\] ]/g; // https://regex101.com/r/vCs702/7/
 var EXP_MATCH_SINGLE_QUOTE_STRING = /('.*?')[\n;,)\] ]/g; // https://regex101.com/r/KjEh0t/3/
 var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
+var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/1/
 
 export default function minScript(str) {
     str = removeBlockComments(str);
@@ -97,6 +98,9 @@ function getDoubleQuoteStringRanges(str) {
     var ranges = [];
     while (m = EXP_MATCH_DOUBLE_QUOTE_STRING.exec(str)) {
         if (Array.isArray(m) && m.length > 0) {
+            if (EXP_NOTOK_DOUBLE_QUOTE_STRING.test(str.slice(m.index, m.index + m[1].length))) {
+                continue;
+            }
             ranges.push(composeRange(m.index, m.index + m[1].length));
         }
     }
