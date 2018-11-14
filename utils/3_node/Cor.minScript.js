@@ -95,4 +95,10 @@ function getSingleQuoteStringRanges(str) {
 function getDoubleQuoteStringRanges(str) {
     var m;
     var ranges = [];
+    while (m = EXP_MATCH_DOUBLE_QUOTE_STRING.exec(str)) {
+        if (Array.isArray(m) && m.length > 0) {
+            ranges.push(composeRange(m.index, m.index + m[1].length));
+        }
+    }
+    return ranges;
 }
