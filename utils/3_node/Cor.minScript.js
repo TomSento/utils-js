@@ -6,7 +6,7 @@ var blindRanges = []; // strings, regular expressions
 var EXP_MATCH_REGEX = /(\/.+\/)[gi\n;,)\] ]/g; // https://regex101.com/r/vCs702/7/
 var EXP_MATCH_SINGLE_QUOTE_STRING = /('.*?')[\n;,)\] ]/g; // https://regex101.com/r/KjEh0t/3/
 var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
-var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/1/
+var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/5/
 
 export default function minScript(str) {
     str = removeBlockComments(str);
