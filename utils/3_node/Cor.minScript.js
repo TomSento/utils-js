@@ -60,6 +60,7 @@ function removeSingleLineComments(str) {
 
 function getBlindRanges(str) {
     var ranges = getRegexRanges(str);
+    ranges = ranges.concat(getStringRanges(str));
     return ranges;
 }
 
@@ -76,4 +77,9 @@ function getRegexRanges(str) {
 
 function composeRange(fromIndex, toIndex) {
     return { fromIndex: fromIndex, toIndex: toIndex };
+}
+
+function getStringRanges() {
+    var m;
+    var ranges = [];
 }
