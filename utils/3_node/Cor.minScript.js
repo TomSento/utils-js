@@ -88,6 +88,9 @@ function getSingleQuoteStringRanges(str) {
     var ranges = [];
     while (m = EXP_MATCH_SINGLE_QUOTE_STRING.exec(str)) {
         if (Array.isArray(m) && m.length > 0) {
+            if (EXP_NOTOK_SINGLE_QUOTE_STRING.test(str.slice(m.index, m.index + m[1].length))) {
+                continue;
+            }
             ranges.push(composeRange(m.index, m.index + m[1].length));
         }
     }
