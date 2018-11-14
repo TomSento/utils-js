@@ -3,7 +3,7 @@
 // - does not take into account comments inside strings e.g. '', inside regex comment // is ok.
 var openBracketIndexes = [];
 var blindRanges = []; // strings, regular expressions
-var EXP_MATCH_REGEXES = /[|&[(=]\s*(\/.+\/)/; // https://regex101.com/r/vCs702/1/
+var EXP_MATCH_REGEXES = /[|&[(=,]\s*(\/.+\/)/; // https://regex101.com/r/vCs702/2
 
 export default function minScript(str) {
     str = removeBlockComments(str);
