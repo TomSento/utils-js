@@ -20,6 +20,10 @@ function removeBlockComments(str) {
             continue;
         }
         j = str.indexOf(searchEnd, j + 2); // ————————————————————————————————— + 2 BECAUSE /**/ IS ALLOWED
+        if (j === -1) {
+            i = -1;
+            continue;
+        }
         j += 2;
     }
 }
