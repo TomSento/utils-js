@@ -34,24 +34,6 @@ export default function minScript(str) {
     return str;
 }
 
-function findClosestUnprocessedOpenBracketIndex(str, fromIndex) { // —————————— DO NOT DUPLICATE BLOCKS OF NESTED FUNCTIONS
-    var i = fromIndex;
-    var brk = false;
-    while (!brk) {
-        i = findSafeLastIndexOf(str, '{', i - 1);
-        if (i === -1) {
-            brk = true;
-            continue;
-        }
-        if (!PROCESSED_BLOCKS[i]) {
-            PROCESSED_BLOCKS[i] = true;
-            brk = true;
-            continue;
-        }
-    }
-    return i;
-}
-
 function findSafeIndexOf(str, ch, fromIndex) {
     var i = fromIndex;
     var brk = false;
@@ -67,6 +49,24 @@ function findSafeIndexOf(str, ch, fromIndex) {
             continue;
         }
         brk = true;
+    }
+    return i;
+}
+
+function findClosestUnprocessedOpenBracketIndex(str, fromIndex) { // —————————— DO NOT DUPLICATE BLOCKS OF NESTED FUNCTIONS
+    var i = fromIndex;
+    var brk = false;
+    while (!brk) {
+        i = findSafeLastIndexOf(str, '{', i - 1);
+        if (i === -1) {
+            brk = true;
+            continue;
+        }
+        if (!PROCESSED_BLOCKS[i]) {
+            PROCESSED_BLOCKS[i] = true;
+            brk = true;
+            continue;
+        }
     }
     return i;
 }
