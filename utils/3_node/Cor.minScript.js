@@ -3,12 +3,12 @@
 // - does not take into account comments inside strings e.g. '', inside regex comment // is ok.
 var openBracketIndexes = [];
 var blindRanges = []; // strings, regular expressions
-var EXP_MATCH_REGEX = /(\/.+\/)[gi\n;,) ]/; // https://regex101.com/r/vCs702/6
+var EXP_MATCH_REGEX = /(\/.+\/)[gi\n;,) ]/g; // https://regex101.com/r/vCs702/6
 
 export default function minScript(str) {
     str = removeBlockComments(str);
     str = removeSingleLineComments(str);
-    blindRanges = getBlindRanges();
+    blindRanges = getBlindRanges(str);
     return str;
 }
 
@@ -57,10 +57,22 @@ function removeSingleLineComments(str) {
     return b;
 }
 
-function getBlindRanges() {
-
+function getBlindRanges(str) {
+    var ranges = getRegexRanges(str);
+    return ranges;
 }
 
-function getRegexRanges() {
+function getRegexRanges(str) {
+    var m;
+    var ranges = [];
+    while (m = EXP_MATCH_REGEX.exec(str)) {
+        if (Array.isArray(m) && m.length > 0) {
+            ranges.push(composeRange(m.index, m.index + m[1].length));
+        }
+    }
+    return ranges;
+}
 
+function composeRange(fromIndex, toIndex) {
+    return { fromIndex: fromIndex, toIndex: toIndex };
 }
