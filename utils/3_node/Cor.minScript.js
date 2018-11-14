@@ -1,18 +1,19 @@
 // - remove comments
 // - ensure that { or } is not inside string or inside regex;
 // - does not take into account comments inside strings e.g. '', inside regex comment // is ok.
-var openBracketIndexes = [];
-var blindRanges = []; // strings, regular expressions
 var EXP_MATCH_REGEX = /(\/.+\/)[gi\n;,)\] ]/g; // https://regex101.com/r/vCs702/7/
 var EXP_MATCH_SINGLE_QUOTE_STRING = /('.*?')[\n;,)\] ]/g; // https://regex101.com/r/KjEh0t/3/
 var EXP_NOTOK_SINGLE_QUOTE_STRING = /"\s*\+/; // https://regex101.com/r/I4u1hw/1/
 var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
 var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/5/
 
+var OPEN_BRACKET_INDEXES = 0;
+var LAST_CLOSE_BRACKET_IDX = 0;
+
 export default function minScript(str) {
     str = removeBlockComments(str);
     str = removeSingleLineComments(str);
-    blindRanges = getBlindRanges(str);
+    var skip = getSkipRanges(str);
     return str;
 }
 
@@ -61,7 +62,7 @@ function removeSingleLineComments(str) {
     return b;
 }
 
-function getBlindRanges(str) {
+function getSkipRanges(str) {
     var ranges = getRegexRanges(str);
     ranges = ranges.concat(getSingleQuoteStringRanges(str));
     ranges = ranges.concat(getDoubleQuoteStringRanges(str));
