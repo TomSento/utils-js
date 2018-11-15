@@ -1,7 +1,7 @@
 // - remove comments
 // - ensure that { or } is not inside string or inside regex;
 // - does not take into account comments inside strings e.g. '', inside regex comment // is ok.
-var EXP_MATCH_REGEX = /(\/.+\/)[gi\n;,)\] ]/g; // https://regex101.com/r/vCs702/7/
+var EXP_MATCH_REGEX = /(\/[^*].*\/)[gi\n;,)\]\s]/g; // https://regex101.com/r/vCs702/9/
 var EXP_MATCH_SINGLE_QUOTE_STRING = /('.*?')[\n;,)\] ]/g; // https://regex101.com/r/KjEh0t/3/
 var EXP_NOTOK_SINGLE_QUOTE_STRING = /"\s*\+/; // https://regex101.com/r/I4u1hw/1/
 var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
