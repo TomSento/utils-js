@@ -11,9 +11,9 @@ var SKIP;
 var PROCESSED_BLOCKS = {};
 
 export default function minScript(str) {
+    SKIP = getSkipRanges(str);
     str = removeBlockComments(str);
     str = removeSingleLineComments(str);
-    SKIP = getSkipRanges(str);
 
     var brk = false;
     var i = 0;
