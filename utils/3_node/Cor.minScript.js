@@ -40,6 +40,72 @@ export default function minScript(str) {
     return str;
 }
 
+function getSkipRanges(str) {
+    var ranges = getRegexRanges(str);
+    ranges = ranges.concat(getSingleQuoteStringRanges(str));
+    ranges = ranges.concat(getDoubleQuoteStringRanges(str));
+    return ranges;
+}
+
+function getRegexRanges(str) {
+    var m;
+    var prev;
+    var ranges = [];
+    while (m = EXP_MATCH_REGEX.exec(str)) {
+        if (Array.isArray(m) && m.length > 0) {
+            if (m[1].indexOf('//') === 0 || m[1].indexOf('/*') === 0) { // ———— IS COMMENT
+                prev = m[1];
+                continue;
+            }
+            if (prev && prev.indexOf('/*') === 0 && m[1].lastIndexOf('*/') === m[1].length - 2) { // IS COMMENT
+                prev = m[1];
+                continue;
+            }
+            ranges.push(composeRange(m.index, m.index + m[1].length));
+            prev = m[1];
+        }
+    }
+    return ranges;
+}
+
+function composeRange(fromIndex, toIndex) {
+    return { fromIndex: fromIndex, toIndex: toIndex };
+}
+
+function getSingleQuoteStringRanges(str) {
+    var m;
+    var ranges = [];
+    while (m = EXP_MATCH_SINGLE_QUOTE_STRING.exec(str)) {
+        if (Array.isArray(m) && m.length > 0) {
+            if (EXP_NOTOK_SINGLE_QUOTE_STRING.test(str.slice(m.index, m.index + m[1].length))) {
+                continue;
+            }
+            if (m[1].length === 2) { // ——————————————————————————————————————— EMPTY STRING
+                continue;
+            }
+            ranges.push(composeRange(m.index, m.index + m[1].length));
+        }
+    }
+    return ranges;
+}
+
+function getDoubleQuoteStringRanges(str) {
+    var m;
+    var ranges = [];
+    while (m = EXP_MATCH_DOUBLE_QUOTE_STRING.exec(str)) {
+        if (Array.isArray(m) && m.length > 0) {
+            if (EXP_NOTOK_DOUBLE_QUOTE_STRING.test(str.slice(m.index, m.index + m[1].length))) {
+                continue;
+            }
+            if (m[1].length === 2) { // ——————————————————————————————————————— EMPTY STRING
+                continue;
+            }
+            ranges.push(composeRange(m.index, m.index + m[1].length));
+        }
+    }
+    return ranges;
+}
+
 function findSafeIndexOf(str, ch, fromIndex) {
     var i = fromIndex;
     var brk = false;
@@ -162,70 +228,4 @@ function removeSingleLineComments(str) {
         }
     }
     return b;
-}
-
-function getSkipRanges(str) {
-    var ranges = getRegexRanges(str);
-    ranges = ranges.concat(getSingleQuoteStringRanges(str));
-    ranges = ranges.concat(getDoubleQuoteStringRanges(str));
-    return ranges;
-}
-
-function getRegexRanges(str) {
-    var m;
-    var prev;
-    var ranges = [];
-    while (m = EXP_MATCH_REGEX.exec(str)) {
-        if (Array.isArray(m) && m.length > 0) {
-            if (m[1].indexOf('//') === 0 || m[1].indexOf('/*') === 0) { // ———— IS COMMENT
-                prev = m[1];
-                continue;
-            }
-            if (prev && prev.indexOf('/*') === 0 && m[1].lastIndexOf('*/') === m[1].length - 2) { // IS COMMENT
-                prev = m[1];
-                continue;
-            }
-            ranges.push(composeRange(m.index, m.index + m[1].length));
-            prev = m[1];
-        }
-    }
-    return ranges;
-}
-
-function composeRange(fromIndex, toIndex) {
-    return { fromIndex: fromIndex, toIndex: toIndex };
-}
-
-function getSingleQuoteStringRanges(str) {
-    var m;
-    var ranges = [];
-    while (m = EXP_MATCH_SINGLE_QUOTE_STRING.exec(str)) {
-        if (Array.isArray(m) && m.length > 0) {
-            if (EXP_NOTOK_SINGLE_QUOTE_STRING.test(str.slice(m.index, m.index + m[1].length))) {
-                continue;
-            }
-            if (m[1].length === 2) { // ——————————————————————————————————————— EMPTY STRING
-                continue;
-            }
-            ranges.push(composeRange(m.index, m.index + m[1].length));
-        }
-    }
-    return ranges;
-}
-
-function getDoubleQuoteStringRanges(str) {
-    var m;
-    var ranges = [];
-    while (m = EXP_MATCH_DOUBLE_QUOTE_STRING.exec(str)) {
-        if (Array.isArray(m) && m.length > 0) {
-            if (EXP_NOTOK_DOUBLE_QUOTE_STRING.test(str.slice(m.index, m.index + m[1].length))) {
-                continue;
-            }
-            if (m[1].length === 2) { // ——————————————————————————————————————— EMPTY STRING
-                continue;
-            }
-            ranges.push(composeRange(m.index, m.index + m[1].length));
-        }
-    }
-    return ranges;
 }
