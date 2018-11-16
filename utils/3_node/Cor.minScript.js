@@ -14,6 +14,9 @@ export default function minScript(str) {
     SKIP = getSkipRanges(str);
     str = removeBlockComments(str);
 
+    console.log('==================\n\n\n\n\n');
+    console.log(str);
+
     SKIP = null;
     SKIP = getSkipRanges(str);
     str = removeSingleLineComments(str);
@@ -113,8 +116,8 @@ function removeBlockComments(str) {
         }
         var range = findSkipRange(i);
         if (range) {
-            b += str.slice(j, j + 2);
-            j += 2;
+            b += str.slice(j, i + 2);
+            j = i + 2;
             continue;
         }
         b += str.slice(j, i);
