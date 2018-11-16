@@ -135,6 +135,12 @@ function removeBlockComments(str) {
     return b;
 }
 
+function findSkipRange(i) {
+    return SKIP.find(function(range) {
+        return (range.fromIndex <= i && i < range.toIndex);
+    });
+}
+
 function findSafeIndexOf(str, ch, fromIndex) {
     var i = fromIndex;
     var brk = false;
@@ -189,12 +195,6 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
         brk = true;
     }
     return i;
-}
-
-function findSkipRange(i) {
-    return SKIP.find(function(range) {
-        return (range.fromIndex <= i && i < range.toIndex);
-    });
 }
 
 function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
