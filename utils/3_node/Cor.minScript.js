@@ -18,6 +18,9 @@ export default function minScript(str) {
     SKIP = getSkipRanges(str);
     str = removeSingleLineComments(str);
 
+    SKIP = null;
+    SKIP = getSkipRanges(str);
+
     var brk = false;
     var i = 0;
     var j;
@@ -30,7 +33,7 @@ export default function minScript(str) {
         }
         j = findClosestUnprocessedOpenBracketIndex(str, i);
         if (j >= 0) {
-            // console.log('block:\n\n' + str.slice(j, i + 1) + '\n\n====\n\n');
+            str = obfuscateCodeBlock(str, j, i + 1);
         }
         i++;
     }
@@ -97,6 +100,11 @@ function findSkipRange(i) {
     return SKIP.find(function(range) {
         return (range.fromIndex <= i && i < range.toIndex);
     });
+}
+
+function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
+    console.log(str.slice(blockStartIdx, blockEndIdx) + '\n\n\n\n\n\n\n\n');
+    return str;
 }
 
 function removeBlockComments(str) {
