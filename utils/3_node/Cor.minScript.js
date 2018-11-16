@@ -108,6 +108,11 @@ function removeBlockComments(str) {
             b += str.slice(j);
             continue;
         }
+        var range = findSkipRange(i);
+        if (range) {
+            j += 2;
+            continue;
+        }
         b += str.slice(j, i);
         j = str.indexOf(searchEnd, i + 2); // ————————————————————————————————— + 2 BECAUSE /**/ IS ALLOWED
         if (j === -1) {
