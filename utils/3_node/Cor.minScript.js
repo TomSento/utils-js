@@ -106,6 +106,35 @@ function getDoubleQuoteStringRanges(str) {
     return ranges;
 }
 
+function removeBlockComments(str) {
+    var i;
+    var searchStart = '/*';
+    var j = 0;
+    var b = '';
+    var searchEnd = '*/';
+    while (i !== -1) {
+        i = str.indexOf(searchStart, j);
+        if (i === -1) {
+            b += str.slice(j);
+            continue;
+        }
+        var range = findSkipRange(i);
+        if (range) {
+            b += str.slice(j, i + 2);
+            j = i + 2;
+            continue;
+        }
+        b += str.slice(j, i);
+        j = str.indexOf(searchEnd, i + 2); // ————————————————————————————————— + 2 BECAUSE /**/ IS ALLOWED
+        if (j === -1) {
+            i = -1;
+            continue;
+        }
+        j += 2;
+    }
+    return b;
+}
+
 function findSafeIndexOf(str, ch, fromIndex) {
     var i = fromIndex;
     var brk = false;
@@ -171,35 +200,6 @@ function findSkipRange(i) {
 function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
     console.log(str.slice(blockStartIdx, blockEndIdx) + '\n\n\n\n\n\n\n\n');
     return str;
-}
-
-function removeBlockComments(str) {
-    var i;
-    var searchStart = '/*';
-    var j = 0;
-    var b = '';
-    var searchEnd = '*/';
-    while (i !== -1) {
-        i = str.indexOf(searchStart, j);
-        if (i === -1) {
-            b += str.slice(j);
-            continue;
-        }
-        var range = findSkipRange(i);
-        if (range) {
-            b += str.slice(j, i + 2);
-            j = i + 2;
-            continue;
-        }
-        b += str.slice(j, i);
-        j = str.indexOf(searchEnd, i + 2); // ————————————————————————————————— + 2 BECAUSE /**/ IS ALLOWED
-        if (j === -1) {
-            i = -1;
-            continue;
-        }
-        j += 2;
-    }
-    return b;
 }
 
 function removeSingleLineComments(str) {
