@@ -141,6 +141,34 @@ function findSkipRange(i) {
     });
 }
 
+function removeSingleLineComments(str) {
+    var i;
+    var searchStart = '//';
+    var j = 0;
+    var b = '';
+    var searchEnd = '\n';
+    while (i !== -1) {
+        i = str.indexOf(searchStart, j);
+        if (i === -1) {
+            b += str.slice(j);
+            continue;
+        }
+        var range = findSkipRange(i);
+        if (range) {
+            b += str.slice(j, i + 2);
+            j = i + 2;
+            continue;
+        }
+        b += str.slice(j, i);
+        j = str.indexOf(searchEnd, i + 2);
+        if (j === -1) {
+            i = -1;
+            continue;
+        }
+    }
+    return b;
+}
+
 function findSafeIndexOf(str, ch, fromIndex) {
     var i = fromIndex;
     var brk = false;
@@ -200,32 +228,4 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
 function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
     console.log(str.slice(blockStartIdx, blockEndIdx) + '\n\n\n\n\n\n\n\n');
     return str;
-}
-
-function removeSingleLineComments(str) {
-    var i;
-    var searchStart = '//';
-    var j = 0;
-    var b = '';
-    var searchEnd = '\n';
-    while (i !== -1) {
-        i = str.indexOf(searchStart, j);
-        if (i === -1) {
-            b += str.slice(j);
-            continue;
-        }
-        var range = findSkipRange(i);
-        if (range) {
-            b += str.slice(j, i + 2);
-            j = i + 2;
-            continue;
-        }
-        b += str.slice(j, i);
-        j = str.indexOf(searchEnd, i + 2);
-        if (j === -1) {
-            i = -1;
-            continue;
-        }
-    }
-    return b;
 }
