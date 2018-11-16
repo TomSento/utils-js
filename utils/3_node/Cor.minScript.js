@@ -27,7 +27,7 @@ export default function minScript(str) {
         }
         j = findClosestUnprocessedOpenBracketIndex(str, i);
         if (j >= 0) {
-            console.log('block:\n\n' + str.slice(j, i + 1) + '\n\n====\n\n');
+            // console.log('block:\n\n' + str.slice(j, i + 1) + '\n\n====\n\n');
         }
         i++;
     }
@@ -110,6 +110,7 @@ function removeBlockComments(str) {
         }
         var range = findSkipRange(i);
         if (range) {
+            b += str.slice(j, j + 2);
             j += 2;
             continue;
         }
