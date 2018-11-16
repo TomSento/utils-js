@@ -143,6 +143,12 @@ function removeSingleLineComments(str) {
             b += str.slice(j);
             continue;
         }
+        var range = findSkipRange(i);
+        if (range) {
+            b += str.slice(j, i + 2);
+            j = i + 2;
+            continue;
+        }
         b += str.slice(j, i);
         j = str.indexOf(searchEnd, i + 2);
         if (j === -1) {
