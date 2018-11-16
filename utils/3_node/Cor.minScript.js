@@ -168,6 +168,9 @@ function getRegexRanges(str) {
     var ranges = [];
     while (m = EXP_MATCH_REGEX.exec(str)) {
         if (Array.isArray(m) && m.length > 0) {
+            if (m[1].indexOf('//') === 0) { // ———————————————————————————————— IS COMMENT
+                continue;
+            }
             ranges.push(composeRange(m.index, m.index + m[1].length));
         }
     }
