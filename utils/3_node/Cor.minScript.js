@@ -231,6 +231,21 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
 
 function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
     var chunks = getBlockChunks(str, blockStartIdx, blockEndIdx);
+    str = BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks);
+    return str;
+}
+
+function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
+    if (blockStartIdx === 0) {
+        var i = chunks.length;
+        var fns = [];
+        while (i >= 3) {
+            i--;
+            if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
+                fns.push(chunks[i - 1]);
+            }
+        }
+    }
     return str;
 }
 
