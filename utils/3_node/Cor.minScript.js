@@ -242,7 +242,7 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
         SKIP = getSkipRanges(block);
 
         var i = chunks.length;
-        var fns = [];
+        var fnDeclarations = [];
         while (i >= 3) {
             i--;
             if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
@@ -251,7 +251,7 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
                 if (skip) {
                     continue;
                 }
-                fns.push(chunk);
+                fnDeclarations.push(chunk);
             }
         }
     }
