@@ -7,7 +7,7 @@ var EXP_NOTOK_SINGLE_QUOTE_STRING = /"\s*\+/; // https://regex101.com/r/I4u1hw/1
 var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
 var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/5/
 
-var EXP_OBFUSCATOR_SEPARATORS = /[\s(){}[\]|=,:;!%^&*|?~/'"+-]+/; // https://regex101.com/r/q2u8G0/4/
+var EXP_OBFUSCATOR_SEPARATORS = /[\s(){}[\]|=,:;!%^&*|?~/'"+-]+/g; // https://regex101.com/r/q2u8G0/4/
 
 var SKIP;
 var PROCESSED_BLOCKS = {};
@@ -27,6 +27,7 @@ export default function minScript(str) {
     var i = 0;
     var j;
 
+    str = '{' + str + '}';
     while (!brk) {
         i = findSafeIndexOf(str, '}', i);
         if (i === -1) {
@@ -39,6 +40,7 @@ export default function minScript(str) {
         }
         i++;
     }
+    str = str.slice(1, str.length - 1);
     return str;
 }
 
@@ -228,6 +230,28 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
 }
 
 function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
-    console.log(str.slice(blockStartIdx, blockEndIdx) + '\n\n\n\n\n\n\n\n');
+    var chunks = getBlockChunks(str, blockStartIdx, blockEndIdx);
     return str;
+}
+
+function getBlockChunks(str, blockStartIdx, blockEndIdx) {
+    var m;
+    var block = str.slice(blockStartIdx, blockEndIdx);
+    var i = 0;
+    var arr = [];
+    while (m = EXP_OBFUSCATOR_SEPARATORS.exec(block)) {
+        if (Array.isArray(m) && m.length > 0) {
+            arr.push(composeMatch(block.slice(i, m.index), i));
+            arr.push(composeMatch(m[0], m.index));
+            i = m.index + m[0].length;
+        }
+    }
+    return arr;
+}
+
+function composeMatch(string, index) {
+    return {
+        0: string,
+        index: index
+    };
 }
