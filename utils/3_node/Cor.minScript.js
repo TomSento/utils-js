@@ -243,12 +243,13 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
 
         var i = chunks.length;
         var chunk;
+        var skip;
         var fnDeclarations = {};
         while (i > 3) {
             i--;
             if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
                 chunk = chunks[i - 1];
-                var skip = findSkipRange(chunk.index);
+                skip = findSkipRange(chunk.index);
                 if (skip) {
                     continue;
                 }
@@ -263,6 +264,10 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
             chunk = chunks[i - 1];
             if (chunks[i][0].trim()[0] === '(' && fnDeclarations[chunk[0]]) {
                 if (chunk.index === fnDeclarations[chunk[0]].index) { // —————— SKIP DECLARATIONS
+                    continue;
+                }
+                skip = findSkipRange(chunk.index);
+                if (skip) {
                     continue;
                 }
                 fnCalls.push(chunk);
