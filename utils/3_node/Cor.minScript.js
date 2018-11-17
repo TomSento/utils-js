@@ -237,12 +237,21 @@ function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
 
 function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
     if (blockStartIdx === 0) {
+        var block = str.slice(blockStartIdx, blockEndIdx);
+        SKIP = null;
+        SKIP = getSkipRanges(block);
+
         var i = chunks.length;
         var fns = [];
         while (i >= 3) {
             i--;
             if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
-                fns.push(chunks[i - 1]);
+                var chunk = chunks[i - 1];
+                var skip = findSkipRange(chunk.index);
+                if (skip) {
+                    continue;
+                }
+                fns.push(chunk);
             }
         }
     }
