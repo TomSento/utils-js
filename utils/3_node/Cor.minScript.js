@@ -236,15 +236,14 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
     return i;
 }
 
-function getObfuscatedBlock(str, blockStartIdx, blockEndIdx) {
-    var chunks = getBlockChunks(str, blockStartIdx, blockEndIdx);
+function getObfuscatedBlock(block) {
+    var chunks = getBlockChunks(block);
     str = BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks);
     return str;
 }
 
-function getBlockChunks(str, blockStartIdx, blockEndIdx) {
+function getBlockChunks(block) {
     var m;
-    var block = str.slice(blockStartIdx, blockEndIdx);
     var i = 0;
     var arr = [];
     while (m = EXP_OBFUSCATOR_SEPARATORS.exec(block)) {
