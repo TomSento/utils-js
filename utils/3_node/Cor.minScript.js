@@ -235,6 +235,28 @@ function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
     return str;
 }
 
+function getBlockChunks(str, blockStartIdx, blockEndIdx) {
+    var m;
+    var block = str.slice(blockStartIdx, blockEndIdx);
+    var i = 0;
+    var arr = [];
+    while (m = EXP_OBFUSCATOR_SEPARATORS.exec(block)) {
+        if (Array.isArray(m) && m.length > 0) {
+            arr.push(composeMatch(block.slice(i, m.index), i));
+            arr.push(composeMatch(m[0], m.index));
+            i = m.index + m[0].length;
+        }
+    }
+    return arr;
+}
+
+function composeMatch(string, index) {
+    return {
+        0: string,
+        index: index
+    };
+}
+
 function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
     if (blockStartIdx === 0) {
         var block = str.slice(blockStartIdx, blockEndIdx);
@@ -275,26 +297,4 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
         }
     }
     return str;
-}
-
-function getBlockChunks(str, blockStartIdx, blockEndIdx) {
-    var m;
-    var block = str.slice(blockStartIdx, blockEndIdx);
-    var i = 0;
-    var arr = [];
-    while (m = EXP_OBFUSCATOR_SEPARATORS.exec(block)) {
-        if (Array.isArray(m) && m.length > 0) {
-            arr.push(composeMatch(block.slice(i, m.index), i));
-            arr.push(composeMatch(m[0], m.index));
-            i = m.index + m[0].length;
-        }
-    }
-    return arr;
-}
-
-function composeMatch(string, index) {
-    return {
-        0: string,
-        index: index
-    };
 }
