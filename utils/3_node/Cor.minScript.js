@@ -295,6 +295,11 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
                 fnCalls.push(chunk);
             }
         }
+        str = BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls);
     }
     return str;
+}
+
+function BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls) {
+
 }
