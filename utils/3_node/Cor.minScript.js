@@ -238,8 +238,8 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
 
 function getObfuscatedBlock(block) {
     var chunks = getBlockChunks(block);
-    str = BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks);
-    return str;
+    block = BLOCK_obfuscateFunctions(block, chunks);
+    return block;
 }
 
 function getBlockChunks(block) {
