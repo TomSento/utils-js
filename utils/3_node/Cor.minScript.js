@@ -11,6 +11,7 @@ var EXP_OBFUSCATOR_SEPARATORS = /[\s(){}[\]|=,:;!%^&*|?~/'"+-]+/g; // https://re
 
 var SKIP;
 var PROCESSED_BLOCKS = {};
+var OBFUSCATED = {};
 
 export default function minScript(str) {
     SKIP = getSkipRanges(str);
@@ -271,6 +272,9 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
             i--;
             if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
                 chunk = chunks[i - 1];
+                if (OBFUSCATED[chunk[0]]) {
+                    continue;
+                }
                 skip = findSkipRange(chunk.index);
                 if (skip) {
                     continue;
@@ -305,6 +309,7 @@ function BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls)
     for (var k in fnDeclarations) {
         if (fnDeclarations.hasOwnProperty(k)) {
             var hash = getHash();
+            OBFUSCATED[hash] = true;
             str = str.slice(0, blockStartIdx + fnDeclarations[k].index) + hash + str.slice(blockStartIdx + fnDeclarations[k].index + fnDeclarations[k][0].length);
         }
     }
