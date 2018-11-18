@@ -27,6 +27,8 @@ export default function minScript(str) {
     var brk = false;
     var i = 0;
     var j;
+    var block;
+    var l;
 
     str = '{' + str + '}';
     while (!brk) {
@@ -37,7 +39,11 @@ export default function minScript(str) {
         }
         j = findClosestUnprocessedOpenBracketIndex(str, i);
         if (j >= 0) {
-            str = obfuscateCodeBlock(str, j, i + 1);
+            block = str.slice(j, i + 1);
+            l = block.length;
+            block = getObfuscatedBlock(block);
+            str = str.slice(0, j) + block + str.slice(i + 1);
+            i += (block.length - l);
         }
         i++;
     }
@@ -230,7 +236,7 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
     return i;
 }
 
-function obfuscateCodeBlock(str, blockStartIdx, blockEndIdx) {
+function getObfuscatedBlock(str, blockStartIdx, blockEndIdx) {
     var chunks = getBlockChunks(str, blockStartIdx, blockEndIdx);
     str = BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks);
     return str;
