@@ -305,15 +305,15 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     return BLOCK_replaceFunctionNames(block, fnDeclarations, fnCalls);
 }
 
-function BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls) {
+function BLOCK_replaceFunctionNames(block, fnDeclarations, fnCalls) {
     for (var k in fnDeclarations) {
         if (fnDeclarations.hasOwnProperty(k)) {
             var hash = getHash();
             OBFUSCATED[hash] = true;
-            str = str.slice(0, blockStartIdx + fnDeclarations[k].index) + hash + str.slice(blockStartIdx + fnDeclarations[k].index + fnDeclarations[k][0].length);
+            block = block.slice(0, fnDeclarations[k].index) + hash + block.slice(fnDeclarations[k].index + fnDeclarations[k][0].length);
         }
     }
-    return str;
+    return block;
 }
 
 function getHash() {
