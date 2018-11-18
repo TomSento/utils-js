@@ -301,5 +301,10 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
 }
 
 function BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls) {
-
+    for (var k in fnDeclarations) {
+        if (fnDeclarations.hasOwnProperty(k)) {
+            str = str.slice(0, blockStartIdx + fnDeclarations[k].index) + ('f' + Math.ceil(Math.random() * 10000)) + str.slice(blockStartIdx + fnDeclarations[k].index + fnDeclarations[k][0].length);
+        }
+    }
+    return str;
 }
