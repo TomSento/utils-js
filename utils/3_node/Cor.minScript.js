@@ -301,10 +301,21 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
 }
 
 function BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls) {
+    var hash = getHash();
     for (var k in fnDeclarations) {
         if (fnDeclarations.hasOwnProperty(k)) {
-            str = str.slice(0, blockStartIdx + fnDeclarations[k].index) + ('f' + Math.ceil(Math.random() * 10000)) + str.slice(blockStartIdx + fnDeclarations[k].index + fnDeclarations[k][0].length);
+            str = str.slice(0, blockStartIdx + fnDeclarations[k].index) + hash + str.slice(blockStartIdx + fnDeclarations[k].index + fnDeclarations[k][0].length);
         }
     }
     return str;
+}
+
+function getHash() {
+    var l = 6;
+    var b = '';
+    var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    while (l--) {
+        b += set[Math.floor(Math.random() * set.length)];
+    }
+    return b;
 }
