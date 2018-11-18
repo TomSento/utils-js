@@ -263,8 +263,7 @@ function composeMatch(string, index) {
     };
 }
 
-function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
-    var block = str.slice(blockStartIdx, blockEndIdx);
+function BLOCK_obfuscateFunctions(block, chunks) {
     SKIP = null;
     SKIP = getSkipRanges(block);
 
@@ -303,8 +302,7 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
             fnCalls.push(chunk);
         }
     }
-    str = BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls);
-    return str;
+    return BLOCK_replaceFunctionNames(block, fnDeclarations, fnCalls);
 }
 
 function BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls) {
