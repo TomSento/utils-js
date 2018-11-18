@@ -259,49 +259,46 @@ function composeMatch(string, index) {
 }
 
 function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
-    if (blockStartIdx === 0) {
-        var block = str.slice(blockStartIdx, blockEndIdx);
-        SKIP = null;
-        SKIP = getSkipRanges(block);
+    var block = str.slice(blockStartIdx, blockEndIdx);
+    SKIP = null;
+    SKIP = getSkipRanges(block);
 
-        var i = chunks.length;
-        var chunk;
-        var skip;
-        var fnDeclarations = {};
-        while (i > 3) {
-            i--;
-            if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
-                chunk = chunks[i - 1];
-                if (OBFUSCATED[chunk[0]]) {
-                    continue;
-                }
-                skip = findSkipRange(chunk.index);
-                if (skip) {
-                    continue;
-                }
-                fnDeclarations[chunk[0]] = chunk;
-            }
-        }
-
-        i = chunks.length;
-        var fnCalls = [];
-        while (i > 1) {
-            i--;
+    var i = chunks.length;
+    var chunk;
+    var skip;
+    var fnDeclarations = {};
+    while (i > 3) {
+        i--;
+        if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
             chunk = chunks[i - 1];
-            if (chunks[i][0].trim()[0] === '(' && fnDeclarations[chunk[0]]) {
-                if (chunk.index === fnDeclarations[chunk[0]].index) { // —————— SKIP DECLARATIONS
-                    continue;
-                }
-                skip = findSkipRange(chunk.index);
-                if (skip) {
-                    continue;
-                }
-                fnCalls.push(chunk);
+            if (OBFUSCATED[chunk[0]]) {
+                continue;
             }
+            skip = findSkipRange(chunk.index);
+            if (skip) {
+                continue;
+            }
+            fnDeclarations[chunk[0]] = chunk;
         }
-        str = BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls);
-        console.log(str);
     }
+
+    i = chunks.length;
+    var fnCalls = [];
+    while (i > 1) {
+        i--;
+        chunk = chunks[i - 1];
+        if (chunks[i][0].trim()[0] === '(' && fnDeclarations[chunk[0]]) {
+            if (chunk.index === fnDeclarations[chunk[0]].index) { // —————— SKIP DECLARATIONS
+                continue;
+            }
+            skip = findSkipRange(chunk.index);
+            if (skip) {
+                continue;
+            }
+            fnCalls.push(chunk);
+        }
+    }
+    str = BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls);
     return str;
 }
 
