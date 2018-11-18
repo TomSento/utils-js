@@ -301,9 +301,9 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
 }
 
 function BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls) {
-    var hash = getHash();
     for (var k in fnDeclarations) {
         if (fnDeclarations.hasOwnProperty(k)) {
+            var hash = getHash();
             str = str.slice(0, blockStartIdx + fnDeclarations[k].index) + hash + str.slice(blockStartIdx + fnDeclarations[k].index + fnDeclarations[k][0].length);
         }
     }
