@@ -296,6 +296,7 @@ function BLOCK_obfuscateFunctions(str, blockStartIdx, blockEndIdx, chunks) {
             }
         }
         str = BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls);
+        console.log(str);
     }
     return str;
 }
@@ -312,8 +313,8 @@ function BLOCK_replaceFunctionNames(str, blockStartIdx, fnDeclarations, fnCalls)
 
 function getHash() {
     var l = 6;
-    var b = '';
     var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var b = set[Math.floor(Math.random() * (set.length - 10))];
     while (l--) {
         b += set[Math.floor(Math.random() * set.length)];
     }
