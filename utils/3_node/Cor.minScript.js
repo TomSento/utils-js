@@ -358,7 +358,7 @@ function updateProcessedBlocks(newBlock) {
 }
 
 function updateSkipRanges(oldBlock, newBlock) {
-    var l = SKIP.length;
+    var l = SKIP.length; // ——————————————————————————————————————————————————— REMOVE SKIP RANGES IN OLD BLOCK
     var range;
     var tmp = [];
     while (l--) {
@@ -369,7 +369,7 @@ function updateSkipRanges(oldBlock, newBlock) {
     }
     SKIP = tmp;
 
-    l = SKIP.length;
+    l = SKIP.length; // ——————————————————————————————————————————————————————— SHIFT SKIP RANGES AFTER BLOCK
     var len;
     while (l--) {
         range = SKIP[l];
@@ -380,7 +380,7 @@ function updateSkipRanges(oldBlock, newBlock) {
         }
     }
 
-    var ranges = getSkipRanges(newBlock);
+    var ranges = getSkipRanges(newBlock); // —————————————————————————————————— ADD SKIP RANGES FOR NEW BLOCK
     l = ranges.length;
     while (l--) {
         range = ranges[l];
