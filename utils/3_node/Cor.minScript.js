@@ -23,6 +23,7 @@ export default function minScript(str) {
     SKIP = getSkipRanges(str);
     str = removeSingleLineComments(str);
 
+    str = '{' + str + '}';
     SKIP = null;
     SKIP = getSkipRanges(str);
 
@@ -32,7 +33,6 @@ export default function minScript(str) {
     var block;
     var l;
 
-    str = '{' + str + '}';
     while (!brk) {
         i = findSafeIndexOf(str, '}', i);
         if (i === -1) {
@@ -133,7 +133,7 @@ function removeBlockComments(str) {
             b += str.slice(j);
             continue;
         }
-        var range = findSkipRange(i);
+        var range = findSkipRange(SKIP, i);
         if (range) {
             b += str.slice(j, i + 2);
             j = i + 2;
@@ -150,10 +150,15 @@ function removeBlockComments(str) {
     return b;
 }
 
-function findSkipRange(i) {
-    return SKIP.find(function(range) {
-        return (range.fromIndex <= i && i < range.toIndex);
-    });
+function findSkipRange(ranges, index) {
+    var range;
+    for (var i = 0, l = ranges.length; i < l; i++) {
+        range = ranges[i];
+        if (range.fromIndex <= index && index < range.toIndex) {
+            return range;
+        }
+    }
+    return null;
 }
 
 function removeSingleLineComments(str) {
@@ -168,7 +173,7 @@ function removeSingleLineComments(str) {
             b += str.slice(j);
             continue;
         }
-        var range = findSkipRange(i);
+        var range = findSkipRange(SKIP, i);
         if (range) {
             b += str.slice(j, i + 2);
             j = i + 2;
@@ -193,7 +198,7 @@ function findSafeIndexOf(str, ch, fromIndex) {
             brk = true;
             continue;
         }
-        var range = findSkipRange(i);
+        var range = findSkipRange(SKIP, i);
         if (range) {
             i = range.toIndex;
             continue;
@@ -230,7 +235,7 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
             brk = true;
             continue;
         }
-        var range = findSkipRange(i);
+        var range = findSkipRange(SKIP, i);
         if (range) {
             i = range.fromIndex;
             continue;
@@ -241,10 +246,11 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
 }
 
 function getObfuscatedBlock(block) {
+    var oldBlock = block;
     var chunks = getBlockChunks(block);
     block = BLOCK_obfuscateFunctions(block, chunks);
     updateProcessedBlocks(block);
-    updateSkipRanges(block);
+    updateSkipRanges(oldBlock, block);
     return block;
 }
 
@@ -270,8 +276,7 @@ function composeMatch(string, index) {
 }
 
 function BLOCK_obfuscateFunctions(block, chunks) {
-    SKIP = null;
-    SKIP = getSkipRanges(block);
+    var blockSkip = getSkipRanges(block);
 
     var i = chunks.length;
     var chunk;
@@ -284,7 +289,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
             if (OBFUSCATED[chunk[0]]) {
                 continue;
             }
-            skip = findSkipRange(chunk.index);
+            skip = findSkipRange(blockSkip, chunk.index);
             if (skip) {
                 continue;
             }
@@ -301,7 +306,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
             if (chunk.index === fnDeclarations[chunk[0]].index) { // —————— SKIP DECLARATIONS
                 continue;
             }
-            skip = findSkipRange(chunk.index);
+            skip = findSkipRange(blockSkip, chunk.index);
             if (skip) {
                 continue;
             }
@@ -352,8 +357,29 @@ function updateProcessedBlocks(newBlock) {
     }
 }
 
-function updateSkipRanges(newBlock) {
+function updateSkipRanges(oldBlock, newBlock) {
     SKIP = SKIP.filter(function(range) {
         return (range.toIndex <= BLOCK_START_IDX || range.fromIndex >= BLOCK_END_IDX);
     });
+
+    var l = SKIP.length;
+    var len;
+    var range;
+    while (l--) {
+        range = SKIP[l];
+        if (range.fromIndex >= BLOCK_END_IDX) {
+            len = newBlock.length - oldBlock.length;
+            range.fromIndex += len;
+            range.toIndex += len;
+        }
+    }
+
+    var ranges = getSkipRanges(newBlock);
+    l = ranges.length;
+    while (l--) {
+        range = ranges[l];
+        range.fromIndex += BLOCK_START_IDX;
+        range.toIndex += BLOCK_START_IDX;
+        SKIP.push(range);
+    }
 }
