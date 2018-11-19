@@ -358,13 +358,19 @@ function updateProcessedBlocks(newBlock) {
 }
 
 function updateSkipRanges(oldBlock, newBlock) {
-    SKIP = SKIP.filter(function(range) {
-        return (range.toIndex <= BLOCK_START_IDX || range.fromIndex >= BLOCK_END_IDX);
-    });
-
     var l = SKIP.length;
-    var len;
     var range;
+    var tmp = [];
+    while (l--) {
+        range = SKIP[l];
+        if (range.toIndex <= BLOCK_START_IDX || range.fromIndex >= BLOCK_END_IDX) {
+            tmp.push(range);
+        }
+    }
+    SKIP = tmp;
+
+    l = SKIP.length;
+    var len;
     while (l--) {
         range = SKIP[l];
         if (range.fromIndex >= BLOCK_END_IDX) {
