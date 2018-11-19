@@ -11,6 +11,8 @@ var EXP_OBFUSCATOR_SEPARATORS = /[\s(){}[\]|=,:;!%^&*|?~/'"+-]+/g; // https://re
 
 var SKIP;
 var PROCESSED_BLOCKS = {};
+var BLOCK_START_IDX;
+var BLOCK_END_IDX;
 var OBFUSCATED = {};
 
 export default function minScript(str) {
@@ -40,6 +42,8 @@ export default function minScript(str) {
         j = findClosestUnprocessedOpenBracketIndex(str, i);
         if (j >= 0) {
             block = str.slice(j, i + 1);
+            BLOCK_START_IDX = j;
+            BLOCK_END_IDX = i + 1;
             l = block.length;
             block = getObfuscatedBlock(block);
             str = str.slice(0, j) + block + str.slice(i + 1);
@@ -239,6 +243,7 @@ function findSafeLastIndexOf(str, ch, fromIndex) {
 function getObfuscatedBlock(block) {
     var chunks = getBlockChunks(block);
     block = BLOCK_obfuscateFunctions(block, chunks);
+    updateProcessedBlocks(block);
     return block;
 }
 
@@ -324,4 +329,24 @@ function getHash() {
         b += set[Math.floor(Math.random() * set.length)];
     }
     return b;
+}
+
+function updateProcessedBlocks(newBlock) {
+    for (var k in PROCESSED_BLOCKS) {
+        if (PROCESSED_BLOCKS.hasOwnProperty(k)) {
+            if (k > BLOCK_START_IDX && k < BLOCK_END_IDX) {
+                PROCESSED_BLOCKS[k] = false;
+            }
+        }
+    }
+
+    var i = 0;
+    while (i !== -1) {
+        i++;
+        i = newBlock.indexOf('{', i);
+        if (i === -1) {
+            continue;
+        }
+        PROCESSED_BLOCKS[BLOCK_START_IDX + i] = true;
+    }
 }
