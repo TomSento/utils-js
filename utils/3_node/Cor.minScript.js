@@ -244,6 +244,7 @@ function getObfuscatedBlock(block) {
     var chunks = getBlockChunks(block);
     block = BLOCK_obfuscateFunctions(block, chunks);
     updateProcessedBlocks(block);
+    updateSkipRanges(block);
     return block;
 }
 
@@ -349,4 +350,10 @@ function updateProcessedBlocks(newBlock) {
         }
         PROCESSED_BLOCKS[BLOCK_START_IDX + i] = true;
     }
+}
+
+function updateSkipRanges(newBlock) {
+    SKIP = SKIP.filter(function(range) {
+        return (range.toIndex <= BLOCK_START_IDX || range.fromIndex >= BLOCK_END_IDX);
+    });
 }
