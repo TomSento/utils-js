@@ -1,5 +1,5 @@
 // - remove comments
-// - ensure that { or } is not inside string or inside regex;
+// - ensure that { or } is not inside string or inside regex
 var EXP_MATCH_REGEX = /(\/[^\n].*?\/)[gi\n;,)\]\s]/g; // https://regex101.com/r/vCs702/12/
 var EXP_MATCH_SINGLE_QUOTE_STRING = /('.*?')[\n;,)\] ]/g; // https://regex101.com/r/KjEh0t/3/
 var EXP_NOTOK_SINGLE_QUOTE_STRING = /"\s*\+/; // https://regex101.com/r/I4u1hw/1/
