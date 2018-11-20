@@ -332,7 +332,7 @@ function BLOCK_replaceNames(block, fnDeclarations, fnUsages) {
             places.push(fnDeclarations[k]);
         }
     }
-    places = places.concat(fnUsages);
+    places = fnUsages.concat(places);
     places.sort(function(a, b) {
         return a.index - b.index;
     });
