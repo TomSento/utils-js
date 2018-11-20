@@ -303,7 +303,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
         i--;
         chunk = chunks[i - 1];
         if (fnDeclarations[chunk[0]]) {
-            if (chunk.index === fnDeclarations[chunk[0]].index) { // —————— SKIP DECLARATIONS
+            if (chunk.index === fnDeclarations[chunk[0]].index) { // —————————— SKIP DECLARATIONS
                 continue;
             }
             skip = findSkipRange(blockSkip, chunk.index);
@@ -313,17 +313,21 @@ function BLOCK_obfuscateFunctions(block, chunks) {
             fnUsages.push(chunk);
         }
     }
-    return BLOCK_replaceFunctionNames(block, fnDeclarations, fnUsages);
+    return BLOCK_replaceNames(block, fnDeclarations, fnUsages);
 }
 
-function BLOCK_replaceFunctionNames(block, fnDeclarations, fnUsages) {
+function BLOCK_replaceNames(block, fnDeclarations, fnUsages) {
+    var hash;
+    var places = [];
     for (var k in fnDeclarations) {
         if (fnDeclarations.hasOwnProperty(k)) {
-            var hash = getHash();
+            hash = getHash();
             OBFUSCATED[hash] = true;
-            block = block.slice(0, fnDeclarations[k].index) + hash + block.slice(fnDeclarations[k].index + fnDeclarations[k][0].length);
+            fnDeclarations[k].hash = hash;
+            places.push(fnDeclarations[k]);
         }
     }
+    places = places.concat(fnUsages);
     return block;
 }
 
