@@ -298,11 +298,11 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     }
 
     i = chunks.length;
-    var fnCalls = [];
+    var fnUsages = [];
     while (i > 1) {
         i--;
         chunk = chunks[i - 1];
-        if (chunks[i][0].trim()[0] === '(' && fnDeclarations[chunk[0]]) {
+        if (fnDeclarations[chunk[0]]) {
             if (chunk.index === fnDeclarations[chunk[0]].index) { // —————— SKIP DECLARATIONS
                 continue;
             }
@@ -310,13 +310,13 @@ function BLOCK_obfuscateFunctions(block, chunks) {
             if (skip) {
                 continue;
             }
-            fnCalls.push(chunk);
+            fnUsages.push(chunk);
         }
     }
-    return BLOCK_replaceFunctionNames(block, fnDeclarations, fnCalls);
+    return BLOCK_replaceFunctionNames(block, fnDeclarations, fnUsages);
 }
 
-function BLOCK_replaceFunctionNames(block, fnDeclarations, fnCalls) {
+function BLOCK_replaceFunctionNames(block, fnDeclarations, fnUsages) {
     for (var k in fnDeclarations) {
         if (fnDeclarations.hasOwnProperty(k)) {
             var hash = getHash();
