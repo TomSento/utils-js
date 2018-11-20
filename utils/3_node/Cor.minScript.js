@@ -310,7 +310,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     while (i > 1) {
         i--;
         chunk = chunks[i - 1];
-        if (fnDeclarations[chunk[0]]) {
+        if (chunks[i][0].trim()[0] !== ':' && fnDeclarations[chunk[0]]) {
             if (chunk.index === fnDeclarations[chunk[0]].index) { // —————————— SKIP DECLARATIONS
                 continue;
             }
