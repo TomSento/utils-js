@@ -328,6 +328,9 @@ function BLOCK_replaceNames(block, fnDeclarations, fnUsages) {
         }
     }
     places = places.concat(fnUsages);
+    places.sort(function(a, b) {
+        return a.index - b.index;
+    });
     return block;
 }
 
