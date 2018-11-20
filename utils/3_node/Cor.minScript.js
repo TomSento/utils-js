@@ -281,6 +281,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     var i = chunks.length;
     var chunk;
     var skip;
+    var hash;
     var fnDeclarations = {};
     while (i > 3) {
         i--;
@@ -293,8 +294,15 @@ function BLOCK_obfuscateFunctions(block, chunks) {
             if (skip) {
                 continue;
             }
+            hash = getHash();
+            OBFUSCATED[hash] = true;
+            chunk.hash = hash;
             fnDeclarations[chunk[0]] = chunk;
         }
+    }
+
+    if (Object.keys(fnDeclarations).length === 0) {
+        return block;
     }
 
     i = chunks.length;
@@ -310,6 +318,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
             if (skip) {
                 continue;
             }
+            chunk.hash = fnDeclarations[chunk[0]].hash;
             fnUsages.push(chunk);
         }
     }
@@ -317,13 +326,9 @@ function BLOCK_obfuscateFunctions(block, chunks) {
 }
 
 function BLOCK_replaceNames(block, fnDeclarations, fnUsages) {
-    var hash;
     var places = [];
     for (var k in fnDeclarations) {
         if (fnDeclarations.hasOwnProperty(k)) {
-            hash = getHash();
-            OBFUSCATED[hash] = true;
-            fnDeclarations[k].hash = hash;
             places.push(fnDeclarations[k]);
         }
     }
@@ -331,7 +336,16 @@ function BLOCK_replaceNames(block, fnDeclarations, fnUsages) {
     places.sort(function(a, b) {
         return a.index - b.index;
     });
-    return block;
+
+    var m;
+    var j = 0;
+    var b = '';
+    for (var i = 0, l = places.length; i < l; i++) {
+        m = places[i];
+        b += block.slice(j, m.index) + m.hash;
+        j = m.index + m[0].length;
+    }
+    return b + block.slice(j);
 }
 
 function getHash() {
