@@ -300,7 +300,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     var m;
     var d;
     var skip;
-    var fnUsages = [];
+    var usages = [];
     while (i > 1) {
         i--;
         m = chunks[i - 1];
@@ -318,10 +318,10 @@ function BLOCK_obfuscateFunctions(block, chunks) {
             }
             m[0] = m[0].slice(0, d[0].length);
             m.hash = d.hash;
-            fnUsages.push(m);
+            usages.push(m);
         }
     }
-    return BLOCK_replaceNames(block, declarations, fnUsages);
+    return BLOCK_replaceNames(block, declarations, usages);
 }
 
 function BLOCK_tryRegisterDeclaration(m, blockSkip, declarations, isVar) {
@@ -341,14 +341,14 @@ function BLOCK_tryRegisterDeclaration(m, blockSkip, declarations, isVar) {
     declarations[m[0]] = m;
 }
 
-function BLOCK_replaceNames(block, declarations, fnUsages) {
+function BLOCK_replaceNames(block, declarations, usages) {
     var places = [];
     for (var k in declarations) {
         if (declarations.hasOwnProperty(k)) {
             places.push(declarations[k]);
         }
     }
-    places = fnUsages.concat(places);
+    places = usages.concat(places);
     places.sort(function(a, b) {
         return a.index - b.index;
     });
