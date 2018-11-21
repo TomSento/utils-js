@@ -297,22 +297,28 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     }
 
     i = chunks.length;
-    var chunk;
+    var m;
+    var d;
     var skip;
     var fnUsages = [];
     while (i > 1) {
         i--;
-        chunk = chunks[i - 1];
-        if (chunks[i][0].trim()[0] !== ':' && fnDeclarations[chunk[0]]) {
-            if (chunk.index === fnDeclarations[chunk[0]].index) { // —————————— SKIP DECLARATIONS
+        m = chunks[i - 1];
+        d = (fnDeclarations[m[0]] || fnDeclarations[m[0].split('.')[0]]);
+        if (chunks[i][0].trim()[0] !== ':' && d) {
+            if (m.index === d.index) { // ————————————————————————————————————— SKIP DECLARATIONS
                 continue;
             }
-            skip = findSkipRange(blockSkip, chunk.index);
+            if (d.isVar && m.index <= d.index) {
+                continue;
+            }
+            skip = findSkipRange(blockSkip, m.index);
             if (skip) {
                 continue;
             }
-            chunk.hash = fnDeclarations[chunk[0]].hash;
-            fnUsages.push(chunk);
+            m[0] = m[0].slice(0, d[0].length);
+            m.hash = d.hash;
+            fnUsages.push(m);
         }
     }
     return BLOCK_replaceNames(block, fnDeclarations, fnUsages);
