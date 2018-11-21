@@ -279,13 +279,16 @@ function BLOCK_obfuscateFunctions(block, chunks) {
 
     var i = chunks.length;
     var fnDeclarations = {};
-    while (i > 3) {
-        i--;
-        if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
-            BLOCK_tryRegisterDeclaration(chunks[i - 1], blockSkip, fnDeclarations, false);
+    while (i--) {
+        if (i >= 3) {
+            if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
+                BLOCK_tryRegisterDeclaration(chunks[i - 1], blockSkip, fnDeclarations, false);
+            }
         }
-        if (chunks[i - 2][0] === 'var' && chunks[i - 1][0] === ' ') {
-            BLOCK_tryRegisterDeclaration(chunks[i], blockSkip, fnDeclarations, true);
+        if (i >= 2) {
+            if (chunks[i - 2][0] === 'var' && chunks[i - 1][0] === ' ') {
+                BLOCK_tryRegisterDeclaration(chunks[i], blockSkip, fnDeclarations, true);
+            }
         }
     }
 
