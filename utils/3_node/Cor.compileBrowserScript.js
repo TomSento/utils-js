@@ -278,21 +278,21 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     var blockSkip = getSkipRanges(block);
 
     var i = chunks.length;
-    var fnDeclarations = {};
+    var declarations = {};
     while (i--) {
         if (i >= 3) {
             if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
-                BLOCK_tryRegisterDeclaration(chunks[i - 1], blockSkip, fnDeclarations, false);
+                BLOCK_tryRegisterDeclaration(chunks[i - 1], blockSkip, declarations, false);
             }
         }
         if (i >= 2) {
             if (chunks[i - 2][0] === 'var' && chunks[i - 1][0] === ' ') {
-                BLOCK_tryRegisterDeclaration(chunks[i], blockSkip, fnDeclarations, true);
+                BLOCK_tryRegisterDeclaration(chunks[i], blockSkip, declarations, true);
             }
         }
     }
 
-    if (Object.keys(fnDeclarations).length === 0) {
+    if (Object.keys(declarations).length === 0) {
         return block;
     }
 
@@ -304,7 +304,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     while (i > 1) {
         i--;
         m = chunks[i - 1];
-        d = (fnDeclarations[m[0]] || fnDeclarations[m[0].split('.')[0]]);
+        d = (declarations[m[0]] || declarations[m[0].split('.')[0]]);
         if (chunks[i][0].trim()[0] !== ':' && d) {
             if (m.index === d.index) { // ————————————————————————————————————— SKIP DECLARATIONS
                 continue;
@@ -321,7 +321,7 @@ function BLOCK_obfuscateFunctions(block, chunks) {
             fnUsages.push(m);
         }
     }
-    return BLOCK_replaceNames(block, fnDeclarations, fnUsages);
+    return BLOCK_replaceNames(block, declarations, fnUsages);
 }
 
 function BLOCK_tryRegisterDeclaration(m, blockSkip, declarations, isVar) {
@@ -341,11 +341,11 @@ function BLOCK_tryRegisterDeclaration(m, blockSkip, declarations, isVar) {
     declarations[m[0]] = m;
 }
 
-function BLOCK_replaceNames(block, fnDeclarations, fnUsages) {
+function BLOCK_replaceNames(block, declarations, fnUsages) {
     var places = [];
-    for (var k in fnDeclarations) {
-        if (fnDeclarations.hasOwnProperty(k)) {
-            places.push(fnDeclarations[k]);
+    for (var k in declarations) {
+        if (declarations.hasOwnProperty(k)) {
+            places.push(declarations[k]);
         }
     }
     places = fnUsages.concat(places);
