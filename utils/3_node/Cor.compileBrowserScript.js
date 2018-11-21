@@ -278,25 +278,11 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     var blockSkip = getSkipRanges(block);
 
     var i = chunks.length;
-    var chunk;
-    var skip;
-    var hash;
     var fnDeclarations = {};
     while (i > 3) {
         i--;
         if (chunks[i][0].trim()[0] === '(' && chunks[i - 2][0] === ' ' && chunks[i - 3][0].trim() === 'function') {
-            chunk = chunks[i - 1];
-            if (OBFUSCATED[chunk[0]]) {
-                continue;
-            }
-            skip = findSkipRange(blockSkip, chunk.index);
-            if (skip) {
-                continue;
-            }
-            hash = getHash();
-            OBFUSCATED[hash] = true;
-            chunk.hash = hash;
-            fnDeclarations[chunk[0]] = chunk;
+            BLOCK_tryRegisterDeclaration(chunks[i - 1], blockSkip, fnDeclarations);
         }
     }
 
@@ -305,6 +291,8 @@ function BLOCK_obfuscateFunctions(block, chunks) {
     }
 
     i = chunks.length;
+    var chunk;
+    var skip;
     var fnUsages = [];
     while (i > 1) {
         i--;
@@ -322,6 +310,20 @@ function BLOCK_obfuscateFunctions(block, chunks) {
         }
     }
     return BLOCK_replaceNames(block, fnDeclarations, fnUsages);
+}
+
+function BLOCK_tryRegisterDeclaration(m, blockSkip, declarations) {
+    if (OBFUSCATED[m[0]]) {
+        return;
+    }
+    var skip = findSkipRange(blockSkip, m.index);
+    if (skip) {
+        return;
+    }
+    var hash = getHash();
+    OBFUSCATED[hash] = true;
+    m.hash = hash;
+    declarations[m[0]] = m;
 }
 
 function BLOCK_replaceNames(block, fnDeclarations, fnUsages) {
