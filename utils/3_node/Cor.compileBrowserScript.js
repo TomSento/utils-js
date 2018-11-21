@@ -7,6 +7,7 @@ var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
 var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/5/
 
 var EXP_OBFUSCATOR_SEPARATORS = /[\s(){}[\]|=,:;!%^&*|?~/'"+-]+/g; // https://regex101.com/r/q2u8G0/4/
+var EXP_WHITESPACES = /(\w*)\s+/g; // https://regex101.com/r/WWn8YV/2/
 
 var SKIP;
 var PROCESSED_BLOCKS = {};
@@ -51,7 +52,7 @@ export default function compileBrowserScript(str) {
         i++;
     }
     str = str.slice(1, str.length - 1);
-    return str;
+    return minify_javascript(str);
 }
 
 function getSkipRanges(str) {
