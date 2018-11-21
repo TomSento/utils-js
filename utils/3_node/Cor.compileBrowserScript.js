@@ -365,8 +365,8 @@ function BLOCK_replaceNames(block, declarations, usages) {
 }
 
 function getHash() {
-    var l = 6;
-    var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var l = 5;
+    var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_$0123456789';
     var b = set[Math.floor(Math.random() * (set.length - 10))];
     while (l--) {
         b += set[Math.floor(Math.random() * set.length)];
