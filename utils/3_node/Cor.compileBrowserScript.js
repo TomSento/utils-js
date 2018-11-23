@@ -447,5 +447,5 @@ function compressChunk(chunk) {
         }
         i = m.index + m[0].length;
     }
-    return b + chunk[0].slice(i);
+    return (chunk[0].length === i) ? b : (b + chunk[0].slice(i));
 }
