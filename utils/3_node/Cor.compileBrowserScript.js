@@ -89,15 +89,13 @@ function getSingleQuoteStringRanges(str) {
     var m;
     var ranges = [];
     while (m = EXP_MATCH_SINGLE_QUOTE_STRING.exec(str)) {
-        if (Array.isArray(m) && m.length > 0) {
-            if (EXP_NOTOK_SINGLE_QUOTE_STRING.test(str.slice(m.index, m.index + m[1].length))) {
-                continue;
-            }
-            if (m[1].length === 2) { // ——————————————————————————————————————— EMPTY STRING
-                continue;
-            }
-            ranges.push(composeRange(m.index, m.index + m[1].length));
+        if (EXP_NOTOK_SINGLE_QUOTE_STRING.test(str.slice(m.index, m.index + m[1].length))) {
+            continue;
         }
+        if (m[1].length === 2) { // ——————————————————————————————————————————— EMPTY STRING
+            continue;
+        }
+        ranges.push(composeRange(m.index, m.index + m[1].length));
     }
     return ranges;
 }
