@@ -253,11 +253,9 @@ function getBlockChunks(block) {
     var i = 0;
     var arr = [];
     while (m = EXP_OBFUSCATOR_SEPARATORS.exec(block)) {
-        if (Array.isArray(m) && m.length > 0) {
-            arr.push(composeMatch(block.slice(i, m.index), i));
-            arr.push(composeMatch(m[0], m.index));
-            i = m.index + m[0].length;
-        }
+        arr.push(composeMatch(block.slice(i, m.index), i));
+        arr.push(composeMatch(m[0], m.index));
+        i = m.index + m[0].length;
     }
     return arr;
 }
