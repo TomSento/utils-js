@@ -67,7 +67,7 @@ function getRegexRanges(str) {
     var prev;
     var ranges = [];
     while (m = EXP_MATCH_REGEX.exec(str)) {
-        if (m[1].indexOf('//') === 0 || m[1].indexOf('/*') === 0) { // ———— IS COMMENT
+        if (m[1].indexOf('//') === 0 || m[1].indexOf('/*') === 0) { // ———————— IS COMMENT
             prev = m[1];
             continue;
         }
