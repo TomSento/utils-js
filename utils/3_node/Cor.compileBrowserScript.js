@@ -67,18 +67,16 @@ function getRegexRanges(str) {
     var prev;
     var ranges = [];
     while (m = EXP_MATCH_REGEX.exec(str)) {
-        if (Array.isArray(m) && m.length > 0) {
-            if (m[1].indexOf('//') === 0 || m[1].indexOf('/*') === 0) { // ———— IS COMMENT
-                prev = m[1];
-                continue;
-            }
-            if (prev && prev.indexOf('/*') === 0 && m[1].lastIndexOf('*/') === m[1].length - 2) { // IS COMMENT
-                prev = m[1];
-                continue;
-            }
-            ranges.push(composeRange(m.index, m.index + m[1].length));
+        if (m[1].indexOf('//') === 0 || m[1].indexOf('/*') === 0) { // ———— IS COMMENT
             prev = m[1];
+            continue;
         }
+        if (prev && prev.indexOf('/*') === 0 && m[1].lastIndexOf('*/') === m[1].length - 2) { // IS COMMENT
+            prev = m[1];
+            continue;
+        }
+        ranges.push(composeRange(m.index, m.index + m[1].length));
+        prev = m[1];
     }
     return ranges;
 }
