@@ -431,7 +431,7 @@ function compressRawScript(str) {
         b += m[0] === ' ' ? ' ' : compressChunk(m);
         i = m.index + m[0].length;
     }
-    return b + str.slice(i);
+    return (str.length === i) ? b : (b + str.slice(i));
 }
 
 function compressChunk(chunk) {
