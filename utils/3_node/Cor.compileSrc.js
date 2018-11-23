@@ -449,3 +449,6 @@ function compressChunk(chunk) {
     }
     return (chunk[0].length === i) ? b : (b + chunk[0].slice(i));
 }
+
+if (!global.Cor) global.Cor = {};
+global.Cor.compileSrc = compileSrc;
