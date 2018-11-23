@@ -425,7 +425,9 @@ function compressRawScript(str) {
     var i = 0;
     var b = '';
     while (m = EXP_OBFUSCATOR_SEPARATORS.exec(str)) {
-        b += str.slice(i, m.index);
+        if (i < m.index) {
+            b += str.slice(i, m.index);
+        }
         b += m[0] === ' ' ? ' ' : compressChunk(m);
         i = m.index + m[0].length;
     }
@@ -437,7 +439,9 @@ function compressChunk(chunk) {
     var i = 0;
     var b = '';
     while (m = EXP_WHITESPACES.exec(chunk[0])) {
-        b += chunk[0].slice(i, m.index);
+        if (i < m.index) {
+            b += chunk[0].slice(i, m.index);
+        }
         if (findSkipRange(SKIP, chunk.index + m.index)) {
             b += m[0];
         }
