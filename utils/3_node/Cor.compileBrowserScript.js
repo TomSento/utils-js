@@ -7,7 +7,7 @@ var EXP_MATCH_DOUBLE_QUOTE_STRING = /(".*?")[\n;,)\] ]/g;
 var EXP_NOTOK_DOUBLE_QUOTE_STRING = /'\s*\+/; // https://regex101.com/r/qJijm5/5/
 
 var EXP_OBFUSCATOR_SEPARATORS = /[\s(){}[\]|=,:;!%^&*|?~/'"+-]+/g; // https://regex101.com/r/q2u8G0/4/
-var EXP_WHITESPACES = /(\w*)\s+/g; // https://regex101.com/r/WWn8YV/2/
+var EXP_WHITESPACES = /\s+/g;
 
 var SKIP;
 var PROCESSED_BLOCKS = {};
@@ -51,8 +51,8 @@ export default function compileBrowserScript(str) {
         }
         i++;
     }
-    str = str.slice(1, str.length - 1);
-    return minify_javascript(str);
+    str = compressRawScript(str);
+    return str.slice(1, str.length - 1);
 }
 
 function getSkipRanges(str) {
@@ -426,6 +426,36 @@ function updateSkipRanges(oldBlock, newBlock) {
         range.toIndex += BLOCK_START_IDX;
         SKIP.push(range);
     }
+}
+
+function compressRawScript(str) {
+    var m;
+    var i = 0;
+    var b = '';
+    while (m = EXP_OBFUSCATOR_SEPARATORS.exec(str)) {
+        if (Array.isArray(m) && m.length > 0) {
+            b += str.slice(i, m.index);
+            b += m[0] === ' ' ? ' ' : compressChunk(m);
+            i = m.index + m[0].length;
+        }
+    }
+    return b + str.slice(i);
+}
+
+function compressChunk(chunk) {
+    var m;
+    var i = 0;
+    var b = '';
+    while (m = EXP_WHITESPACES.exec(chunk[0])) {
+        if (Array.isArray(m) && m.length > 0) {
+            b += chunk[0].slice(i, m.index);
+            if (findSkipRange(SKIP, chunk.index + m.index)) {
+                b += m[0];
+            }
+            i = m.index + m[0].length;
+        }
+    }
+    return b + chunk[0].slice(i);
 }
 
 function minify_javascript(data) {
