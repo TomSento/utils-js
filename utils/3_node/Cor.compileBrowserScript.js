@@ -334,6 +334,16 @@ function BLOCK_tryRegisterDeclaration(m, blockSkip, declarations, isVar) {
     declarations[m[0]] = m;
 }
 
+function getHash() {
+    var l = 5;
+    var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_$0123456789';
+    var b = set[Math.floor(Math.random() * (set.length - 10))];
+    while (l--) {
+        b += set[Math.floor(Math.random() * set.length)];
+    }
+    return b;
+}
+
 function BLOCK_replaceNames(block, declarations, usages) {
     var places = [];
     for (var k in declarations) {
@@ -355,16 +365,6 @@ function BLOCK_replaceNames(block, declarations, usages) {
         j = m.index + m[0].length;
     }
     return b + block.slice(j);
-}
-
-function getHash() {
-    var l = 5;
-    var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_$0123456789';
-    var b = set[Math.floor(Math.random() * (set.length - 10))];
-    while (l--) {
-        b += set[Math.floor(Math.random() * set.length)];
-    }
-    return b;
 }
 
 function updateProcessedBlocks(newBlock) {
