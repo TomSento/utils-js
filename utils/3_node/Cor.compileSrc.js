@@ -15,7 +15,7 @@ var BLOCK_START_IDX;
 var BLOCK_END_IDX;
 var OBFUSCATED = {};
 
-export default function compileBrowserScript(str) {
+export default function compileSrc(str) {
     SKIP = getSkipRanges(str);
     str = removeBlockComments(str);
 
