@@ -23,8 +23,6 @@ export default function h(cmd, a, b) {
     var REG_BASE_CMD_NO_MULTIPLE_PIPES = /\|{2,}/;
     var REG_BASE_CMD_NO_SPACES_AROUND_PIPE = /(?:\s+\|)|(?:\|\s+)/;
     var REG_BASE_CMD_NO_PIPE_AT_END = /\|$/;
-    var REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN = /\(\s/;
-    var REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN = /\s\)/;
     // -----------------------------------------------------------------------> REGEX PARTS ARE SORTED ALPHABETICALLY (IGNORE CASE)
     var REG_BASE_CMD_IS_METATAG = /^(Doc|Head|Link|Meta|Title)(?![A-Za-z0-9_-])/;
     var REG_BASE_CMD_IS_BODYTAG = /^(A|Abbr|Address|Area|Article|Aside|Audio|B|Base|Bdi|Bdo|BlockQuote|Body|Br|Button|Canvas|Caption|Cite|Code|Col|ColGroup|DataList|Dd|Del|Details|Dfn|Dialog|Div|Dl|Dt|Em|Embeded|FieldSet|FigCaption|Figure|Footer|Form|H1|H2|H3|H4|H5|H6|Header|Hr|I|Iframe|Img|Input|Ins|Kbd|Label|Legend|Li|Main|Map|Mark|Menu|MenuItem|Meter|Nav|NoScript|Object|Ol|OptGroup|Option|Output|P|Param|Picture|Pre|Progress|Q|Rp|Rt|Ruby|S|Samp|Script|Section|Select|Small|Source|Span|Strong|Sub|Summary|Sup|Svg|Table|Tbody|Td|Template|TextArea|TFoot|Th|THead|Time|Tr|Track|U|Ul|Var|Video|Wbr)(?![A-Za-z0-9_-])/; // https://www.w3schools.com/tags/default.asp
@@ -2269,9 +2267,7 @@ export default function h(cmd, a, b) {
             BASE_CMD_noMultipleCommas,
             BASE_CMD_noMultiplePipes,
             BASE_CMD_noSpacesAroundPipe,
-            BASE_CMD_noPipeAtEnd,
-            BASE_CMD_noSpaceAfterOpenParen,
-            BASE_CMD_noSpaceBeforeCloseParen
+            BASE_CMD_noPipeAtEnd
         ]);
     }
     function validateAll(str, validations) {
@@ -2328,18 +2324,6 @@ export default function h(cmd, a, b) {
     function BASE_CMD_noPipeAtEnd(v) {
         if (REG_BASE_CMD_NO_PIPE_AT_END.test(v)) {
             return new Error('Base command - No pipe at end.');
-        }
-        return null;
-    }
-    function BASE_CMD_noSpaceAfterOpenParen(v) {
-        if (REG_BASE_CMD_NO_SPACE_AFTER_OPEN_PAREN.test(v)) {
-            return new Error('Base command - No space after open paren.');
-        }
-        return null;
-    }
-    function BASE_CMD_noSpaceBeforeCloseParen(v) {
-        if (REG_BASE_CMD_NO_SPACE_BEFORE_CLOSE_PAREN.test(v)) {
-            return new Error('Base command - No space before close paren.');
         }
         return null;
     }
@@ -2696,6 +2680,14 @@ export default function h(cmd, a, b) {
                 return new Error('HTML attributes instruction string - Instruction "' + htmlAttribute.func + '" must not define parameter.');
             }
             return null;
+        }
+        if (htmlAttribute.func !== 'Val') {
+            if (v[0] === ' ') {
+                return new Error('HTML attributes instruction string - No space after open paren.');
+            }
+            if (v[v.length - 1] === ' ') {
+                return new Error('HTML attributes instruction string - No space before close paren.');
+            }
         }
         var arr = [HTML_ATTRIBUTES_INSTRUCTION_VALUE_noUnallowedChar];
         if (htmlAttribute.noMissingSpaceAfterComma) {
