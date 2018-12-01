@@ -2801,6 +2801,12 @@ export default function h(cmd, a, b) {
         }
     }
     function ACSS_INSTRUCTION_VALUE_validate(acssRule, v) {
+        if (v[0] === ' ') {
+            return new Error('ACSS instruction string - No space after open paren.');
+        }
+        if (v[v.length - 1] === ' ') {
+            return new Error('ACSS instruction string - No space before close paren.');
+        }
         if (acssRule.type === ACSS_INSTRUCTION_TYPE_helper()) {
             if (!acssRule.allowArgument && v) {
                 return new Error('ACSS instruction value - Instruction "' + acssRule.func + '" must not define parameter."');
