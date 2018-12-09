@@ -3346,11 +3346,14 @@ export default function h(cmd, a, b) {
         var autovendor = ['filter', 'appearance', 'column-count', 'column-gap', 'column-rule', 'display', 'transform', 'transform-style', 'transform-origin', 'transition', 'user-select', 'animation', 'perspective', 'animation-name', 'animation-duration', 'animation-timing-function', 'animation-delay', 'animation-iteration-count', 'animation-direction', 'animation-play-state', 'opacity', 'background', 'background-image', 'font-smoothing', 'text-size-adjust', 'backface-visibility', 'box-sizing', 'overflow-scrolling'];
         kv = kv.replace(/\s{2,}/g, ' ');
         kv = kv[kv.length - 1] === ';' ? kv.slice(0, -1) : kv;
-        kv = kv.split(/\s*:\s*/);
-        var k = kv[0];
-        var v = kv[1];
-        important = important ? ' !important' : '';
         var sep = ': ';
+        var index = kv.indexOf(sep);
+        if (index === -1) {
+            return '';
+        }
+        var k = kv.slice(0, index);
+        var v = kv.slice(index + sep.length);
+        important = important ? ' !important' : '';
         var del = ';';
         if (k && v) {
             if (autovendor.indexOf(k) === -1) {
