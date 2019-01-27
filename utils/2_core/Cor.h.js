@@ -93,6 +93,7 @@ export default function h(cmd, a, b) {
         Label: '<label[[modifiers]]>[[content]]</label>',
         Input: '<input[[modifiers]]>',
         Select: '<select[[modifiers]]>[[content]]</select>',
+        OptGroup: '<optgroup[[modifiers]]>[[content]]</optgroup>',
         Option: '<option[[modifiers]]>[[content]]</option>',
         Ul: '<ul[[modifiers]]>[[content]]</ul>',
         Li: '<li[[modifiers]]>[[content]]</li>',
@@ -276,6 +277,13 @@ export default function h(cmd, a, b) {
             func: 'Multiple',
             allowArgument: false,
             html: 'multiple',
+            noMissingSpaceAfterComma: false
+        }],
+        OptGroup: [{
+            name: 'Label',
+            func: 'Label',
+            allowArgument: true,
+            html: 'label=$',
             noMissingSpaceAfterComma: false
         }],
         Option: [{
