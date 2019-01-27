@@ -29,7 +29,7 @@ export default function h(cmd, a, b) {
 
     var REG_BASE_CMD_SPLIT_BY_PIPE = /\|/;
 
-    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Accept|Alt|Charset|Chckd|Content|Disabled|For|Href|HttpEquiv|Lang|Multiple|Name|Ph|Property|Rel|Ro|Slctd|Src|Type|Val)(?![A-Za-z0-9])/;
+    var REG_BASE_CMD_IS_PROBABLY_HTML_ATTRIBUTES_INSTRUCTIONS_STRING = /(?:^|\s)(?:Accept|Alt|Charset|Chckd|Content|Disabled|For|Href|HttpEquiv|Label|Lang|Multiple|Name|Ph|Property|Rel|Ro|Slctd|Src|Type|Val)(?![A-Za-z0-9])/;
     var REG_BASE_CMD_IS_PROBABLY_ACSS_INSTUCTIONS_STRING = /(?:^|\s)(?:Ac|Ai|Anim|Animdel|Animdir|Animdur|Animfm|Animic|Animn|Animps|Animtf|Ap|As|B|BdA|Bda|BdB|Bdb|Bdbc|Bdbs|Bdbw|Bdc|Bdcl|BdL|Bdl|Bdlc|Bdls|Bdlw|BdR|Bdr|Bdrad|Bdradbl|Bdradbr|Bdradtl|Bdradtr|Bdrc|Bdrs|Bdrw|Bds|Bdsp|BdT|Bdt|Bdtc|Bdts|Bdtw|Bdw|BdX|Bdx|BdY|Bdy|BfcHack|Bfv|Bg|Bga|Bgc|Bgcp|Bgi|Bgo|Bgp|Bgpx|Bgpy|Bgr|Bgz|Blur|Brightness|Bxsh|Bxz|C|Cf|Cl|Cnt|Contrast|Cur|D|Dropshadow|Ell|Ff|Fil|Fill|Fl|Fs|Fv|Fw|Fx|Fxb|Fxd|Fxf|Fxg|Fxs|Fxw|Fz|Grayscale|H|Hidden|HueRotate|Hy|IbBox|Invert|Jc|L|Lh|LineClamp|Lisi|Lisp|List|Lts|M|Mah|Matrix|Matrix3d|Maw|Mb|Mih|Miw|Ml|Mr|Mt|Mx|My|O|Op|Opacity|Or|Ov|Ovs|Ovx|Ovy|P|Pb|Pe|Pl|Pos|Pr|Prs|Prso|Pt|Px|Py|R|Rotate|Rotate3d|RotateX|RotateY|RotateZ|Row|Rsz|Saturate|Scale|Scale3d|ScaleX|ScaleY|Sepia|Skew|SkewX|SkewY|Stk|Stklc|Stklj|Stkw|StretchedBox|T|Ta|Tal|Tbl|Td|Ti|Tov|Tr|Translate|Translate3d|TranslateX|TranslateY|TranslateZ|Tren|Trf|Trfo|Trfs|Trs|Trsde|Trsdu|Trsp|Trstf|Tsh|Tt|Us|V|Va|W|Whs|Whsc|Wob|Wow|Z|Zoom)(?![A-Za-z0-9])/; // LAST CLOSURE IS NEEDED, OTHERWISE Stkljaaaa WOULD MATCH
 
     var REG_HTML_SELECTOR_INSTRUCTION_STRING_NO_SPACES = /\s+/g; // FOR EXAMPLE TO CHECK IF STRING CONTAINS SOMETHING MORE THAN ONLY SPACES
