@@ -284,6 +284,12 @@ export default function h(cmd, a, b) {
             allowArgument: false,
             html: 'selected',
             noMissingSpaceAfterComma: false
+        }, {
+            name: 'Value',
+            func: 'Val',
+            allowArgument: true,
+            html: 'value=$',
+            noMissingSpaceAfterComma: false
         }],
         Ul: [],
         Li: [],
