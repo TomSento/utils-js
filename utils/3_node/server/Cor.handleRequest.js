@@ -6,7 +6,7 @@ import * as $querystring from 'querystring';
 import $ext2ct from '../../ext2ct';
 import $MultipartParser from './internal/MultipartParser';
 
-if (!global.$cache) global.$cache = { matchers: {}, routes: {} };
+if (!global.$router) global.$router = { matchers: {}, routes: {} };
 
 var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
@@ -75,8 +75,8 @@ function findRoute(req) {
     }
     var pathname = (tmp !== '/' && tmp[tmp.length - 1] === '/') ? tmp.slice(0, -1) : tmp;
     var matcher = null;
-    for (var k in global.$cache.matchers) {
-        var exp = global.$cache.matchers[k];
+    for (var k in global.$router.matchers) {
+        var exp = global.$router.matchers[k];
         if (exp.test(pathname)) {
             matcher = k;
         }
@@ -85,7 +85,7 @@ function findRoute(req) {
         return null;
     }
     var mfd = getContentType4L(req) === 'data';
-    return global.$cache.routes[matcher + '?' + req.method + '?' + (mfd ? 'mfd' : 'def')] || null;
+    return global.$router.routes[matcher + '?' + req.method + '?' + (mfd ? 'mfd' : 'def')] || null;
 }
 
 function toPathname(v) {

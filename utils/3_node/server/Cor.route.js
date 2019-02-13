@@ -1,4 +1,4 @@
-if (!global.$cache) global.$cache = { matchers: {}, routes: {} };
+if (!global.$router) global.$router = { matchers: {}, routes: {} };
 
 export default function route(/* ...args */) {
     var matcher;
@@ -22,8 +22,8 @@ export default function route(/* ...args */) {
         throw new Error('api-fn');
     }
     var v = parseRoute();
-    global.$cache.matchers[v.matcher] = v.exp; // ————————————————————————————— FOR FINDING ROUTE MATCHER BY URL
-    global.$cache.routes[v.matcher + '?' + v.method + '?' + (v.mfd ? 'mfd' : 'def')] = v;
+    global.$router.matchers[v.matcher] = v.exp; // ————————————————————————————— FOR FINDING ROUTE MATCHER BY URL
+    global.$router.routes[v.matcher + '?' + v.method + '?' + (v.mfd ? 'mfd' : 'def')] = v;
     function parseRoute() {
         var m;
         var exp = /^([\w-/[\]@]+)\s+-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/17
