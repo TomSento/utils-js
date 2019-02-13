@@ -59,6 +59,17 @@ Node|
 [Cor.compileSrc(str?) : String]()|
 
 
+Browser|
+-
+[Cookie.get(k) : String?]() `global`|
+[Cor.visible(el) : Boolean]()|
+[Cor.xhr(cmd, a, b?, c?, d?) : undefined]()|
+[CustomEvent.create(k, v?) : CustomEvent]()|
+[Element.prototype.matches(sel) : Boolean]() `polyfill`|
+[Element.prototype.removeChild(el) : Element]() `override`|
+[HTMLCollection.from(str?) : HTMLCollection]()|
+
+
 ## Contact
 
 Tomáš Sentkeresty - [tsentkeresty@gmail.com](mailto:tsentkeresty@gmail.com)
