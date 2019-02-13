@@ -19,13 +19,13 @@
             "multi-line"
         ],
         "default-case": "off",
-        "dot-notation": "warn",
+        "dot-notation": "off",
         "dot-location": [
             "error",
             "property"
         ],
         "eqeqeq": "off",
-        "guard-for-in": "error",
+        "guard-for-in": "off",
         "no-alert": "warn",
         "no-caller": "error",
         "no-case-declarations": "error",
@@ -605,10 +605,7 @@
             "off",
             "expression"
         ],
-        "func-names": [
-            "error",
-            "never"
-        ],
+        "func-names": "off",
         "func-name-matching": [
             "off",
             "always",
