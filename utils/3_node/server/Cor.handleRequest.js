@@ -3,11 +3,11 @@ import * as $fs from 'fs';
 import * as $Stream from 'stream';
 import * as $url from 'url';
 import * as $querystring from 'querystring';
-import $malloc from '../../0_internal/malloc';
 import $ext2ct from '../../ext2ct';
 import $MultipartParser from './internal/MultipartParser';
 
-var cache = $malloc('__SERVER');
+if (!global.$cache) global.$cache = { matchers: {}, routes: {} };
+
 var EXP_ONLY_SLASHES = /^\/{2,}$/;
 var RES_FN_CALLS_BLACKLIST = [ // --------------------------------------------> EXCEPT end()
     'addTrailers',
@@ -74,10 +74,9 @@ function findRoute(req) {
         return null;
     }
     var pathname = (tmp !== '/' && tmp[tmp.length - 1] === '/') ? tmp.slice(0, -1) : tmp;
-    var matchers = cache('matchers') || {};
     var matcher = null;
-    for (var k in matchers) {
-        var exp = matchers[k];
+    for (var k in global.$cache.matchers) {
+        var exp = global.$cache.matchers[k];
         if (exp.test(pathname)) {
             matcher = k;
         }
@@ -86,8 +85,7 @@ function findRoute(req) {
         return null;
     }
     var mfd = getContentType4L(req) === 'data';
-    var routes = cache('routes') || {};
-    return routes[matcher + '?' + req.method + '?' + (mfd ? 'mfd' : 'def')] || null;
+    return global.$cache.routes[matcher + '?' + req.method + '?' + (mfd ? 'mfd' : 'def')] || null;
 }
 
 function toPathname(v) {
