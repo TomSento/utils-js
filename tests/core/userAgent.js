@@ -17,14 +17,11 @@ browsers.forEach(function(data) {
     if (ua.browserVersion !== data.expect.version) log(`browserVersion: ${data.desc}`);
 });
 
-// engines.forEach(function(data) {
-//     test('(engine) ' + data.desc, function(assert) {
-//         var v = userAgent(data.ua).engineName;
-//         assert.ok(v === data.expect.name, v, data.expect.name, '(engine/name) ' + data.desc);
-//         v = userAgent(data.ua).engineVersion;
-//         assert.ok(v === data.expect.version, v, data.expect.version, '(engine/version) ' + data.desc);
-//     });
-// });
+engines.forEach(function(data) {
+    var ua = userAgent(data.ua);
+    if (ua.engineName !== data.expect.name) log(`engineName: ${data.desc}`);
+    if (ua.engineVersion !== data.expect.version) log(`engineVersion: ${data.desc}`);
+});
 
 // os.forEach(function(data) {
 //     test('(os) ' + data.desc, function(assert) {
