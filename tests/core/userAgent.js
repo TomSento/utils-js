@@ -4,7 +4,6 @@ var os = require('../files/userAgent_os.json');
 var devices = require('../files/userAgent_devices.json');
 var cpu = require('../files/userAgent_cpu.json');
 
-var test = require('../../dist/out.node.js').test;
 var userAgent = require('../../dist/out.node.js').userAgent;
 
 function log(arg) {
