@@ -42,7 +42,6 @@ Core|
 Node|
 -|
 [Cor.ls(a, flag?, fn, next) : undefined]()|
-[Cor.Watcher(t?) : Watcher]() `class`|
 [Cor.handleRequest(req, res, routeError) : undefined]()|
 [Cor.request(url, flags, a, b?, c?) : undefined]()|
 [Cor.route(matcher, ...middlewares, fn) : undefined]()|
