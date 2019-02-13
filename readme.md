@@ -16,6 +16,9 @@ node min -m
 
 Internals|
 -
+[malloc(scope) : Function]() `global`|
+[typ : Object.prototype.toString]() `global`|
+
 
 Primitives|
 -
