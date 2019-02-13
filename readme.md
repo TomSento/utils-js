@@ -19,7 +19,7 @@ Primitives|
 [array.unique(k?) : Array](#docs)|
 [Cor.clone(obj, skip?, skipFunctions?) : Object](#docs)|
 [Cor.extend(objA, objB, rewrite?) : Object](#docs)|
-[string.escape(lspace?, lrev?, rspace?) : String](#docs)|
+[string.escape() : String](#docs)|
 [string.padEnd(len, str?) : String](#docs) `polyfill`|
 [string.padStart(len, str?) : String](#docs) `polyfill`|
 [string.slug(max?) : String](#docs)|
