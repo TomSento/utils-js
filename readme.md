@@ -24,8 +24,8 @@ Primitives       |
 [Cor.extension(k?) : String?]()|
 [string.escape(lspace?, lrev?, rspace?) : String]()|
 [string.fmt(...String) : String]()|
-[string.padEnd(len, str?) : String]()|
-[string.padStart(len, str?) : String]()|
+[string.padEnd(len, str?) : String]() `polyfill`|
+[string.padStart(len, str?) : String]() `polyfill`|
 [string.slug(max?) : String]()|
 [string.strip() : String]()|
 
