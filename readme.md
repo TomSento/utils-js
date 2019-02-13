@@ -32,7 +32,6 @@ Core|
 [Cor.extension(k?) : String?](#docs)|
 [Cor.h(cmd, a?, b?) : String](#docs)|
 [Cor.Schema(obj) : Schema](#docs) `class`|
-[Cor.test(k, fn, maxTimeout?) : undefined](#docs)|
 [Cor.uid1() : String](#docs)|
 [Cor.uid2() : String](#docs)|
 [Cor.userAgent(str?) : Object](#docs)|
