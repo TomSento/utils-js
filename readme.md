@@ -36,6 +36,19 @@ Primitives|
 [string.slug(max?) : String]()|
 [string.strip() : String]()|
 
+
+Core|
+-
+[Cor.all(arr, fn, next?) : undefined]()|
+[Cor.h(cmd, a?, b?) : String]()|
+[Cor.Schema(obj) : Schema]() `class`|
+[Cor.test(k, fn, maxTimeout?) : undefined]()|
+[Cor.uid1() : String]()|
+[Cor.uid2() : String]()|
+[Cor.userAgent(str?) : Object]()|
+[log(...Any) : undefined]() `global`|
+
+
 ## Contact
 
 Tomáš Sentkeresty - [tsentkeresty@gmail.com](mailto:tsentkeresty@gmail.com)
