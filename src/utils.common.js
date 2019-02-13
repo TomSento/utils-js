@@ -12,7 +12,6 @@ import '../utils/1_primitives/array/Array.prototype.unique';
 export { default as clone } from '../utils/1_primitives/object/Cor.clone';
 export { default as extend } from '../utils/1_primitives/object/Cor.extend';
 
-export { default as extension } from '../utils/1_primitives/string/Cor.extension';
 import '../utils/1_primitives/string/String.prototype.escape';
 import '../utils/1_primitives/string/String.prototype.padEnd';
 import '../utils/1_primitives/string/String.prototype.padStart';
@@ -20,6 +19,7 @@ import '../utils/1_primitives/string/String.prototype.slug';
 import '../utils/1_primitives/string/String.prototype.strip';
 
 export { default as all } from '../utils/2_core/Cor.all';
+export { default as extension } from '../utils/2_core/Cor.extension';
 export { default as h } from '../utils/2_core/Cor.h';
 export { default as Schema } from '../utils/2_core/Cor.Schema';
 export { default as test } from '../utils/2_core/Cor.test';

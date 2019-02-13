@@ -19,7 +19,6 @@ Primitives|
 [array.unique(k?) : Array](#docs)|
 [Cor.clone(obj, skip?, skipFunctions?) : Object](#docs)|
 [Cor.extend(objA, objB, rewrite?) : Object](#docs)|
-[Cor.extension(k?) : String?](#docs)|
 [string.escape(lspace?, lrev?, rspace?) : String](#docs)|
 [string.padEnd(len, str?) : String](#docs) `polyfill`|
 [string.padStart(len, str?) : String](#docs) `polyfill`|
@@ -30,6 +29,7 @@ Primitives|
 Core|
 -|
 [Cor.all(arr, fn, next?) : undefined](#docs)|
+[Cor.extension(k?) : String?](#docs)|
 [Cor.h(cmd, a?, b?) : String](#docs)|
 [Cor.Schema(obj) : Schema](#docs) `class`|
 [Cor.test(k, fn, maxTimeout?) : undefined](#docs)|
