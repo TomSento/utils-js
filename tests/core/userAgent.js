@@ -36,10 +36,6 @@ devices.forEach(function(data) {
     if (ua.deviceType !== data.expect.type) log(`deviceType: ${data.desc}`);
 });
 
-
-// cpu.forEach(function(data) {
-//     test('(cpu) ' + data.desc, function(assert) {
-//         var v = userAgent(data.ua).cpu;
-//         assert.ok(v === data.expect.architecture, v, data.expect.architecture, '(cpu) ' + data.desc);
-//     });
-// });
+cpu.forEach(function(data) {
+    if (userAgent(data.ua).cpu !== data.expect.architecture) log(`cpu: ${data.desc}`);
+});
