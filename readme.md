@@ -13,8 +13,12 @@ node min -m
 ```
 
 ## Docs
-Primitives       |
------------------|
+
+Internals|
+-
+
+Primitives|
+-
 [array.find(fn, v?) : Any]() `override`|
 [array.findIndex(fn, v?) : Number]() `override`|
 [array.remove(fn, v?) : Array]()|
