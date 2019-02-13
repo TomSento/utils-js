@@ -7,55 +7,55 @@
 
 Internals|
 -|
-[malloc(scope) : Function](#) `global`|
-[typ : Object.prototype.toString](#) `global`|
+[malloc(scope) : Function](#docs) `global`|
+[typ : Object.prototype.toString](#docs) `global`|
 
 
 Primitives|
 -|
-[array.find(fn, v?) : Any](#) `override`|
-[array.findIndex(fn, v?) : Number](#) `override`|
-[array.remove(fn, v?) : Array](#)|
-[array.unique(k?) : Array](#)|
-[Cor.clone(obj, skip?, skipFunctions?) : Object](#)|
-[Cor.extend(objA, objB, rewrite?) : Object](#)|
-[Cor.extension(k?) : String?](#)|
-[string.escape(lspace?, lrev?, rspace?) : String](#)|
-[string.padEnd(len, str?) : String](#) `polyfill`|
-[string.padStart(len, str?) : String](#) `polyfill`|
-[string.slug(max?) : String](#)|
-[string.strip() : String](#)|
+[array.find(fn, v?) : Any](#docs) `override`|
+[array.findIndex(fn, v?) : Number](#docs) `override`|
+[array.remove(fn, v?) : Array](#docs)|
+[array.unique(k?) : Array](#docs)|
+[Cor.clone(obj, skip?, skipFunctions?) : Object](#docs)|
+[Cor.extend(objA, objB, rewrite?) : Object](#docs)|
+[Cor.extension(k?) : String?](#docs)|
+[string.escape(lspace?, lrev?, rspace?) : String](#docs)|
+[string.padEnd(len, str?) : String](#docs) `polyfill`|
+[string.padStart(len, str?) : String](#docs) `polyfill`|
+[string.slug(max?) : String](#docs)|
+[string.strip() : String](#docs)|
 
 
 Core|
 -|
-[Cor.all(arr, fn, next?) : undefined](#)|
-[Cor.h(cmd, a?, b?) : String](#)|
-[Cor.Schema(obj) : Schema](#) `class`|
-[Cor.test(k, fn, maxTimeout?) : undefined](#)|
-[Cor.uid1() : String](#)|
-[Cor.uid2() : String](#)|
-[Cor.userAgent(str?) : Object](#)|
-[log(...Any) : undefined](#) `global`|
+[Cor.all(arr, fn, next?) : undefined](#docs)|
+[Cor.h(cmd, a?, b?) : String](#docs)|
+[Cor.Schema(obj) : Schema](#docs) `class`|
+[Cor.test(k, fn, maxTimeout?) : undefined](#docs)|
+[Cor.uid1() : String](#docs)|
+[Cor.uid2() : String](#docs)|
+[Cor.userAgent(str?) : Object](#docs)|
+[log(...Any) : undefined](#docs) `global`|
 
 
 Node|
 -|
-[Cor.handleRequest(req, res, routeError) : undefined](#)|
-[Cor.request(url, flags, a, b?, c?) : undefined](#)|
-[Cor.route(matcher, ...middlewares, fn) : undefined](#)|
-[Cor.compileSrc(str?) : String](#)|
+[Cor.handleRequest(req, res, routeError) : undefined](#docs)|
+[Cor.request(url, flags, a, b?, c?) : undefined](#docs)|
+[Cor.route(matcher, ...middlewares, fn) : undefined](#docs)|
+[Cor.compileSrc(str?) : String](#docs)|
 
 
 Browser|
 -|
-[Cookie.get(k) : String?](#) `global`|
-[Cor.visible(el) : Boolean](#)|
-[Cor.xhr(cmd, a, b?, c?, d?) : undefined](#)|
-[CustomEvent.create(k, v?) : CustomEvent](#)|
-[Element.prototype.matches(sel) : Boolean](#) `polyfill`|
-[Element.prototype.removeChild(el) : Element](#) `override`|
-[HTMLCollection.from(str?) : HTMLCollection](#)|
+[Cookie.get(k) : String?](#docs) `global`|
+[Cor.visible(el) : Boolean](#docs)|
+[Cor.xhr(cmd, a, b?, c?, d?) : undefined](#docs)|
+[CustomEvent.create(k, v?) : CustomEvent](#docs)|
+[Element.prototype.matches(sel) : Boolean](#docs) `polyfill`|
+[Element.prototype.removeChild(el) : Element](#docs) `override`|
+[HTMLCollection.from(str?) : HTMLCollection](#docs)|
 
 
 ## Contact
