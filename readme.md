@@ -46,8 +46,8 @@ Browser|
 [Cor.visible(el) : Boolean](#docs)|
 [Cor.xhr(cmd, a, b?, c?, d?) : undefined](#docs)|
 [CustomEvent.create(k, v?) : CustomEvent](#docs)|
-[Element.prototype.matches(sel) : Boolean](#docs) `polyfill`|
-[Element.prototype.removeChild(el) : Element](#docs) `override`|
+[element.matches(sel) : Boolean](#docs) `polyfill`|
+[element.removeChild(el) : Element](#docs) `override`|
 [HTMLCollection.from(str?) : HTMLCollection](#docs)|
 
 
