@@ -6,13 +6,13 @@
 ## Docs
 
 Internals|
--
+-|
 [malloc(scope) : Function]() `global`|
 [typ : Object.prototype.toString]() `global`|
 
 
 Primitives|
--
+-|
 [array.find(fn, v?) : Any]() `override`|
 [array.findIndex(fn, v?) : Number]() `override`|
 [array.remove(fn, v?) : Array]()|
@@ -29,7 +29,7 @@ Primitives|
 
 
 Core|
--
+-|
 [Cor.all(arr, fn, next?) : undefined]()|
 [Cor.h(cmd, a?, b?) : String]()|
 [Cor.Schema(obj) : Schema]() `class`|
@@ -41,7 +41,7 @@ Core|
 
 
 Node|
--
+-|
 [Cor.ls(a, flag?, fn, next) : undefined]()|
 [Cor.Watcher(t?) : Watcher]() `class`|
 [Cor.handleRequest(req, res, routeError) : undefined]()|
@@ -51,7 +51,7 @@ Node|
 
 
 Browser|
--
+-|
 [Cookie.get(k) : String?]() `global`|
 [Cor.visible(el) : Boolean]()|
 [Cor.xhr(cmd, a, b?, c?, d?) : undefined]()|
