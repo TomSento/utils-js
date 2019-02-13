@@ -1,8 +1,6 @@
 /* eslint-disable import/first */
 /* eslint import/newline-after-import: "off" */
 
-import '../utils/0_internal/typ';
-
 import '../utils/1_primitives/array/Array.prototype.find';
 import '../utils/1_primitives/array/Array.prototype.findIndex';
 import '../utils/1_primitives/array/Array.prototype.remove';

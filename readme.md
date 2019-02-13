@@ -5,11 +5,6 @@
 
 ## Docs
 
-Internals|
--|
-[typ : Object.prototype.toString](#docs) `global`|
-
-
 Primitives|
 -|
 [array.find(fn, v?) : Any](#docs) `override`|

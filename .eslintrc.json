@@ -6,9 +6,6 @@
     "globals": {
         "Stream": true,
         "ReadStream": true,
-
-        "typ": true,
-
         "log": true
     }
 }
