@@ -77,11 +77,9 @@ function findRoute(req) {
     var matchers = cache('matchers') || {};
     var matcher = null;
     for (var k in matchers) {
-        if (matchers.hasOwnProperty(k)) {
-            var exp = matchers[k];
-            if (exp.test(pathname)) {
-                matcher = k;
-            }
+        var exp = matchers[k];
+        if (exp.test(pathname)) {
+            matcher = k;
         }
     }
     if (!matcher) {
