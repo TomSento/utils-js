@@ -1,12 +1,10 @@
 /* eslint-disable no-console */
 var Schema = require('../../dist/out.node.js').Schema;
 
-var schema = malloc('schemas');
-
-schema('User', new Schema({
+var User = new Schema({
     'name': {
         validate: function(v) {
-            return typ.call(v) === '[object String]' && v.length > 5;
+            return typeof(v) === 'string' && v.length > 5;
         }
     },
     'description': {
@@ -17,28 +15,28 @@ schema('User', new Schema({
             if (v === null) {
                 return true;
             }
-            return typ.call(v) === '[object String]';
+            return typeof(v) === 'string';
         }
     },
     'projects': {
         validate: function(v) {
-            return typ.call(v) === '[object Array]' && v && v.length > 0;
+            return Array.isArray(v) && v.length > 0;
         }
     },
     'getName': {
         validate: function(v) {
-            return typ.call(v) === '[object Function]';
+            return typeof(v) === 'function';
         }
     }
-}));
+});
 
-schema('Project', new Schema({
+var Project = new Schema({
     'name': {
         validate: function(v) {
-            return typ.call(v) === '[object String]' && v && v.length < 20;
+            return !!v && typeof(v) === 'string' && v.length < 20;
         }
     }
-}));
+});
 
 var user = {
     name: 'Tomas Sentkeresty',
@@ -49,10 +47,10 @@ var user = {
 };
 console.log('user:', user);
 
-var err = schema('User').prepareValidate(user);
+var err = User.prepareValidate(user);
 
 console.log('\nafter prepare & validate:', user);
-var cleaned = schema('User').clean(user);
+var cleaned = User.clean(user);
 console.log('\ncleaned:', cleaned);
 console.log('\ncleaned & stringified:', JSON.stringify(cleaned));
 
@@ -60,7 +58,7 @@ console.log('\ntop-level errors', err);
 if (!err.projects) {
     var has;
     has = user.projects.find(function(v) {
-        return typ.call(v) !== '[object Object]' || Object.keys(schema('Project').prepareValidate(v)).length > 0;
+        return !v || v.constructor !== Object || Object.keys(Project.prepareValidate(v)).length > 0;
     });
     if (has) {
         err.projects = true;
