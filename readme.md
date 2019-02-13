@@ -1,16 +1,7 @@
 # Cor.js
 
-> not yet production ready
-
-## Requirements
-
-- Node.js +v10.0.0
-
-## Build
-
-```bash
-node min -m
-```
+**Requirements:** Node.js +v10.0.0  
+> Not yet production ready
 
 ## Docs
 
