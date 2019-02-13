@@ -1,4 +1,4 @@
-import $malloc from '../../0_internal/malloc';
+if (!global.$cache) global.$cache = { matchers: {}, routes: {} };
 
 export default function route(/* ...args */) {
     var matcher;
@@ -21,14 +21,9 @@ export default function route(/* ...args */) {
     if (!fn || typeof(fn) !== 'function') {
         throw new Error('api-fn');
     }
-    var cache = $malloc('__SERVER');
     var v = parseRoute();
-    var matchers = cache('matchers') || {};
-    var routes = cache('routes') || {};
-    matchers[v.matcher] = v.exp; // ------------------------------------------> FOR FINDING ROUTE MATCHER BY URL
-    routes[v.matcher + '?' + v.method + '?' + (v.mfd ? 'mfd' : 'def')] = v;
-    cache('matchers', matchers);
-    cache('routes', routes);
+    global.$cache.matchers[v.matcher] = v.exp; // ————————————————————————————— FOR FINDING ROUTE MATCHER BY URL
+    global.$cache.routes[v.matcher + '?' + v.method + '?' + (v.mfd ? 'mfd' : 'def')] = v;
     function parseRoute() {
         var m;
         var exp = /^([\w-/[\]@]+)\s+-m\s(GET|PUT|POST|DELETE)\s+-s\s(\d+)(GB|MB|kB)\s+-t\s(\d+)s(?:(?=\s+-mfd)(?:\s+-(mfd))|)$/; // https://regex101.com/r/Rq520Q/17
