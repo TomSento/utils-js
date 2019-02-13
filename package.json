@@ -1,8 +1,8 @@
 {
     "name": "corjs",
-    "version": "2.6.2",
-    "description": "Minify everything to single, well readable object.",
-    "main": "compile.js",
+    "version": "2.7.0",
+    "description": "Simply route, validate, render html, do xhr and little more :)",
+    "main": "min.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
