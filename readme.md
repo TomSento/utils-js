@@ -1,8 +1,6 @@
 # Cor.js
 
-> :small_orange_diamond: *experimental & unstable*
-
-[Documentation](https://github.com/tomassentkeresty/corjs-docs)
+> not yet production ready
 
 ## Requirements
 
@@ -13,6 +11,23 @@
 ```bash
 node min -m
 ```
+
+## Docs
+Primitives       |
+-----------------|
+[array.find(fn, v?) : Any]() `override`|
+[array.findIndex(fn, v?) : Number]() `override`|
+[array.remove(fn, v?) : Array]()|
+[array.unique(k?) : Array]()|
+[Cor.clone(obj, skip?, skipFunctions?) : Object]()|
+[Cor.extend(objA, objB, rewrite?) : Object]()|
+[Cor.extension(k?) : String?]()|
+[string.escape(lspace?, lrev?, rspace?) : String]()|
+[string.fmt(...String) : String]()|
+[string.padEnd(len, str?) : String]()|
+[string.padStart(len, str?) : String]()|
+[string.slug(max?) : String]()|
+[string.strip() : String]()|
 
 ## Contact
 
