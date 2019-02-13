@@ -29,16 +29,13 @@ os.forEach(function(data) {
     if (ua.osVersion !== data.expect.version) log(`osVersion: ${data.desc}`);
 });
 
-// devices.forEach(function(data) {
-//     test('(device) ' + data.desc, function(assert) {
-//         var v = userAgent(data.ua).deviceVendor;
-//         assert.ok(v === data.expect.vendor, v, data.expect.vendor, '(device/vendor) ' + data.desc);
-//         v = userAgent(data.ua).deviceModel;
-//         assert.ok(v === data.expect.model, v, data.expect.model, '(device/model) ' + data.desc);
-//         v = userAgent(data.ua).deviceType;
-//         assert.ok(v === data.expect.type, v, data.expect.type, '(device/type) ' + data.desc);
-//     });
-// });
+devices.forEach(function(data) {
+    var ua = userAgent(data.ua);
+    if (ua.deviceVendor !== data.expect.vendor) log(`deviceVendor: ${data.desc}`);
+    if (ua.deviceModel !== data.expect.model) log(`deviceModel: ${data.desc}`);
+    if (ua.deviceType !== data.expect.type) log(`deviceType: ${data.desc}`);
+});
+
 
 // cpu.forEach(function(data) {
 //     test('(cpu) ' + data.desc, function(assert) {
