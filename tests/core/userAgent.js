@@ -23,14 +23,11 @@ engines.forEach(function(data) {
     if (ua.engineVersion !== data.expect.version) log(`engineVersion: ${data.desc}`);
 });
 
-// os.forEach(function(data) {
-//     test('(os) ' + data.desc, function(assert) {
-//         var v = userAgent(data.ua).osName;
-//         assert.ok(v === data.expect.name, v, data.expect.name, '(os/name) ' + data.desc);
-//         v = userAgent(data.ua).osVersion;
-//         assert.ok(v === data.expect.version, v, data.expect.version, '(os/version) ' + data.desc);
-//     });
-// });
+os.forEach(function(data) {
+    var ua = userAgent(data.ua);
+    if (ua.osName !== data.expect.name) log(`osName: ${data.desc}`);
+    if (ua.osVersion !== data.expect.version) log(`osVersion: ${data.desc}`);
+});
 
 // devices.forEach(function(data) {
 //     test('(device) ' + data.desc, function(assert) {
