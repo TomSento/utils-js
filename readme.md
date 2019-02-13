@@ -7,7 +7,6 @@
 
 Internals|
 -|
-[malloc(scope) : Function](#docs) `global`|
 [typ : Object.prototype.toString](#docs) `global`|
 
 

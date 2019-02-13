@@ -1,7 +1,6 @@
 /* eslint-disable import/first */
 /* eslint import/newline-after-import: "off" */
 
-import '../utils/0_internal/malloc';
 import '../utils/0_internal/typ';
 
 import '../utils/1_primitives/array/Array.prototype.find';

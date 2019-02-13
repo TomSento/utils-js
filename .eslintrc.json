@@ -7,7 +7,6 @@
         "Stream": true,
         "ReadStream": true,
 
-        "malloc": true,
         "typ": true,
 
         "log": true
