@@ -17,6 +17,7 @@ import '../utils/1_primitives/string/String.prototype.strip';
 
 export { default as all } from '../utils/2_core/Cor.all';
 export { default as extension } from '../utils/2_core/Cor.extension';
+import '../utils/2_core/Cor.html';
 export { default as Schema } from '../utils/2_core/Cor.Schema';
 export { default as tid } from '../utils/2_core/Cor.tid';
 export { default as uid } from '../utils/2_core/Cor.uid';
