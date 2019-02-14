@@ -1,7 +1,7 @@
 var $path = require('path');
 var $fs = require('fs');
 var $rollup = require('rollup');
-var $uglify = require('uglify-js');
+var terser = require('terser');
 
 dist('./src/utils.browser.js', 'iife', './dist/out.browser.js');
 dist('./src/utils.node.js', 'cjs', './dist/out.node.js');
@@ -10,7 +10,7 @@ async function dist(entry, format, out) {
     var result = await bundle(entry, format);
     var code = result.code || '';
     if (process.argv.indexOf('-m') >= 0) {
-        var min = $uglify.minify(code);
+        var min = terser.minify(code);
         if (min.error) {
             kill(min.error);
         }

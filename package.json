@@ -19,7 +19,7 @@
     "homepage": "https://github.com/tomas-sentkeresty/utils-js#readme",
     "dependencies": {
         "rollup": "0.61.2",
-        "uglify-js": "3.4.1"
+        "terser": "3.16.1"
     },
     "devDependencies": {
         "eslint": "4.17.0",
