@@ -268,7 +268,8 @@ $0{
     var l;
     var str = ''; // —————————————————————————————————————————————————————————— INSERT VALUE PLACEHOLDERS
     for (i = 0, l = strings.length; i < l; i++) {
-        str += strings[i] + '@[[' + i + ']]';
+        str += strings[i];
+        if (i <= l - 2) str += '@[[' + i + ']]';
     }
     str = str.trim();
 
