@@ -24,6 +24,7 @@ Core|
 -|
 [Cor.all(arr, fn, next?) : undefined](#docs)|
 [Cor.extension(k?) : String?](#docs)|
+[Cor.html](#docs) `literal tag`|
 [Cor.Schema(obj) : Schema](#docs) `class`|
 [Cor.tid() : String](#docs)|
 [Cor.uid(len) : String](#docs)|
