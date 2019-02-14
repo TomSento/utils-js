@@ -26,7 +26,7 @@ Core|
 [Cor.extension(k?) : String?](#docs)|
 [Cor.h(cmd, a?, b?) : String](#docs)|
 [Cor.Schema(obj) : Schema](#docs) `class`|
-[Cor.uid1() : String](#docs)|
+[Cor.tid() : String](#docs)|
 [Cor.uid2() : String](#docs)|
 [Cor.userAgent(str?) : Object](#docs)|
 [log(...Any) : undefined](#docs) `global`|
