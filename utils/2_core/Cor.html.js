@@ -599,3 +599,6 @@ function genID() {
     }
     return b;
 }
+
+if (!world.Cor) world.Cor = {};
+world.Cor.html = html;
