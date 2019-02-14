@@ -19,7 +19,7 @@ export { default as all } from '../utils/2_core/Cor.all';
 export { default as extension } from '../utils/2_core/Cor.extension';
 export { default as h } from '../utils/2_core/Cor.h';
 export { default as Schema } from '../utils/2_core/Cor.Schema';
-export { default as uid1 } from '../utils/2_core/Cor.uid1';
+export { default as tid } from '../utils/2_core/Cor.tid';
 export { default as uid2 } from '../utils/2_core/Cor.uid2';
 export { default as userAgent } from '../utils/2_core/Cor.userAgent';
 import '../utils/2_core/log';
