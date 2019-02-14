@@ -662,7 +662,7 @@
             "error",
             "stroustrup",
             {
-                "allowSingleLine": false
+                "allowSingleLine": true
             }
         ],
         "block-spacing": [

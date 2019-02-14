@@ -292,7 +292,7 @@ $0{
             if (gap_end === -1) {
                 gap_end_loop = false;
                 continue;
-            };
+            }
             next = str[gap_end + 1];
             if (next === '/' || alpha.test(next)) {
                 gap_end_loop = false;
@@ -354,7 +354,7 @@ $0{
 
         el_end = str.indexOf(el_end_look, s_start + s_start_look.length); // —— FIND ELEMENT END
         if (el_end === -1) {
-        s_start_look_from += 8;
+            s_start_look_from += 8;
             continue;
         }
         el_end += el_end_look.length;
