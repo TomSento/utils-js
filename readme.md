@@ -7,17 +7,17 @@
 
 Primitives|
 -|
-[array.find(fn, v?) : Any](#docs) `override`|
-[array.findIndex(fn, v?) : Number](#docs) `override`|
-[array.remove(fn, v?) : Array](#docs)|
-[array.unique(k?) : Array](#docs)|
+[Array.prototype.find(fn, v?) : Any](#docs) `override`|
+[Array.prototype.findIndex(fn, v?) : Number](#docs) `override`|
+[Array.prototype.remove(fn, v?) : Array](#docs)|
+[Array.prototype.unique(k?) : Array](#docs)|
 [Cor.clone(obj, skip?, skipFunctions?) : Object](#docs)|
 [Cor.extend(objA, objB, rewrite?) : Object](#docs)|
-[string.escape() : String](#docs)|
-[string.padEnd(len, str?) : String](#docs) `polyfill`|
-[string.padStart(len, str?) : String](#docs) `polyfill`|
-[string.slug(max?) : String](#docs)|
-[string.strip() : String](#docs)|
+[String.prototype.escape() : String](#docs)|
+[String.prototype.padEnd(len, str?) : String](#docs) `polyfill`|
+[String.prototype.padStart(len, str?) : String](#docs) `polyfill`|
+[String.prototype.slug(max?) : String](#docs)|
+[String.prototype.strip() : String](#docs)|
 
 
 Core|
