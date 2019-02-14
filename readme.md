@@ -24,7 +24,6 @@ Core|
 -|
 [Cor.all(arr, fn, next?) : undefined](#docs)|
 [Cor.extension(k?) : String?](#docs)|
-[Cor.h(cmd, a?, b?) : String](#docs)|
 [Cor.Schema(obj) : Schema](#docs) `class`|
 [Cor.tid() : String](#docs)|
 [Cor.uid(len) : String](#docs)|
