@@ -49,6 +49,7 @@ Browser|
 [element.matches(sel) : Boolean](#docs) `polyfill`|
 [element.removeChild(el) : Element](#docs) `override`|
 [HTMLCollection.from(str?) : HTMLCollection](#docs)|
+[HTMLCollection.prototype.forEach(fn, ctx?) : undefined](#docs)|
 
 
 ## Contact
