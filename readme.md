@@ -48,6 +48,7 @@ Browser|
 [CustomEvent.create(k, v?) : CustomEvent](#docs)|
 [Element.prototype.matches(sel) : Boolean](#docs) `polyfill`|
 [Element.prototype.removeChild(el) : Element](#docs) `override`|
+[Element.state : Object \| Array](#docs) `attribute`|
 [HTMLCollection.from(str?) : HTMLCollection](#docs)|
 [HTMLCollection.prototype.forEach(fn, ctx?) : undefined](#docs)|
 
