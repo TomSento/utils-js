@@ -310,6 +310,40 @@ $0{
     build_from = 0;
 
 
+    var val; // ——————————————————————————————————————————————————————————————— INSERT VALUES
+    var val_encode;
+    var val_encode_reg = /(&|'|"|<|>)/g;
+    var val_start;
+    var val_start_abs;
+    var val_start_look;
+    var val_start_look_from = 0;
+    for (i = 0, l = vals.length; i < l; i++) {
+        val_start_look = '@[[' + i + ']]';
+        val_start = str.indexOf(val_start_look, val_start_look_from);
+        if (val_start === -1) break;
+
+        val = vals[i]; // ————————————————————————————————————————————————————— TO STRING
+        if (!val || (val.constructor !== Object && val.constructor !== Array)) {
+            val = '' + val;
+        }
+        else {
+            try { val = JSON.stringify(val); }
+            catch (e) { val = '' + val; }
+        }
+
+        val_encode = str[val_start - 1] !== '!'; // ——————————————————————————— ENCODE
+        if (val_encode) {
+            val = val.replace(val_encode_reg, function(m, k) {
+                return '&' + encode[k] + ';';
+            });
+        }
+
+        val_start_abs = val_encode ? val_start : (val_start - 1);
+        str = str.slice(0, val_start_abs) + val + str.slice(val_start + val_start_look.length);
+        val_start_look_from = val_start_abs + val.length;
+    }
+
+
     var s_start;
     var s_start_look = ' s="';
     var s_start_look_from = 2; // 2 - <a
@@ -381,40 +415,6 @@ $0{
     }
     str = builder + str.slice(build_from);
     builder = undefined;
-
-
-    var val; // ——————————————————————————————————————————————————————————————— INSERT VALUES
-    var val_encode;
-    var val_encode_reg = /(&|'|"|<|>)/g;
-    var val_start;
-    var val_start_abs;
-    var val_start_look;
-    var val_start_look_from = 0;
-    for (i = 0, l = vals.length; i < l; i++) {
-        val_start_look = '@[[' + i + ']]';
-        val_start = str.indexOf(val_start_look, val_start_look_from);
-        if (val_start === -1) break;
-
-        val = vals[i]; // ————————————————————————————————————————————————————— TO STRING
-        if (!val || (val.constructor !== Object && val.constructor !== Array)) {
-            val = '' + val;
-        }
-        else {
-            try { val = JSON.stringify(val); }
-            catch (e) { val = '' + val; }
-        }
-
-        val_encode = str[val_start - 1] !== '!'; // ——————————————————————————— ENCODE
-        if (val_encode) {
-            val = val.replace(val_encode_reg, function(m, k) {
-                return '&' + encode[k] + ';';
-            });
-        }
-
-        val_start_abs = val_encode ? val_start : (val_start - 1);
-        str = str.slice(0, val_start_abs) + val + str.slice(val_start + val_start_look.length);
-        val_start_look_from = val_start_abs + val.length;
-    }
 
 
     return css ? ('<style>' + css + '</style>' + str) : str;
