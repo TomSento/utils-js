@@ -271,43 +271,6 @@ $0{
         str += strings[i];
         if (i <= l - 2) str += '@[[' + i + ']]';
     }
-    str = str.trim();
-
-    var m;
-    var next;
-    var alpha = /[a-z]/;
-
-    var gap_start_reg = /[a-z"]>/g; // ———————————————————————————————————————— TRIM HTML
-    var gap_start;
-    var gap_end_look_from;
-    var gap_end_loop;
-    var gap_end;
-    var build_from = 0;
-    var builder = '';
-    while (m = gap_start_reg.exec(str)) {
-        gap_start = m.index + 2;
-        gap_end_look_from = gap_start;
-        gap_end_loop = true;
-        while (gap_end_loop) {
-            gap_end = str.indexOf('<', gap_end_look_from);
-            if (gap_end === -1) {
-                gap_end_loop = false;
-                continue;
-            }
-            next = str[gap_end + 1];
-            if (next === '/' || alpha.test(next)) {
-                gap_end_loop = false;
-                builder += str.slice(build_from, gap_start) + str.slice(gap_start, gap_end).trim();
-                build_from = gap_end;
-            }
-            else {
-                gap_end_look_from = gap_end + 2;
-            }
-        }
-    }
-    str = builder + str.slice(build_from);
-    builder = '';
-    build_from = 0;
 
 
     var val; // ——————————————————————————————————————————————————————————————— INSERT VALUES
@@ -343,6 +306,10 @@ $0{
         val_start_look_from = val_start_abs + val.length;
     }
 
+
+    var alpha = /[a-z]/;
+    var builder = '';
+    var build_from = 0;
 
     var s_start;
     var s_start_look = ' s="';
