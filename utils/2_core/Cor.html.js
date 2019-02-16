@@ -266,44 +266,36 @@ $0{
 
     var i;
     var l;
-    var str = ''; // —————————————————————————————————————————————————————————— INSERT VALUE PLACEHOLDERS
-    for (i = 0, l = strings.length; i < l; i++) {
-        str += strings[i];
-        if (i <= l - 2) str += '@[[' + i + ']]';
-    }
+    var str = ''; // —————————————————————————————————————————————————————————— JOIN STRINGS WITH VALUES
 
-
-    var val; // ——————————————————————————————————————————————————————————————— INSERT VALUES
-    var val_encode;
+    var string;
+    var val;
     var val_encode_reg = /(&|'|"|<|>)/g;
-    var val_start;
-    var val_start_abs;
-    var val_start_look;
-    var val_start_look_from = 0;
-    for (i = 0, l = vals.length; i < l; i++) {
-        val_start_look = '@[[' + i + ']]';
-        val_start = str.indexOf(val_start_look, val_start_look_from);
-        if (val_start === -1) break;
+    for (i = 0, l = strings.length; i < l; i++) {
+        string = strings[i];
+        if (i <= l - 2) {
+            val = vals[i]; // ————————————————————————————————————————————————— TO STRING
+            if (!val || (val.constructor !== Object && val.constructor !== Array)) {
+                val = '' + val;
+            }
+            else {
+                try { val = JSON.stringify(val); }
+                catch (e) { val = '' + val; }
+            }
 
-        val = vals[i]; // ————————————————————————————————————————————————————— TO STRING
-        if (!val || (val.constructor !== Object && val.constructor !== Array)) {
-            val = '' + val;
+            if (string[string.length - 1] === '!') {
+                string = string.slice(0, -1);
+            }
+            else { // ————————————————————————————————————————————————————————— ENCODE
+                val = val.replace(val_encode_reg, function(m, k) {
+                    return '&' + encode[k] + ';';
+                });
+            }
+            str += string + val;
         }
         else {
-            try { val = JSON.stringify(val); }
-            catch (e) { val = '' + val; }
+            str += string;
         }
-
-        val_encode = str[val_start - 1] !== '!'; // ——————————————————————————— ENCODE
-        if (val_encode) {
-            val = val.replace(val_encode_reg, function(m, k) {
-                return '&' + encode[k] + ';';
-            });
-        }
-
-        val_start_abs = val_encode ? val_start : (val_start - 1);
-        str = str.slice(0, val_start_abs) + val + str.slice(val_start + val_start_look.length);
-        val_start_look_from = val_start_abs + val.length;
     }
 
 
