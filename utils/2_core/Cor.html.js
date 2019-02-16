@@ -541,10 +541,30 @@ function helper2css(class_id, spec_item, arg) {
 }
 
 function rule2css(class_id, spec_item, important, pseudo, media, arg) {
-    var m;
     var builder = '';
     var build_from = 0;
 
+
+    var bracket_look_l = '[';
+    var bracket_look_r = ']';
+    var bracket_start_l;
+    var bracket_start_r;
+    var bracket_start;
+    while (bracket_start !== -1) {
+        bracket_start_l = arg.indexOf(bracket_look_l, build_from);
+        bracket_start_r = arg.indexOf(bracket_look_r, build_from);
+        bracket_start = Math.min(bracket_start_l, bracket_start_r);
+        if (bracket_start === -1) bracket_start = Math.max(bracket_start_l, bracket_start_r);
+        if (bracket_start === -1) continue;
+        builder += arg.slice(build_from, bracket_start) + (arg[bracket_start] === bracket_look_l ? '(' : ')');
+        build_from = bracket_start + 1;
+    }
+    arg = builder + arg.slice(build_from);
+    builder = '';
+    build_from = 0;
+
+
+    var m;
     var color_reg = /#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})(\.\d+)/ig;
     while (m = color_reg.exec(arg)) {
         builder += arg.slice(build_from, m.index) + 'rgba('
