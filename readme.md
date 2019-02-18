@@ -14,6 +14,7 @@ Primitives|
 [Cor.clone(obj, skip?, skipFunctions?) : Object](#docs)|
 [Cor.extend(objA, objB, rewrite?) : Object](#docs)|
 [String.prototype.escape() : String](#docs)|
+[String.prototype.fmt(...Any) : String](#docs)|
 [String.prototype.padEnd(len, str?) : String](#docs) `polyfill`|
 [String.prototype.padStart(len, str?) : String](#docs) `polyfill`|
 [String.prototype.slug(max?) : String](#docs)|

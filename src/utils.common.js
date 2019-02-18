@@ -10,6 +10,7 @@ export { default as clone } from '../utils/1_primitives/object/Cor.clone';
 export { default as extend } from '../utils/1_primitives/object/Cor.extend';
 
 import '../utils/1_primitives/string/String.prototype.escape';
+import '../utils/1_primitives/string/String.prototype.fmt';
 import '../utils/1_primitives/string/String.prototype.padEnd';
 import '../utils/1_primitives/string/String.prototype.padStart';
 import '../utils/1_primitives/string/String.prototype.slug';
