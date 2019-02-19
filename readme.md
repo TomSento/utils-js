@@ -39,6 +39,7 @@ Node|
 [Cor.request(url, flags, a, b?, c?) : undefined](#docs)|
 [Cor.route(matcher, ...middlewares, fn) : undefined](#docs)|
 [Cor.compileSrc(str?) : String](#docs)|
+[Cor.loadComponents(obj) : { component, header, footer }](#docs)|
 
 
 Browser|
