@@ -48,3 +48,5 @@ function buildTmp(fn) {
     });
 }
 
+if (!global.Cor) global.Cor = {};
+global.Cor.buildTmp = buildTmp;
