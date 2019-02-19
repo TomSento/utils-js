@@ -94,3 +94,6 @@ function loadComponents(obj) {
         return result;
     }
 }
+
+if (!global.Cor) global.Cor = {};
+global.Cor.loadComponents = loadComponents;
