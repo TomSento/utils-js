@@ -1,3 +1,5 @@
+import * as child_process from 'child_process';
+import * as fs from 'fs';
 
 function buildTmp(fn) {
     if (typeof(fn) !== 'function') {
