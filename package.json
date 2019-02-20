@@ -18,7 +18,7 @@
     },
     "homepage": "https://github.com/tomas-sentkeresty/utils-js#readme",
     "dependencies": {
-        "rollup": "0.61.2",
+        "rollup": "1.2.2",
         "terser": "3.16.1"
     },
     "devDependencies": {

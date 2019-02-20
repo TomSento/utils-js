@@ -8,7 +8,7 @@ dist('./src/utils.node.js', 'cjs', './dist/out.node.js');
 
 async function dist(entry, format, out) {
     var result = await bundle(entry, format);
-    var code = result.code || '';
+    var code = result.output[0].code || '';
     if (process.argv.indexOf('-m') >= 0) {
         var min = terser.minify(code);
         if (min.error) {
