@@ -6,13 +6,14 @@ function loadComponents(obj) {
     var i;
     var l;
 
+    var cwd = process.cwd();
     var node_component = {};
     var page_key;
     var page = {};
 
 
     for (k in obj) {
-        node_component[k] = require(`../components/${k}/${k}.node`);
+        node_component[k] = require(`${cwd}/components/${k}/${k}.node`);
         result.component[k] = node_component[k].render;
         v = obj[k];
         if (v && Array.isArray(v.pages)) {
