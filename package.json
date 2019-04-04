@@ -1,6 +1,6 @@
 {
     "name": "corjs",
-    "version": "2.7.0",
+    "version": "2.9.0",
     "description": "Simply route, validate, render html, do xhr and little more :)",
     "main": "min.js",
     "scripts": {
