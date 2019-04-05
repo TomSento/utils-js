@@ -7,18 +7,18 @@
 
 Primitives|
 -|
-[Array.prototype.find(fn, v?) : Any](#docs) `override`|
-[Array.prototype.findIndex(fn, v?) : Number](#docs) `override`|
-[Array.prototype.remove(fn, v?) : Array](#docs)|
-[Array.prototype.unique(k?) : Array](#docs)|
-[Cor.clone(obj, skip?, skipFunctions?) : Object](#docs)|
-[Cor.extend(objA, objB, rewrite?) : Object](#docs)|
-[String.prototype.escape() : String](#docs)|
-[String.prototype.fmt(...Any) : String](#docs)|
-[String.prototype.padEnd(len, str?) : String](#docs) `polyfill`|
-[String.prototype.padStart(len, str?) : String](#docs) `polyfill`|
-[String.prototype.slug(max?) : String](#docs)|
-[String.prototype.strip() : String](#docs)|
+[Array.prototype.find(fn, v?) : Any](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/array/Array.prototype.find.js) `override`|
+[Array.prototype.findIndex(fn, v?) : Number](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/array/Array.prototype.findIndex.js) `override`|
+[Array.prototype.remove(fn, v?) : Array](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/array/Array.prototype.remove.js)|
+[Array.prototype.unique(k?) : Array](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/array/Array.prototype.unique.js)|
+[Cor.clone(obj, skip?, skipFunctions?) : Object](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/object/Cor.clone.js)|
+[Cor.extend(objA, objB, rewrite?) : Object](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/object/Cor.extend.js)|
+[String.prototype.escape() : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/string/String.prototype.escape.js)|
+[String.prototype.fmt(...Any) : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/string/String.prototype.fmt.js)|
+[String.prototype.padEnd(len, str?) : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/string/String.prototype.padEnd.js) `polyfill`|
+[String.prototype.padStart(len, str?) : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/string/String.prototype.padStart.js) `polyfill`|
+[String.prototype.slug(max?) : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/string/String.prototype.slug.js)|
+[String.prototype.strip() : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/1_primitives/string/String.prototype.strip.js)|
 
 
 Core|
