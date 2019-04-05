@@ -45,15 +45,15 @@ Node|
 
 Browser|
 -|
-[Cookie.get(k) : String?](#docs) `global`|
-[Cor.visible(el) : Boolean](#docs)|
-[Cor.xhr(cmd, a, b?, c?, d?) : undefined](#docs)|
-[CustomEvent.create(k, v?) : CustomEvent](#docs)|
-[Element.prototype.matches(sel) : Boolean](#docs) `polyfill`|
-[Element.prototype.removeChild(el) : Element](#docs) `override`|
-[Element.state : Object \| Array](#docs) `attribute`|
-[HTMLCollection.from(str?) : HTMLCollection](#docs)|
-[HTMLCollection.prototype.forEach(fn, ctx?) : undefined](#docs)|
+[Cookie.get(k) : String?](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/Cookie.get.js) `global`|
+[Cor.visible(el) : Boolean](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/Cor.visible.js)|
+[Cor.xhr(cmd, a, b?, c?, d?) : undefined](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/Cor.xhr.js)|
+[CustomEvent.create(k, v?) : CustomEvent](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/CustomEvent.create.js)|
+[Element.prototype.matches(sel) : Boolean](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/Element.prototype.matches.js) `polyfill`|
+[Element.prototype.removeChild(el) : Element](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/Element.prototype.removeChild.js) `override`|
+[Element.state : Object \| Array](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/Element.state.js) `attribute`|
+[HTMLCollection.from(str?) : HTMLCollection](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/HTMLCollection.from.js)|
+[HTMLCollection.prototype.forEach(fn, ctx?) : undefined](https://github.com/tomassentkeresty/corjs/blob/master/utils/4_browser/HTMLCollection.prototype.forEach.js)|
 
 
 ## Contact
