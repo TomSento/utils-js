@@ -23,14 +23,14 @@ Primitives|
 
 Core|
 -|
-[Cor.all(arr, fn, next?) : undefined](#docs)|
-[Cor.extension(k?) : String?](#docs)|
-[Cor.html](#docs) `literal tag`|
-[Cor.Schema(obj) : Schema](#docs) `class`|
-[Cor.tid() : String](#docs)|
-[Cor.uid(len) : String](#docs)|
-[Cor.userAgent(str?) : Object](#docs)|
-[log(...Any) : undefined](#docs) `global`|
+[Cor.all(arr, fn, next?) : undefined](https://github.com/tomassentkeresty/corjs/blob/master/utils/2_core/Cor.all.js)|
+[Cor.extension(k?) : String?](https://github.com/tomassentkeresty/corjs/blob/master/utils/2_core/Cor.extension.js)|
+[Cor.html](https://github.com/tomassentkeresty/corjs/blob/master/utils/2_core/Cor.html.js) `literal tag`|
+[Cor.Schema(obj) : Schema](https://github.com/tomassentkeresty/corjs/blob/master/utils/2_core/Cor.Schema.js) `class`|
+[Cor.tid() : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/2_core/Cor.tid.js)|
+[Cor.uid(len) : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/2_core/Cor.uid.js)|
+[Cor.userAgent(str?) : Object](https://github.com/tomassentkeresty/corjs/blob/master/utils/2_core/Cor.userAgent.js)|
+[log(...Any) : undefined](https://github.com/tomassentkeresty/corjs/blob/master/utils/2_core/log.js) `global`|
 
 
 Node|
