@@ -35,12 +35,12 @@ Core|
 
 Node|
 -|
-[Cor.handleRequest(req, res, routeError) : undefined](#docs)|
-[Cor.request(url, flags, a, b?, c?) : undefined](#docs)|
-[Cor.route(matcher, ...middlewares, fn) : undefined](#docs)|
-[Cor.buildTmp(fn?) : undefined](#docs)|
-[Cor.compileSrc(str?) : String](#docs)|
-[Cor.loadComponents(obj) : { component, header, footer }](#docs)|
+[Cor.handleRequest(req, res, routeError) : undefined](https://github.com/tomassentkeresty/corjs/blob/master/utils/3_node/server/Cor.handleRequest.js)|
+[Cor.request(url, flags, a, b?, c?) : undefined](https://github.com/tomassentkeresty/corjs/blob/master/utils/3_node/server/Cor.request.js)|
+[Cor.route(matcher, ...middlewares, fn) : undefined](https://github.com/tomassentkeresty/corjs/blob/master/utils/3_node/server/Cor.route.js)|
+[Cor.buildTmp(fn?) : undefined](https://github.com/tomassentkeresty/corjs/blob/master/utils/3_node/Cor.buildTmp.js)|
+[Cor.compileSrc(str?) : String](https://github.com/tomassentkeresty/corjs/blob/master/utils/3_node/Cor.compileSrc.js)|
+[Cor.loadComponents(obj) : { component, header, footer }](https://github.com/tomassentkeresty/corjs/blob/master/utils/3_node/Cor.loadComponents.js)|
 
 
 Browser|
